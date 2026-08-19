@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Street - UR PICKS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body.dark-theme { background-color: #0A0A0A; color: #F0EDE6; font-family: 'Outfit', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        h1, h2, h3, h4, h5, .logo-text, .cinzel { font-family: 'Cinzel', serif; }
+        a { text-decoration: none; color: inherit; }
+        * { box-sizing: border-box; }
+        
+        /* Shared */
+        .c-announcement { background: #0A0A0A; color: #C9A84C; font-size: 11px; letter-spacing: 1px; padding: 8px 0; overflow: hidden; border-bottom: 1px solid #1A1A1A; }
+        .c-announcement-marquee { white-space: nowrap; overflow: hidden; display: flex; }
+        .c-announcement-track { animation: marquee 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        
+        header { background: rgba(10,10,10,0.85); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #1A1A1A; }
+        .nav-wrap { display: flex; justify-content: space-between; align-items: center; padding: 16px 40px; }
+        .logo-cinch { display: flex; flex-direction: column; }
+        .logo-text { font-size: 24px; font-weight: 800; letter-spacing: 2px; }
+        .logo-text span { color: #C9A84C; }
+        .logo-tagline { font-size: 9px; color: #8A8580; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+        .nav-links { display: flex; gap: 32px; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+        .nav-links a.active { color: #C9A84C; }
+        .nav-links a:hover { color: #C9A84C; transition: 0.3s; }
+        .nav-right-actions { display: flex; align-items: center; gap: 24px; font-size: 12px; font-weight: 500; }
+        .dash-pill-link { border: 1px solid #C9A84C; color: #C9A84C; padding: 6px 14px; border-radius: 20px; transition: 0.3s; }
+        .dash-pill-link:hover { background: #C9A84C; color: #0A0A0A; }
+        .cart-trigger { cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .cart-count { background: #C9A84C; color: #0A0A0A; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
+        
+        .hamburger-btn { display: none; background: none; border: none; flex-direction: column; gap: 4px; cursor: pointer; }
+        .hamburger-btn span { display: block; width: 24px; height: 2px; background: #F0EDE6; transition: 0.3s; }
+        .mobile-nav-drawer { position: fixed; top: 0; right: -300px; width: 300px; height: 100vh; background: #141414; z-index: 200; transition: 0.4s ease; padding: 24px; }
+        .mobile-nav-drawer.open { right: 0; }
+        .mobile-nav-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 199; display: none; }
+        .mobile-nav-overlay.active { display: block; }
+        .mobile-nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .mobile-nav-links { display: flex; flex-direction: column; gap: 20px; font-size: 16px; font-weight: 500; text-transform: uppercase; }
+        
+        /* Cursor */
+        .cursor-follower { position: fixed; width: 60px; height: 60px; border-radius: 50%; background: rgba(201,168,76,0.15); border: 1px solid #C9A84C; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #C9A84C; letter-spacing: 1px; backdrop-filter: blur(2px); mix-blend-mode: screen; transition: width 0.2s, height 0.2s; }
+        
+        /* Cart Drawer */
+        .cart-drawer { position: fixed; top: 0; right: -400px; width: 100%; max-width: 400px; height: 100vh; background: #141414; z-index: 200; transition: right 0.4s ease; display: flex; flex-direction: column; border-left: 1px solid #1A1A1A; }
+        .cart-drawer.open { right: 0; }
+        .cart-drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 199; opacity: 0; pointer-events: none; transition: 0.4s; }
+        .cart-drawer-overlay.active { opacity: 1; pointer-events: all; }
+        .cart-drawer-header { padding: 24px; border-bottom: 1px solid #1A1A1A; display: flex; justify-content: space-between; align-items: center; }
+        .t-micro-1 { font-size: 12px; font-weight: 700; letter-spacing: 2px; }
+        .t-micro-2 { font-size: 10px; color: #8A8580; margin-top: 4px; }
+        .cart-drawer-close { font-size: 20px; cursor: pointer; color: #8A8580; }
+        .cart-drawer-body { flex: 1; overflow-y: auto; padding: 24px; }
+        .cart-drawer-footer { padding: 24px; border-top: 1px solid #1A1A1A; background: #0A0A0A; }
+
+        /* Toast */
+        .toast-notification { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px); background: #C9A84C; color: #0A0A0A; padding: 12px 24px; border-radius: 30px; font-size: 12px; font-weight: 600; opacity: 0; transition: 0.4s; z-index: 1000; box-shadow: 0 10px 30px rgba(201,168,76,0.3); pointer-events: none; }
+        .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* Dashboard Specific */
+        .c-section { padding: 60px 40px; max-width: 1400px; margin: 0 auto; }
+        .hero-dashboard { background: linear-gradient(135deg, #1A150A 0%, #0A0A0A 100%); border: 1px solid #C9A84C; padding: 60px 40px; border-radius: 12px; text-align: center; margin-bottom: 60px; }
+        .hero-dashboard h1 { font-size: 48px; color: #C9A84C; margin: 0 0 16px; }
+        .hero-dashboard p { font-size: 16px; color: #F0EDE6; max-width: 600px; margin: 0 auto 30px; line-height: 1.5; }
+        .btn-gold { background: #C9A84C; color: #0A0A0A; padding: 14px 28px; font-size: 14px; font-weight: 700; border-radius: 40px; display: inline-block; cursor: pointer; border: none; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 60px; }
+        
+        .dark-card { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 40px; }
+        .dark-card h2 { font-size: 24px; margin: 0 0 24px; color: #F0EDE6; border-bottom: 1px solid #222; padding-bottom: 16px; }
+        
+        /* Outfit Mixer */
+        .mixer-stage { height: 300px; background: #0A0A0A; border-radius: 8px; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; border: 1px dashed #333; }
+        .mixer-item { position: absolute; max-height: 80%; object-fit: contain; transition: 0.3s; }
+        .mixer-item.top { top: 10%; z-index: 2; height: 45%; }
+        .mixer-item.bottom { bottom: 10%; z-index: 1; height: 50%; }
+        .mixer-item.jacket { top: 5%; z-index: 3; height: 55%; opacity: 0.9; }
+        
+        .pill-group { margin-bottom: 20px; }
+        .pill-label { font-size: 11px; color: #8A8580; text-transform: uppercase; margin-bottom: 8px; display: block; letter-spacing: 1px; }
+        .pills { display: flex; gap: 8px; flex-wrap: wrap; }
+        .pill-btn { background: #0A0A0A; border: 1px solid #333; color: #F0EDE6; padding: 6px 16px; border-radius: 20px; font-size: 12px; cursor: pointer; transition: 0.3s; }
+        .pill-btn.active { background: #C9A84C; color: #0A0A0A; border-color: #C9A84C; }
+        
+        .bundle-summary { background: #0A0A0A; padding: 20px; border-radius: 8px; margin-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+        .bundle-badge { background: rgba(201,168,76,0.2); color: #C9A84C; padding: 4px 8px; font-size: 10px; border-radius: 4px; font-weight: 700; margin-bottom: 4px; display: inline-block; }
+        
+        /* Radar */
+        .timer-boxes { display: flex; gap: 12px; margin-bottom: 30px; }
+        .t-box { background: #0A0A0A; border: 1px solid #333; border-radius: 6px; padding: 16px; text-align: center; flex: 1; }
+        .t-num { font-size: 32px; font-family: 'Cinzel'; font-weight: 600; color: #C9A84C; }
+        .t-lbl { font-size: 10px; color: #8A8580; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        
+        .radar-item { margin-bottom: 20px; }
+        .radar-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
+        .radar-bar-bg { height: 6px; background: #0A0A0A; border-radius: 3px; overflow: hidden; }
+        .radar-bar-fill { height: 100%; background: #C9A84C; border-radius: 3px; }
+        
+        /* Ticker */
+        .ticker-card { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 24px; overflow: hidden; }
+        .ticker-item { display: flex; align-items: center; gap: 12px; font-size: 13px; padding: 12px 0; border-bottom: 1px solid #1A1A1A; animation: fadeIn 0.5s; }
+        .dot-pulse { width: 8px; height: 8px; background: #4CAF50; border-radius: 50%; box-shadow: 0 0 10px #4CAF50; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        footer { background: #050505; border-top: 1px solid #1A1A1A; margin-top: 60px; }
+        .footer-bottom { display: flex; justify-content: space-between; font-size: 10px; color: #6B6560; letter-spacing: 1px; padding: 20px 40px; max-width: 1400px; margin: 0 auto; }
+
+        @media (max-width: 768px) {
+            .nav-links, .nav-right-actions { display: none; }
+            .hamburger-btn { display: flex; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .c-section { padding: 40px 20px; }
+            .hero-dashboard h1 { font-size: 32px; }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <div class="cursor-follower" id="cursor-badge">MIX</div>
+
+    <div class="c-announcement">
+      <div class="c-announcement-marquee">
+        <div class="c-announcement-track">
+          ✦ DUAL-FUNNEL HYBRID FASHION ✦ READY-TO-SHIP 24H DISPATCH & BESPOKE MADE-TO-MEASURE 7-14 DAYS ✦ CODE <strong>NOVA10</strong> FOR 10% OFF ✦ AHMEDABAD GOTS ORGANIC COTTON ✦ FREE SHIPPING ABOVE ₹2999 ✦ DUAL-FUNNEL HYBRID FASHION ✦ READY-TO-SHIP 24H DISPATCH & BESPOKE MADE-TO-MEASURE 7-14 DAYS ✦ CODE <strong>NOVA10</strong> FOR 10% OFF ✦
+        </div>
+      </div>
+    </div>
+
+    <header>
+      <div class="nav-wrap">
+        <a href="index.html" class="logo-cinch">
+          <div class="logo-text">NOVA <span>STREET</span></div>
+          <div class="logo-tagline">Hybrid Custom-Curated Label · Est. 2026</div>
+        </a>
+        <nav class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="shop.html">Collection</a>
+          <a href="customize.html">Studio</a>
+          <a href="dashboard.html" class="active">UR PICKS</a>
+        </nav>
+        <div class="nav-right-actions">
+          <a href="customize.html" class="dash-pill-link">✂️ Try-On Studio</a>
+          <div class="cart-trigger" onclick="openCartDrawer()">
+            <span>BAG</span>
+            <span class="cart-count">0</span>
+          </div>
+        </div>
+        <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileMenu()"></div>
+      <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+        <div class="mobile-nav-header">
+          <div class="logo-text" style="font-size:20px;">NOVA <span>STREET</span></div>
+          <button onclick="closeMobileMenu()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#F0EDE6">✕</button>
+        </div>
+        <nav class="mobile-nav-links">
+          <a href="index.html" onclick="closeMobileMenu()">Home</a>
+          <a href="shop.html" onclick="closeMobileMenu()">Collection</a>
+          <a href="customize.html" onclick="closeMobileMenu()">Try-On Studio</a>
+          <a href="dashboard.html" onclick="closeMobileMenu()">UR PICKS</a>
+          <a href="cart.html" onclick="closeMobileMenu()">Shopping Bag</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+        <section class="c-section">
+            <div class="hero-dashboard">
+                <h1 class="cinzel">UR PICKS & LIMITED DEALS STUDIO</h1>
+                <p>Mix & match outfits, capture 15% bundle savings, track live drops, and view what's trending across the global hybrid network.</p>
+                <div style="display:flex; gap: 16px; justify-content:center; flex-wrap:wrap;">
+                    <a href="#outfit-mixer" class="btn-gold">Launch Outfit Mixer</a>
+                    <a href="#drop-radar" class="btn-gold" style="background:transparent; border:1px solid #C9A84C; color:#C9A84C;">Drop Radar</a>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <!-- Outfit Mixer -->
+                <div class="dark-card" id="outfit-mixer">
+                    <h2 class="cinzel">OUTFIT MIXER</h2>
+                    <div class="mixer-stage">
+                        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&q=80" class="mixer-item top" id="mix-top" alt="Top">
+                        <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=300&q=80" class="mixer-item bottom" id="mix-bottom" alt="Bottom">
+                    </div>
+                    
+                    <div class="pill-group">
+                        <span class="pill-label">SELECT TOP</span>
+                        <div class="pills">
+                            <button class="pill-btn active" onclick="selectItem('top', 1499, this)">Slate Tee</button>
+                            <button class="pill-btn" onclick="selectItem('top', 3499, this)">Onyx Silk</button>
+                            <button class="pill-btn" onclick="selectItem('top', 2999, this)">Graphite Hoodie</button>
+                        </div>
+                    </div>
+                    <div class="pill-group">
+                        <span class="pill-label">SELECT BOTTOM</span>
+                        <div class="pills">
+                            <button class="pill-btn active" onclick="selectItem('bottom', 4299, this)">Midnight Cargo</button>
+                            <button class="pill-btn" onclick="selectItem('bottom', 2899, this)">Desert Chinos</button>
+                        </div>
+                    </div>
+
+                    <div class="bundle-summary">
+                        <div>
+                            <div class="bundle-badge">15% BUNDLE SAVINGS</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #F0EDE6;" id="bundle-total">₹4928</div>
+                            <div style="font-size: 12px; color: #8A8580; text-decoration: line-through;" id="bundle-orig">₹5798</div>
+                        </div>
+                        <button class="btn-gold" onclick="showToast('🛍️ Outfit bundle added to bag!')">Add Bundle to Cart</button>
+                    </div>
+                </div>
+
+                <!-- Drop Radar & Ticker -->
+                <div>
+                    <div class="dark-card" id="drop-radar" style="margin-bottom: 40px;">
+                        <h2 class="cinzel">LIMITED DROP COUNTDOWN</h2>
+                        <div class="timer-boxes">
+                            <div class="t-box"><div class="t-num" id="t-hrs">08</div><div class="t-lbl">HOURS</div></div>
+                            <div class="t-box"><div class="t-num" id="t-min">23</div><div class="t-lbl">MINS</div></div>
+                            <div class="t-box"><div class="t-num" id="t-sec">45</div><div class="t-lbl">SECS</div></div>
+                        </div>
+                        
+                        <div class="pill-label" style="margin-bottom: 16px;">STOCK VELOCITY RADAR</div>
+                        <div class="radar-item">
+                            <div class="radar-header"><span>Japanese Indigo Selvedge Jacket</span> <span style="color:#C9A84C;">82% Claimed</span></div>
+                            <div class="radar-bar-bg"><div class="radar-bar-fill" style="width: 82%;"></div></div>
+                        </div>
+                        <div class="radar-item">
+                            <div class="radar-header"><span>Terracotta Terry Hoodie</span> <span style="color:#C9A84C;">94% Claimed</span></div>
+                            <div class="radar-bar-bg"><div class="radar-bar-fill" style="width: 94%; background: #E57373;"></div></div>
+                        </div>
+                        <div class="radar-item">
+                            <div class="radar-header"><span>Organic Biella Linen Shirt</span> <span style="color:#C9A84C;">45% Claimed</span></div>
+                            <div class="radar-bar-bg"><div class="radar-bar-fill" style="width: 45%;"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="ticker-card">
+                        <div class="pill-label" style="margin-bottom: 16px; font-size: 14px; color: #F0EDE6;">HYPE TICKER — LIVE GLOBAL ORDERS</div>
+                        <div id="ticker-container">
+                            <div class="ticker-item"><div class="dot-pulse"></div> Someone in Mumbai just ordered Onyx Silk Shirt</div>
+                            <div class="ticker-item"><div class="dot-pulse"></div> Someone in Delhi just configured a Bespoke Jacket</div>
+                            <div class="ticker-item"><div class="dot-pulse"></div> Someone in Bangalore just ordered Desert Chinos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="cart-drawer-overlay" id="cart-drawer-overlay" onclick="closeCartDrawer()"></div>
+    <div class="cart-drawer" id="cart-drawer">
+      <div class="cart-drawer-header">
+        <div>
+          <div class="t-micro-1">YOUR SHOPPING BAG</div>
+          <div class="t-micro-2">NOVA STREET STORE</div>
+        </div>
+        <div class="cart-drawer-close" onclick="closeCartDrawer()">✕</div>
+      </div>
+      <div class="cart-drawer-body" id="drawer-cart-items"></div>
+      <div class="cart-drawer-footer" id="drawer-cart-summary"></div>
+    </div>
+
+    <footer>
+      <div class="footer-bottom">
+        <span>© 2026 NOVA STREET HYBRID D2C LABEL. ALL RIGHTS RESERVED.</span>
+        <span>PRIVACY POLICY · TERMS OF SERVICE · AHMEDABAD GOTS TEXTILE HUB</span>
+      </div>
+    </footer>
+
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script>
+    const cursorBadge = document.getElementById('cursor-badge');
+    if (cursorBadge) {
+      document.addEventListener('mousemove', (e) => {
+        cursorBadge.style.left = e.clientX + 'px';
+        cursorBadge.style.top = e.clientY + 'px';
+      });
+    }
+    
+    function toggleMobileMenu() {
+      document.getElementById('mobile-nav-drawer').classList.toggle('open');
+      document.getElementById('mobile-nav-overlay').classList.toggle('active');
+      document.getElementById('hamburger-btn').classList.toggle('open');
+    }
+    function closeMobileMenu() {
+      document.getElementById('mobile-nav-drawer').classList.remove('open');
+      document.getElementById('mobile-nav-overlay').classList.remove('active');
+      document.getElementById('hamburger-btn').classList.remove('open');
+    }
+    function openCartDrawer() {
+      document.getElementById('cart-drawer').classList.add('open');
+      document.getElementById('cart-drawer-overlay').classList.add('active');
+    }
+    function closeCartDrawer() {
+      document.getElementById('cart-drawer').classList.remove('open');
+      document.getElementById('cart-drawer-overlay').classList.remove('active');
+    }
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.className = 'toast-notification';
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.classList.add('show'), 50);
+      setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3500);
+    }
+
+    // Outfit Mixer Logic
+    let selectedTop = 1499;
+    let selectedBottom = 4299;
+    function selectItem(type, price, el) {
+        if(type === 'top') {
+            selectedTop = price;
+            el.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        } else {
+            selectedBottom = price;
+            el.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        }
+        calcBundle();
+    }
+    function calcBundle() {
+        const orig = selectedTop + selectedBottom;
+        const total = Math.round(orig * 0.85);
+        document.getElementById('bundle-orig').innerText = `₹${orig}`;
+        document.getElementById('bundle-total').innerText = `₹${total}`;
+    }
+
+    // Countdown Timer
+    let hrs = 8, mins = 23, secs = 45;
+    setInterval(() => {
+        secs--;
+        if(secs < 0) { secs = 59; mins--; }
+        if(mins < 0) { mins = 59; hrs--; }
+        if(hrs < 0) { hrs = 23; }
+        
+        document.getElementById('t-hrs').innerText = hrs.toString().padStart(2, '0');
+        document.getElementById('t-min').innerText = mins.toString().padStart(2, '0');
+        document.getElementById('t-sec').innerText = secs.toString().padStart(2, '0');
+    }, 1000);
+
+    // Ticker Logic
+    const fakeOrders = [
+        "Someone in Ahmedabad just ordered Onyx Silk Shirt",
+        "Someone in Pune just configured a Bespoke Dress",
+        "Someone in Chennai just ordered Midnight Cargo",
+        "Someone in Hyderabad just ordered Terracotta Terry",
+        "Someone in Kolkata just added 3 items to bag"
+    ];
+    let tickerIdx = 0;
+    setInterval(() => {
+        const container = document.getElementById('ticker-container');
+        const newItem = document.createElement('div');
+        newItem.className = 'ticker-item';
+        newItem.innerHTML = `<div class="dot-pulse"></div> ${fakeOrders[tickerIdx]}`;
+        container.insertBefore(newItem, container.firstChild);
+        if(container.children.length > 3) container.removeChild(container.lastChild);
+        tickerIdx = (tickerIdx + 1) % fakeOrders.length;
+    }, 3000);
+    </script>
+</body>
+</html>

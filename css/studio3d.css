@@ -1,0 +1,632 @@
+/* ===================================================================
+   NOVA STREET — AI CLOTHES CHANGER & BODY VISUALIZER STYLESHEET
+   Inspired by Vidnoz AI Clothes Changer & BodyVisualizer.ai
+   Dark Luxury Aesthetics (#0A0A0A & Gold #C9A84C)
+   Interactive Before/After Slider · Supermodel Tray · Garment Grid
+   =================================================================== */
+
+.studio-page {
+  background: #0A0A0A;
+  color: #F0EDE6;
+  overflow-x: hidden;
+}
+
+/* ── Main Studio Grid ── */
+.studio-root {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  min-height: calc(100vh - 96px);
+  gap: 0;
+  background: #0A0A0A;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LEFT PANEL: Controls, Uploads, Models, Garments & Body Visualizer
+═══════════════════════════════════════════════════════════════════ */
+.studio-controls-panel {
+  overflow-y: auto;
+  padding: 28px 32px;
+  background: #0D0D0D;
+  scroll-behavior: smooth;
+}
+
+.studio-controls-panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.studio-controls-panel::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.35);
+  border-radius: 4px;
+}
+
+/* ── App Navigation Tabs (Clothes Changer vs Body Visualizer vs Bespoke) ── */
+.app-tab {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #8A8580;
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.app-tab:hover {
+  border-color: rgba(201, 168, 76, 0.4);
+  color: #F0EDE6;
+}
+
+.app-tab.active {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: #C9A84C;
+  color: #C9A84C;
+}
+
+/* ── Upload Drag-and-Drop Zone ── */
+.upload-dropzone {
+  background: #141414;
+  border: 2px dashed rgba(201, 168, 76, 0.35);
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.upload-dropzone:hover {
+  border-color: #C9A84C;
+  background: rgba(201, 168, 76, 0.05);
+  transform: translateY(-2px);
+}
+
+/* ── Supermodels Horizontal Scroll Tray ── */
+.supermodels-tray {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.supermodels-tray::-webkit-scrollbar {
+  height: 3px;
+}
+
+.supermodels-tray::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.3);
+  border-radius: 3px;
+}
+
+.model-thumb-card {
+  width: 80px;
+  flex-shrink: 0;
+  background: #141414;
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.model-thumb-card img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  display: block;
+}
+
+.model-thumb-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: #A09B93;
+  padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.model-thumb-card:hover {
+  border-color: rgba(201, 168, 76, 0.4);
+}
+
+.model-thumb-card.active {
+  border-color: #C9A84C;
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.25);
+}
+
+.model-thumb-card.active .model-thumb-name {
+  color: #C9A84C;
+  font-weight: 800;
+}
+
+/* ── Gender Switcher ── */
+.model-gender-switcher {
+  display: inline-flex;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  padding: 3px;
+}
+
+.gender-btn {
+  padding: 5px 14px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  color: #8A8580;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.gender-btn.active {
+  background: #C9A84C;
+  color: #0A0A0A;
+}
+
+/* ── Category Tags Bar ── */
+.category-tags-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 14px;
+  padding-bottom: 4px;
+}
+
+.cat-tag {
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #8A8580;
+  padding: 5px 14px;
+  border-radius: 16px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.cat-tag:hover {
+  border-color: rgba(201, 168, 76, 0.4);
+  color: #F0EDE6;
+}
+
+.cat-tag.active {
+  background: #C9A84C;
+  color: #0A0A0A;
+  border-color: #C9A84C;
+}
+
+/* ── Garments Grid ── */
+.garments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.garment-thumb-card {
+  background: #141414;
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.garment-thumb-card img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+}
+
+.garment-thumb-info {
+  padding: 8px;
+  background: #141414;
+}
+
+.garment-thumb-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: #F0EDE6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.garment-thumb-price {
+  font-size: 11px;
+  font-weight: 800;
+  color: #C9A84C;
+  margin-top: 2px;
+}
+
+.garment-tag-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(6px);
+  color: #C9A84C;
+  font-size: 8px;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.garment-thumb-card.upload-card {
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(201, 168, 76, 0.35);
+  background: #121212;
+  aspect-ratio: 3/4;
+}
+
+.garment-thumb-card:hover {
+  border-color: rgba(201, 168, 76, 0.45);
+  transform: translateY(-2px);
+}
+
+.garment-thumb-card.active {
+  border-color: #C9A84C;
+  box-shadow: 0 0 16px rgba(201, 168, 76, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RIGHT PANEL: Before / After Live AI Comparison Studio
+═══════════════════════════════════════════════════════════════════ */
+.studio-model-panel {
+  display: flex;
+  flex-direction: column;
+  background: #080808;
+  padding: 24px;
+  position: sticky;
+  top: 96px;
+  height: calc(100vh - 96px);
+  overflow: hidden;
+}
+
+.viewport-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+.viewport-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.vp-btn {
+  background: #161616;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #A09B93;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.vp-btn.accent {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: #C9A84C;
+  color: #C9A84C;
+}
+
+/* ── Interactive Before / After Comparison Canvas ── */
+.comparison-container {
+  flex: 1;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #050505;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  user-select: none;
+  min-height: 0;
+}
+
+.comparison-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.comparison-layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.before-layer {
+  z-index: 1;
+}
+
+.after-layer {
+  z-index: 2;
+  clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+  transition: clip-path 0.05s linear;
+}
+
+/* Before / After Badges */
+.comparison-label {
+  position: absolute;
+  top: 16px;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  z-index: 5;
+}
+
+.before-label {
+  left: 16px;
+  color: #8A8580;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.after-label {
+  right: 16px;
+  color: #C9A84C;
+  border: 1px solid rgba(201, 168, 76, 0.4);
+}
+
+/* ── Center Comparison Divider with Purple Arrow Badge ── */
+.comparison-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #C9A84C;
+  z-index: 10;
+  cursor: ew-resize;
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.6);
+}
+
+.divider-arrow-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 38px;
+  height: 38px;
+  background: #7C3AED; /* Vibrant Purple from reference image! */
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.6);
+}
+
+/* AI Shimmer Loading Animation */
+.ai-transform-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  transition: opacity 0.3s ease;
+}
+
+/* HUD Overlay Badge */
+.model-overlay-badge {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  background: rgba(12, 12, 12, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 14px;
+  padding: 12px 16px;
+  z-index: 5;
+}
+
+.fit-stats-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.fit-stat-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  color: #A09B93;
+}
+
+.fit-stat-pill strong {
+  color: #C9A84C;
+}
+
+/* ── Sticky Price Summary ── */
+.studio-price-summary {
+  background: #121212;
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  border-radius: 16px;
+  padding: 18px 22px;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CUSTOMIZATION / FABRICS / SLIDERS
+═══════════════════════════════════════════════════════════════════ */
+.control-section {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.control-section-title {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #C9A84C;
+  margin-bottom: 14px;
+}
+
+.color-swatches {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.color-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.color-swatch:hover, .color-swatch.active {
+  border-color: #C9A84C;
+  transform: scale(1.15);
+}
+
+.fabric-option-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.fabric-option-card {
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fabric-option-card:hover, .fabric-option-card.active {
+  border-color: #C9A84C;
+  background: rgba(201, 168, 76, 0.08);
+}
+
+.option-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.option-pill {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #141414;
+  font-size: 10px;
+  font-weight: 700;
+  color: #8A8580;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.option-pill:hover, .option-pill.active {
+  background: rgba(201, 168, 76, 0.14);
+  border-color: #C9A84C;
+  color: #C9A84C;
+}
+
+.measurement-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.measurement-field {
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.measurement-field label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #8A8580;
+  display: flex;
+  justify-content: space-between;
+}
+
+.measurement-field input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: #252525;
+  border-radius: 3px;
+  outline: none;
+}
+
+.measurement-field input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #C9A84C;
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN (Mobile & Tablets)
+═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .studio-root {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+  .studio-model-panel {
+    position: relative;
+    top: 0;
+    height: 70vh;
+    min-height: 500px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .studio-controls-panel {
+    padding: 24px 20px;
+  }
+}

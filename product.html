@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product | NOVA STREET</title>
+<meta name="description" content="Shop premium ready-to-wear and bespoke made-to-measure garments at Nova Street. GOTS organic cotton, crafted in Ahmedabad.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/studio3d.css">
+</head>
+<body class="theme-dark">
+
+<div class="cursor-follower" id="cursor-badge">BUY</div>
+
+<!-- Announcement Bar -->
+<div class="c-announcement">
+  <div class="c-announcement-marquee">
+    <div class="c-announcement-track">
+      ✦ DUAL-FUNNEL HYBRID FASHION ✦ READY-TO-SHIP 24H DISPATCH & BESPOKE MADE-TO-MEASURE 7-14 DAYS ✦ CODE <strong>NOVA10</strong> FOR 10% OFF ✦ AHMEDABAD GOTS ORGANIC COTTON ✦ FREE SHIPPING ABOVE ₹2999 ✦ DUAL-FUNNEL HYBRID FASHION ✦ READY-TO-SHIP 24H DISPATCH & BESPOKE MADE-TO-MEASURE 7-14 DAYS ✦
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo-cinch">
+      <div class="logo-text">NOVA <span>STREET</span></div>
+      <div class="logo-tagline">Hybrid Custom-Curated Label · Est. 2026</div>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="shop.html" class="active">Collection</a>
+      <a href="customize.html">Studio</a>
+      <a href="dashboard.html">UR PICKS</a>
+    </nav>
+    <div class="nav-right-actions">
+      <a href="customize.html" class="dash-pill-link">✂️ Try-On Studio</a>
+      <div class="cart-trigger" onclick="openCartDrawer()">
+        <span>BAG</span>
+        <span class="cart-count">0</span>
+      </div>
+    </div>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+    <div class="mobile-nav-header">
+      <div class="logo-text" style="font-size:20px;">NOVA <span>STREET</span></div>
+      <button onclick="closeMobileMenu()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#F0EDE6">✕</button>
+    </div>
+    <nav class="mobile-nav-links">
+      <a href="index.html" onclick="closeMobileMenu()">Home</a>
+      <a href="shop.html" class="active" onclick="closeMobileMenu()">Collection</a>
+      <a href="customize.html" onclick="closeMobileMenu()">Try-On Studio</a>
+      <a href="dashboard.html" onclick="closeMobileMenu()">UR PICKS</a>
+      <a href="cart.html" onclick="closeMobileMenu()">Shopping Bag</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Product Detail -->
+<section class="c-section" style="padding-top: 48px;">
+  <div id="product-content">
+    <!-- Rendered by JS -->
+    <div style="text-align:center;padding:80px 20px;color:#6B6560;">
+      <div style="font-size:40px;margin-bottom:16px;">⏳</div>
+      <div style="font-size:14px;">Loading product...</div>
+    </div>
+  </div>
+</section>
+
+<!-- Related Products -->
+<section class="c-section" style="padding-top: 0;" id="related-section" style="display:none;">
+  <div class="c-section-header">
+    <span class="t-micro-1">YOU MAY ALSO LIKE</span>
+  </div>
+  <div class="c-product-grid" id="related-grid"></div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="logo-text" style="margin-bottom:12px;">NOVA <span>STREET</span></div>
+      <p style="font-size:13px;color:#6B6560;max-width:300px;margin-bottom:20px;">Hybrid D2C custom-curated apparel. GOTS organic mills in Ahmedabad, crafted with unit-of-one precision.</p>
+    </div>
+    <div>
+      <h4 class="t-micro-1" style="color:#C9A84C;margin-bottom:16px;">COLLECTION</h4>
+      <ul style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:#8A8580;">
+        <li><a href="shop.html">Shop Men</a></li>
+        <li><a href="shop.html?gender=women">Shop Women</a></li>
+        <li><a href="customize.html">Bespoke Studio</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="t-micro-1" style="color:#C9A84C;margin-bottom:16px;">TECHNOLOGY</h4>
+      <ul style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:#8A8580;">
+        <li><a href="customize.html">AI Try-On Studio</a></li>
+        <li><a href="customize.html">CPQ Configurator</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="t-micro-1" style="color:#C9A84C;margin-bottom:16px;">NEWSLETTER</h4>
+      <p style="font-size:12px;color:#6B6560;margin-bottom:14px;">VIP access to bespoke fabric drops.</p>
+      <div style="display:flex;background:#1A1A1A;border-radius:40px;padding:4px;border:1px solid rgba(255,255,255,0.08);">
+        <input type="email" placeholder="Your email address" style="background:transparent;border:none;padding:10px 16px;color:#F0EDE6;font-size:12px;flex:1;outline:none;font-family:inherit;">
+        <button onclick="showToast('🎉 Subscribed!')" style="background:#C9A84C;border:none;color:#0A0A0A;padding:8px 18px;border-radius:30px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">JOIN</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 NOVA STREET HYBRID D2C LABEL. ALL RIGHTS RESERVED.</span>
+    <span>PRIVACY POLICY · TERMS OF SERVICE · AHMEDABAD GOTS TEXTILE HUB</span>
+  </div>
+</footer>
+
+<!-- Cart Drawer -->
+<div class="cart-drawer-overlay" id="cart-drawer-overlay" onclick="closeCartDrawer()"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-drawer-header">
+    <div>
+      <div class="t-micro-1">YOUR SHOPPING BAG</div>
+      <div class="t-micro-2">NOVA STREET STORE</div>
+    </div>
+    <div class="cart-drawer-close" onclick="closeCartDrawer()">✕</div>
+  </div>
+  <div class="cart-drawer-body" id="drawer-cart-items"></div>
+  <div class="cart-drawer-footer" id="drawer-cart-summary"></div>
+</div>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script>
+/* ── Standard Utilities ── */
+const cursorBadge = document.getElementById('cursor-badge');
+if (cursorBadge) {
+  document.addEventListener('mousemove', (e) => {
+    cursorBadge.style.left = e.clientX + 'px';
+    cursorBadge.style.top  = e.clientY + 'px';
+  });
+}
+function toggleMobileMenu() {
+  document.getElementById('mobile-nav-drawer').classList.toggle('open');
+  document.getElementById('mobile-nav-overlay').classList.toggle('active');
+  document.getElementById('hamburger-btn').classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-nav-drawer').classList.remove('open');
+  document.getElementById('mobile-nav-overlay').classList.remove('active');
+  document.getElementById('hamburger-btn').classList.remove('open');
+}
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast-notification';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.classList.add('show'), 50);
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3500);
+}
+
+/* ── Product Page Logic ── */
+let selectedSize = null;
+let currentProduct = null;
+let currentImageIndex = 0;
+
+function renderProduct(p) {
+  currentProduct = p;
+  const off = discountPercent(p.mrp, p.price);
+  const isBespoke = p.funnel === 'custom-made';
+
+  document.title = `${p.name} | NOVA STREET`;
+
+  const sizeBtns = p.sizes.map(s => {
+    const oos = p.outOfStock.includes(s);
+    return `<button class="size-btn${oos ? ' out-of-stock' : ''}" data-size="${s}" ${oos ? 'disabled' : `onclick="selectSize('${s}',this)"`}>${s}</button>`;
+  }).join('');
+
+  document.getElementById('product-content').innerHTML = `
+    <div style="margin-bottom:20px;">
+      <a href="shop.html" style="font-size:11px;color:#6B6560;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;transition:color 0.2s;" onmouseenter="this.style.color='#C9A84C'" onmouseleave="this.style.color='#6B6560'">
+        ← BACK TO COLLECTION
+      </a>
+    </div>
+
+    <div class="product-detail-grid">
+      <!-- Gallery -->
+      <div class="product-gallery">
+        <div style="position:relative;border-radius:24px;overflow:hidden;background:#141414;aspect-ratio:4/5;">
+          <img id="main-product-img" src="${p.images[0]}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;transition:opacity 0.4s ease;">
+          ${isBespoke ? `<div style="position:absolute;top:16px;left:16px;background:#B85C38;color:#fff;font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:20px;">✂️ BESPOKE</div>` : `<div class="c-badge">${p.badge}</div>`}
+        </div>
+
+        ${p.images.length > 1 ? `
+        <div class="product-thumbnails" style="margin-top:12px;">
+          ${p.images.map((img, i) => `
+            <img src="${img}" alt="${p.name} ${i+1}"
+              class="product-thumbnail ${i === 0 ? 'active' : ''}"
+              onclick="switchImage('${img}', this)"
+              style="width:72px;height:90px;object-fit:cover;border-radius:12px;cursor:pointer;border:2px solid ${i === 0 ? '#C9A84C' : 'transparent'};transition:border-color 0.2s ease;">
+          `).join('')}
+        </div>` : ''}
+      </div>
+
+      <!-- Product Info -->
+      <div style="padding-top:8px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:${isBespoke ? '#B85C38' : '#C9A84C'};">
+            ${isBespoke ? '✂️ BESPOKE MADE-TO-MEASURE (7-14 DAYS)' : '⚡ READY TO SHIP (24 HOURS)'}
+          </span>
+        </div>
+
+        <h1 style="font-family:'Cinzel',serif;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:800;text-transform:uppercase;color:#F0EDE6;line-height:1.1;margin-bottom:14px;">
+          ${p.name}
+        </h1>
+
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap;">
+          <span style="font-family:'Cinzel',serif;font-size:28px;font-weight:800;color:#C9A84C;">₹${p.price.toLocaleString('en-IN')}</span>
+          <span style="font-size:16px;color:#6B6560;text-decoration:line-through;">₹${p.mrp.toLocaleString('en-IN')}</span>
+          <span style="background:rgba(16,185,129,0.12);color:#10B981;font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;">${off}% OFF</span>
+        </div>
+
+        <div style="background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:24px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div>
+              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:#6B6560;text-transform:uppercase;margin-bottom:4px;">FABRIC</div>
+              <div style="font-size:12px;font-weight:600;color:#F0EDE6;">${p.fabric}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:#6B6560;text-transform:uppercase;margin-bottom:4px;">COLOUR</div>
+              <div style="font-size:12px;font-weight:600;color:#F0EDE6;">${p.color}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:#6B6560;text-transform:uppercase;margin-bottom:4px;">DISPATCH</div>
+              <div style="font-size:12px;font-weight:600;color:#C9A84C;">${p.dispatch}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:#6B6560;text-transform:uppercase;margin-bottom:4px;">STOCK</div>
+              <div style="font-size:12px;font-weight:600;color:${p.stockLeft < 10 ? '#EF4444' : '#10B981'};">
+                ${p.stockLeft < 5 ? `🔥 Only ${p.stockLeft} left!` : `${p.stockLeft} available`}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Size Selector -->
+        <div style="margin-bottom:24px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <span style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#6B6560;">SELECT SIZE</span>
+            <span style="font-size:11px;color:#C9A84C;cursor:pointer;font-weight:700;" onclick="showToast('📏 Size guide: XS=36, S=38, M=40, L=42, XL=44, XXL=46 (inches)')">SIZE GUIDE →</span>
+          </div>
+          <div class="size-grid">
+            ${sizeBtns}
+          </div>
+          ${p.outOfStock.length > 0 ? `<div style="font-size:11px;color:#6B6560;margin-top:8px;">Strikethrough sizes are sold out</div>` : ''}
+        </div>
+
+        <!-- CTA Buttons -->
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;">
+          <button onclick="handleAddToCart()" style="
+            width:100%;background:#C9A84C;color:#0A0A0A;
+            border:none;padding:18px;border-radius:16px;
+            font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+            cursor:pointer;font-family:inherit;transition:all 0.2s ease;
+          " onmouseenter="this.style.background='#E8C96A'" onmouseleave="this.style.background='#C9A84C'">
+            ADD TO BAG ✦
+          </button>
+          <a href="customize.html" style="
+            display:block;width:100%;background:transparent;color:#C9A84C;
+            border:1.5px solid rgba(201,168,76,0.4);padding:16px;border-radius:16px;
+            font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+            text-align:center;transition:all 0.2s ease;
+          " onmouseenter="this.style.background='rgba(201,168,76,0.1)'" onmouseleave="this.style.background='transparent'">
+            🪞 TRY IN STUDIO
+          </a>
+        </div>
+
+        <!-- Description -->
+        <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:24px;margin-bottom:24px;">
+          <h4 style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#6B6560;margin-bottom:12px;">ABOUT THIS GARMENT</h4>
+          <p style="font-size:14px;color:#8A8580;line-height:1.8;">${p.description}</p>
+        </div>
+
+        <!-- Trust Badges -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:#141414;border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;display:flex;align-items:center;gap:10px;">
+            <span style="font-size:20px;">🌿</span>
+            <div>
+              <div style="font-size:10px;font-weight:800;color:#10B981;letter-spacing:1px;">GOTS CERTIFIED</div>
+              <div style="font-size:11px;color:#6B6560;margin-top:2px;">Organic cotton</div>
+            </div>
+          </div>
+          <div style="background:#141414;border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;display:flex;align-items:center;gap:10px;">
+            <span style="font-size:20px;">🔒</span>
+            <div>
+              <div style="font-size:10px;font-weight:800;color:#C9A84C;letter-spacing:1px;">SECURE PAYMENT</div>
+              <div style="font-size:11px;color:#6B6560;margin-top:2px;">100% safe checkout</div>
+            </div>
+          </div>
+          <div style="background:#141414;border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;display:flex;align-items:center;gap:10px;">
+            <span style="font-size:20px;">🚚</span>
+            <div>
+              <div style="font-size:10px;font-weight:800;color:#C9A84C;letter-spacing:1px;">FREE SHIPPING</div>
+              <div style="font-size:11px;color:#6B6560;margin-top:2px;">Orders above ₹2999</div>
+            </div>
+          </div>
+          <div style="background:#141414;border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;display:flex;align-items:center;gap:10px;">
+            <span style="font-size:20px;">✅</span>
+            <div>
+              <div style="font-size:10px;font-weight:800;color:#C9A84C;letter-spacing:1px;">FIT GUARANTEE</div>
+              <div style="font-size:11px;color:#6B6560;margin-top:2px;">${isBespoke ? 'Free alterations' : '15-day returns'}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Render related products
+  renderRelated(p);
+}
+
+function switchImage(src, el) {
+  const main = document.getElementById('main-product-img');
+  if (main) {
+    main.style.opacity = '0';
+    setTimeout(() => { main.src = src; main.style.opacity = '1'; }, 250);
+  }
+  document.querySelectorAll('.product-thumbnail').forEach(t => {
+    t.style.borderColor = 'transparent';
+  });
+  el.style.borderColor = '#C9A84C';
+}
+
+function selectSize(size, el) {
+  selectedSize = size;
+  document.querySelectorAll('.size-btn:not(.out-of-stock)').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = '#1A1A1A';
+    b.style.borderColor = 'rgba(255,255,255,0.08)';
+    b.style.color = '#6B6560';
+  });
+  el.classList.add('active');
+  el.style.background = '#C9A84C';
+  el.style.borderColor = '#C9A84C';
+  el.style.color = '#0A0A0A';
+}
+
+function handleAddToCart() {
+  if (!selectedSize) {
+    showToast('👆 Please select a size first');
+    // Highlight size selector
+    const sizeBtns = document.querySelectorAll('.size-btn:not(.out-of-stock)');
+    sizeBtns.forEach(b => { b.style.borderColor = '#C9A84C'; });
+    setTimeout(() => {
+      sizeBtns.forEach(b => { if (!b.classList.contains('active')) b.style.borderColor = 'rgba(255,255,255,0.08)'; });
+    }, 1200);
+    return;
+  }
+
+  const p = currentProduct;
+  let cart = JSON.parse(localStorage.getItem('NOVA_CART') || '[]');
+  const existingIdx = cart.findIndex(item => item.id === p.id && item.size === selectedSize);
+
+  if (existingIdx >= 0) {
+    cart[existingIdx].qty = (cart[existingIdx].qty || 1) + 1;
+  } else {
+    cart.push({ id: p.id, name: p.name, price: p.price, mrp: p.mrp, size: selectedSize, images: p.images, funnel: p.funnel, fabric: p.fabric, color: p.color, qty: 1 });
+  }
+  localStorage.setItem('NOVA_CART', JSON.stringify(cart));
+  document.querySelectorAll('.cart-count').forEach(el => el.textContent = cart.length);
+
+  showToast(`✦ ${p.name} (${selectedSize}) added to bag!`);
+  setTimeout(openCartDrawer, 600);
+}
+
+function renderRelated(p) {
+  const related = PRODUCTS
+    .filter(prod => prod.id !== p.id && prod.gender === p.gender)
+    .slice(0, 4);
+
+  if (related.length === 0) return;
+
+  document.getElementById('related-section').style.display = 'block';
+  document.getElementById('related-grid').innerHTML = related.map(prod => {
+    const off = discountPercent(prod.mrp, prod.price);
+    return `
+      <div class="c-product-card" onclick="location.href='product.html?id=${prod.id}'"
+        onmouseenter="cursorBadge.classList.add('active');cursorBadge.textContent='VIEW';"
+        onmouseleave="cursorBadge.classList.remove('active');">
+        <div class="c-product-img-wrap">
+          <span class="c-badge">${prod.badge}</span>
+          <img src="${prod.images[0]}" alt="${prod.name}" loading="lazy">
+        </div>
+        <div class="c-product-info">
+          <div class="c-product-funnel" style="color:${prod.funnel === 'custom-made' ? '#B85C38' : '#C9A84C'};">
+            ${prod.funnel === 'custom-made' ? '✂️ BESPOKE' : '⚡ READY TO SHIP'}
+          </div>
+          <h3 class="c-product-name">${prod.name}</h3>
+          <div class="c-product-price">
+            ₹${prod.price.toLocaleString('en-IN')}
+            <span class="price-strike">₹${prod.mrp.toLocaleString('en-IN')}</span>
+            <span class="price-off">${off}% OFF</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ── Load Product from URL ── */
+const urlParams = new URLSearchParams(window.location.search);
+const productId = urlParams.get('id');
+
+if (productId && typeof PRODUCTS !== 'undefined') {
+  const product = getProductById(productId);
+  if (product) {
+    renderProduct(product);
+  } else {
+    document.getElementById('product-content').innerHTML = `
+      <div style="text-align:center;padding:100px 20px;">
+        <div style="font-size:48px;margin-bottom:16px;">😕</div>
+        <h2 style="font-family:'Cinzel',serif;font-size:24px;text-transform:uppercase;color:#F0EDE6;margin-bottom:12px;">Product Not Found</h2>
+        <p style="color:#6B6560;margin-bottom:28px;">This product doesn't exist or has been removed.</p>
+        <a href="shop.html" class="c-btn filled-gold">BACK TO COLLECTION →</a>
+      </div>
+    `;
+  }
+} else {
+  document.getElementById('product-content').innerHTML = `
+    <div style="text-align:center;padding:100px 20px;">
+      <div style="font-size:48px;margin-bottom:16px;">👋</div>
+      <h2 style="font-family:'Cinzel',serif;font-size:24px;text-transform:uppercase;color:#F0EDE6;margin-bottom:12px;">No Product Selected</h2>
+      <a href="shop.html" class="c-btn filled-gold">BROWSE COLLECTION →</a>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
