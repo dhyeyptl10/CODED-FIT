@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CODED-FIT Mobile App — Expo Go SDK 54 QR Code</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0A0A0A;
+    color: #F0EDE6;
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+  }
+  .card {
+    background: #141414;
+    border: 1.5px solid rgba(201, 168, 76, 0.4);
+    border-radius: 28px;
+    padding: 40px 36px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(201, 168, 76, 0.15);
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid #10B981;
+    color: #10B981;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  h1 span { color: #C9A84C; }
+  p {
+    font-size: 13px;
+    color: #8A8580;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .qr-frame {
+    background: #FFFFFF;
+    padding: 18px;
+    border-radius: 20px;
+    display: inline-block;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+  }
+  .qr-frame img {
+    display: block;
+    width: 260px;
+    height: 260px;
+  }
+  .url-box {
+    background: #1C1C1C;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-family: monospace;
+    font-size: 13px;
+    color: #C9A84C;
+    margin-bottom: 20px;
+    word-break: break-all;
+  }
+  .instructions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+    background: #0D0D0D;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 12px;
+    color: #A09B93;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .step { display: flex; gap: 10px; align-items: center; }
+  .step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    background: #C9A84C;
+    color: #0A0A0A;
+    font-weight: 900;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="badge">✓ UPGRADED TO EXPO SDK 54</div>
+  <h1>NOVA <span>STREET</span> MOBILE</h1>
+  <p>Your app is now running on <strong>Expo SDK 54</strong>. Scan this QR code with the <strong>Expo Go</strong> app on your phone!</p>
+
+  <div class="qr-frame">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=exp%3A%2F%2F192.168.1.132%3A8081" alt="Expo Go SDK 54 QR Code">
+  </div>
+
+  <div class="url-box">
+    exp://192.168.1.132:8081
+  </div>
+
+  <div class="instructions">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>Confirm phone and PC are on the same Wi-Fi.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>Open <strong>Expo Go (SDK 54)</strong> and tap <em>Scan QR Code</em>.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>Enjoy AI Try-On, 3D Body Visualizer & Biometric Checkout!</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

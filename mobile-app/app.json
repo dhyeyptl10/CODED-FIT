@@ -1,0 +1,78 @@
+{
+  "expo": {
+    "name": "CODED-FIT",
+    "slug": "coded-fit",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "codedfitapp",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.novastreet.codedfitapp",
+      "infoPlist": {
+        "NSCameraUsageDescription": "CODED-FIT requires camera access for AI Virtual Try-On and body scanning.",
+        "NSMicrophoneUsageDescription": "CODED-FIT requires microphone access for video recording try-on looks.",
+        "NSLocationWhenInUseUsageDescription": "CODED-FIT uses your location to calculate accurate 24H shipping ETAs.",
+        "NSContactsUsageDescription": "CODED-FIT allows you to share customized looks and promo discounts with friends.",
+        "NSFaceIDUsageDescription": "CODED-FIT uses Face ID for fast and secure one-touch checkout."
+      }
+    },
+    "android": {
+      "package": "com.novastreet.codedfitapp",
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "READ_CONTACTS",
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT",
+        "VIBRATE",
+        "RECEIVE_BOOT_COMPLETED",
+        "POST_NOTIFICATIONS"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow CODED-FIT to access camera for AI Virtual Clothes Try-On.",
+          "microphonePermission": "Allow CODED-FIT to record audio for try-on videos."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow CODED-FIT to access location for delivery ETA."
+        }
+      ],
+      "expo-notifications",
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow CODED-FIT to share bespoke outfits with your contacts."
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow CODED-FIT to use Face ID for secure biometric checkout."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you try on clothes on your own image."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
