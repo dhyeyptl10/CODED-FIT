@@ -626,3 +626,153 @@ footer { background: var(--dark-1); border-top: 1px solid var(--border); padding
   .cart-drawer { width: 100%; right: -100%; }
   .mobile-nav-drawer { width: 100%; right: -100%; }
 }
+
+
+/* ===================================================================
+   NOVA STREET — HAUTE COUTURE WHITE LUXURY THEME (.theme-light)
+   =================================================================== */
+
+body.theme-light {
+  background-color: #FFFFFF;
+  color: #121212;
+}
+
+body.theme-light header {
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid #E8E4DC;
+  backdrop-filter: blur(12px);
+}
+
+body.theme-light .logo-text {
+  color: #111111;
+}
+
+body.theme-light .nav-links a {
+  color: #55514B;
+}
+
+body.theme-light .nav-links a:hover,
+body.theme-light .nav-links a.active {
+  color: #111111;
+}
+
+body.theme-light .cart-trigger {
+  background: #FAF8F5;
+  border-color: #E8E4DC;
+  color: #111111;
+}
+
+body.theme-light .cart-count {
+  background: #C9A84C;
+  color: #FFFFFF;
+}
+
+body.theme-light .c-product-card {
+  background: #FFFFFF;
+  border: 1px solid #E8E4DC;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+}
+
+body.theme-light .c-product-card:hover {
+  border-color: #C9A84C;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+body.theme-light .c-product-name {
+  color: #111111;
+}
+
+body.theme-light .c-product-price {
+  color: #111111;
+}
+
+body.theme-light .c-product-mrp {
+  color: #8C877D;
+}
+
+body.theme-light .feature-card {
+  background: #FAF8F5;
+  border: 1px solid #E8E4DC;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+
+body.theme-light .feature-card-title {
+  color: #111111;
+}
+
+body.theme-light .feature-card-sub {
+  color: #6B6560;
+}
+
+body.theme-light .c-tab-btn {
+  background: #FAF8F5;
+  border-color: #E8E4DC;
+  color: #6B6560;
+}
+
+body.theme-light .c-tab-btn:hover {
+  border-color: #C9A84C;
+  color: #111111;
+}
+
+body.theme-light .c-tab-btn.active {
+  background: #111111;
+  border-color: #111111;
+  color: #FFFFFF;
+}
+
+body.theme-light .cart-drawer {
+  background: #FFFFFF;
+  border-left: 1px solid #E8E4DC;
+  box-shadow: -8px 0 32px rgba(0,0,0,0.1);
+}
+
+body.theme-light .cart-drawer-header {
+  border-bottom: 1px solid #E8E4DC;
+  color: #111111;
+}
+
+body.theme-light .cart-drawer-close {
+  color: #111111;
+}
+
+body.theme-light .cart-drawer-footer {
+  border-top: 1px solid #E8E4DC;
+  background: #FAF8F5;
+}
+
+body.theme-light .mobile-nav-drawer {
+  background: #FFFFFF;
+  border-left: 1px solid #E8E4DC;
+}
+
+body.theme-light .mobile-nav-links a {
+  color: #111111;
+  border-bottom: 1px solid #F0ECE4;
+}
+
+body.theme-light footer {
+  background: #FAF8F5;
+  border-top: 1px solid #E8E4DC;
+  color: #111111;
+}
+
+body.theme-light .footer-grid a {
+  color: #6B6560;
+}
+
+body.theme-light .footer-grid a:hover {
+  color: #C9A84C;
+}
+
+body.theme-light .footer-bottom {
+  border-top: 1px solid #E8E4DC;
+  color: #8A8580;
+}
+
+body.theme-light .modal-card {
+  background: #FFFFFF;
+  border: 1px solid #E8E4DC;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  color: #111111;
+}
