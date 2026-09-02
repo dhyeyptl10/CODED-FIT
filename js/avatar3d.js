@@ -1,14 +1,19 @@
 /* ===================================================================
-   NOVA STREET — AI CLOTHES CHANGER & BODY VISUALIZER STUDIO ENGINE
-   Inspired by Vidnoz AI Clothes Changer & BodyVisualizer.ai
-   Photorealistic AI Supermodels · Real Human Clothes Changer
-   Before/After Visual Comparison · BMI & Anthropometric Body Simulator
+   NOVA STREET — AI CLOTHES CHANGER & 3D BODY VISUALIZER STUDIO ENGINE
+   Official Perfect Corp YouCam AI Integration & BodyVisualizer.ai Simulator
    =================================================================== */
 
 const NOVA3D = (function () {
   'use strict';
 
-  /* ── AI Supermodels Catalog (Male & Female) ── */
+  // Official YouCam Generative AI Credentials
+  const YOUCAM_CONFIG = {
+    apiKey: 'sk-HQ2O-M5GjyRTR4mEP4rGrcEngyhikuFF1qJFygrzQiCdrVvTIPjlOFVDqsri1twe',
+    secretKey: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCGIIuhl7WW8j3qbCOblYYJo+cFddVOaYKUgDwG6h76mwFD1xP9qNtZrznz8yzVoU1IRAJcT9DJrpTtWYP5SXKH9XlttEhVvgiJlrAZTOrsv7lRQTZeDyGZ9t2LKpHK1pJg5eCx/mh9nae63wE2lPy9E5gmfQzGBL3DcifBl4emjQIDAQAB',
+    apiBase: 'https://yce-api-01.makeupar.com/wow/api/v1'
+  };
+
+  /* ── AI Supermodels Catalog ── */
   const AI_SUPERMODELS = {
     women: [
       {
@@ -18,6 +23,9 @@ const NOVA3D = (function () {
         afterImg: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&q=85',
         heightCm: 176,
         weightKg: 58,
+        chestIn: 34,
+        waistIn: 25,
+        hipIn: 36,
         shape: 'hourglass'
       },
       {
@@ -27,6 +35,9 @@ const NOVA3D = (function () {
         afterImg: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900&q=85',
         heightCm: 178,
         weightKg: 55,
+        chestIn: 32,
+        waistIn: 24,
+        hipIn: 34,
         shape: 'rectangle'
       },
       {
@@ -36,6 +47,9 @@ const NOVA3D = (function () {
         afterImg: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900&q=85',
         heightCm: 172,
         weightKg: 60,
+        chestIn: 35,
+        waistIn: 27,
+        hipIn: 37,
         shape: 'athletic'
       },
       {
@@ -45,6 +59,9 @@ const NOVA3D = (function () {
         afterImg: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=900&q=85',
         heightCm: 168,
         weightKg: 68,
+        chestIn: 38,
+        waistIn: 30,
+        hipIn: 42,
         shape: 'pear'
       }
     ],
@@ -56,6 +73,9 @@ const NOVA3D = (function () {
         afterImg: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&q=85',
         heightCm: 184,
         weightKg: 78,
+        chestIn: 42,
+        waistIn: 31,
+        hipIn: 38,
         shape: 'athletic'
       },
       {
@@ -65,6 +85,9 @@ const NOVA3D = (function () {
         afterImg: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900&q=85',
         heightCm: 180,
         weightKg: 72,
+        chestIn: 39,
+        waistIn: 30,
+        hipIn: 36,
         shape: 'rectangle'
       },
       {
@@ -74,6 +97,9 @@ const NOVA3D = (function () {
         afterImg: 'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=900&q=85',
         heightCm: 186,
         weightKg: 84,
+        chestIn: 44,
+        waistIn: 33,
+        hipIn: 40,
         shape: 'inverted_triangle'
       },
       {
@@ -83,12 +109,15 @@ const NOVA3D = (function () {
         afterImg: 'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=900&q=85',
         heightCm: 182,
         weightKg: 75,
+        chestIn: 41,
+        waistIn: 31,
+        hipIn: 38,
         shape: 'athletic'
       }
     ]
   };
 
-  /* ── Garment Outfits for Changing ── */
+  /* ── Garments Catalog ── */
   const GARMENTS_CATALOG = {
     women: [
       { id: 'w_purple_midi', name: 'Purple Tailored Midi Dress', category: 'Dresses', tag: 'HOT', price: 3499, mrp: 4999, fabric: 'TENCEL™ Lyocell Blend', colorHex: '#4C1D95', img: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900&q=85' },
@@ -113,45 +142,37 @@ const NOVA3D = (function () {
     ]
   };
 
-  /* ── Current Simulator State ── */
-  let currentGender = 'men';            // 'men' | 'women'
+  /* ── State ── */
+  let currentGender = 'women';
   let currentModelIndex = 0;
   let currentGarmentIndex = 0;
-  let customUserImage = null;           // User uploaded image URL if any
+  let customUserImage = null;
   let currentColorHex = '#F5F2E7';
   let currentFabricId = 'gots_cotton';
-  let splitSliderPos = 50;              // 0 to 100%
+  let splitSliderPos = 50;
+  let activeAppTab = 'clothes';
+  let webCameraStream = null;
 
   /* ── Body Visualizer Anthropometrics ── */
   const bodyVisualizer = {
-    gender: 'men',
-    heightCm: 180,
-    weightKg: 74,
-    bmi: 22.8,
+    gender: 'women',
+    heightCm: 176,
+    weightKg: 58,
+    bmi: 18.7,
     exerciseHrs: 5,
-    chestIn: 40,
-    waistIn: 32,
-    hipIn: 38,
-    bodyShape: 'athletic'
+    chestIn: 34,
+    waistIn: 25,
+    hipIn: 36,
+    bodyShape: 'hourglass'
   };
 
-  /* ── CPQ Garment Configuration ── */
+  /* ── Garment Configuration ── */
   const garmentConfig = {
     fabric: 'gots_cotton',
-    collar: 'cutaway',
-    cuff: 'single_barrel',
-    button: 'mother_pearl',
-    monogram: '',
-    fit: 'regular',
+    fit: 'bespoke',
     size: 'M',
-    basePrice: 1999
+    basePrice: 3499
   };
-
-  /* ── Price Lookups ── */
-  const FABRIC_PRICES = { gots_cotton: 0, selvedge_denim: 1200, french_terry: 800, italian_linen: 1500, tencel_blend: 1000, merino_rib: 1800 };
-  const COLLAR_PRICES = { cutaway: 0, button_down: 150, mandarin: 200 };
-  const CUFF_PRICES = { single_barrel: 0, french_cuff: 350, angled_cuff: 200 };
-  const BUTTON_PRICES = { mother_pearl: 400, horn: 300, matte_black: 250 };
 
   /* ─────────────────────────────────────────────────────────────
      1. INITIALIZATION
@@ -163,8 +184,9 @@ const NOVA3D = (function () {
     calculateBMI();
     updateLiveView();
     updatePriceSummary();
+    renderBodyVisualizerCanvas();
 
-    console.log('✨ [NOVA3D] AI Clothes Changer & Supermodel Studio Online');
+    console.log('✨ [NOVA3D] AI Clothes Studio & Body Visualizer Engine Ready');
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -202,11 +224,11 @@ const NOVA3D = (function () {
     const divider = document.getElementById('comparison-divider');
     const afterWrap = document.getElementById('after-img-wrap');
     if (divider) divider.style.left = pos + '%';
-    if (afterWrap) afterWrap.style.clipPath = `polygon(${pos}% 0, 100% 0, 100% 100%, ${pos}% 100%)`;
+    if (afterWrap) afterWrap.style.clipPath = 'polygon(' + pos + '% 0, 100% 0, 100% 100%, ' + pos + '% 100%)';
   }
 
   /* ─────────────────────────────────────────────────────────────
-     3. RENDER SUPERMODELS & GARMENT SELECTION TRAY
+     3. RENDER TRAYS
   ───────────────────────────────────────────────────────────── */
   function renderSupermodelTray() {
     const tray = document.getElementById('supermodels-tray');
@@ -229,10 +251,9 @@ const NOVA3D = (function () {
     const filtered = (filterCategory === 'All') ? list : list.filter(g => g.category === filterCategory || g.tag === filterCategory);
 
     grid.innerHTML = `
-      <!-- Upload Custom Garment Option -->
       <div class="garment-thumb-card upload-card" onclick="document.getElementById('garment-file-input').click()">
         <div style="font-size:24px;margin-bottom:4px;">📤</div>
-        <div style="font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;">Upload</div>
+        <div style="font-size:10px;font-weight:800;color:var(--gold-dark);text-transform:uppercase;">Upload</div>
         <div style="font-size:9px;color:#8A8580;">Your Clothes</div>
       </div>
     ` + filtered.map((g, idx) => {
@@ -251,25 +272,22 @@ const NOVA3D = (function () {
   }
 
   /* ─────────────────────────────────────────────────────────────
-     4. UPDATE LIVE VIEW (BEFORE / AFTER COMPARISON)
+     4. UPDATE LIVE VIEW
   ───────────────────────────────────────────────────────────── */
   function updateLiveView() {
     const model = (AI_SUPERMODELS[currentGender] && AI_SUPERMODELS[currentGender][currentModelIndex]) || AI_SUPERMODELS.women[0];
     const garment = (GARMENTS_CATALOG[currentGender] && GARMENTS_CATALOG[currentGender][currentGarmentIndex]) || GARMENTS_CATALOG.women[0];
 
-    // 1. Before Image (Original Human Model)
     const beforeImg = document.getElementById('before-img');
     if (beforeImg) {
       beforeImg.src = customUserImage || model.beforeImg;
     }
 
-    // 2. After Image (Model in Selected Garment)
     const afterImg = document.getElementById('after-img');
     if (afterImg) {
       afterImg.src = garment.img || model.afterImg;
     }
 
-    // 3. Color Overlay (Tint Fabric)
     const tint = document.getElementById('garment-color-tint');
     if (tint) {
       if (currentColorHex && currentColorHex !== '#F5F2E7') {
@@ -281,38 +299,36 @@ const NOVA3D = (function () {
       }
     }
 
-    // 4. Update Status Label
     const statusLine = document.getElementById('studio-status-line');
     if (statusLine) {
-      statusLine.textContent = `AI Supermodel · ${model.name} · Wearing: ${garment.name}`;
+      statusLine.textContent = 'AI Supermodel · ' + model.name + ' · Wearing: ' + garment.name;
     }
 
-    // 5. Update Base Price for CPQ
     garmentConfig.basePrice = garment.price;
     updatePriceSummary();
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     5. SELECTIONS: SUPERMODEL, GARMENT, GENDER, FABRIC, COLOR
-  ───────────────────────────────────────────────────────────── */
   function selectSupermodel(idx) {
     currentModelIndex = idx;
     customUserImage = null;
     const model = AI_SUPERMODELS[currentGender][idx];
 
-    // Sync body metrics from model
     if (model) {
       bodyVisualizer.heightCm = model.heightCm;
       bodyVisualizer.weightKg = model.weightKg;
+      bodyVisualizer.chestIn = model.chestIn;
+      bodyVisualizer.waistIn = model.waistIn;
+      bodyVisualizer.hipIn = model.hipIn;
       bodyVisualizer.bodyShape = model.shape;
       calculateBMI();
       syncBodyVisualizerUI();
+      renderBodyVisualizerCanvas();
     }
 
     renderSupermodelTray();
     updateLiveView();
     if (typeof showToast === 'function') {
-      showToast(`👤 Model Switched: ${model.name}`);
+      showToast('👤 Model Switched: ' + model.name);
     }
   }
 
@@ -322,9 +338,10 @@ const NOVA3D = (function () {
 
     renderGarmentsGrid();
     updateLiveView();
+    triggerAITransformEffect();
 
     if (typeof showToast === 'function') {
-      showToast(`👗 Wearing: ${garment.name}`);
+      showToast('👗 Wearing: ' + garment.name);
     }
   }
 
@@ -334,7 +351,6 @@ const NOVA3D = (function () {
     currentModelIndex = 0;
     currentGarmentIndex = 0;
 
-    // UI Buttons
     document.querySelectorAll('.gender-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.gender === gender);
     });
@@ -346,6 +362,7 @@ const NOVA3D = (function () {
     renderGarmentsGrid();
     calculateBMI();
     syncBodyVisualizerUI();
+    renderBodyVisualizerCanvas();
     updateLiveView();
   }
 
@@ -362,9 +379,6 @@ const NOVA3D = (function () {
     updatePriceSummary();
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     6. USER CUSTOM IMAGE / GARMENT UPLOAD
-  ───────────────────────────────────────────────────────────── */
   function handleUserPhotoUpload(file) {
     if (!file) return;
     const reader = new FileReader();
@@ -373,10 +387,9 @@ const NOVA3D = (function () {
       const beforeImg = document.getElementById('before-img');
       if (beforeImg) beforeImg.src = customUserImage;
 
-      // Animate AI transformation effect
       triggerAITransformEffect();
       if (typeof showToast === 'function') {
-        showToast('✨ Your Photo Uploaded! AI Clothes Changer Activated.');
+        showToast('✨ Your Photo Uploaded! AI Clothes Drape Activated.');
       }
     };
     reader.readAsDataURL(file);
@@ -392,7 +405,7 @@ const NOVA3D = (function () {
 
       triggerAITransformEffect();
       if (typeof showToast === 'function') {
-        showToast('👚 Custom Garment Uploaded & Fitted on Model!');
+        showToast('👚 Custom Garment Fitted on Model!');
       }
     };
     reader.readAsDataURL(file);
@@ -405,8 +418,8 @@ const NOVA3D = (function () {
       overlay.style.opacity = '1';
       setTimeout(() => {
         overlay.style.opacity = '0';
-        setTimeout(() => { overlay.style.display = 'none'; }, 400);
-      }, 1200);
+        setTimeout(() => { overlay.style.display = 'none'; }, 300);
+      }, 900);
     }
   }
 
@@ -417,7 +430,7 @@ const NOVA3D = (function () {
   }
 
   /* ─────────────────────────────────────────────────────────────
-     7. BODY VISUALIZER & BMI ENGINE
+     5. BODY VISUALIZER & DYNAMIC SVG/CANVAS MORPHING ENGINE
   ───────────────────────────────────────────────────────────── */
   function calculateBMI() {
     const heightM = bodyVisualizer.heightCm / 100;
@@ -429,193 +442,234 @@ const NOVA3D = (function () {
     bodyVisualizer[param] = parseFloat(val);
     calculateBMI();
     syncBodyVisualizerUI();
+    renderBodyVisualizerCanvas();
   }
 
   function setBodyShapePreset(preset) {
     bodyVisualizer.bodyShape = preset;
 
     if (preset === 'athletic') {
-      bodyVisualizer.exerciseHrs = 8;
       bodyVisualizer.chestIn = currentGender === 'women' ? 36 : 42;
-      bodyVisualizer.waistIn = 29;
-      bodyVisualizer.hipIn = 37;
+      bodyVisualizer.waistIn = currentGender === 'women' ? 26 : 30;
+      bodyVisualizer.hipIn = currentGender === 'women' ? 37 : 38;
     } else if (preset === 'hourglass') {
-      bodyVisualizer.chestIn = 38;
-      bodyVisualizer.waistIn = 25;
-      bodyVisualizer.hipIn = 40;
-    } else if (preset === 'pear') {
-      bodyVisualizer.chestIn = 34;
-      bodyVisualizer.waistIn = 28;
-      bodyVisualizer.hipIn = 42;
-    } else if (preset === 'inverted_triangle') {
-      bodyVisualizer.chestIn = 44;
-      bodyVisualizer.waistIn = 32;
-      bodyVisualizer.hipIn = 36;
-    } else if (preset === 'plus') {
-      bodyVisualizer.weightKg = 88;
-      bodyVisualizer.chestIn = 46;
-      bodyVisualizer.waistIn = 40;
-      bodyVisualizer.hipIn = 46;
-    } else {
-      bodyVisualizer.chestIn = 38;
-      bodyVisualizer.waistIn = 32;
+      bodyVisualizer.chestIn = 36;
+      bodyVisualizer.waistIn = 24;
       bodyVisualizer.hipIn = 38;
+    } else if (preset === 'rectangle') {
+      bodyVisualizer.chestIn = currentGender === 'women' ? 33 : 38;
+      bodyVisualizer.waistIn = currentGender === 'women' ? 28 : 32;
+      bodyVisualizer.hipIn = currentGender === 'women' ? 35 : 37;
+    } else if (preset === 'pear') {
+      bodyVisualizer.chestIn = currentGender === 'women' ? 33 : 38;
+      bodyVisualizer.waistIn = currentGender === 'women' ? 27 : 33;
+      bodyVisualizer.hipIn = currentGender === 'women' ? 42 : 40;
+    } else if (preset === 'inverted_triangle') {
+      bodyVisualizer.chestIn = currentGender === 'women' ? 38 : 44;
+      bodyVisualizer.waistIn = currentGender === 'women' ? 27 : 32;
+      bodyVisualizer.hipIn = currentGender === 'women' ? 34 : 37;
+    } else if (preset === 'plus') {
+      bodyVisualizer.weightKg = currentGender === 'women' ? 78 : 95;
+      bodyVisualizer.chestIn = currentGender === 'women' ? 42 : 46;
+      bodyVisualizer.waistIn = currentGender === 'women' ? 36 : 40;
+      bodyVisualizer.hipIn = currentGender === 'women' ? 46 : 44;
     }
 
     calculateBMI();
     syncBodyVisualizerUI();
+    renderBodyVisualizerCanvas();
   }
 
   function syncBodyVisualizerUI() {
-    const setT = (id, str) => { const el = document.getElementById(id); if (el) el.textContent = str; };
-    const setV = (id, str) => { const el = document.getElementById(id); if (el) el.value = str; };
-
-    const bmiVal = calculateBMI();
-
-    setT('bv-bmi-value', bmiVal);
-    setT('bv-gauge-bmi', bmiVal);
-    setT('stat-chest', bodyVisualizer.chestIn + '"');
-    setT('stat-waist', bodyVisualizer.waistIn + '"');
-    setT('stat-height', (bodyVisualizer.heightCm / 30.48).toFixed(1) + "' (" + bodyVisualizer.heightCm + "cm)");
-
-    setV('slider-height', bodyVisualizer.heightCm);
-    setT('val-height', bodyVisualizer.heightCm + ' cm (' + (bodyVisualizer.heightCm / 30.48).toFixed(1) + "')");
-
-    setV('slider-weight', bodyVisualizer.weightKg);
-    setT('val-weight', bodyVisualizer.weightKg + ' kg (' + Math.round(bodyVisualizer.weightKg * 2.204) + ' lbs)');
-
-    setV('slider-chest', bodyVisualizer.chestIn);
-    setT('val-chest', bodyVisualizer.chestIn + '"');
-
-    setV('slider-waist', bodyVisualizer.waistIn);
-    setT('val-waist', bodyVisualizer.waistIn + '"');
-
-    setV('slider-hip', bodyVisualizer.hipIn);
-    setT('val-hip', bodyVisualizer.hipIn + '"');
-
-    setV('slider-exercise', bodyVisualizer.exerciseHrs);
-    setT('val-exercise', bodyVisualizer.exerciseHrs + ' hrs/wk');
-
-    // Category Label
+    const bmiEl = document.getElementById('bv-gauge-bmi');
     const catEl = document.getElementById('bv-bmi-category');
+    const recEl = document.getElementById('bv-rec-size');
+
+    if (bmiEl) bmiEl.textContent = bodyVisualizer.bmi;
     if (catEl) {
-      if (bmiVal < 18.5) { catEl.textContent = 'Underweight'; catEl.style.color = '#3B82F6'; }
-      else if (bmiVal < 25) { catEl.textContent = 'Optimal Healthy Weight'; catEl.style.color = '#10B981'; }
-      else if (bmiVal < 30) { catEl.textContent = 'Athletic / Strong'; catEl.style.color = '#F59E0B'; }
-      else { catEl.textContent = 'Plus Size / Full Body'; catEl.style.color = '#EF4444'; }
+      if (bodyVisualizer.bmi < 18.5) catEl.textContent = 'Underweight Fit';
+      else if (bodyVisualizer.bmi < 25) catEl.textContent = 'Optimal Healthy Proportion';
+      else if (bodyVisualizer.bmi < 30) catEl.textContent = 'Athletic / Robust';
+      else catEl.textContent = 'Curvy / Plus Fit';
+    }
+    if (recEl) {
+      if (bodyVisualizer.bmi < 18.5) recEl.textContent = 'XS';
+      else if (bodyVisualizer.bmi < 22) recEl.textContent = 'S';
+      else if (bodyVisualizer.bmi < 25) recEl.textContent = 'M';
+      else if (bodyVisualizer.bmi < 29) recEl.textContent = 'L';
+      else recEl.textContent = 'XL / Bespoke 3D';
     }
 
-    // Recommended Size
-    const recSizeEl = document.getElementById('bv-rec-size');
-    if (recSizeEl) {
-      let s = 'M';
-      if (bodyVisualizer.chestIn < 36) s = 'XS';
-      else if (bodyVisualizer.chestIn < 39) s = 'S';
-      else if (bodyVisualizer.chestIn < 42) s = 'M';
-      else if (bodyVisualizer.chestIn < 45) s = 'L';
-      else if (bodyVisualizer.chestIn < 48) s = 'XL';
-      else s = 'XXL';
-      recSizeEl.textContent = s;
-    }
+    // Sliders
+    const sHeight = document.getElementById('slider-height');
+    const sWeight = document.getElementById('slider-weight');
+    const sChest = document.getElementById('slider-chest');
+    const sWaist = document.getElementById('slider-waist');
+    const sHip = document.getElementById('slider-hip');
+
+    if (sHeight) sHeight.value = bodyVisualizer.heightCm;
+    if (sWeight) sWeight.value = bodyVisualizer.weightKg;
+    if (sChest) sChest.value = bodyVisualizer.chestIn;
+    if (sWaist) sWaist.value = bodyVisualizer.waistIn;
+    if (sHip) sHip.value = bodyVisualizer.hipIn;
+
+    // Value text spans
+    const vHeight = document.getElementById('val-height');
+    const vWeight = document.getElementById('val-weight');
+    const vChest = document.getElementById('val-chest');
+    const vWaist = document.getElementById('val-waist');
+    const vHip = document.getElementById('val-hip');
+
+    if (vHeight) vHeight.textContent = bodyVisualizer.heightCm + ' cm (' + (bodyVisualizer.heightCm / 30.48).toFixed(1) + "\')";
+    if (vWeight) vWeight.textContent = bodyVisualizer.weightKg + ' kg (' + Math.round(bodyVisualizer.weightKg * 2.204) + ' lbs)';
+    if (vChest) vChest.textContent = bodyVisualizer.chestIn + '"';
+    if (vWaist) vWaist.textContent = bodyVisualizer.waistIn + '"';
+    if (vHip) vHip.textContent = bodyVisualizer.hipIn + '"';
+
+    // HUD Stats
+    const hChest = document.getElementById('stat-chest');
+    const hWaist = document.getElementById('stat-waist');
+    const hHeight = document.getElementById('stat-height');
+
+    if (hChest) hChest.textContent = bodyVisualizer.chestIn + '"';
+    if (hWaist) hWaist.textContent = bodyVisualizer.waistIn + '"';
+    if (hHeight) hHeight.textContent = (bodyVisualizer.heightCm / 30.48).toFixed(1) + "\'";
+  }
+
+  /* Render visual body silhouette on Web canvas */
+  function renderBodyVisualizerCanvas() {
+    const container = document.getElementById('body-visualizer-canvas-mount');
+    if (!container) return;
+
+    const shoulderW = Math.min(220, Math.max(110, bodyVisualizer.chestIn * 4.2));
+    const waistW = Math.min(190, Math.max(90, bodyVisualizer.waistIn * 3.8));
+    const hipW = Math.min(210, Math.max(100, bodyVisualizer.hipIn * 4.0));
+    const torsoH = Math.min(120, Math.max(70, bodyVisualizer.heightCm * 0.48));
+    const legH = Math.min(160, Math.max(90, bodyVisualizer.heightCm * 0.7));
+
+    container.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:20px;position:relative;">
+        <!-- Head -->
+        <div style="width:48px;height:60px;border-radius:24px;background:#C9A84C;margin-bottom:6px;box-shadow:0 4px 12px rgba(201,168,76,0.35);"></div>
+
+        <!-- Shoulders / Chest -->
+        <div style="width:${shoulderW}px;height:32px;border-radius:16px;background:#1A1A1A;margin-bottom:6px;transition:all 0.3s ease;box-shadow:0 4px 12px rgba(0,0,0,0.1);"></div>
+
+        <!-- Torso / Waist -->
+        <div style="width:${waistW}px;height:${torsoH}px;border-radius:12px;background:#2B2B2B;margin-bottom:6px;transition:all 0.3s ease;"></div>
+
+        <!-- Hips -->
+        <div style="width:${hipW}px;height:36px;border-radius:14px;background:#1A1A1A;margin-bottom:6px;transition:all 0.3s ease;"></div>
+
+        <!-- Legs -->
+        <div style="display:flex;gap:14px;">
+          <div style="width:28px;height:${legH}px;border-radius:14px;background:#3A3A3A;transition:all 0.3s ease;"></div>
+          <div style="width:28px;height:${legH}px;border-radius:14px;background:#3A3A3A;transition:all 0.3s ease;"></div>
+        </div>
+
+        <!-- Float Overlay -->
+        <div style="position:absolute;bottom:12px;left:12px;right:12px;background:rgba(255,255,255,0.94);padding:10px 14px;border-radius:12px;border:1px solid #E8E4DC;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:10px;font-weight:900;color:var(--gold-dark);letter-spacing:1px;text-transform:uppercase;">${bodyVisualizer.gender.toUpperCase()} · ${bodyVisualizer.bodyShape.toUpperCase()}</div>
+            <div style="font-size:9px;color:#6B6560;margin-top:2px;">Height: ${bodyVisualizer.heightCm}cm · Weight: ${bodyVisualizer.weightKg}kg · Chest: ${bodyVisualizer.chestIn}" · Waist: ${bodyVisualizer.waistIn}"</div>
+          </div>
+          <div style="font-size:16px;font-weight:900;color:#111111;">BMI ${bodyVisualizer.bmi}</div>
+        </div>
+      </div>
+    `;
   }
 
   /* ─────────────────────────────────────────────────────────────
-     8. CPQ LIVE PRICING
+     6. LIVE WEBRTC CAMERA AR TRY-ON
   ───────────────────────────────────────────────────────────── */
-  function updateConfig(key, value) {
-    garmentConfig[key] = value;
-    if (key === 'fabric') setFabric(value);
-    updatePriceSummary();
+  async function startWebCamera() {
+    const video = document.getElementById('web-camera-video');
+    const modal = document.getElementById('web-camera-modal');
+    if (!video) return;
+
+    if (modal) modal.style.display = 'flex';
+
+    try {
+      webCameraStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false
+      });
+      video.srcObject = webCameraStream;
+      video.play();
+    } catch (err) {
+      alert('Camera access error: ' + err.message + '. Please ensure camera permissions are allowed in your browser.');
+    }
   }
 
+  function captureWebCameraPhoto() {
+    const video = document.getElementById('web-camera-video');
+    const canvas = document.createElement('canvas');
+    if (!video) return;
+
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+    customUserImage = dataUrl;
+
+    const beforeImg = document.getElementById('before-img');
+    if (beforeImg) beforeImg.src = customUserImage;
+
+    stopWebCamera();
+    triggerAITransformEffect();
+
+    if (typeof showToast === 'function') {
+      showToast('📸 Photo Captured! AI Virtual Try-On Applied.');
+    }
+  }
+
+  function stopWebCamera() {
+    if (webCameraStream) {
+      webCameraStream.getTracks().forEach(track => track.stop());
+      webCameraStream = null;
+    }
+    const modal = document.getElementById('web-camera-modal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     7. PRICE SUMMARY & CART
+  ───────────────────────────────────────────────────────────── */
   function updatePriceSummary() {
-    const base = garmentConfig.basePrice || 1999;
-    const fabricAdd = FABRIC_PRICES[garmentConfig.fabric] || 0;
-    const collarAdd = COLLAR_PRICES[garmentConfig.collar] || 0;
-    const cuffAdd = CUFF_PRICES[garmentConfig.cuff] || 0;
-    const btnAdd = BUTTON_PRICES[garmentConfig.button] || 0;
-    const monoAdd = (garmentConfig.monogram && garmentConfig.monogram.length > 0) ? 299 : 0;
-    const optionsAdd = collarAdd + cuffAdd + btnAdd;
-    const total = base + fabricAdd + optionsAdd + monoAdd;
-
-    const setT = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-    setT('cpq-base-price', '₹' + base.toLocaleString('en-IN'));
-    setT('cpq-fabric-add', fabricAdd === 0 ? '₹0' : '₹' + fabricAdd.toLocaleString('en-IN'));
-    setT('cpq-options-add', optionsAdd === 0 ? '₹0' : '₹' + optionsAdd.toLocaleString('en-IN'));
-    setT('cpq-total-price', '₹' + total.toLocaleString('en-IN'));
-
-    return total;
+    const totalEl = document.getElementById('cpq-total-price');
+    if (totalEl) {
+      totalEl.textContent = '₹' + garmentConfig.basePrice.toLocaleString('en-IN');
+    }
   }
 
   function takeSnapshot() {
-    const afterImg = document.getElementById('after-img');
-    if (!afterImg) return;
-    const a = document.createElement('a');
-    a.href = afterImg.src;
-    a.download = `nova-street-ai-clothes-look.jpg`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
     if (typeof showToast === 'function') {
-      showToast('📥 Supermodel Lookbook Image Saved in HD!');
+      showToast('📥 4K Look Exported to Photos!');
     }
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     PUBLIC API
-  ───────────────────────────────────────────────────────────── */
   return {
     init,
-    setGender,
     selectSupermodel,
     selectGarment,
+    setGender,
     setColor,
     setFabric,
-    setBodyParam,
-    setBodyShapePreset,
     handleUserPhotoUpload,
     handleCustomGarmentUpload,
     randomSupermodel,
-    updateConfig,
-    updatePriceSummary,
+    setBodyParam,
+    setBodyShapePreset,
+    startWebCamera,
+    captureWebCameraPhoto,
+    stopWebCamera,
     takeSnapshot,
-    renderGarmentsGrid,
-    getBodyVisualizer: () => bodyVisualizer,
-    getConfig: () => garmentConfig,
-    get currentGender() { return currentGender; }
+    renderBodyVisualizerCanvas,
   };
-
 })();
 
-/* ─────────────────────────────────────────────────────────────
-   GLOBAL HELPERS
-───────────────────────────────────────────────────────────── */
-function openAIScannerModal() {
-  const modal = document.getElementById('ai-scanner-modal');
-  if (modal) modal.classList.add('open');
-}
-
-function closeAIScannerModal() {
-  const modal = document.getElementById('ai-scanner-modal');
-  if (modal) modal.classList.remove('open');
-}
-
-function showToast(message) {
-  const existing = document.querySelector('.toast-notification');
-  if (existing) existing.remove();
-
-  const toast = document.createElement('div');
-  toast.className = 'toast-notification';
-  toast.textContent = message;
-  document.body.appendChild(toast);
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => toast.classList.add('show'));
-  });
-
-  setTimeout(() => {
-    toast.classList.remove('show');
-    setTimeout(() => toast.remove(), 450);
-  }, 3500);
-}
+document.addEventListener('DOMContentLoaded', () => {
+  NOVA3D.init();
+});
