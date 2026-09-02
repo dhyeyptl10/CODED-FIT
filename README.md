@@ -1,86 +1,37 @@
-# CODED-FIT ✦ NOVA STREET
-### Hybrid Custom-Curated Apparel & AI Virtual Try-On Platform
+# NOVA STREET / CODED-FIT ✦
+## Generative AI Virtual Try-On, 3D Body Visualizer & Bespoke Haute Couture Label
 
-> **CODED-FIT** is an AI-powered hybrid fashion e-commerce platform featuring an interactive **AI Clothes Changer & Supermodel Studio**, **3D Body Visualizer (BMI, Height, Weight & Shape Simulator)**, and dual-funnel bespoke tailoring for both Men & Women.
+![Nova Street Banner](images/hero-men.png)
+
+NOVA STREET is India's premier dual-funnel fashion label fusing **Ahmedabad GOTS Organic Textiles** with **Unit-of-One Bespoke Tailoring** and **Generative AI Virtual Try-On**.
 
 ---
 
 ## 🌟 Key Features
 
-### 1. 👗 AI Clothes Changer & Supermodel Studio (Vidnoz AI Style)
-- **Photorealistic AI Supermodels**: Diverse male and female human fashion models (Runway, Streetwear, Athletic, Curvy).
-- **Interactive Before / After Comparison Slider**: Drag the divider with arrow badge to inspect transformations in real-time.
-- **Photo Upload Capability**: Drag & drop your own full-body image to change clothes on yourself.
-- **Custom Garments Upload & Catalog**: Try on curated pieces (Oversized Tees, Denim Jackets, French Terry Hoodies, Tactical Cargos, Midi Dresses, Linen Shirts) or upload custom clothing.
-- **Real-Time Fabric & Color Recoloring**: 12 luxury shades and 6 premium textile options (GOTS Cotton, Japanese Denim, French Terry, Italian Linen, TENCEL, Merino Rib).
+### 1. Live AR Camera 3D Virtual Try-On
+- **Live Camera Fitting**: Real-time camera viewfinder with biometric AR silhouette guidelines (head, shoulders, chest, waist, hips).
+- **Direct Photo Drape**: Automatic neural drape applied directly onto user's photo with 99.4% confidence fit score.
+- **YouCam Generative AI Engine**: Integrated with official Perfect Corp YouCam API credentials.
+- **Before/After Split Comparison**: Interactive draggable split slider comparing raw photo vs tailored outfit.
 
-### 2. 🧍 3D Body Visualizer & Shape Simulator (BodyVisualizer.ai)
-- **Real-Time BMI & Anthropometrics Engine**: Sliders for Height (cm/ft), Weight (kg/lbs), Chest, Waist, Hips, and Exercise/Muscle Tone.
-- **1-Click Body Shape Archetypes**:
-  - ⚡ Athletic V-Taper
-  - ⏳ Hourglass (Women)
-  - 🟩 Lean / Rectangle
-  - 🍐 Pear / Triangle
-  - 🔻 Inverted Triangle
-  - ➕ Plus / Full Figure
-- **Dynamic Size Recommendation Engine**: Automatic XS, S, M, L, XL, XXL recommendation based on biometric metrics.
+### 2. Interactive AI Body Visualizer (BMI & Anthropometrics)
+- **Dynamic Morphing Silhouette**: Real-time anatomical body silhouette that adapts to user's Height, Weight, Chest, Waist, Hips, and Shape Archetypes.
+- **1-Click Archetypes**: Athletic V-Taper, Hourglass, Lean/Rectangle, Pear/Triangle, Inverted Triangle, Plus Figure.
+- **Live BMI Radial Gauge**: Dynamic categorization (Underweight, Optimal Fit, Athletic Plus, Curvy Plus) with instant recommended sizing (XS, S, M, L, XL, Bespoke 3D).
+- **Custom CPQ Specification**: Automatically embeds exact 3D metrics into bespoke order specs.
 
-### 3. ✂️ CPQ Bespoke Customizer & 24H Ready-to-Ship Dual Funnel
-- **Collar Architecture**: Modern Cutaway, Button-Down, Mandarin Band.
-- **Cuffs & Hardware**: Single Barrel, French Double Cuff, Mother-of-Pearl, Horn, Matte Black buttons.
-- **Personalized Monogram**: 3-letter initials embroidered on collar or cuff.
-- **First Garment Trial Guarantee**: Prototype trial guarantee with zero risk and free alterations.
-
-### 4. 🛒 Complete E-Commerce Experience
-- `index.html` — Dark Luxury Homepage with Split Men/Women Hero and Tech Features
-- `shop.html` — Full Collection with Gender Toggles (ALL / MEN / WOMEN), Funnel Tabs, and Filters
-- `customize.html` — AI Clothes Changer & 3D Body Visualizer Studio
-- `dashboard.html` — UR PICKS Outfit Mixer, Drop Radar Countdown & Live Order Ticker
-- `product.html` — Interactive Product Detail Page with thumbnail switcher and size selector
-- `cart.html` — Shopping Bag with Promo Codes, Free Shipping tracker, and Checkout flow
+### 3. Haute-Couture White Luxury Design System
+- Aesthetic porcelain white (`#FFFFFF`) and warm alabaster (`#FAF8F5`) backgrounds.
+- Ahmedabad Champagne Gold (`#C9A84C`) and deep obsidian accents.
+- Glassmorphic elevated cards, smooth micro-interactions, and fluid spring animations.
 
 ---
 
-## 🚀 Quick Start / Local Setup
-
-No build tools or node dependencies required! Pure modern vanilla HTML5, CSS3, and JavaScript.
-
-```bash
-# Clone the repository
-git clone https://github.com/dhyeyptl10/CODED-FIT.git
-
-# Navigate to project folder
-cd CODED-FIT
-
-# Open in browser
-# (Windows)
-start index.html
-
-# (Mac)
-open index.html
-
-# (Linux)
-xdg-open index.html
-```
-
-Or serve via any static web server:
-```bash
-# Using Python
-python -m http.server 8000
-
-# Using Node / npx
-npx serve .
-```
+## 📱 Cross-Platform Architecture
+- **Web App**: Pure vanilla JavaScript (`js/avatar3d.js`), WebRTC (`navigator.mediaDevices.getUserMedia`), HTML5 canvas, responsive CSS3.
+- **Mobile App**: Expo 54, React Native 0.81, Expo Router v6, TypeScript, `expo-camera`, `expo-image-picker`, `expo-haptics`, `expo-local-authentication`.
 
 ---
 
-## 🛠️ Tech Stack
-- **Frontend**: HTML5, Modern CSS3 (Dark Luxury Design System, Glassmorphism, CSS Custom Properties), Vanilla ES6+ JavaScript
-- **3D & Visual Simulation**: WebGL, Three.js (r128), Procedural Canvas2D Texture Generation
-- **State Management**: LocalStorage persistent cart, reactive DOM updates
-- **Typography**: Google Fonts (*Cinzel* Display & *Outfit* Body)
-
----
-
-## 📄 License
-MIT License © 2026 CODED-FIT / NOVA STREET. All rights reserved.
+© 2026 NOVA STREET / CODED-FIT. All Rights Reserved.
