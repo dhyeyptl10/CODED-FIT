@@ -1,79 +1,64 @@
-﻿import React from 'react';
-import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+/**
+ * CODED-FIT / NOVA STREET — Monochrome Status Badge
+ * Architectural clean sharp borders
+ */
+
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { COLORS, RADIUS } from '../../constants/theme';
 
 interface BadgeProps {
   label: string;
-  variant?: 'gold' | 'green' | 'rust' | 'purple' | 'muted' | 'outline' | 'white';
+  variant?: 'white' | 'dark' | 'green' | 'red' | 'gold' | 'purple' | 'amber';
   size?: 'sm' | 'md';
-  style?: ViewStyle;
-  textStyle?: TextStyle;
 }
 
-export function Badge({
-  label,
-  variant = 'gold',
-  size = 'md',
-  style,
-  textStyle,
-}: BadgeProps) {
-  const getVariantStyle = () => {
+export function Badge({ label, variant = 'white', size = 'md' }: BadgeProps) {
+  const getBadgeStyle = () => {
     switch (variant) {
-      case 'gold':
-        return styles.goldBadge;
+      case 'dark':
+        return styles.badgeDark;
       case 'green':
-        return styles.greenBadge;
-      case 'rust':
-        return styles.rustBadge;
-      case 'purple':
-        return styles.purpleBadge;
+        return styles.badgeGreen;
+      case 'red':
+        return styles.badgeRed;
+      case 'amber':
+        return styles.badgeAmber;
       case 'white':
-        return styles.whiteBadge;
-      case 'outline':
-        return styles.outlineBadge;
-      case 'muted':
+      case 'gold':
+      case 'purple':
       default:
-        return styles.mutedBadge;
+        return styles.badgeWhite;
     }
   };
 
   const getTextStyle = () => {
     switch (variant) {
-      case 'gold':
-        return styles.goldText;
+      case 'dark':
+        return styles.textDark;
       case 'green':
-        return styles.greenText;
-      case 'rust':
-        return styles.rustText;
-      case 'purple':
-        return styles.purpleText;
+        return styles.textGreen;
+      case 'red':
+        return styles.textRed;
+      case 'amber':
+        return styles.textAmber;
       case 'white':
-        return styles.whiteText;
-      case 'outline':
-        return styles.outlineText;
-      case 'muted':
+      case 'gold':
+      case 'purple':
       default:
-        return styles.mutedText;
+        return styles.textWhite;
     }
   };
 
   return (
     <View
       style={[
-        styles.base,
-        getVariantStyle(),
-        size === 'sm' ? styles.sm : styles.md,
-        style,
+        styles.badgeBase,
+        getBadgeStyle(),
+        size === 'sm' ? styles.sizeSm : styles.sizeMd,
       ]}
     >
-      <Text
-        style={[
-          styles.text,
-          getTextStyle(),
-          size === 'sm' ? styles.smText : styles.mdText,
-          textStyle,
-        ]}
-      >
+      <Text style={[styles.textBase, getTextStyle(), size === 'sm' && { fontSize: 8 }]}>
         {label}
       </Text>
     </View>
@@ -81,92 +66,63 @@ export function Badge({
 }
 
 const styles = StyleSheet.create({
-  base: {
-    borderRadius: RADIUS.full,
+  badgeBase: {
+    borderRadius: RADIUS.sm, // 0 sharp edges
+    borderWidth: 1,
     alignSelf: 'flex-start',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  text: {
+  sizeSm: {
+    paddingVertical: 2,
+    paddingHorizontal: 6,
+  },
+  sizeMd: {
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+  },
+  textBase: {
+    fontSize: 9,
     fontWeight: '800',
-    letterSpacing: 0.8,
+    letterSpacing: 1,
     textTransform: 'uppercase',
   },
-  sm: {
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-  },
-  md: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-  },
-  smText: {
-    fontSize: 9,
-  },
-  mdText: {
-    fontSize: 10,
-  },
 
-  goldBadge: {
-    backgroundColor: '#FBF8EE',
-    borderWidth: 1,
-    borderColor: COLORS.gold,
-  },
-  goldText: {
-    color: COLORS.goldDark,
-  },
-
-  greenBadge: {
-    backgroundColor: COLORS.successLight,
-    borderWidth: 1,
-    borderColor: '#A7F3D0',
-  },
-  greenText: {
-    color: COLORS.success,
-  },
-
-  rustBadge: {
-    backgroundColor: '#FFF7ED',
-    borderWidth: 1,
-    borderColor: '#FED7AA',
-  },
-  rustText: {
-    color: COLORS.rust,
-  },
-
-  purpleBadge: {
-    backgroundColor: COLORS.purpleLight,
-    borderWidth: 1,
-    borderColor: '#DDD6FE',
-  },
-  purpleText: {
-    color: COLORS.purpleVibrant,
-  },
-
-  whiteBadge: {
+  badgeWhite: {
     backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#FFFFFF',
   },
-  whiteText: {
-    color: COLORS.textPrimary,
-  },
-
-  outlineBadge: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  outlineText: {
-    color: COLORS.textSecondary,
+  textWhite: {
+    color: '#000000',
   },
 
-  mutedBadge: {
-    backgroundColor: COLORS.surface,
-    borderWidth: 1,
-    borderColor: COLORS.borderLight,
+  badgeDark: {
+    backgroundColor: '#111111',
+    borderColor: '#333333',
   },
-  mutedText: {
-    color: COLORS.textMuted,
+  textDark: {
+    color: '#E5E5E5',
+  },
+
+  badgeGreen: {
+    backgroundColor: 'rgba(34, 197, 94, 0.15)',
+    borderColor: '#22C55E',
+  },
+  textGreen: {
+    color: '#22C55E',
+  },
+
+  badgeRed: {
+    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+    borderColor: '#EF4444',
+  },
+  textRed: {
+    color: '#EF4444',
+  },
+
+  badgeAmber: {
+    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    borderColor: '#F59E0B',
+  },
+  textAmber: {
+    color: '#F59E0B',
   },
 });

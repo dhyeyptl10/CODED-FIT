@@ -1,4 +1,9 @@
-﻿import React from 'react';
+/**
+ * CODED-FIT / NOVA STREET — High-Fashion Monochrome Luxury Button
+ * Clean contrast, sharp architectural edges (non-curved), haptic feedback
+ */
+
+import React from 'react';
 import {
   TouchableOpacity,
   Text,
@@ -8,12 +13,12 @@ import {
   TextStyle,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { COLORS, RADIUS, SHADOWS } from '../../constants/theme';
+import { COLORS, FONTS, SPACING, RADIUS } from '../../constants/theme';
 
-interface GoldButtonProps {
+interface LuxuryButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'gold' | 'outline' | 'dark' | 'white';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'dark';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   disabled?: boolean;
@@ -25,87 +30,88 @@ interface GoldButtonProps {
 export function GoldButton({
   title,
   onPress,
-  variant = 'gold',
+  variant = 'primary',
   size = 'md',
   loading = false,
   disabled = false,
   style,
   textStyle,
   icon,
-}: GoldButtonProps) {
+}: LuxuryButtonProps) {
   const handlePress = () => {
     if (disabled || loading) return;
     try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     } catch (_) {}
     onPress();
   };
 
-  const getContainerStyle = () => {
+  const getVariantStyles = () => {
     switch (variant) {
-      case 'gold':
-        return styles.goldBtn;
       case 'outline':
-        return styles.outlineBtn;
+        return styles.btnOutline;
+      case 'secondary':
+        return styles.btnSecondary;
+      case 'ghost':
+        return styles.btnGhost;
       case 'dark':
-        return styles.darkBtn;
-      case 'white':
-        return styles.whiteBtn;
+        return styles.btnDark;
+      case 'primary':
       default:
-        return styles.goldBtn;
+        return styles.btnPrimary;
     }
   };
 
-  const getTextStyle = () => {
+  const getTextStyles = () => {
     switch (variant) {
-      case 'gold':
-        return styles.goldText;
       case 'outline':
-        return styles.outlineText;
+        return styles.textOutline;
+      case 'secondary':
+        return styles.textSecondary;
+      case 'ghost':
+        return styles.textGhost;
       case 'dark':
-        return styles.darkText;
-      case 'white':
-        return styles.whiteText;
+        return styles.textDark;
+      case 'primary':
       default:
-        return styles.goldText;
+        return styles.textPrimary;
     }
   };
 
-  const getSizeStyle = () => {
+  const getSizeStyles = () => {
     switch (size) {
       case 'sm':
-        return styles.smSize;
-      case 'md':
-        return styles.mdSize;
+        return styles.sizeSm;
       case 'lg':
-        return styles.lgSize;
+        return styles.sizeLg;
+      case 'md':
       default:
-        return styles.mdSize;
+        return styles.sizeMd;
     }
   };
 
   return (
     <TouchableOpacity
-      activeOpacity={0.82}
+      activeOpacity={0.85}
       onPress={handlePress}
       disabled={disabled || loading}
       style={[
-        styles.base,
-        getContainerStyle(),
-        getSizeStyle(),
-        disabled && styles.disabled,
+        styles.btnBase,
+        getVariantStyles(),
+        getSizeStyles(),
+        disabled && styles.btnDisabled,
         style,
       ]}
     >
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === 'gold' || variant === 'dark' ? '#FFFFFF' : COLORS.gold}
+          color={variant === 'primary' ? '#000000' : '#FFFFFF'}
         />
       ) : (
         <>
           {icon && <>{icon}</>}
-          <Text style={[styles.baseText, getTextStyle(), textStyle]}>
+          <Text style={[styles.textBase, getTextStyles(), textStyle]}>
             {title}
           </Text>
         </>
@@ -115,68 +121,76 @@ export function GoldButton({
 }
 
 const styles = StyleSheet.create({
-  base: {
-    borderRadius: RADIUS.md,
+  btnBase: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: RADIUS.sm, // 0 sharp edges
     gap: 8,
   },
-  baseText: {
-    fontFamily: 'Outfit',
-    fontWeight: '700',
-    letterSpacing: 1.2,
-    textTransform: 'uppercase',
-  },
-  smSize: {
+  sizeSm: {
     paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
   },
-  mdSize: {
+  sizeMd: {
     paddingVertical: 14,
     paddingHorizontal: 22,
   },
-  lgSize: {
-    paddingVertical: 17,
+  sizeLg: {
+    paddingVertical: 18,
     paddingHorizontal: 28,
   },
-  goldBtn: {
-    backgroundColor: COLORS.gold,
-    ...SHADOWS.gold,
-  },
-  goldText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '800',
-  },
-  outlineBtn: {
-    backgroundColor: 'transparent',
-    borderWidth: 1.5,
-    borderColor: COLORS.gold,
-  },
-  outlineText: {
-    color: COLORS.goldDark,
-    fontSize: 12,
-  },
-  darkBtn: {
-    backgroundColor: COLORS.textPrimary,
-    ...SHADOWS.card,
-  },
-  darkText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-  },
-  whiteBtn: {
+
+  // Variants
+  btnPrimary: {
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: COLORS.border,
-    ...SHADOWS.soft,
+    borderColor: '#FFFFFF',
   },
-  whiteText: {
-    color: COLORS.textPrimary,
-    fontSize: 12,
+  btnOutline: {
+    backgroundColor: '#000000',
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
   },
-  disabled: {
-    opacity: 0.45,
+  btnSecondary: {
+    backgroundColor: '#1C1C1C',
+    borderWidth: 1,
+    borderColor: '#333333',
+  },
+  btnDark: {
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#262626',
+  },
+  btnGhost: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+  },
+  btnDisabled: {
+    opacity: 0.35,
+  },
+
+  // Text
+  textBase: {
+    fontFamily: FONTS.body,
+    fontWeight: '800',
+    letterSpacing: 1.5,
+    textTransform: 'uppercase',
+    fontSize: 11,
+  },
+  textPrimary: {
+    color: '#000000',
+  },
+  textOutline: {
+    color: '#FFFFFF',
+  },
+  textSecondary: {
+    color: '#FFFFFF',
+  },
+  textDark: {
+    color: '#E5E5E5',
+  },
+  textGhost: {
+    color: '#A3A3A3',
   },
 });
