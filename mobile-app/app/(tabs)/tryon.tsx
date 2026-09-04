@@ -90,6 +90,8 @@ export default function TryOnStudioScreen() {
     openNativeDeviceCamera,
     pickImageFromGallery,
     isProcessing: cameraLoading,
+    isCameraReady,
+    setIsCameraReady,
   } = useCamera();
 
   // Sync model on gender change
@@ -338,12 +340,14 @@ export default function TryOnStudioScreen() {
              1. MAIN VIEWPORT: Live Camera OR Interactive Before/After
         ═══════════════════════════════════════════════════════════ */}
         {showLiveCamera ? (
-          /* ── INLINE LIVE CAMERA VIEWPORT ── */
           <View style={styles.cameraViewport}>
             {isPermissionGranted ? (
               <CameraView
                 ref={cameraRef}
                 facing={facing}
+                flash={flash}
+                enableTorch={flash === 'on'}
+                onCameraReady={() => setIsCameraReady(true)}
                 style={styles.cameraView}
               >
                 {/* AR Human Alignment Guidelines Overlay */}
@@ -410,10 +414,8 @@ export default function TryOnStudioScreen() {
             </TouchableOpacity>
           </View>
         ) : activeTab === 'body' ? (
-          /* ══════════════════════════════════════════════════════════
-               2. DYNAMIC MORPHING HUMAN BODY VISUALIZER CANVAS
-          ═══════════════════════════════════════════════════════════ */}
           <View style={styles.bodyCanvasContainer}>
+            {/* 2. DYNAMIC MORPHING HUMAN BODY VISUALIZER CANVAS */}
             {/* Morphing Silhouette Simulation */}
             <View style={styles.bodySilhouetteMount}>
               {/* Head */}
@@ -486,10 +488,8 @@ export default function TryOnStudioScreen() {
             </View>
           </View>
         ) : (
-          /* ══════════════════════════════════════════════════════════
-               3. BEFORE / AFTER INTERACTIVE COMPARISON SLIDER
-          ═══════════════════════════════════════════════════════════ */
           <View style={styles.viewportContainer}>
+            {/* 3. BEFORE / AFTER INTERACTIVE COMPARISON SLIDER */}
             <View style={styles.imageContainer} {...panResponder.panHandlers}>
               {/* BEFORE LAYER: Base Supermodel or User Uploaded Photo */}
               <Image
