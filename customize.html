@@ -1,570 +1,619 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The New Black | AI Fashion Design Platform · Studio</title>
-  <meta name="description" content="Design clothing, generate AI fashion models, create virtual try-ons with photo and video upload, and simulate custom body shapes with the 3D Body Visualizer.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/studio3d.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Clothes Changer & Body Visualizer Studio | NOVA STREET</title>
+<meta name="description" content="Change clothes in photos and tailor virtual outfits to any style on real AI supermodels or your own uploaded photo. Integrated Body Visualizer (BMI, Height, Weight, Shape) simulator. Nova Street — India's premier hybrid bespoke fashion label.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/studio3d.css">
 </head>
-<body class="studio-page">
+<body class="theme-dark studio-page">
 
-  <!-- Top Studio Header Navigation -->
-  <header>
-    <div class="nav-wrap">
-      <a href="index.html" class="logo-cinch">
-        <span class="logo-text">THE NEW BLACK</span>
-        <span class="logo-tag">AI STUDIO</span>
-      </a>
+<!-- Custom Cursor Follower -->
+<div class="cursor-follower" id="cursor-badge">TRY-ON</div>
 
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="shop.html">Collection</a>
-        <a href="customize.html" class="active">Studio</a>
-        <a href="dashboard.html">Atelier VIP</a>
-      </nav>
+<!-- Top Announcement Marquee -->
+<div class="c-announcement">
+  <div class="c-announcement-marquee">
+    <div class="c-announcement-track">
+      ✦ AI CLOTHES CHANGER & BODY VISUALIZER ✦ REAL-WORLD SUPERMODELS · UPLOAD YOUR PHOTO OR CLOTHES · LIVE VIRTUAL TRY-ON ✦ BODY SHAPE & BMI SIMULATOR ✦ GOTS ORGANIC AHMEDABAD TEXTILES ✦ 24H DISPATCH & BESPOKE TAILORING ✦
+    </div>
+  </div>
+</div>
 
-      <div class="nav-right-actions">
-        <button class="btn-pill-outline" onclick="NOVA3D.startWebCamera()" style="font-size:11px;padding:6px 14px;display:inline-flex;align-items:center;gap:6px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-          Live Camera Scan
-        </button>
-        <div class="cart-trigger" onclick="openCartDrawer()">
-          <span>BAG</span>
-          <span class="cart-count">0</span>
-        </div>
+<!-- Navigation Header -->
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo-cinch">
+      <div class="logo-text">NOVA <span>STREET</span></div>
+      <div class="logo-tagline">AI Clothes Changer & Body Visualizer Studio</div>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Collection</a>
+      <a href="customize.html" class="active">AI Try-On Studio</a>
+      <a href="dashboard.html">UR PICKS</a>
+    </nav>
+    <div class="nav-right-actions">
+      <button class="c-btn outline-gold" style="padding:8px 18px;font-size:10px;" onclick="openAIScannerModal()">
+        📸 SCAN BODY AI
+      </button>
+      <div class="cart-trigger" onclick="openCartDrawer()">
+        <span>BAG</span>
+        <span class="cart-count">0</span>
       </div>
+    </div>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+    <div class="mobile-nav-header">
+      <div class="logo-text" style="font-size:20px;">NOVA <span>STREET</span></div>
+      <button onclick="closeMobileMenu()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#F0EDE6">✕</button>
+    </div>
+    <nav class="mobile-nav-links">
+      <a href="index.html" onclick="closeMobileMenu()">Home</a>
+      <a href="shop.html" onclick="closeMobileMenu()">Collection</a>
+      <a href="customize.html" class="active" onclick="closeMobileMenu()">AI Clothes Studio</a>
+      <a href="dashboard.html" onclick="closeMobileMenu()">UR PICKS</a>
+      <a href="cart.html" onclick="closeMobileMenu()">Shopping Bag</a>
+    </nav>
+  </div>
+</header>
 
-      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
-        <span></span><span></span><span></span>
+<!-- ═══════════════════════════════════════════════════
+     MAIN STUDIO LAYOUT — Left: Clothes Changer Controls | Right: Live AI Model
+════════════════════════════════════════════════════ -->
+<main class="studio-root">
+
+  <!-- ── LEFT PANEL: Clothes Changer & Body Visualizer Controls ── -->
+  <div class="studio-controls-panel" style="background:#0D0D0D;border-right:1px solid rgba(255,255,255,0.08);">
+
+    <!-- Top Navigation Tabs (Clothes Changer vs Body Visualizer) -->
+    <div style="display:flex;gap:10px;margin-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:14px;">
+      <button class="app-tab active" id="tab-clothes-btn" onclick="switchAppTab('clothes')">
+        👗 Clothes Changer
+      </button>
+      <button class="app-tab" id="tab-body-btn" onclick="switchAppTab('body')">
+        🧍 Body Visualizer (BMI)
+      </button>
+      <button class="app-tab" id="tab-custom-btn" onclick="switchAppTab('custom')">
+        ✂️ Bespoke Tailor
       </button>
     </div>
-  </header>
 
-  <!-- ══════════════════════════════════════════════════════════════════
-       THE NEW BLACK AI WORKSPACE SHELL
-       1. Left Slim Icon Rail | 2. Secondary Controls Panel | 3. Canvas Viewport
-  ════════════════════════════════════════════════════════════════════ -->
-  <div class="studio-shell">
+    <!-- ══════════════════════════════════════════════
+         TAB 1: CLOTHES CHANGER & SUPERMODEL
+    ═══════════════════════════════════════════════ -->
+    <div id="section-clothes-changer">
 
-    <!-- ── 1. LEFT SLIM ICON RAIL ── -->
-    <aside class="studio-rail">
-      <div class="studio-rail-group">
-        <!-- Workflows -->
-        <button class="rail-btn" data-tooltip="Fashion Design Studio" onclick="switchWorkflow('custom')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="14 2 18 6 7 17 3 17 3 13 14 2"/><line x1="12" y1="5" x2="16" y2="9"/></svg>
-          <span class="rail-btn-label">Design</span>
-        </button>
+      <!-- 1. Upload User Image Box -->
+      <div style="margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <label style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#F0EDE6;">
+            1. Upload Photo with Clear Body to Change Clothes
+          </label>
+          <button onclick="NOVA3D.randomSupermodel()" style="background:none;border:none;color:var(--gold);font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;">
+            🎲 Random Model
+          </button>
+        </div>
 
-        <button class="rail-btn active" id="rail-tryon-btn" data-tooltip="Virtual Try-On (Photo & Video)" onclick="switchWorkflow('clothes')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
-          <span class="rail-btn-label">Try-On</span>
-        </button>
+        <input type="file" id="user-photo-input" accept="image/*" style="display:none;" onchange="if(this.files[0]) NOVA3D.handleUserPhotoUpload(this.files[0])">
+        <input type="file" id="garment-file-input" accept="image/*" style="display:none;" onchange="if(this.files[0]) NOVA3D.handleCustomGarmentUpload(this.files[0])">
 
-        <button class="rail-btn" id="rail-body-btn" data-tooltip="3D Body Visualizer" onclick="switchWorkflow('body')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="5" r="3"/><path d="M6.5 9h11a1.5 1.5 0 0 1 1.5 1.5V14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3.5A1.5 1.5 0 0 1 6.5 9z"/><line x1="9" y1="16" x2="9" y2="22"/><line x1="15" y1="16" x2="15" y2="22"/></svg>
-          <span class="rail-btn-label">Body</span>
-        </button>
-
-        <button class="rail-btn" data-tooltip="AI Runway Models" onclick="switchWorkflow('clothes')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
-          <span class="rail-btn-label">Models</span>
-        </button>
-
-        <button class="rail-btn" data-tooltip="Tech Pack & Specifications" onclick="switchWorkflow('custom')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-          <span class="rail-btn-label">Specs</span>
-        </button>
+        <div class="upload-dropzone" onclick="document.getElementById('user-photo-input').click()" ondragover="event.preventDefault()" ondrop="event.preventDefault(); if(event.dataTransfer.files[0]) NOVA3D.handleUserPhotoUpload(event.dataTransfer.files[0])">
+          <div style="font-size:32px;margin-bottom:6px;">📸</div>
+          <div style="font-size:13px;font-weight:700;color:#F0EDE6;">Upload Your Photo</div>
+          <div style="font-size:11px;color:#8A8580;margin-top:2px;">Drag or upload your full-body image JPG, PNG, WEBP</div>
+        </div>
       </div>
 
-      <div class="studio-rail-group">
-        <a href="dashboard.html" class="rail-btn" data-tooltip="Atelier VIP Account">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </a>
-        <a href="cart.html" class="rail-btn" data-tooltip="Shopping Bag">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        </a>
-      </div>
-    </aside>
-
-    <!-- ── 2. SECONDARY STUDIO CONTROLS PANEL ── -->
-    <div class="studio-controls-panel">
-
-      <!-- Top Workflow Sub-Tabs -->
-      <div class="workflow-tab-bar">
-        <button class="workflow-tab-btn active" id="tab-btn-clothes" onclick="switchWorkflow('clothes')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
-          Try-On
-        </button>
-        <button class="workflow-tab-btn" id="tab-btn-body" onclick="switchWorkflow('body')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="5" r="3"/><path d="M6.5 9h11a1.5 1.5 0 0 1 1.5 1.5V14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3.5A1.5 1.5 0 0 1 6.5 9z"/><line x1="9" y1="16" x2="9" y2="22"/><line x1="15" y1="16" x2="15" y2="22"/></svg>
-          Body Simulator
-        </button>
-        <button class="workflow-tab-btn" id="tab-btn-custom" onclick="switchWorkflow('custom')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="14 2 18 6 7 17 3 17 3 13 14 2"/><line x1="12" y1="5" x2="16" y2="9"/></svg>
-          Bespoke Atelier
-        </button>
+      <!-- 2. Select AI Supermodel Avatar Tray -->
+      <div style="margin-bottom:24px;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#8A8580;margin-bottom:8px;">
+          Or Select an AI Supermodel:
+        </div>
+        <div class="supermodels-tray" id="supermodels-tray">
+          <!-- Populated by JS -->
+        </div>
       </div>
 
-      <!-- ══════════════════════════════════════════════
-           TAB 1: AI VIRTUAL TRY-ON (PHOTO & VIDEO)
-      ═══════════════════════════════════════════════ -->
-      <div id="panel-clothes-section">
+      <!-- 3. Choose Your New Clothes -->
+      <div style="margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+          <div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#F0EDE6;">
+            2. Choose Your New Clothes:
+          </div>
 
-        <!-- 1. Photo & Video Upload Options -->
-        <div class="studio-section-block">
-          <div class="studio-section-title">
-            <span>01. Upload Photo or Video</span>
-            <button onclick="NOVA3D.randomSupermodel()" style="font-size:10px;font-weight:700;color:#000;text-transform:uppercase;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-              Random Model
+          <!-- Gender Toggle -->
+          <div class="model-gender-switcher">
+            <button class="gender-btn active" data-gender="men" onclick="NOVA3D.setGender('men')">
+              Masculine
+            </button>
+            <button class="gender-btn" data-gender="women" onclick="NOVA3D.setGender('women')">
+              Feminine
             </button>
           </div>
-
-          <!-- Hidden File Inputs (Accepts Images and Videos) -->
-          <input type="file" id="user-media-input" accept="image/*,video/*" style="display:none;" onchange="if(this.files[0]) NOVA3D.handleUserMediaUpload(this.files[0])">
-
-          <div class="media-upload-grid">
-            <div class="media-upload-card" onclick="document.getElementById('user-media-input').click()">
-              <div class="media-upload-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              </div>
-              <div class="media-upload-title">Upload Photo / Video</div>
-              <div class="media-upload-sub">JPG, PNG, MP4, MOV</div>
-            </div>
-
-            <div class="media-upload-card" onclick="NOVA3D.startWebCamera()">
-              <div class="media-upload-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              </div>
-              <div class="media-upload-title">Live AR Camera</div>
-              <div class="media-upload-sub">Instant Web Scanner</div>
-            </div>
-          </div>
         </div>
 
-        <!-- 2. AI Runway Supermodels Tray -->
-        <div class="studio-section-block">
-          <div class="studio-section-title">
-            <span>02. Select AI Model or Runway Clip</span>
-            <div style="display:flex;gap:4px;">
-              <button class="cat-pill active" id="btn-gender-women" onclick="NOVA3D.setGender('women')">Feminine</button>
-              <button class="cat-pill" id="btn-gender-men" onclick="NOVA3D.setGender('men')">Masculine</button>
-            </div>
-          </div>
-          <div class="models-scroll-tray" id="supermodels-tray">
-            <!-- Populated by JS -->
-          </div>
+        <!-- Garment Category Filter Tags (HOT, Party, Daily, Bespoke, Tops, Bottoms, Dresses) -->
+        <div class="category-tags-bar">
+          <button class="cat-tag active" onclick="filterGarments('All', this)">All</button>
+          <button class="cat-tag" onclick="filterGarments('HOT', this)">🔥 HOT</button>
+          <button class="cat-tag" onclick="filterGarments('Party', this)">✨ Party</button>
+          <button class="cat-tag" onclick="filterGarments('Daily', this)">☀️ Daily</button>
+          <button class="cat-tag" onclick="filterGarments('Bespoke', this)">✂️ Bespoke</button>
+          <button class="cat-tag" onclick="filterGarments('Tops', this)">Tops</button>
+          <button class="cat-tag" onclick="filterGarments('Bottoms', this)">Bottoms</button>
         </div>
 
-        <!-- 3. Garment Selection Grid -->
-        <div class="studio-section-block">
-          <div class="studio-section-title">
-            <span>03. Choose Garment to Drape</span>
-          </div>
-
-          <!-- Clean Category Filter Pills (Zero Emojis) -->
-          <div class="category-filter-bar">
-            <button class="cat-pill active" onclick="filterGarments('All', this)">All</button>
-            <button class="cat-pill" onclick="filterGarments('Tops', this)">Tops</button>
-            <button class="cat-pill" onclick="filterGarments('Bottoms', this)">Bottoms</button>
-            <button class="cat-pill" onclick="filterGarments('Dresses', this)">Dresses</button>
-            <button class="cat-pill" onclick="filterGarments('Jackets', this)">Outerwear</button>
-            <button class="cat-pill" onclick="filterGarments('Bespoke', this)">Bespoke</button>
-          </div>
-
-          <div class="garments-two-col-grid" id="garments-grid">
-            <!-- Populated by JS -->
-          </div>
+        <!-- Garments Grid (With Upload Card + Catalog Items) -->
+        <div class="garments-grid" id="garments-grid">
+          <!-- Populated by JS -->
         </div>
-
-      </div>
-
-      <!-- ══════════════════════════════════════════════
-           TAB 2: REAL AI BODY VISUALIZER (BMI & SILHOUETTE)
-      ═══════════════════════════════════════════════ -->
-      <div id="panel-body-section" style="display:none;">
-
-        <div class="bv-card">
-          <!-- BMI Dial Gauge -->
-          <div class="bv-gauge-wrap">
-            <div>
-              <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#71717A;">BODY MASS INDEX (BMI)</div>
-              <div class="bv-gauge-val" id="bv-gauge-bmi">18.7</div>
-            </div>
-            <div style="text-align:right;">
-              <div class="bv-gauge-status" id="bv-bmi-category">Optimal Healthy Proportion</div>
-              <div style="font-size:11px;color:#71717A;margin-top:2px;">
-                Recommended Size: <strong id="bv-rec-size" style="color:#000000;">S</strong>
-              </div>
-            </div>
-          </div>
-
-          <!-- 1-Click Body Archetypes (Zero Emojis) -->
-          <div style="margin-bottom:16px;">
-            <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#71717A;margin-bottom:8px;">
-              1-CLICK BODY SHAPE ARCHETYPES
-            </div>
-            <div class="bv-archetype-grid">
-              <button class="bv-arch-btn" onclick="selectBodyPreset('athletic', this)">Athletic</button>
-              <button class="bv-arch-btn active" id="preset-hourglass" onclick="selectBodyPreset('hourglass', this)">Hourglass</button>
-              <button class="bv-arch-btn" onclick="selectBodyPreset('rectangle', this)">Rectangle</button>
-              <button class="bv-arch-btn" onclick="selectBodyPreset('pear', this)">Pear</button>
-              <button class="bv-arch-btn" onclick="selectBodyPreset('inverted_triangle', this)">Inverted</button>
-              <button class="bv-arch-btn" onclick="selectBodyPreset('plus', this)">Plus Fit</button>
-            </div>
-          </div>
-
-          <!-- Sliders Grid -->
-          <div class="bv-slider-group">
-            <div class="bv-slider-row">
-              <div class="bv-slider-label-row">
-                <span>Height</span>
-                <span class="bv-slider-val" id="val-height">176 cm (5.8')</span>
-              </div>
-              <input type="range" id="slider-height" min="140" max="210" value="176" oninput="handleBVChange('heightCm', this.value)">
-            </div>
-
-            <div class="bv-slider-row">
-              <div class="bv-slider-label-row">
-                <span>Weight</span>
-                <span class="bv-slider-val" id="val-weight">58 kg (128 lbs)</span>
-              </div>
-              <input type="range" id="slider-weight" min="40" max="150" value="58" oninput="handleBVChange('weightKg', this.value)">
-            </div>
-
-            <div class="bv-slider-row">
-              <div class="bv-slider-label-row">
-                <span>Chest / Bust</span>
-                <span class="bv-slider-val" id="val-chest">34"</span>
-              </div>
-              <input type="range" id="slider-chest" min="30" max="56" value="34" oninput="handleBVChange('chestIn', this.value)">
-            </div>
-
-            <div class="bv-slider-row">
-              <div class="bv-slider-label-row">
-                <span>Waist</span>
-                <span class="bv-slider-val" id="val-waist">25"</span>
-              </div>
-              <input type="range" id="slider-waist" min="20" max="50" value="25" oninput="handleBVChange('waistIn', this.value)">
-            </div>
-
-            <div class="bv-slider-row">
-              <div class="bv-slider-label-row">
-                <span>Hips</span>
-                <span class="bv-slider-val" id="val-hip">36"</span>
-              </div>
-              <input type="range" id="slider-hip" min="28" max="54" value="36" oninput="handleBVChange('hipIn', this.value)">
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ══════════════════════════════════════════════
-           TAB 3: BESPOKE ATELIER & FABRICS
-      ═══════════════════════════════════════════════ -->
-      <div id="panel-custom-section" style="display:none;">
-
-        <!-- Fabric Color Swatches -->
-        <div class="studio-section-block">
-          <div class="studio-section-title">
-            <span>Garment Fabric Color</span>
-            <span id="selected-color-name" style="color:#71717A;font-weight:600;">Ivory White</span>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <div class="color-swatch-circle active" style="width:32px;height:32px;border-radius:50%;background:#F5F2E7;border:2px solid #000;cursor:pointer;" onclick="selectColor('#F5F2E7','Ivory White',this)"></div>
-            <div class="color-swatch-circle" style="width:32px;height:32px;border-radius:50%;background:#4C1D95;border:2px solid #E4E4E7;cursor:pointer;" onclick="selectColor('#4C1D95','Royal Purple',this)"></div>
-            <div class="color-swatch-circle" style="width:32px;height:32px;border-radius:50%;background:#1C2536;border:2px solid #E4E4E7;cursor:pointer;" onclick="selectColor('#1C2536','Midnight Navy',this)"></div>
-            <div class="color-swatch-circle" style="width:32px;height:32px;border-radius:50%;background:#18181B;border:2px solid #E4E4E7;cursor:pointer;" onclick="selectColor('#18181B','Onyx Black',this)"></div>
-            <div class="color-swatch-circle" style="width:32px;height:32px;border-radius:50%;background:#EECDAF;border:2px solid #E4E4E7;cursor:pointer;" onclick="selectColor('#EECDAF','Terracotta',this)"></div>
-            <div class="color-swatch-circle" style="width:32px;height:32px;border-radius:50%;background:#4A7C6F;border:2px solid #E4E4E7;cursor:pointer;" onclick="selectColor('#4A7C6F','Forest Sage',this)"></div>
-          </div>
-        </div>
-
-        <!-- Textile Mills -->
-        <div class="studio-section-block">
-          <div class="studio-section-title"><span>Textile Mills</span></div>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <div class="fabric-card active" onclick="selectFabric('gots_cotton', this)" style="background:#FFFFFF;border:1.5px solid #000;border-radius:4px;padding:12px;cursor:pointer;">
-              <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:#71717A;text-transform:uppercase;">GOTS CERTIFIED ORGANIC</div>
-              <div style="font-size:13px;font-weight:700;color:#000;margin:2px 0;">Ahmedabad Long-Staple Cotton</div>
-              <div style="font-size:11px;color:#71717A;">280 GSM &bull; Included</div>
-            </div>
-            <div class="fabric-card" onclick="selectFabric('selvedge_denim', this)" style="background:#FFFFFF;border:1px solid #E4E4E7;border-radius:4px;padding:12px;cursor:pointer;">
-              <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:#71717A;text-transform:uppercase;">RAW JAPANESE</div>
-              <div style="font-size:13px;font-weight:700;color:#000;margin:2px 0;">Selvedge Denim</div>
-              <div style="font-size:11px;color:#000;font-weight:700;">+ &#8377;1,200</div>
-            </div>
-            <div class="fabric-card" onclick="selectFabric('french_terry', this)" style="background:#FFFFFF;border:1px solid #E4E4E7;border-radius:4px;padding:12px;cursor:pointer;">
-              <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:#71717A;text-transform:uppercase;">HEAVY FLEECE</div>
-              <div style="font-size:13px;font-weight:700;color:#000;margin:2px 0;">French Terry Cotton</div>
-              <div style="font-size:11px;color:#000;font-weight:700;">+ &#8377;800</div>
-            </div>
-          </div>
-        </div>
-
       </div>
 
     </div>
 
-    <!-- ── 3. RIGHT MAIN STUDIO VIEWPORT CANVAS ── -->
-    <main class="studio-canvas-panel">
+    <!-- ══════════════════════════════════════════════
+         TAB 2: BODY VISUALIZER (BMI, HEIGHT, WEIGHT)
+    ═══════════════════════════════════════════════ -->
+    <div id="section-body-visualizer" style="display:none;">
 
-      <!-- Viewport Top Bar -->
-      <div class="canvas-topbar">
-        <div class="canvas-title-box">
-          <span class="status-badge-dot"></span>
-          <span class="canvas-status-text" id="studio-status-line">
-            AI Supermodel &bull; Elena Vance &bull; Purple Tailored Midi Dress
-          </span>
-        </div>
-
-        <div class="canvas-actions">
-          <span style="font-size:10px;font-weight:800;color:#71717A;letter-spacing:1px;padding:4px 8px;background:#F4F4F5;border-radius:3px;">
-            4K NEURAL MESH
-          </span>
-          <button class="canvas-action-btn" onclick="NOVA3D.takeSnapshot()" title="Export HD Image">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Save Look
+      <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.25);border-radius:18px;padding:20px;margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div>
+            <span class="t-micro-1" style="color:var(--gold);">BODY VISUALIZER SIMULATOR</span>
+            <h3 style="font-family:'Cinzel',serif;font-size:18px;color:#F0EDE6;margin:4px 0 0;text-transform:uppercase;">
+              Body Shape & BMI Engine
+            </h3>
+          </div>
+          <button onclick="openAIScannerModal()" style="background:rgba(201,168,76,0.15);border:1px solid var(--gold);color:var(--gold);padding:6px 12px;border-radius:8px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;">
+            📸 AI CAMERA SCAN
           </button>
         </div>
-      </div>
 
-      <!-- Center Stage: Interactive Before / After Split Viewport -->
-      <div class="viewport-stage">
-
-        <!-- 1. Try-On Before/After Comparison Container -->
-        <div class="comparison-container" id="comparison-container">
-          <!-- BEFORE LAYER: Base Photo or Runway Video -->
-          <div class="comparison-layer before-layer" id="before-media-mount">
-            <img id="before-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&q=85" alt="Original Model Photo">
-            <video id="before-video" autoplay loop muted playsinline style="display:none;width:100%;height:100%;object-fit:cover;"></video>
-            <span class="comparison-tag tag-before">BEFORE</span>
+        <!-- BMI Gauge Card -->
+        <div style="background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:10px;font-weight:800;color:#8A8580;letter-spacing:1.5px;text-transform:uppercase;">BODY MASS INDEX (BMI)</div>
+            <div style="font-family:'Cinzel',serif;font-size:26px;font-weight:900;color:var(--gold);margin-top:2px;" id="bv-gauge-bmi">22.8</div>
           </div>
-
-          <!-- AFTER LAYER: Dressed Supermodel in Garment -->
-          <div class="comparison-layer after-layer" id="after-media-mount">
-            <img id="after-img" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&q=85" alt="Dressed Outfit">
-            <video id="after-video" autoplay loop muted playsinline style="display:none;width:100%;height:100%;object-fit:cover;"></video>
-            <span class="comparison-tag tag-after">AFTER</span>
-          </div>
-
-          <!-- DRAGGABLE DIVIDER HANDLE -->
-          <div class="comparison-handle" id="comparison-handle">
-            <div class="comparison-handle-knob">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-            </div>
-          </div>
-
-          <!-- AI Transformation Loading Spinner -->
-          <div class="ai-processing-overlay" id="ai-processing-overlay" style="display:none;">
-            <div class="spinner-ring"></div>
-            <div class="processing-label">AI NEURAL DRAPE IN PROGRESS...</div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;font-weight:800;color:#10B981;letter-spacing:1px;" id="bv-bmi-category">Optimal Healthy Weight</div>
+            <div style="font-size:10px;color:#8A8580;margin-top:2px;">Rec. Fit Size: <strong id="bv-rec-size" style="color:var(--gold);">M</strong></div>
           </div>
         </div>
 
-        <!-- 2. Interactive SVG Body Visualizer Canvas (Visible in Body Tab) -->
-        <div class="body-svg-mount" id="body-visualizer-canvas-mount" style="display:none;">
-          <!-- SVG silhouette dynamically rendered by JS -->
-        </div>
-
-      </div>
-
-      <!-- Viewport Bottom Price & Checkout Bar -->
-      <div class="studio-bottom-bar">
-        <div class="price-meta-box">
-          <span class="price-label">ORDER SPECIFICATION</span>
-          <span class="price-number" id="cpq-total-price">&#8377;3,499</span>
-        </div>
-
-        <div style="display:flex;align-items:center;gap:16px;">
-          <div style="text-align:right;font-size:11px;color:#71717A;">
-            <div>Ships in 24 Hours &bull; Free Exchanges</div>
-            <div style="font-weight:700;color:#16A34A;">First Garment Trial Guaranteed</div>
+        <!-- 1-Click Body Shape Presets -->
+        <div style="margin-bottom:18px;">
+          <div style="font-size:10px;font-weight:800;color:#8A8580;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">1-CLICK BODY SHAPE ARCHETYPES:</div>
+          <div class="option-pills">
+            <button class="option-pill active" onclick="selectBodyPreset('athletic', this)">⚡ Athletic V-Taper</button>
+            <button class="option-pill" id="preset-hourglass" onclick="selectBodyPreset('hourglass', this)" style="display:none;">⏳ Hourglass</button>
+            <button class="option-pill" onclick="selectBodyPreset('rectangle', this)">🟩 Lean / Rectangle</button>
+            <button class="option-pill" onclick="selectBodyPreset('pear', this)">🍐 Pear / Triangle</button>
+            <button class="option-pill" onclick="selectBodyPreset('inverted_triangle', this)">🔻 Inverted Triangle</button>
+            <button class="option-pill" onclick="selectBodyPreset('plus', this)">➕ Plus / Full Figure</button>
           </div>
+        </div>
 
-          <button class="add-outfit-btn" onclick="addCurrentOutfitToCart()">
-            ADD THIS BESPOKE OUTFIT TO BAG
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </button>
+        <!-- Sliders -->
+        <div class="measurement-form-grid">
+          <div class="measurement-field">
+            <label>Height: <span id="val-height" style="color:var(--gold);font-weight:700;">180 cm (5.9')</span></label>
+            <input type="range" id="slider-height" min="140" max="210" value="180" oninput="handleBVChange('heightCm', this.value)">
+          </div>
+          <div class="measurement-field">
+            <label>Weight: <span id="val-weight" style="color:var(--gold);font-weight:700;">74 kg (163 lbs)</span></label>
+            <input type="range" id="slider-weight" min="40" max="150" value="74" oninput="handleBVChange('weightKg', this.value)">
+          </div>
+          <div class="measurement-field">
+            <label>Chest / Bust: <span id="val-chest" style="color:var(--gold);font-weight:700;">40"</span></label>
+            <input type="range" id="slider-chest" min="30" max="56" value="40" oninput="handleBVChange('chestIn', this.value)">
+          </div>
+          <div class="measurement-field">
+            <label>Waist: <span id="val-waist" style="color:var(--gold);font-weight:700;">32"</span></label>
+            <input type="range" id="slider-waist" min="22" max="50" value="32" oninput="handleBVChange('waistIn', this.value)">
+          </div>
+          <div class="measurement-field">
+            <label>Hips: <span id="val-hip" style="color:var(--gold);font-weight:700;">38"</span></label>
+            <input type="range" id="slider-hip" min="28" max="54" value="38" oninput="handleBVChange('hipIn', this.value)">
+          </div>
+          <div class="measurement-field">
+            <label>Exercise: <span id="val-exercise" style="color:var(--gold);font-weight:700;">5 hrs/wk</span></label>
+            <input type="range" id="slider-exercise" min="0" max="20" value="5" oninput="handleBVChange('exerciseHrs', this.value)">
+          </div>
         </div>
       </div>
 
-    </main>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         TAB 3: BESPOKE TAILORING & CUSTOMIZATION
+    ═══════════════════════════════════════════════ -->
+    <div id="section-bespoke-customizer" style="display:none;">
+
+      <!-- Color Swatches -->
+      <div class="control-section">
+        <div class="control-section-title">GARMENT FABRIC COLOUR</div>
+        <div class="color-swatches">
+          <div class="color-swatch active" style="background:#F5F2E7;" onclick="selectColor('#F5F2E7','Ivory White',this)" title="Ivory White"></div>
+          <div class="color-swatch" style="background:#4C1D95;" onclick="selectColor('#4C1D95','Royal Purple',this)" title="Royal Purple"></div>
+          <div class="color-swatch" style="background:#1c2536;" onclick="selectColor('#1c2536','Midnight Navy',this)" title="Midnight Navy"></div>
+          <div class="color-swatch" style="background:#18181B;" onclick="selectColor('#18181B','Onyx Black',this)" title="Onyx Black"></div>
+          <div class="color-swatch" style="background:#EECDAF;" onclick="selectColor('#EECDAF','Peach Terracotta',this)" title="Peach Terracotta"></div>
+          <div class="color-swatch" style="background:#A54C14;" onclick="selectColor('#A54C14','Burnt Rust',this)" title="Burnt Rust"></div>
+          <div class="color-swatch" style="background:#C9A84C;" onclick="selectColor('#C9A84C','Warm Gold',this)" title="Warm Gold"></div>
+          <div class="color-swatch" style="background:#4A7C6F;" onclick="selectColor('#4A7C6F','Forest Sage',this)" title="Forest Sage"></div>
+          <div class="color-swatch" style="background:#EC4899;" onclick="selectColor('#EC4899','Dusty Rose',this)" title="Dusty Rose"></div>
+          <div class="color-swatch" style="background:#6B7280;" onclick="selectColor('#6B7280','Slate Grey',this)" title="Slate Grey"></div>
+        </div>
+        <div style="font-size:12px;color:#8A8580;margin-top:10px;">
+          Active Shade: <strong id="selected-color-name" style="color:#F0EDE6;">Ivory White</strong>
+        </div>
+      </div>
+
+      <!-- Fabrics Selection -->
+      <div class="control-section">
+        <div class="control-section-title">PREMIUM TEXTILE MILLS</div>
+        <div class="fabric-option-grid">
+          <div class="fabric-option-card active" onclick="selectFabric('gots_cotton', this)">
+            <div class="t-micro-1" style="color:var(--gold);font-size:9px;">GOTS ORGANIC</div>
+            <div style="font-size:12px;font-weight:700;color:#F0EDE6;margin:3px 0;">Ahmedabad Cotton</div>
+            <div style="font-size:10px;color:#8A8580;">280 GSM · Included</div>
+          </div>
+          <div class="fabric-option-card" onclick="selectFabric('selvedge_denim', this)">
+            <div class="t-micro-1" style="color:var(--gold);font-size:9px;">RAW JAPANESE</div>
+            <div style="font-size:12px;font-weight:700;color:#F0EDE6;margin:3px 0;">Selvedge Denim</div>
+            <div style="font-size:10px;color:var(--gold);font-weight:700;">+ ₹1,200</div>
+          </div>
+          <div class="fabric-option-card" onclick="selectFabric('french_terry', this)">
+            <div class="t-micro-1" style="color:var(--gold);font-size:9px;">FRENCH FLEECE</div>
+            <div style="font-size:12px;font-weight:700;color:#F0EDE6;margin:3px 0;">Heavy French Terry</div>
+            <div style="font-size:10px;color:var(--gold);font-weight:700;">+ ₹800</div>
+          </div>
+          <div class="fabric-option-card" onclick="selectFabric('italian_linen', this)">
+            <div class="t-micro-1" style="color:var(--gold);font-size:9px;">BIELLA SOURCED</div>
+            <div style="font-size:12px;font-weight:700;color:#F0EDE6;margin:3px 0;">Italian Linen</div>
+            <div style="font-size:10px;color:var(--gold);font-weight:700;">+ ₹1,500</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Collar & Monogram -->
+      <div class="control-section">
+        <div class="control-section-title">BESPOKE HARDWARE & MONOGRAM</div>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <input type="text" id="monogram-input" maxlength="3" placeholder="INITIALS" oninput="updateMonogram(this.value)" style="background:#1C1C1C;border:1px solid rgba(201,168,76,0.3);border-radius:12px;padding:10px 14px;color:#F0EDE6;font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:3px;width:110px;text-transform:uppercase;outline:none;">
+          <div style="font-size:11px;color:#8A8580;">Custom monogram embroidery (+₹299)</div>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 
-  <!-- ══════════════════════════════════════════════════════════════════
-       WEBCAM SCAN MODAL (Zero Emojis)
-  ════════════════════════════════════════════════════════════════════ -->
-  <div class="modal-backdrop" id="web-camera-modal" style="display:none;" onclick="NOVA3D.stopWebCamera()">
-    <div class="modal-dialog" onclick="event.stopPropagation()">
-      <div class="modal-header-row">
+  <!-- ── RIGHT PANEL: Live AI Supermodel & Before/After Clothes Changer ── -->
+  <div class="studio-model-panel" style="background:#080808;padding:24px;">
+
+    <!-- Top Viewport Bar -->
+    <div class="viewport-topbar">
+      <div class="viewport-title">
+        <span class="t-micro-1" style="color:var(--gold);">✦ AI CLOTHES CHANGER & SUPERMODEL</span>
+        <div style="font-size:12px;color:#F0EDE6;font-weight:700;margin-top:2px;" id="studio-status-line">
+          AI Supermodel · Elena Vance · Wearing: Purple Tailored Midi Dress
+        </div>
+      </div>
+
+      <div class="viewport-actions">
+        <button class="vp-btn accent" onclick="NOVA3D.takeSnapshot()" title="Export HD Image">📥 Save Look</button>
+      </div>
+    </div>
+
+    <!-- ── BEFORE / AFTER INTERACTIVE COMPARISON CONTAINER ── -->
+    <div class="comparison-container" id="comparison-container">
+
+      <!-- 1. BEFORE LAYER: Base Model / User Uploaded Photo -->
+      <div class="comparison-layer before-layer">
+        <img id="before-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&q=85" alt="Original Model Photo">
+        <span class="comparison-label before-label">BEFORE</span>
+      </div>
+
+      <!-- 2. AFTER LAYER: Dressed Supermodel in Selected Garment -->
+      <div class="comparison-layer after-layer" id="after-img-wrap">
+        <img id="after-img" src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900&q=85" alt="Dressed Supermodel Outfit">
+        
+        <!-- Live Color Tint Layer -->
+        <div id="garment-color-tint" style="position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity 0.3s ease;"></div>
+
+        <span class="comparison-label after-label">AFTER</span>
+      </div>
+
+      <!-- 3. SLIDER DIVIDER WITH PURPLE ARROW (Inspired by User's Reference!) -->
+      <div class="comparison-divider" id="comparison-divider" style="left:50%;">
+        <div class="divider-arrow-badge">
+          <span>⇄</span>
+        </div>
+      </div>
+
+      <!-- AI Shimmer Processing Effect Overlay -->
+      <div class="ai-transform-overlay" id="ai-transform-overlay" style="display:none;">
+        <div class="loading-spinner"></div>
+        <div style="font-size:12px;color:var(--gold);font-weight:800;letter-spacing:2px;margin-top:14px;">
+          AI TAILORING OUTFIT ON SUPERMODEL...
+        </div>
+      </div>
+
+      <!-- Supermodel HUD Overlay Badge -->
+      <div class="model-overlay-badge">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="t-micro-1" style="color:var(--gold);">AI SUPERMODEL VTON</span>
+            <span style="width:7px;height:7px;background:#10B981;border-radius:50%;box-shadow:0 0 8px #10B981;"></span>
+            <span style="font-size:9px;font-weight:800;color:#10B981;letter-spacing:1px;">READY</span>
+          </div>
+          <span style="font-size:10px;color:#8A8580;">Drag slider to compare Before / After</span>
+        </div>
+        <div class="fit-stats-bar">
+          <span class="fit-stat-pill">Chest: <strong id="stat-chest">40"</strong></span>
+          <span class="fit-stat-pill">Waist: <strong id="stat-waist">32"</strong></span>
+          <span class="fit-stat-pill">Height: <strong id="stat-height">5.9'</strong></span>
+          <span class="fit-stat-pill">Fit: <strong style="color:#10B981;">99.4% Flawless</strong></span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── STICKY PRICE SUMMARY & ADD TO BAG ── -->
+    <div class="studio-price-summary" style="margin-top:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
         <div>
-          <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#71717A;">LIVE AR SCANNER</div>
-          <h3 style="font-family:var(--font-title);font-size:18px;font-weight:800;color:#000;">Webcam 3D Fitting</h3>
+          <span class="t-micro-1" style="color:var(--gold);">ORDER SPECIFICATION</span>
+          <div style="font-family:'Cinzel',serif;font-size:24px;font-weight:800;color:var(--gold);" id="cpq-total-price">
+            ₹3,499
+          </div>
         </div>
-        <button class="modal-close-icon-btn" onclick="NOVA3D.stopWebCamera()">&times;</button>
-      </div>
-
-      <div style="position:relative;width:100%;height:340px;background:#000;border-radius:4px;overflow:hidden;">
-        <video id="web-camera-video" autoplay playsinline style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1);"></video>
-        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
-          <div style="width:70px;height:90px;border-radius:35px;border:1.5px dashed rgba(255,255,255,0.8);margin-bottom:8px;"></div>
-          <div style="width:200px;height:2px;background:rgba(255,255,255,0.8);margin-bottom:20px;"></div>
-          <div style="width:140px;height:120px;border-radius:6px;border:1.5px dashed rgba(255,255,255,0.5);"></div>
+        <div style="text-align:right;">
+          <div style="font-size:10px;color:#8A8580;">Ships in 24 Hours · Free Returns</div>
+          <div style="font-size:11px;font-weight:800;color:#10B981;margin-top:2px;">First Garment Trial Guaranteed</div>
         </div>
       </div>
 
-      <div style="display:flex;gap:12px;margin-top:16px;">
-        <button onclick="NOVA3D.captureWebCameraPhoto()" class="btn-pill-dark" style="flex:1;justify-content:center;border-radius:4px;padding:12px;">
-          Capture &amp; Try On
-        </button>
-        <button onclick="NOVA3D.stopWebCamera()" class="btn-pill-outline" style="border-radius:4px;padding:12px 20px;">
-          Cancel
-        </button>
-      </div>
+      <button onclick="addCurrentOutfitToCart()" style="
+        width:100%;background:var(--gold);color:#0A0A0A;
+        border:none;padding:16px;border-radius:14px;
+        font-size:12px;font-weight:800;letter-spacing:2px;
+        text-transform:uppercase;cursor:pointer;
+        font-family:inherit;transition:all 0.2s ease;
+      " onmouseenter="this.style.background='#E8C96A'" onmouseleave="this.style.background='var(--gold)'">
+        ADD THIS BESPOKE OUTFIT TO BAG ✦
+      </button>
     </div>
-  </div>
 
-  <!-- Slide-over Cart Drawer -->
-  <div class="cart-drawer-overlay" id="cart-drawer-overlay" onclick="closeCartDrawer()"></div>
-  <div class="cart-drawer" id="cart-drawer">
-    <div class="cart-drawer-header">
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════
+     AI BODY SCANNER MODAL
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="ai-scanner-modal" onclick="closeAIScannerModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;">
       <div>
-        <div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;">SHOPPING BAG</div>
-        <div style="font-size:11px;color:#71717A;" id="drawer-item-count">0 items</div>
+        <span class="t-micro-1" style="color:var(--gold);">AI BIOMETRIC CAMERA SCANNER</span>
+        <h3 style="font-family:'Cinzel',serif;font-size:22px;color:#F0EDE6;margin:6px 0 0;text-transform:uppercase;">
+          3D Digital Twin Scan
+        </h3>
       </div>
-      <button class="cart-drawer-close" onclick="closeCartDrawer()" style="font-size:22px;color:#71717A;">&times;</button>
+      <button onclick="closeAIScannerModal()" style="background:rgba(255,255,255,0.08);border:none;color:#F0EDE6;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px;">✕</button>
     </div>
-    <div class="cart-drawer-body" id="cart-drawer-items">
-      <div style="text-align:center;padding:60px 20px;color:#71717A;font-size:13px;">
-        Your bag is currently empty.
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+      <div style="background:#1A1A1A;border-radius:16px;padding:18px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:6px;">📸</div>
+        <div class="t-micro-1" style="color:var(--gold);margin-bottom:4px;">STEP 1: FRONT</div>
+        <div style="font-size:12px;color:#F0EDE6;font-weight:600;">Stand Straight</div>
+      </div>
+      <div style="background:#1A1A1A;border-radius:16px;padding:18px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:6px;">🔄</div>
+        <div class="t-micro-1" style="color:var(--gold);margin-bottom:4px;">STEP 2: PROFILE</div>
+        <div style="font-size:12px;color:#F0EDE6;font-weight:600;">Turn 90° Right</div>
       </div>
     </div>
-    <div class="cart-drawer-footer">
-      <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800;margin-bottom:16px;">
-        <span>TOTAL</span>
-        <span id="drawer-total-price">&#8377;0</span>
+
+    <button id="scan-trigger-btn" onclick="simulateScan()" style="
+      width:100%;background:var(--gold);color:#0A0A0A;
+      border:none;padding:16px;border-radius:14px;
+      font-size:12px;font-weight:800;letter-spacing:2px;
+      text-transform:uppercase;cursor:pointer;font-family:inherit;
+    ">
+      🤖 EXECUTE 80-POINT BIOMETRIC SCAN
+    </button>
+
+    <div id="scan-result" style="display:none;margin-top:20px;">
+      <div class="t-micro-1" style="color:#10B981;margin-bottom:12px;">✓ 80 BIOMETRIC MEASUREMENTS EXTRACTED</div>
+      <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;">
+        <div style="background:#1A1A1A;border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:var(--gold);font-family:'Cinzel',serif;" id="r-chest">40"</div>
+          <div style="font-size:10px;color:#8A8580;margin-top:4px;">Chest</div>
+        </div>
+        <div style="background:#1A1A1A;border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:var(--gold);font-family:'Cinzel',serif;" id="r-waist">32"</div>
+          <div style="font-size:10px;color:#8A8580;margin-top:4px;">Waist</div>
+        </div>
+        <div style="background:#1A1A1A;border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:var(--gold);font-family:'Cinzel',serif;" id="r-height">180cm</div>
+          <div style="font-size:10px;color:#8A8580;margin-top:4px;">Height</div>
+        </div>
       </div>
-      <a href="cart.html" class="btn-pill-dark" style="width:100%;justify-content:center;padding:14px;">
-        Proceed to Checkout
-      </a>
+      <button onclick="closeAIScannerModal(); showToast('✅ 80-point Biometric Scan Applied!');" style="
+        width:100%;background:#10B981;color:#fff;border:none;padding:14px;border-radius:14px;margin-top:16px;
+        font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-family:inherit;
+      ">
+        ✓ APPLY TO PROFILE & ORDER
+      </button>
     </div>
   </div>
+</div>
 
-  <script src="js/products.js"></script>
-  <script src="js/avatar3d.js"></script>
-  <script src="js/cart.js"></script>
-  <script>
-    function switchWorkflow(tabKey) {
-      document.getElementById('panel-clothes-section').style.display = tabKey === 'clothes' ? 'block' : 'none';
-      document.getElementById('panel-body-section').style.display = tabKey === 'body' ? 'block' : 'none';
-      document.getElementById('panel-custom-section').style.display = tabKey === 'custom' ? 'block' : 'none';
+<!-- Slide-over Cart Drawer -->
+<div class="cart-drawer-overlay" id="cart-drawer-overlay" onclick="closeCartDrawer()"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-drawer-header">
+    <div>
+      <div class="t-micro-1">YOUR SHOPPING BAG</div>
+      <div class="t-micro-2">NOVA STREET HYBRID STORE</div>
+    </div>
+    <div class="cart-drawer-close" onclick="closeCartDrawer()">✕</div>
+  </div>
+  <div class="cart-drawer-body" id="drawer-cart-items"></div>
+  <div class="cart-drawer-footer" id="drawer-cart-summary"></div>
+</div>
 
-      document.getElementById('tab-btn-clothes').classList.toggle('active', tabKey === 'clothes');
-      document.getElementById('tab-btn-body').classList.toggle('active', tabKey === 'body');
-      document.getElementById('tab-btn-custom').classList.toggle('active', tabKey === 'custom');
+<!-- JavaScript Dependencies -->
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/avatar3d.js"></script>
 
-      const comp = document.getElementById('comparison-container');
-      const bvm = document.getElementById('body-visualizer-canvas-mount');
-      if (tabKey === 'body') {
-        comp.style.display = 'none';
-        bvm.style.display = 'flex';
-        NOVA3D.renderBodyVisualizer();
-      } else {
-        comp.style.display = 'block';
-        bvm.style.display = 'none';
-      }
-    }
+<script>
+/* ── Custom Cursor ── */
+const cursorBadge = document.getElementById('cursor-badge');
+if (cursorBadge) {
+  document.addEventListener('mousemove', (e) => {
+    cursorBadge.style.left = e.clientX + 'px';
+    cursorBadge.style.top = e.clientY + 'px';
+  });
+}
 
-    function filterGarments(category, btn) {
-      document.querySelectorAll('.category-filter-bar .cat-pill').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      NOVA3D.filterGarments(category);
-    }
+function toggleMobileMenu() {
+  document.getElementById('mobile-nav-drawer').classList.toggle('open');
+  document.getElementById('mobile-nav-overlay').classList.toggle('active');
+  document.getElementById('hamburger-btn').classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-nav-drawer').classList.remove('open');
+  document.getElementById('mobile-nav-overlay').classList.remove('active');
+  document.getElementById('hamburger-btn').classList.remove('open');
+}
 
-    function selectBodyPreset(presetName, btn) {
-      document.querySelectorAll('.bv-arch-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      NOVA3D.applyBodyArchetype(presetName);
-    }
+/* ── App Navigation Tabs (Clothes Changer vs Body Visualizer vs Bespoke) ── */
+function switchAppTab(tab) {
+  document.querySelectorAll('.app-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${tab}-btn`).classList.add('active');
 
-    function handleBVChange(prop, val) {
-      NOVA3D.updateBodyParameter(prop, parseFloat(val));
-    }
+  document.getElementById('section-clothes-changer').style.display = (tab === 'clothes') ? 'block' : 'none';
+  document.getElementById('section-body-visualizer').style.display = (tab === 'body') ? 'block' : 'none';
+  document.getElementById('section-bespoke-customizer').style.display = (tab === 'custom') ? 'block' : 'none';
+}
 
-    function selectColor(hex, name, el) {
-      document.querySelectorAll('.color-swatch-circle').forEach(s => s.style.borderColor = '#E4E4E7');
-      el.style.borderColor = '#000';
-      document.getElementById('selected-color-name').innerText = name;
-      NOVA3D.selectGarmentColor(hex, name);
-    }
+/* ── Category Filter for Garments Grid ── */
+function filterGarments(category, el) {
+  document.querySelectorAll('.cat-tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  if (typeof NOVA3D !== 'undefined') {
+    NOVA3D.renderGarmentsGrid(category);
+  }
+}
 
-    function selectFabric(key, el) {
-      document.querySelectorAll('.fabric-card').forEach(c => {
-        c.style.borderColor = '#E4E4E7';
-        c.style.borderWidth = '1px';
-      });
-      el.style.borderColor = '#000';
-      el.style.borderWidth = '1.5px';
-      NOVA3D.selectFabric(key);
-    }
+/* ── Color Swatches ── */
+function selectColor(hex, name, el) {
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  if (typeof NOVA3D !== 'undefined') {
+    NOVA3D.setColor(hex, name);
+  }
+}
 
-    function addCurrentOutfitToCart() {
-      NOVA3D.addToCart();
-      openCartDrawer();
-    }
+/* ── Fabrics ── */
+function selectFabric(id, el) {
+  document.querySelectorAll('.fabric-option-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  if (typeof NOVA3D !== 'undefined') {
+    NOVA3D.setFabric(id);
+  }
+}
 
-    function openCartDrawer() {
-      document.getElementById('cart-drawer').classList.add('open');
-      document.getElementById('cart-drawer-overlay').classList.add('active');
-    }
-    function closeCartDrawer() {
-      document.getElementById('cart-drawer').classList.remove('open');
-      document.getElementById('cart-drawer-overlay').classList.remove('active');
-    }
-    function toggleMobileMenu() {
-      document.getElementById('mobile-nav-drawer').classList.toggle('open');
-      document.getElementById('mobile-nav-overlay').classList.toggle('active');
-    }
-    function closeMobileMenu() {
-      document.getElementById('mobile-nav-drawer').classList.remove('open');
-      document.getElementById('mobile-nav-overlay').classList.remove('active');
-    }
+/* ── Monogram ── */
+function updateMonogram(val) {
+  if (typeof NOVA3D !== 'undefined') {
+    NOVA3D.updateConfig('monogram', val.toUpperCase().slice(0, 3));
+  }
+}
 
-    // Draggable Divider
-    (function initSlider() {
-      const container = document.getElementById('comparison-container');
-      const handle = document.getElementById('comparison-handle');
-      const afterMount = document.getElementById('after-media-mount');
-      let isDragging = false;
+/* ── Body Visualizer Sliders Sync ── */
+function handleBVChange(param, val) {
+  if (typeof NOVA3D !== 'undefined') {
+    NOVA3D.setBodyParam(param, val);
+  }
+}
 
-      function updateSlider(clientX) {
-        const rect = container.getBoundingClientRect();
-        let pos = ((clientX - rect.left) / rect.width) * 100;
-        pos = Math.max(5, Math.min(95, pos));
-        handle.style.left = pos + '%';
-        afterMount.style.clipPath = `polygon(0 0, ${pos}% 0, ${pos}% 100%, 0 100%)`;
-      }
+function selectBodyPreset(preset, el) {
+  el.closest('.option-pills').querySelectorAll('.option-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  if (typeof NOVA3D !== 'undefined') {
+    NOVA3D.setBodyShapePreset(preset);
+  }
+}
 
-      handle.addEventListener('mousedown', () => isDragging = true);
-      window.addEventListener('mouseup', () => isDragging = false);
-      window.addEventListener('mousemove', (e) => {
-        if (isDragging) updateSlider(e.clientX);
-      });
+/* ── AI Scanner Simulation ── */
+function simulateScan() {
+  const btn = document.getElementById('scan-trigger-btn');
+  btn.textContent = '🤖 SCANNING BIOMETRIC NODES...';
+  setTimeout(() => {
+    document.getElementById('scan-result').style.display = 'block';
+    btn.textContent = '✓ SCAN COMPLETE';
+    btn.style.background = '#10B981';
+    btn.style.color = '#fff';
+  }, 1800);
+}
 
-      handle.addEventListener('touchstart', () => isDragging = true);
-      window.addEventListener('touchend', () => isDragging = false);
-      window.addEventListener('touchmove', (e) => {
-        if (isDragging && e.touches[0]) updateSlider(e.touches[0].clientX);
-      });
-    })();
-  </script>
+/* ── Add Outfit to Cart ── */
+function addCurrentOutfitToCart() {
+  const price = parseInt(document.getElementById('cpq-total-price').textContent.replace(/[₹,]/g, '')) || 3499;
+  const statusLine = document.getElementById('studio-status-line').textContent;
+  const bv = (NOVA3D && NOVA3D.getBodyVisualizer()) || {};
+
+  const item = {
+    id: 'ai_look_' + Date.now(),
+    name: 'AI Custom Fitted Supermodel Outfit',
+    price: price,
+    mrp: Math.round(price * 1.35),
+    funnel: 'custom-made',
+    fabric: 'Ahmedabad GOTS Organic Mill',
+    color: document.getElementById('selected-color-name')?.textContent || 'Custom Shade',
+    bodyMetrics: {
+      heightCm: bv.heightCm,
+      weightKg: bv.weightKg,
+      bmi: bv.bmi,
+      chest: bv.chestIn,
+      waist: bv.waistIn
+    },
+    images: [document.getElementById('after-img')?.src || 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&q=85'],
+    size: document.getElementById('bv-rec-size')?.textContent || 'M',
+    qty: 1
+  };
+
+  let cart = JSON.parse(localStorage.getItem('NOVA_CART') || '[]');
+  cart.push(item);
+  localStorage.setItem('NOVA_CART', JSON.stringify(cart));
+  document.querySelectorAll('.cart-count').forEach(el => el.textContent = cart.length);
+
+  showToast('✦ Supermodel Outfit Added to Shopping Bag!');
+  setTimeout(openCartDrawer, 500);
+}
+
+/* ── Auto Init ── */
+window.addEventListener('DOMContentLoaded', () => {
+  if (typeof NOVA3D !== 'undefined') {
+    NOVA3D.init();
+  }
+});
+</script>
 </body>
 </html>
