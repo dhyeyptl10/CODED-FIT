@@ -1,100 +1,74 @@
-﻿import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+/**
+ * CODED-FIT / NOVA STREET — Shopping Bag Item Card
+ * Sharp Monochrome Architecture
+ */
+
+import React from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { CartItem as CartItemType } from '../services/cart';
 import { Badge } from './ui/Badge';
-import { COLORS, RADIUS, SHADOWS } from '../constants/theme';
+import { COLORS, RADIUS } from '../constants/theme';
 
 interface CartItemProps {
   item: CartItemType;
-  onUpdateQty: (productId: string, size: string, color: string | undefined, newQty: number) => void;
+  onUpdateQty: (productId: string, size: string, color: string | undefined, qty: number) => void;
   onRemove: (productId: string, size: string, color?: string) => void;
 }
 
 export function CartItem({ item, onUpdateQty, onRemove }: CartItemProps) {
-  const handleIncrease = () => {
-    try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    } catch (_) {}
-    onUpdateQty(item.product.id, item.size, item.selectedColor, item.qty + 1);
-  };
-
-  const handleDecrease = () => {
-    try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    } catch (_) {}
-    if (item.qty > 1) {
-      onUpdateQty(item.product.id, item.size, item.selectedColor, item.qty - 1);
-    } else {
-      onRemove(item.product.id, item.size, item.selectedColor);
-    }
-  };
-
-  const handleRemove = () => {
-    try {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    } catch (_) {}
-    onRemove(item.product.id, item.size, item.selectedColor);
-  };
+  const { product, size, color, qty } = item;
 
   return (
     <View style={styles.container}>
-      {/* Product Image */}
       <Image
-        source={{ uri: item.product.images[0] }}
+        source={{ uri: product.images[0] }}
         style={styles.image}
         resizeMode="cover"
       />
 
-      {/* Item Details */}
       <View style={styles.details}>
         <View style={styles.topRow}>
-          <Text style={styles.name} numberOfLines={1}>
-            {item.product.name}
-          </Text>
-          <TouchableOpacity onPress={handleRemove} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+          <Badge
+            label={product.funnel === 'rtw' ? '24H EXPRESS' : 'BESPOKE 3D'}
+            variant="dark"
+            size="sm"
+          />
+          <TouchableOpacity
+            onPress={() => {
+              try { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); } catch (_) {}
+              onRemove(product.id, size, color);
+            }}
+          >
             <Text style={styles.removeText}>✕</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Funnel / Type Badge */}
-        <View style={styles.metaRow}>
-          <Badge
-            label={item.product.funnel === 'rtw' ? '⚡ 24H DISPATCH' : '✂️ BESPOKE FIT'}
-            variant={item.product.funnel === 'rtw' ? 'green' : 'gold'}
-            size="sm"
-          />
-          <Text style={styles.sizeText}>
-            Size: <Text style={styles.sizeVal}>{item.size}</Text>
-          </Text>
-          {item.selectedColor && (
-            <Text style={styles.colorText}>
-              · {item.selectedColor}
-            </Text>
-          )}
-        </View>
+        <Text style={styles.name} numberOfLines={1}>{product.name}</Text>
+        <Text style={styles.meta}>Size: {size} {color ? '· ' + color : ''}</Text>
 
-        {/* Custom Body Metrics Pill if Bespoke */}
-        {item.customMeasurements && (
-          <View style={styles.bespokeMetrics}>
-            <Text style={styles.bespokeText}>
-              Custom 3D Fit: {item.customMeasurements.heightCm}cm · {item.customMeasurements.weightKg}kg
-            </Text>
-          </View>
-        )}
-
-        {/* Bottom Row: Price & Quantity Controls */}
         <View style={styles.bottomRow}>
-          <Text style={styles.price}>
-            ₹{(item.product.price * item.qty).toLocaleString('en-IN')}
-          </Text>
+          <Text style={styles.price}>₹{(product.price * qty).toLocaleString('en-IN')}</Text>
 
-          <View style={styles.qtyContainer}>
-            <TouchableOpacity onPress={handleDecrease} style={styles.qtyBtn}>
+          {/* Qty Counter */}
+          <View style={styles.qtyControl}>
+            <TouchableOpacity
+              onPress={() => onUpdateQty(product.id, size, color, qty - 1)}
+              style={styles.qtyBtn}
+            >
               <Text style={styles.qtyBtnText}>-</Text>
             </TouchableOpacity>
-            <Text style={styles.qtyText}>{item.qty}</Text>
-            <TouchableOpacity onPress={handleIncrease} style={styles.qtyBtn}>
+            <Text style={styles.qtyVal}>{qty}</Text>
+            <TouchableOpacity
+              onPress={() => onUpdateQty(product.id, size, color, qty + 1)}
+              style={styles.qtyBtn}
+            >
               <Text style={styles.qtyBtnText}>+</Text>
             </TouchableOpacity>
           </View>
@@ -107,19 +81,17 @@ export function CartItem({ item, onUpdateQty, onRemove }: CartItemProps) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    borderRadius: RADIUS.lg,
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm, // 0 sharp edges
     padding: 12,
     marginBottom: 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    ...SHADOWS.card,
   },
   image: {
     width: 80,
     height: 100,
-    borderRadius: RADIUS.md,
-    backgroundColor: COLORS.surface,
+    backgroundColor: '#0D0D0D',
   },
   details: {
     flex: 1,
@@ -129,87 +101,54 @@ const styles = StyleSheet.create({
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  name: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: COLORS.textPrimary,
-    flex: 1,
-    marginRight: 8,
+    alignItems: 'center',
   },
   removeText: {
     fontSize: 14,
-    color: COLORS.textMuted,
-    fontWeight: '600',
+    color: '#737373',
+    padding: 2,
   },
-  metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginTop: 4,
-    flexWrap: 'wrap',
-  },
-  sizeText: {
-    fontSize: 11,
-    color: COLORS.textSecondary,
-  },
-  sizeVal: {
+  name: {
+    fontSize: 12,
     fontWeight: '800',
-    color: COLORS.textPrimary,
-  },
-  colorText: {
-    fontSize: 11,
-    color: COLORS.textMuted,
-  },
-  bespokeMetrics: {
-    backgroundColor: '#FAF8F3',
-    borderWidth: 1,
-    borderColor: COLORS.borderGold,
-    borderRadius: RADIUS.sm,
-    paddingVertical: 3,
-    paddingHorizontal: 6,
+    color: '#FFFFFF',
     marginTop: 4,
   },
-  bespokeText: {
-    fontSize: 9,
-    color: COLORS.goldDark,
-    fontWeight: '700',
+  meta: {
+    fontSize: 10,
+    color: '#A3A3A3',
   },
   bottomRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 6,
   },
   price: {
     fontSize: 14,
     fontWeight: '900',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
   },
-  qtyContainer: {
+  qtyControl: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F7F5F0',
-    borderRadius: RADIUS.sm,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#333333',
+    backgroundColor: '#000000',
   },
   qtyBtn: {
-    width: 28,
-    height: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingVertical: 2,
+    paddingHorizontal: 8,
   },
   qtyBtnText: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: COLORS.textPrimary,
-  },
-  qtyText: {
+    color: '#FFFFFF',
     fontSize: 12,
     fontWeight: '800',
-    color: COLORS.textPrimary,
-    paddingHorizontal: 8,
+  },
+  qtyVal: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '800',
+    paddingHorizontal: 4,
   },
 });

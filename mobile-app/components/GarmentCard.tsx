@@ -1,13 +1,25 @@
-﻿import React from 'react';
-import { TouchableOpacity, Image, Text, View, StyleSheet } from 'react-native';
+/**
+ * CODED-FIT / NOVA STREET — Garment Card Component for Virtual Try-On
+ * Sharp Black & White Studio Card
+ */
+
+import React from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { YouCamGarment } from '../services/youcam';
-import { COLORS, RADIUS, SHADOWS } from '../constants/theme';
+import { Badge } from './ui/Badge';
+import { COLORS, RADIUS } from '../constants/theme';
 
 interface GarmentCardProps {
   garment: YouCamGarment;
   isSelected: boolean;
-  onSelect: () => void;
+  onSelect: (garment: YouCamGarment) => void;
 }
 
 export function GarmentCard({ garment, isSelected, onSelect }: GarmentCardProps) {
@@ -15,7 +27,7 @@ export function GarmentCard({ garment, isSelected, onSelect }: GarmentCardProps)
     try {
       Haptics.selectionAsync();
     } catch (_) {}
-    onSelect();
+    onSelect(garment);
   };
 
   return (
@@ -27,34 +39,24 @@ export function GarmentCard({ garment, isSelected, onSelect }: GarmentCardProps)
         isSelected && styles.cardSelected,
       ]}
     >
-      <View style={styles.imageContainer}>
+      <View style={styles.imageWrap}>
         <Image
           source={{ uri: garment.imageUrl }}
           style={styles.image}
           resizeMode="cover"
         />
         {garment.tag && (
-          <View style={styles.tagBadge}>
-            <Text style={styles.tagText}>{garment.tag}</Text>
-          </View>
-        )}
-        {isSelected && (
-          <View style={styles.selectedBadge}>
-            <Text style={styles.selectedText}>✓ FITTED</Text>
+          <View style={styles.tagWrap}>
+            <Badge label={garment.tag} variant={isSelected ? 'white' : 'dark'} size="sm" />
           </View>
         )}
       </View>
 
-      <View style={styles.details}>
+      <View style={styles.info}>
         <Text style={styles.name} numberOfLines={1}>
           {garment.name}
         </Text>
-        <View style={styles.priceRow}>
-          <Text style={styles.price}>₹{garment.price.toLocaleString('en-IN')}</Text>
-          <Text style={styles.fabric} numberOfLines={1}>
-            {garment.fabric.split(' ')[0]}
-          </Text>
-        </View>
+        <Text style={styles.price}>₹{garment.price.toLocaleString('en-IN')}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -62,80 +64,45 @@ export function GarmentCard({ garment, isSelected, onSelect }: GarmentCardProps)
 
 const styles = StyleSheet.create({
   card: {
-    width: 130,
-    backgroundColor: '#FFFFFF',
-    borderRadius: RADIUS.lg,
+    width: 105,
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm, // 0 sharp edges
     overflow: 'hidden',
-    borderWidth: 1.5,
-    borderColor: COLORS.border,
-    marginRight: 12,
-    ...SHADOWS.card,
+    marginRight: 10,
   },
   cardSelected: {
-    borderColor: COLORS.gold,
-    backgroundColor: '#FCFAF5',
-    ...SHADOWS.gold,
+    borderColor: '#FFFFFF',
+    borderWidth: 1.5,
   },
-  imageContainer: {
+  imageWrap: {
     width: '100%',
-    height: 140,
-    backgroundColor: COLORS.surface,
+    height: 120,
+    backgroundColor: '#0D0D0D',
     position: 'relative',
   },
   image: {
     width: '100%',
     height: '100%',
   },
-  tagBadge: {
+  tagWrap: {
     position: 'absolute',
-    top: 6,
-    left: 6,
-    backgroundColor: 'rgba(18, 18, 18, 0.82)',
-    paddingVertical: 2,
-    paddingHorizontal: 6,
-    borderRadius: RADIUS.sm,
+    top: 4,
+    left: 4,
   },
-  tagText: {
-    color: '#FFFFFF',
-    fontSize: 8,
-    fontWeight: '800',
-    letterSpacing: 0.5,
-  },
-  selectedBadge: {
-    position: 'absolute',
-    bottom: 6,
-    right: 6,
-    backgroundColor: COLORS.gold,
-    paddingVertical: 2,
-    paddingHorizontal: 6,
-    borderRadius: RADIUS.sm,
-  },
-  selectedText: {
-    color: '#FFFFFF',
-    fontSize: 8,
-    fontWeight: '900',
-  },
-  details: {
-    padding: 8,
+  info: {
+    padding: 6,
   },
   name: {
-    fontSize: 11,
+    fontSize: 9,
     fontWeight: '700',
-    color: COLORS.textPrimary,
-    marginBottom: 4,
-  },
-  priceRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    color: '#E5E5E5',
+    marginBottom: 2,
   },
   price: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: COLORS.goldDark,
-  },
-  fabric: {
-    fontSize: 9,
-    color: COLORS.textMuted,
+    fontSize: 10,
+    fontWeight: '900',
+    color: '#FFFFFF',
   },
 });
