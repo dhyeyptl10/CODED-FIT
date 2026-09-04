@@ -1,10 +1,15 @@
 /**
- * CODED-FIT / NOVA STREET — AI Clothes Changer & 3D Body Visualizer Studio
- * Official Perfect Corp YouCam Generative AI Engine Integration + BodyVisualizer.ai Simulator
- * Features: Live AR Camera Try-On, Interactive Morphing Body Visualizer, Supermodels, Before/After Slider
+ * CODED-FIT / NOVA STREET — AI Clothes Changer & Real Dynamic Body Visualizer Studio
+ * Haute-Couture Black & White Luxury Theme (Sharp Non-Curved Edges, Pitch Black & Crisp White)
+ * Features:
+ *  1. Multi-Mode Camera Engine (Inline CameraView + 100% Reliable Native Device Camera + Gallery)
+ *  2. Real AI Virtual Try-On with YouCam API Credentials (sk-HQ2O-M5GjyRTR4mEP4rGrcEngyhikuFF1qJFygrzQiCdrVvTIPjlOFVDqsri1twe)
+ *  3. Dynamic Morphing 2D/3D Human Body Visualizer Canvas reacting to Height, Weight, Chest, Waist, Hips & Archetypes
+ *  4. Live Radial BMI Meter & Anthropometric Ledger
+ *  5. Interactive Draggable Before / After Split Slider
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,54 +17,59 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator,
   Dimensions,
-  Platform,
+  PanResponder,
+  ActivityIndicator,
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { CameraView } from 'expo-camera';
 import * as Haptics from 'expo-haptics';
 import {
+  YouCamService,
   YOUCAM_SUPERMODELS,
   YOUCAM_GARMENTS,
   YouCamSupermodel,
   YouCamGarment,
-  YouCamService,
 } from '../../services/youcam';
 import { CartService } from '../../services/cart';
 import { useCamera } from '../../hooks/useCamera';
-import { useShare } from '../../hooks/useShare';
-import { useNotifications } from '../../hooks/useNotifications';
-import { GarmentCard } from '../../components/GarmentCard';
 import { GoldButton } from '../../components/ui/GoldButton';
 import { Badge } from '../../components/ui/Badge';
-import { COLORS, RADIUS, SHADOWS } from '../../constants/theme';
+import { GarmentCard } from '../../components/GarmentCard';
+import { COLORS, FONTS, SPACING, RADIUS, SHADOWS } from '../../constants/theme';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const SLIDER_WIDTH = SCREEN_WIDTH - 32;
 
-const COLOR_SWATCHES = [
-  { name: 'Ivory White', hex: '#F5F2E7' },
-  { name: 'Royal Purple', hex: '#4C1D95' },
-  { name: 'Midnight Navy', hex: '#1c2536' },
-  { name: 'Onyx Black', hex: '#18181B' },
-  { name: 'Peach Terracotta', hex: '#EECDAF' },
-  { name: 'Warm Gold', hex: '#C9A84C' },
-  { name: 'Forest Sage', hex: '#4A7C6F' },
-  { name: 'Dusty Rose', hex: '#EC4899' },
-];
+export default function TryOnStudioScreen() {
+  const router = useRouter();
 
-export default function TryOnScreen() {
-  const [activeGender, setActiveGender] = useState<'men' | 'women'>('women');
-  const [activeTab, setActiveTab] = useState<'clothes' | 'body' | 'camera'>('clothes');
-  const [selectedModelIdx, setSelectedModelIdx] = useState<number>(0);
-  const [selectedGarmentIdx, setSelectedGarmentIdx] = useState<number>(0);
-  const [selectedColor, setSelectedColor] = useState(COLOR_SWATCHES[0]);
-  const [sliderSplit, setSliderSplit] = useState<number>(50); // 0-100%
-  const [isAIProcessing, setIsAIProcessing] = useState<boolean>(false);
+  // Tab State: 'clothes' (AI Virtual Try-On) | 'body' (AI Body Visualizer) | 'custom' (Bespoke Specs)
+  const [activeTab, setActiveTab] = useState<'clothes' | 'body' | 'custom'>('clothes');
+  const [gender, setGender] = useState<'women' | 'men'>('women');
+
+  // Supermodels & Garments
+  const modelsForGender = YOUCAM_SUPERMODELS.filter(m => m.gender === gender);
+  const garmentsForGender = YOUCAM_GARMENTS.filter(g => g.gender === gender);
+
+  const [selectedModel, setSelectedModel] = useState<YouCamSupermodel>(modelsForGender[0] || YOUCAM_SUPERMODELS[0]);
+  const [selectedGarment, setSelectedGarment] = useState<YouCamGarment>(garmentsForGender[0] || YOUCAM_GARMENTS[0]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [customUserPhoto, setCustomUserPhoto] = useState<string | null>(null);
+
+  // Camera & Try-On State
+  const [showLiveCamera, setShowLiveCamera] = useState<boolean>(false);
+  const [isProcessingTryOn, setIsProcessingTryOn] = useState<boolean>(false);
   const [fitScore, setFitScore] = useState<number>(99.4);
+  const [activeColorHex, setActiveColorHex] = useState<string>('#FFFFFF');
+  const [selectedFabric, setSelectedFabric] = useState<string>('gots_cotton');
 
-  // Body Visualizer Anthropometrics State
+  // Before/After Split Position (Percentage 0-100)
+  const [splitPos, setSplitPos] = useState<number>(50);
+
+  // Anthropometric Body Visualizer Metrics
   const [heightCm, setHeightCm] = useState<number>(176);
   const [weightKg, setWeightKg] = useState<number>(58);
   const [chestIn, setChestIn] = useState<number>(34);
@@ -67,652 +77,714 @@ export default function TryOnScreen() {
   const [hipIn, setHipIn] = useState<number>(36);
   const [bodyShape, setBodyShape] = useState<string>('hourglass');
 
-  // Native Hooks
-  const camera = useCamera();
-  const { shareOutfitLook } = useShare();
-  const { scheduleBespokeMilestoneAlert } = useNotifications();
+  // Camera Hook
+  const {
+    cameraRef,
+    isPermissionGranted,
+    requestPermission,
+    facing,
+    flash,
+    toggleCameraFacing,
+    toggleFlash,
+    takePhoto,
+    openNativeDeviceCamera,
+    pickImageFromGallery,
+    isProcessing: cameraLoading,
+  } = useCamera();
 
-  const currentModels = YOUCAM_SUPERMODELS.filter(m => m.gender === activeGender);
-  const currentGarments = YOUCAM_GARMENTS.filter(g => g.gender === activeGender);
-  const currentModel = currentModels[selectedModelIdx] || currentModels[0];
-  const currentGarment = currentGarments[selectedGarmentIdx] || currentGarments[0];
+  // Sync model on gender change
+  useEffect(() => {
+    const list = YOUCAM_SUPERMODELS.filter(m => m.gender === gender);
+    const garms = YOUCAM_GARMENTS.filter(g => g.gender === gender);
+    if (list.length > 0) {
+      setSelectedModel(list[0]);
+      setHeightCm(list[0].heightCm);
+      setWeightKg(list[0].weightKg);
+      setChestIn(list[0].chestIn);
+      setWaistIn(list[0].waistIn);
+      setHipIn(list[0].hipIn);
+      setBodyShape(list[0].bodyShape);
+    }
+    if (garms.length > 0) setSelectedGarment(garms[0]);
+  }, [gender]);
 
-  // Calculate live BMI
+  // Dynamic BMI Calculation
   const heightM = heightCm / 100;
   const bmi = parseFloat((weightKg / (heightM * heightM)).toFixed(1));
 
-  // Recommended Size from BMI & Chest
-  const getRecommendedSize = () => {
-    if (bmi < 18.5) return 'XS';
-    if (bmi < 22) return 'S';
-    if (bmi < 25) return 'M';
-    if (bmi < 29) return 'L';
-    return 'XL / Bespoke';
+  const getBmiCategory = () => {
+    if (bmi < 18.5) return { label: 'Underweight Fit', size: 'XS', color: '#38BDF8' };
+    if (bmi < 25) return { label: 'Optimal Proportion', size: 'S / M', color: '#22C55E' };
+    if (bmi < 30) return { label: 'Athletic / Robust', size: 'L', color: '#F59E0B' };
+    return { label: 'Curvy / Plus Fit', size: 'XL / Bespoke', color: '#EC4899' };
   };
 
-  const executeAITryOn = async (garment: YouCamGarment) => {
-    setIsAIProcessing(true);
+  const bmiInfo = getBmiCategory();
+
+  // 1-Click Body Shape Presets
+  const applyBodyShape = (shape: string) => {
+    setBodyShape(shape);
+    try { Haptics.selectionAsync(); } catch (_) {}
+
+    if (shape === 'athletic') {
+      setChestIn(gender === 'women' ? 36 : 42);
+      setWaistIn(gender === 'women' ? 26 : 30);
+      setHipIn(gender === 'women' ? 37 : 38);
+    } else if (shape === 'hourglass') {
+      setChestIn(36);
+      setWaistIn(24);
+      setHipIn(38);
+    } else if (shape === 'rectangle') {
+      setChestIn(gender === 'women' ? 33 : 38);
+      setWaistIn(gender === 'women' ? 28 : 32);
+      setHipIn(gender === 'women' ? 35 : 37);
+    } else if (shape === 'pear') {
+      setChestIn(gender === 'women' ? 33 : 38);
+      setWaistIn(gender === 'women' ? 27 : 33);
+      setHipIn(gender === 'women' ? 42 : 40);
+    } else if (shape === 'inverted_triangle') {
+      setChestIn(gender === 'women' ? 38 : 44);
+      setWaistIn(gender === 'women' ? 27 : 32);
+      setHipIn(gender === 'women' ? 34 : 37);
+    } else if (shape === 'plus') {
+      setWeightKg(gender === 'women' ? 78 : 95);
+      setChestIn(gender === 'women' ? 42 : 46);
+      setWaistIn(gender === 'women' ? 36 : 40);
+      setHipIn(gender === 'women' ? 46 : 44);
+    }
+  };
+
+  // Draggable Split Slider PanResponder
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderMove: (_, gestureState) => {
+        const newPos = (gestureState.moveX / SCREEN_WIDTH) * 100;
+        setSplitPos(Math.max(5, Math.min(95, newPos)));
+      },
+    })
+  ).current;
+
+  // Execute Try-On API Call
+  const handleTryOnGarment = async (garment: YouCamGarment) => {
+    setSelectedGarment(garment);
+    setIsProcessingTryOn(true);
+
     try {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     } catch (_) {}
 
     try {
       const result = await YouCamService.executeClothesTryOn({
-        modelImageUrl: camera.capturedPhoto?.uri || currentModel.beforeImageUrl,
+        modelImageUrl: customUserPhoto || selectedModel.beforeImageUrl,
         garmentImageUrl: garment.imageUrl,
         garmentType: garment.garmentType,
-        bodyParameters: { heightCm, weightKg, chestIn, waistIn, hipIn },
+        bodyParameters: {
+          heightCm,
+          weightKg,
+          chestIn,
+          waistIn,
+          hipIn,
+        },
       });
 
       if (result.success) {
         setFitScore(result.fitScore);
-        try {
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        } catch (_) {}
       }
     } catch (e) {
-      console.error(e);
+      console.warn('Try-On error:', e);
     } finally {
-      setIsAIProcessing(false);
+      setIsProcessingTryOn(false);
     }
   };
 
-  const handleSelectModel = (idx: number) => {
-    try {
-      Haptics.selectionAsync();
-    } catch (_) {}
-    setSelectedModelIdx(idx);
-    camera.clearPhoto();
-    const model = currentModels[idx];
-    if (model) {
-      setHeightCm(model.heightCm);
-      setWeightKg(model.weightKg);
-      setChestIn(model.chestIn);
-      setWaistIn(model.waistIn);
-      setHipIn(model.hipIn);
-      setBodyShape(model.bodyShape);
+  // Capture Inline Camera Photo
+  const handleCaptureInlineCamera = async () => {
+    const photo = await takePhoto();
+    if (photo) {
+      setCustomUserPhoto(photo.uri);
+      setShowLiveCamera(false);
+      handleTryOnGarment(selectedGarment);
     }
   };
 
-  const handleSelectGarment = (idx: number) => {
-    setSelectedGarmentIdx(idx);
-    executeAITryOn(currentGarments[idx]);
-  };
-
-  const handleShapePreset = (shape: string) => {
-    try {
-      Haptics.selectionAsync();
-    } catch (_) {}
-    setBodyShape(shape);
-    if (shape === 'athletic') {
-      setChestIn(activeGender === 'women' ? 36 : 42);
-      setWaistIn(activeGender === 'women' ? 26 : 30);
-      setHipIn(activeGender === 'women' ? 37 : 38);
-    } else if (shape === 'hourglass') {
-      setChestIn(36);
-      setWaistIn(24);
-      setHipIn(38);
-    } else if (shape === 'rectangle') {
-      setChestIn(activeGender === 'women' ? 33 : 38);
-      setWaistIn(activeGender === 'women' ? 28 : 32);
-      setHipIn(activeGender === 'women' ? 35 : 37);
-    } else if (shape === 'pear') {
-      setChestIn(activeGender === 'women' ? 33 : 38);
-      setWaistIn(activeGender === 'women' ? 27 : 33);
-      setHipIn(activeGender === 'women' ? 42 : 40);
-    } else if (shape === 'inverted_triangle') {
-      setChestIn(activeGender === 'women' ? 38 : 44);
-      setWaistIn(activeGender === 'women' ? 27 : 32);
-      setHipIn(activeGender === 'women' ? 34 : 37);
-    } else if (shape === 'plus') {
-      setWeightKg(activeGender === 'women' ? 78 : 95);
-      setChestIn(activeGender === 'women' ? 42 : 46);
-      setWaistIn(activeGender === 'women' ? 36 : 40);
-      setHipIn(activeGender === 'women' ? 46 : 44);
+  // Open Native Camera
+  const handleLaunchNativeCamera = async () => {
+    const photo = await openNativeDeviceCamera();
+    if (photo) {
+      setCustomUserPhoto(photo.uri);
+      setShowLiveCamera(false);
+      handleTryOnGarment(selectedGarment);
     }
   };
 
+  // Pick Gallery Image
+  const handlePickGallery = async () => {
+    const photo = await pickImageFromGallery();
+    if (photo) {
+      setCustomUserPhoto(photo.uri);
+      setShowLiveCamera(false);
+      handleTryOnGarment(selectedGarment);
+    }
+  };
+
+  // Add Outfit to Cart
   const handleAddOutfitToBag = async () => {
     try {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch (_) {}
 
-    const bespokeItem: any = {
-      id: 'bespoke_' + currentGarment.id + '_' + Date.now(),
-      name: currentGarment.name + ' (Custom AI Fit)',
-      category: currentGarment.category,
-      price: currentGarment.price,
-      mrp: Math.round(currentGarment.price * 1.35),
-      badge: 'BESPOKE OPTION',
-      fabric: currentGarment.fabric,
-      dispatch: 'Bespoke Made-to-Measure 7-14 Days',
-      stockLeft: 10,
-      hypeRating: 98,
-      sizes: ['Custom 3D'],
-      outOfStock: [],
-      funnel: 'custom-made',
-      gender: activeGender,
-      images: [currentGarment.imageUrl],
-      description: 'Bespoke tailored outfit using your exact 3D metrics (Height: ' + heightCm + 'cm, Weight: ' + weightKg + 'kg, Chest: ' + chestIn + '", Waist: ' + waistIn + '", Hips: ' + hipIn + '").',
+    const productMock = {
+      id: 'custom_vto_' + selectedGarment.id + '_' + Date.now(),
+      name: selectedGarment.name + ' (AI Bespoke Fit)',
+      price: selectedGarment.price,
+      mrp: Math.round(selectedGarment.price * 1.35),
+      fabric: selectedGarment.fabric,
+      gender: gender,
+      category: selectedGarment.category,
+      funnel: 'custom-made' as const,
+      images: [selectedGarment.imageUrl],
+      description: 'Laser tailored to ' + heightCm + 'cm, ' + weightKg + 'kg, ' + chestIn + '" chest, ' + waistIn + '" waist.',
+      sizes: [bmiInfo.size],
+      inStock: true,
+      hypeRating: 99,
     };
 
-    await CartService.addItem(
-      bespokeItem,
-      'Custom 3D',
-      1,
-      selectedColor.name,
-      { heightCm, weightKg, bmi, chest: chestIn, waist: waistIn, hip: hipIn }
-    );
-
-    scheduleBespokeMilestoneAlert(currentGarment.name);
+    await CartService.addItem(productMock, bmiInfo.size, 1);
     Alert.alert(
       '✦ BESPOKE OUTFIT ADDED',
-      'Your custom tailored ' + currentGarment.name + ' with ' + selectedColor.name + ' shade and exact 3D anthropometrics has been added to your shopping bag.',
-      [{ text: 'CONTINUE SHOPPING' }]
+      selectedGarment.name + ' tailored to your exact 3D body metrics has been added to your shopping bag.',
+      [
+        { text: 'CONTINUE STUDIO' },
+        { text: 'VIEW BAG', onPress: () => router.push('/cart') },
+      ]
     );
   };
 
-  const handleOpenLiveCamera = async () => {
-    try {
-      Haptics.selectionAsync();
-    } catch (_) {}
-    if (!camera.isPermissionGranted) {
-      await camera.requestPermission();
-    }
-    setActiveTab('camera');
-  };
+  // Filter Garments by category
+  const categories = ['All', 'HOT', 'Party', 'Daily', 'Bespoke', 'Tops', 'Bottoms', 'Dresses', 'Jackets'];
+  const filteredGarments = garmentsForGender.filter(g => {
+    if (selectedCategory === 'All') return true;
+    if (selectedCategory === g.tag || selectedCategory === g.category) return true;
+    return false;
+  });
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
-      {/* ── Top Header Bar ── */}
-      <View style={styles.topBar}>
+      {/* ── TOP LUXURY BAR ── */}
+      <View style={styles.header}>
         <View>
-          <Text style={styles.title}>AI TRY-ON STUDIO</Text>
+          <Text style={styles.title}>AI VIRTUAL TRY-ON & BODY STUDIO</Text>
           <Text style={styles.subTitle}>
-            Perfect Corp YouCam Generative Engine · 99.4% Fit Accuracy
+            {gender.toUpperCase()} · YOUCAM GENERATIVE AI · 80 BIOMETRIC NODES
           </Text>
         </View>
+
+        {/* Gender Toggle */}
+        <View style={styles.genderToggle}>
+          <TouchableOpacity
+            onPress={() => setGender('women')}
+            style={[styles.genderBtn, gender === 'women' && styles.genderBtnActive]}
+          >
+            <Text style={[styles.genderText, gender === 'women' && styles.genderTextActive]}>
+              WOMEN
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setGender('men')}
+            style={[styles.genderBtn, gender === 'men' && styles.genderBtnActive]}
+          >
+            <Text style={[styles.genderText, gender === 'men' && styles.genderTextActive]}>
+              MEN
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* ── STUDIO SUB-TABS (Clothes Changer vs Body Visualizer vs Bespoke) ── */}
+      <View style={styles.tabNav}>
         <TouchableOpacity
-          onPress={() => shareOutfitLook(camera.capturedPhoto?.uri, currentGarment.name)}
-          style={styles.shareBtn}
+          onPress={() => setActiveTab('clothes')}
+          style={[styles.tabBtn, activeTab === 'clothes' && styles.tabBtnActive]}
         >
-          <Text style={{ fontSize: 16 }}>📤</Text>
+          <Text style={[styles.tabText, activeTab === 'clothes' && styles.tabTextActive]}>
+            👗 AI Try-On
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => setActiveTab('body')}
+          style={[styles.tabBtn, activeTab === 'body' && styles.tabBtnActive]}
+        >
+          <Text style={[styles.tabText, activeTab === 'body' && styles.tabTextActive]}>
+            🧍 Body Visualizer
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => setActiveTab('custom')}
+          style={[styles.tabBtn, activeTab === 'custom' && styles.tabBtnActive]}
+        >
+          <Text style={[styles.tabText, activeTab === 'custom' && styles.tabTextActive]}>
+            ✂️ Bespoke Specs
+          </Text>
         </TouchableOpacity>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        
-        {/* ── MAIN STUDIO VIEWPORT CANVAS ── */}
-        <View style={styles.canvasContainer}>
-          {activeTab === 'camera' ? (
-            /* 1. LIVE AR CAMERA VIEWPORT */
-            camera.isPermissionGranted ? (
-              <View style={styles.cameraWrap}>
-                <CameraView
-                  ref={camera.cameraRef}
-                  facing={camera.facing}
-                  flash={camera.flash}
-                  style={StyleSheet.absoluteFillObject}
-                />
 
-                {/* AR 3D Body Outline Alignment Frame */}
+        {/* ══════════════════════════════════════════════════════════
+             1. MAIN VIEWPORT: Live Camera OR Interactive Before/After
+        ═══════════════════════════════════════════════════════════ */}
+        {showLiveCamera ? (
+          /* ── INLINE LIVE CAMERA VIEWPORT ── */
+          <View style={styles.cameraViewport}>
+            {isPermissionGranted ? (
+              <CameraView
+                ref={cameraRef}
+                facing={facing}
+                style={styles.cameraView}
+              >
+                {/* AR Human Alignment Guidelines Overlay */}
                 <View style={styles.arOverlay}>
-                  <View style={styles.arHeadGuide} />
-                  <View style={styles.arShoulderGuide} />
-                  <View style={styles.arTorsoGuide} />
-                  <View style={styles.arHipsGuide} />
-                  <Text style={styles.arGuideText}>Align your body within the frame</Text>
+                  <View style={styles.arHead} />
+                  <View style={styles.arShoulderLine} />
+                  <View style={styles.arTorsoBox} />
+                  <Text style={styles.arGuidelineText}>Align body within frame</Text>
                 </View>
 
-                {/* Camera Control Bar */}
-                <View style={styles.cameraControls}>
-                  <TouchableOpacity onPress={camera.toggleCameraFacing} style={styles.camIconBtn}>
-                    <Text style={{ color: '#fff', fontSize: 18 }}>🔄</Text>
+                {/* Camera Action Overlay Controls */}
+                <View style={styles.cameraControlsBar}>
+                  <TouchableOpacity onPress={toggleFlash} style={styles.camIconBtn}>
+                    <Text style={styles.camIconText}>{flash === 'off' ? '⚡ OFF' : '⚡ ON'}</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    onPress={async () => {
-                      const photo = await camera.takePhoto();
-                      if (photo) {
-                        setActiveTab('clothes');
-                        executeAITryOn(currentGarment);
-                      }
-                    }}
-                    style={styles.camShutterBtn}
+                    onPress={handleCaptureInlineCamera}
+                    style={styles.shutterBtn}
                   >
-                    <View style={styles.camShutterInner} />
+                    <View style={styles.shutterInner} />
                   </TouchableOpacity>
 
-                  <TouchableOpacity onPress={camera.toggleFlash} style={styles.camIconBtn}>
-                    <Text style={{ color: '#fff', fontSize: 18 }}>
-                      {camera.flash === 'on' ? '⚡' : camera.flash === 'auto' ? '🅰️' : '🚫'}
-                    </Text>
+                  <TouchableOpacity onPress={toggleCameraFacing} style={styles.camIconBtn}>
+                    <Text style={styles.camIconText}>🔄 FLIP</Text>
                   </TouchableOpacity>
                 </View>
-              </View>
+              </CameraView>
             ) : (
-              /* Camera Permission Request Fallback View */
               <View style={styles.permissionCard}>
-                <Text style={{ fontSize: 44, marginBottom: 12 }}>📸</Text>
-                <Text style={styles.permissionTitle}>Camera Access Required</Text>
-                <Text style={styles.permissionSub}>
-                  Allow camera access to try on high-fashion outfits on your live photo using AI neural drape technology.
+                <Text style={{ fontSize: 32, marginBottom: 8 }}>📸</Text>
+                <Text style={styles.permTitle}>Camera Access Required</Text>
+                <Text style={styles.permSub}>
+                  Grant camera permissions to try on garments directly on your live photo.
                 </Text>
 
                 <GoldButton
-                  title="ALLOW CAMERA ACCESS ✦"
-                  onPress={camera.requestPermission}
-                  size="md"
-                  style={{ width: '100%', marginTop: 16 }}
-                />
-
-                <TouchableOpacity
+                  title="ALLOW CAMERA ACCESS"
                   onPress={async () => {
-                    const img = await camera.pickImageFromGallery();
-                    if (img) {
-                      setActiveTab('clothes');
-                      executeAITryOn(currentGarment);
+                    const ok = await requestPermission();
+                    if (!ok) {
+                      handleLaunchNativeCamera();
                     }
                   }}
-                  style={styles.galleryFallbackBtn}
-                >
-                  <Text style={styles.galleryFallbackText}>📁 Or Select Photo from Gallery</Text>
-                </TouchableOpacity>
-              </View>
-            )
-          ) : activeTab === 'body' ? (
-            /* 2. DEDICATED INTERACTIVE AI BODY VISUALIZER CANVAS */
-            <View style={styles.bodyCanvasContainer}>
-              <View style={styles.bodyVisualizerGraphic}>
-                {/* Visual Anthropometric Human Silhouette */}
-                <View style={styles.bodySilhouetteWrap}>
-                  <View style={styles.bodyHead} />
-                  <View
-                    style={[
-                      styles.bodyShoulders,
-                      {
-                        width: Math.min(180, Math.max(90, (chestIn * 3.4))),
-                        backgroundColor: COLORS.gold,
-                      },
-                    ]}
-                  />
-                  <View
-                    style={[
-                      styles.bodyWaist,
-                      {
-                        width: Math.min(160, Math.max(70, (waistIn * 3.0))),
-                        height: Math.min(80, Math.max(45, (heightCm / 3.2))),
-                      },
-                    ]}
-                  />
-                  <View
-                    style={[
-                      styles.bodyHips,
-                      {
-                        width: Math.min(175, Math.max(80, (hipIn * 3.2))),
-                      },
-                    ]}
-                  />
-                  <View style={styles.bodyLegsRow}>
-                    <View
-                      style={[
-                        styles.bodyLeg,
-                        { height: Math.min(140, Math.max(80, (heightCm * 0.55))) },
-                      ]}
-                    />
-                    <View
-                      style={[
-                        styles.bodyLeg,
-                        { height: Math.min(140, Math.max(80, (heightCm * 0.55))) },
-                      ]}
-                    />
-                  </View>
-                </View>
+                  size="md"
+                  style={{ marginTop: 12 }}
+                />
 
-                {/* Floating Anthropometric Nodes */}
-                <View style={styles.metricsPill}>
-                  <Text style={styles.metricsPillText}>
-                    {activeGender === 'women' ? 'FEMALE' : 'MALE'} · {bodyShape.toUpperCase()} ARCHETYPE
-                  </Text>
-                  <Text style={styles.metricsPillSub}>
-                    Height: {heightCm}cm · Weight: {weightKg}kg · Chest: {chestIn}" · Waist: {waistIn}" · Hips: {hipIn}"
-                  </Text>
-                </View>
+                <GoldButton
+                  title="OPEN NATIVE DEVICE CAMERA"
+                  variant="outline"
+                  onPress={handleLaunchNativeCamera}
+                  size="md"
+                  style={{ marginTop: 8 }}
+                />
               </View>
+            )}
 
-              {/* BMI Dial Card */}
-              <View style={styles.bmiStatsBox}>
-                <View>
-                  <Text style={styles.bmiStatsMicro}>BODY MASS INDEX</Text>
-                  <Text style={styles.bmiStatsValue}>{bmi}</Text>
-                </View>
-                <View style={{ alignItems: 'flex-end' }}>
-                  <Badge
-                    label={
-                      bmi < 18.5
-                        ? 'Underweight'
-                        : bmi < 25
-                        ? 'Optimal Fit'
-                        : bmi < 30
-                        ? 'Athletic Plus'
-                        : 'Curvy Plus'
-                    }
-                    variant={bmi >= 18.5 && bmi <= 25 ? 'green' : 'gold'}
-                  />
-                  <Text style={styles.bmiSizeRec}>
-                    Recommended Size: <Text style={{ color: COLORS.goldDark, fontWeight: '900' }}>{getRecommendedSize()}</Text>
-                  </Text>
-                </View>
-              </View>
-            </View>
-          ) : (
-            /* 3. PHOTOREALISTIC BEFORE/AFTER CLOTHES CHANGER CANVAS */
-            <View style={styles.imageCanvas}>
-              {/* BEFORE LAYER */}
-              <Image
-                source={{
-                  uri: camera.capturedPhoto?.uri || currentModel.beforeImageUrl,
-                }}
-                style={styles.canvasImage}
-                resizeMode="cover"
-              />
-              <View style={styles.beforeLabel}>
-                <Text style={styles.labelText}>BEFORE</Text>
-              </View>
+            <TouchableOpacity
+              onPress={() => setShowLiveCamera(false)}
+              style={styles.closeCamBtn}
+            >
+              <Text style={styles.closeCamText}>✕ CLOSE LIVE CAMERA</Text>
+            </TouchableOpacity>
+          </View>
+        ) : activeTab === 'body' ? (
+          <View style={styles.bodyCanvasContainer}>
+            {/* 2. DYNAMIC MORPHING HUMAN BODY VISUALIZER CANVAS */}
+            {/* Morphing Silhouette Simulation */}
+            <View style={styles.bodySilhouetteMount}>
+              {/* Head */}
+              <View style={styles.bvHead} />
 
-              {/* AFTER LAYER */}
+              {/* Shoulders / Chest Width */}
               <View
                 style={[
-                  styles.afterWrap,
-                  { width: (100 - sliderSplit) + '%' },
+                  styles.bvShoulders,
+                  {
+                    width: Math.min(240, Math.max(120, chestIn * 4.4)),
+                  },
+                ]}
+              />
+
+              {/* Torso / Waist Width & Height */}
+              <View
+                style={[
+                  styles.bvTorso,
+                  {
+                    width: Math.min(210, Math.max(90, waistIn * 4.0)),
+                    height: Math.min(130, Math.max(75, heightCm * 0.48)),
+                  },
+                ]}
+              />
+
+              {/* Hips Width */}
+              <View
+                style={[
+                  styles.bvHips,
+                  {
+                    width: Math.min(230, Math.max(100, hipIn * 4.2)),
+                  },
+                ]}
+              />
+
+              {/* Legs */}
+              <View style={styles.bvLegsRow}>
+                <View
+                  style={[
+                    styles.bvLeg,
+                    { height: Math.min(160, Math.max(90, heightCm * 0.68)) },
+                  ]}
+                />
+                <View
+                  style={[
+                    styles.bvLeg,
+                    { height: Math.min(160, Math.max(90, heightCm * 0.68)) },
+                  ]}
+                />
+              </View>
+            </View>
+
+            {/* Anthropometric HUD Overlay */}
+            <View style={styles.bvMetricsHud}>
+              <View>
+                <Text style={styles.bvShapeTag}>
+                  {gender.toUpperCase()} · {bodyShape.toUpperCase()} ARCHETYPE
+                </Text>
+                <Text style={styles.bvMetricsLine}>
+                  {heightCm}cm · {weightKg}kg · Chest: {chestIn}" · Waist: {waistIn}" · Hips: {hipIn}"
+                </Text>
+              </View>
+              <View style={{ alignItems: 'flex-end' }}>
+                <Text style={styles.bvBmiVal}>BMI {bmi}</Text>
+                <Text style={[styles.bvBmiCat, { color: bmiInfo.color }]}>
+                  {bmiInfo.label}
+                </Text>
+              </View>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.viewportContainer}>
+            {/* 3. BEFORE / AFTER INTERACTIVE COMPARISON SLIDER */}
+            <View style={styles.imageContainer} {...panResponder.panHandlers}>
+              {/* BEFORE LAYER: Base Supermodel or User Uploaded Photo */}
+              <Image
+                source={{
+                  uri: customUserPhoto || selectedModel.beforeImageUrl,
+                }}
+                style={styles.modelImage}
+                resizeMode="cover"
+              />
+
+              {/* AFTER LAYER: Dressed Supermodel (Clipped by slider position) */}
+              <View
+                style={[
+                  styles.afterOverlay,
+                  { left: splitPos + '%' },
                 ]}
               >
                 <Image
                   source={{
-                    uri: currentGarment.imageUrl,
+                    uri: selectedGarment.imageUrl || selectedModel.afterImageUrl,
                   }}
-                  style={[styles.canvasImage, { width: SCREEN_WIDTH - 32 }]}
-                  resizeMode="cover"
-                />
-                <View
                   style={[
-                    styles.colorTint,
+                    styles.modelImage,
                     {
-                      backgroundColor: selectedColor.hex,
-                      opacity: selectedColor.hex === '#F5F2E7' ? 0 : 0.2,
+                      width: SLIDER_WIDTH,
+                      marginLeft: -((SLIDER_WIDTH * splitPos) / 100),
                     },
                   ]}
+                  resizeMode="cover"
                 />
-                <View style={styles.afterLabel}>
-                  <Text style={[styles.labelText, { color: COLORS.goldDark }]}>AFTER</Text>
+
+                {/* Garment Color Swatch Tint */}
+                {activeColorHex !== '#FFFFFF' && (
+                  <View
+                    style={[
+                      styles.colorTint,
+                      { backgroundColor: activeColorHex },
+                    ]}
+                  />
+                )}
+              </View>
+
+              {/* SLIDER DIVIDER HANDLE */}
+              <View style={[styles.sliderDivider, { left: splitPos + '%' }]}>
+                <View style={styles.sliderHandle}>
+                  <Text style={styles.sliderHandleText}>⇄</Text>
                 </View>
               </View>
 
-              {/* Divider */}
-              <View style={[styles.sliderDivider, { left: sliderSplit + '%' }]}>
-                <View style={styles.sliderArrowBadge}>
-                  <Text style={styles.sliderArrowText}>⇄</Text>
-                </View>
+              {/* BEFORE & AFTER LABELS */}
+              <View style={styles.labelBefore}>
+                <Text style={styles.labelText}>BEFORE</Text>
+              </View>
+              <View style={styles.labelAfter}>
+                <Text style={styles.labelText}>AFTER (TRY-ON)</Text>
               </View>
 
-              {/* AI Processing Overlay */}
-              {isAIProcessing && (
-                <View style={styles.aiLoadingOverlay}>
-                  <ActivityIndicator size="large" color={COLORS.gold} />
-                  <Text style={styles.aiLoadingText}>AI TAILORING OUTFIT ON SUPERMODEL...</Text>
+              {/* AI Processing Shimmer Overlay */}
+              {isProcessingTryOn && (
+                <View style={styles.processingOverlay}>
+                  <ActivityIndicator size="large" color="#FFFFFF" />
+                  <Text style={styles.processingText}>
+                    YOUCAM AI TAILORING OUTFIT ON MODEL...
+                  </Text>
                 </View>
               )}
+            </View>
 
-              {/* Model HUD Badge */}
-              <View style={styles.hudBadge}>
-                <View style={styles.hudTop}>
-                  <Text style={styles.hudModelName}>
-                    {camera.capturedPhoto ? 'Your Captured Photo' : currentModel.name}
-                  </Text>
-                  <Text style={styles.hudFitScore}>✓ {fitScore}% Fit Score</Text>
-                </View>
-                <Text style={styles.hudSub}>
-                  Wearing: {currentGarment.name} · {selectedColor.name}
+            {/* Viewport Meta Bar */}
+            <View style={styles.metaBar}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.metaTitle} numberOfLines={1}>
+                  {selectedGarment.name}
+                </Text>
+                <Text style={styles.metaSub}>
+                  Model: {selectedModel.name} · Fit Confidence: {fitScore}%
                 </Text>
               </View>
-            </View>
-          )}
-
-          {/* Slider Controls */}
-          {activeTab === 'clothes' && (
-            <View style={styles.sliderControlBar}>
-              <TouchableOpacity onPress={() => setSliderSplit(20)} style={[styles.splitBtn, sliderSplit === 20 && styles.splitBtnActive]}>
-                <Text style={[styles.splitBtnText, sliderSplit === 20 && styles.splitBtnTextActive]}>Before 80%</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setSliderSplit(50)} style={[styles.splitBtn, sliderSplit === 50 && styles.splitBtnActive]}>
-                <Text style={[styles.splitBtnText, sliderSplit === 50 && styles.splitBtnTextActive]}>50 / 50 Split</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setSliderSplit(80)} style={[styles.splitBtn, sliderSplit === 80 && styles.splitBtnActive]}>
-                <Text style={[styles.splitBtnText, sliderSplit === 80 && styles.splitBtnTextActive]}>After 80%</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-
-        {/* ── TABS ── */}
-        <View style={styles.tabBar}>
-          <TouchableOpacity
-            onPress={() => setActiveTab('clothes')}
-            style={[styles.tabBtn, activeTab === 'clothes' && styles.tabBtnActive]}
-          >
-            <Text style={[styles.tabBtnText, activeTab === 'clothes' && styles.tabBtnTextActive]}>
-              👗 Clothes Changer
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => setActiveTab('body')}
-            style={[styles.tabBtn, activeTab === 'body' && styles.tabBtnActive]}
-          >
-            <Text style={[styles.tabBtnText, activeTab === 'body' && styles.tabBtnTextActive]}>
-              🧍 Body Visualizer
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={handleOpenLiveCamera}
-            style={[styles.tabBtn, activeTab === 'camera' && styles.tabBtnActive]}
-          >
-            <Text style={[styles.tabBtnText, activeTab === 'camera' && styles.tabBtnTextActive]}>
-              📸 Live Camera
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* ── TAB 1: CLOTHES CHANGER ── */}
-        {activeTab === 'clothes' && (
-          <View style={styles.tabContent}>
-            <View style={styles.sectionHeaderRow}>
-              <Text style={styles.sectionTitle}>1. SELECT SUPERMODEL OR UPLOAD</Text>
-              <View style={styles.genderPills}>
-                <TouchableOpacity
-                  onPress={() => {
-                    try { Haptics.selectionAsync(); } catch (_) {}
-                    setActiveGender('women');
-                  }}
-                  style={[styles.genderPill, activeGender === 'women' && styles.genderPillActive]}
-                >
-                  <Text style={[styles.genderPillText, activeGender === 'women' && styles.genderPillTextActive]}>
-                    FEMININE
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    try { Haptics.selectionAsync(); } catch (_) {}
-                    setActiveGender('men');
-                  }}
-                  style={[styles.genderPill, activeGender === 'men' && styles.genderPillActive]}
-                >
-                  <Text style={[styles.genderPillText, activeGender === 'men' && styles.genderPillTextActive]}>
-                    MASCULINE
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.modelsScroll}
-            >
-              <TouchableOpacity
-                onPress={async () => {
-                  const img = await camera.pickImageFromGallery();
-                  if (img) executeAITryOn(currentGarment);
-                }}
-                style={styles.uploadCard}
-              >
-                <Text style={{ fontSize: 24, marginBottom: 2 }}>📸</Text>
-                <Text style={styles.uploadCardTitle}>UPLOAD</Text>
-                <Text style={styles.uploadCardSub}>Your Photo</Text>
-              </TouchableOpacity>
-
-              {currentModels.map((model, idx) => (
-                <TouchableOpacity
-                  key={model.id}
-                  onPress={() => handleSelectModel(idx)}
-                  style={[
-                    styles.modelCard,
-                    selectedModelIdx === idx && !camera.capturedPhoto && styles.modelCardActive,
-                  ]}
-                >
-                  <Image source={{ uri: model.beforeImageUrl }} style={styles.modelImg} />
-                  <Text style={styles.modelName} numberOfLines={1}>
-                    {model.name.split(' ')[0]}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-
-            <View style={{ marginTop: 20, marginBottom: 8 }}>
-              <Text style={styles.sectionTitle}>2. CHOOSE NEW OUTFIT TO WEAR</Text>
-            </View>
-
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.garmentsScroll}
-            >
-              {currentGarments.map((garment, idx) => (
-                <GarmentCard
-                  key={garment.id}
-                  garment={garment}
-                  isSelected={selectedGarmentIdx === idx}
-                  onSelect={() => handleSelectGarment(idx)}
-                />
-              ))}
-            </ScrollView>
-
-            <View style={{ marginTop: 20, marginBottom: 8 }}>
-              <Text style={styles.sectionTitle}>3. GARMENT FABRIC SHADE</Text>
-            </View>
-
-            <View style={styles.colorRow}>
-              {COLOR_SWATCHES.map(swatch => (
-                <TouchableOpacity
-                  key={swatch.name}
-                  onPress={() => {
-                    try { Haptics.selectionAsync(); } catch (_) {}
-                    setSelectedColor(swatch);
-                  }}
-                  style={[
-                    styles.colorCircle,
-                    { backgroundColor: swatch.hex },
-                    selectedColor.name === swatch.name && styles.colorCircleActive,
-                  ]}
-                />
-              ))}
+              <Badge label="YOUCAM 4K VTO" variant="white" size="sm" />
             </View>
           </View>
         )}
 
-        {/* ── TAB 2: BODY VISUALIZER ── */}
-        {activeTab === 'body' && (
-          <View style={styles.tabContent}>
-            <Text style={[styles.sectionTitle, { marginBottom: 10 }]}>
-              1. BODY SHAPE ARCHETYPES
-            </Text>
-            <View style={styles.presetRow}>
-              {['athletic', 'hourglass', 'rectangle', 'pear', 'inverted_triangle', 'plus'].map(shape => (
+        {/* ══════════════════════════════════════════════════════════
+             4. MULTI-CAMERA PHOTO SOURCE BUTTONS
+        ═══════════════════════════════════════════════════════════ */}
+        <View style={styles.photoActionsRow}>
+          <TouchableOpacity
+            activeOpacity={0.88}
+            onPress={handleLaunchNativeCamera}
+            style={styles.photoActionBtnPrimary}
+          >
+            <Text style={styles.photoActionIcon}>📸</Text>
+            <View>
+              <Text style={styles.photoActionTitle}>TAKE PHOTO</Text>
+              <Text style={styles.photoActionSub}>Native Device Camera</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            activeOpacity={0.88}
+            onPress={() => setShowLiveCamera(prev => !prev)}
+            style={styles.photoActionBtn}
+          >
+            <Text style={styles.photoActionIcon}>📹</Text>
+            <View>
+              <Text style={styles.photoActionTitle}>LIVE AR</Text>
+              <Text style={styles.photoActionSub}>Viewfinder</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            activeOpacity={0.88}
+            onPress={handlePickGallery}
+            style={styles.photoActionBtn}
+          >
+            <Text style={styles.photoActionIcon}>📁</Text>
+            <View>
+              <Text style={styles.photoActionTitle}>UPLOAD</Text>
+              <Text style={styles.photoActionSub}>Photo Gallery</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        {/* ══════════════════════════════════════════════════════════
+             TAB 1 CONTENT: AI CLOTHES CHANGER (SUPERMODELS & GARMENTS)
+        ═══════════════════════════════════════════════════════════ */}
+        {activeTab === 'clothes' && (
+          <View style={styles.controlsSection}>
+            {/* Supermodel Selector */}
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionHeading}>1. SELECT AI SUPERMODEL</Text>
+              <Text style={styles.sectionMeta}>{modelsForGender.length} Editorial Models</Text>
+            </View>
+
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.modelsTray}>
+              {modelsForGender.map(m => {
+                const isSel = selectedModel.id === m.id && !customUserPhoto;
+                return (
+                  <TouchableOpacity
+                    key={m.id}
+                    onPress={() => {
+                      setCustomUserPhoto(null);
+                      setSelectedModel(m);
+                      setHeightCm(m.heightCm);
+                      setWeightKg(m.weightKg);
+                      setChestIn(m.chestIn);
+                      setWaistIn(m.waistIn);
+                      setHipIn(m.hipIn);
+                      setBodyShape(m.bodyShape);
+                      handleTryOnGarment(selectedGarment);
+                    }}
+                    style={[styles.modelCard, isSel && styles.modelCardActive]}
+                  >
+                    <Image source={{ uri: m.beforeImageUrl }} style={styles.modelThumb} />
+                    <Text style={[styles.modelName, isSel && styles.modelNameActive]} numberOfLines={1}>
+                      {m.name.split(' ')[0]}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+
+            {/* Garment Categories */}
+            <View style={[styles.sectionHeader, { marginTop: 16 }]}>
+              <Text style={styles.sectionHeading}>2. CHOOSE NEW OUTFIT TO TRY ON</Text>
+              <Text style={styles.sectionMeta}>1-Click YouCam Drape</Text>
+            </View>
+
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.catScroll}>
+              {categories.map(c => (
                 <TouchableOpacity
-                  key={shape}
-                  onPress={() => handleShapePreset(shape)}
-                  style={[styles.presetBtn, bodyShape === shape && styles.presetBtnActive]}
+                  key={c}
+                  onPress={() => setSelectedCategory(c)}
+                  style={[styles.catPill, selectedCategory === c && styles.catPillActive]}
                 >
-                  <Text style={[styles.presetBtnText, bodyShape === shape && styles.presetBtnTextActive]}>
-                    {shape === 'athletic'
-                      ? '⚡ Athletic'
-                      : shape === 'hourglass'
-                      ? '⏳ Hourglass'
-                      : shape === 'rectangle'
-                      ? '🟩 Rectangle'
-                      : shape === 'pear'
-                      ? '🍐 Pear'
-                      : shape === 'inverted_triangle'
-                      ? '🔻 V-Taper'
-                      : '➕ Plus'}
+                  <Text style={[styles.catPillText, selectedCategory === c && styles.catPillTextActive]}>
+                    {c}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
+            {/* Garments Grid */}
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.garmentsTray}>
+              {filteredGarments.map(g => (
+                <GarmentCard
+                  key={g.id}
+                  garment={g}
+                  isSelected={selectedGarment.id === g.id}
+                  onSelect={handleTryOnGarment}
+                />
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════
+             TAB 2 CONTENT: AI BODY VISUALIZER (ANTHROPOMETRICS & BMI)
+        ═══════════════════════════════════════════════════════════ */}
+        {activeTab === 'body' && (
+          <View style={styles.controlsSection}>
+            {/* BMI Gauge Summary Card */}
+            <View style={styles.bmiCard}>
+              <View>
+                <Text style={styles.bmiHeaderLabel}>BODY MASS INDEX (BMI)</Text>
+                <Text style={styles.bmiDisplayVal}>{bmi}</Text>
+              </View>
+              <View style={{ alignItems: 'flex-end' }}>
+                <Text style={[styles.bmiDisplayCat, { color: bmiInfo.color }]}>
+                  {bmiInfo.label}
+                </Text>
+                <Text style={styles.bmiDisplaySize}>
+                  Recommended Fit: <Text style={{ color: '#FFFFFF', fontWeight: '900' }}>{bmiInfo.size}</Text>
+                </Text>
+              </View>
+            </View>
+
+            {/* 1-Click Body Shape Presets */}
+            <Text style={[styles.sectionHeading, { marginTop: 14, marginBottom: 8 }]}>
+              1-CLICK BODY SHAPE ARCHETYPES
+            </Text>
+            <View style={styles.presetGrid}>
+              {[
+                { id: 'athletic', label: '⚡ Athletic V-Taper' },
+                { id: 'hourglass', label: '⏳ Hourglass' },
+                { id: 'rectangle', label: '🟩 Lean / Rectangle' },
+                { id: 'pear', label: '🍐 Pear / Triangle' },
+                { id: 'inverted_triangle', label: '🔻 Inverted Triangle' },
+                { id: 'plus', label: '➕ Plus / Robust' },
+              ].map(p => (
+                <TouchableOpacity
+                  key={p.id}
+                  onPress={() => applyBodyShape(p.id)}
+                  style={[styles.presetBtn, bodyShape === p.id && styles.presetBtnActive]}
+                >
+                  <Text style={[styles.presetText, bodyShape === p.id && styles.presetTextActive]}>
+                    {p.label}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
 
-            <Text style={[styles.sectionTitle, { marginTop: 18, marginBottom: 10 }]}>
-              2. FINE-TUNE ANTHROPOMETRICS
+            {/* Measurement Steppers / Adjusters */}
+            <Text style={[styles.sectionHeading, { marginTop: 16, marginBottom: 8 }]}>
+              ANTHROPOMETRIC MEASUREMENTS
             </Text>
 
-            <View style={styles.slidersGrid}>
-              <View style={styles.sliderBox}>
-                <Text style={styles.sliderLabel}>Height: {heightCm} cm ({(heightCm / 30.48).toFixed(1)}')</Text>
-                <View style={styles.sliderButtonsRow}>
+            <View style={styles.measurementsGrid}>
+              {/* Height */}
+              <View style={styles.metricCard}>
+                <Text style={styles.metricLabel}>Height</Text>
+                <Text style={styles.metricVal}>{heightCm} cm ({(heightCm / 30.48).toFixed(1)}')</Text>
+                <View style={styles.stepperRow}>
                   <TouchableOpacity onPress={() => setHeightCm(h => Math.max(140, h - 2))} style={styles.stepBtn}>
                     <Text style={styles.stepBtnText}>-</Text>
                   </TouchableOpacity>
-                  <Text style={styles.stepValueText}>{heightCm} cm</Text>
                   <TouchableOpacity onPress={() => setHeightCm(h => Math.min(210, h + 2))} style={styles.stepBtn}>
                     <Text style={styles.stepBtnText}>+</Text>
                   </TouchableOpacity>
                 </View>
               </View>
 
-              <View style={styles.sliderBox}>
-                <Text style={styles.sliderLabel}>Weight: {weightKg} kg ({Math.round(weightKg * 2.204)} lbs)</Text>
-                <View style={styles.sliderButtonsRow}>
+              {/* Weight */}
+              <View style={styles.metricCard}>
+                <Text style={styles.metricLabel}>Weight</Text>
+                <Text style={styles.metricVal}>{weightKg} kg ({Math.round(weightKg * 2.204)} lbs)</Text>
+                <View style={styles.stepperRow}>
                   <TouchableOpacity onPress={() => setWeightKg(w => Math.max(40, w - 2))} style={styles.stepBtn}>
                     <Text style={styles.stepBtnText}>-</Text>
                   </TouchableOpacity>
-                  <Text style={styles.stepValueText}>{weightKg} kg</Text>
-                  <TouchableOpacity onPress={() => setWeightKg(w => Math.min(140, w + 2))} style={styles.stepBtn}>
+                  <TouchableOpacity onPress={() => setWeightKg(w => Math.min(150, w + 2))} style={styles.stepBtn}>
                     <Text style={styles.stepBtnText}>+</Text>
                   </TouchableOpacity>
                 </View>
               </View>
 
-              <View style={styles.sliderBox}>
-                <Text style={styles.sliderLabel}>Chest / Bust: {chestIn}"</Text>
-                <View style={styles.sliderButtonsRow}>
+              {/* Chest */}
+              <View style={styles.metricCard}>
+                <Text style={styles.metricLabel}>Chest / Bust</Text>
+                <Text style={styles.metricVal}>{chestIn}"</Text>
+                <View style={styles.stepperRow}>
                   <TouchableOpacity onPress={() => setChestIn(c => Math.max(28, c - 1))} style={styles.stepBtn}>
                     <Text style={styles.stepBtnText}>-</Text>
                   </TouchableOpacity>
-                  <Text style={styles.stepValueText}>{chestIn}"</Text>
                   <TouchableOpacity onPress={() => setChestIn(c => Math.min(56, c + 1))} style={styles.stepBtn}>
                     <Text style={styles.stepBtnText}>+</Text>
                   </TouchableOpacity>
                 </View>
               </View>
 
-              <View style={styles.sliderBox}>
-                <Text style={styles.sliderLabel}>Waist: {waistIn}"</Text>
-                <View style={styles.sliderButtonsRow}>
+              {/* Waist */}
+              <View style={styles.metricCard}>
+                <Text style={styles.metricLabel}>Waist</Text>
+                <Text style={styles.metricVal}>{waistIn}"</Text>
+                <View style={styles.stepperRow}>
                   <TouchableOpacity onPress={() => setWaistIn(w => Math.max(20, w - 1))} style={styles.stepBtn}>
                     <Text style={styles.stepBtnText}>-</Text>
                   </TouchableOpacity>
-                  <Text style={styles.stepValueText}>{waistIn}"</Text>
                   <TouchableOpacity onPress={() => setWaistIn(w => Math.min(50, w + 1))} style={styles.stepBtn}>
                     <Text style={styles.stepBtnText}>+</Text>
                   </TouchableOpacity>
@@ -722,28 +794,73 @@ export default function TryOnScreen() {
           </View>
         )}
 
-        {/* ── SUMMARY BOX ── */}
-        <View style={styles.summaryBox}>
-          <View style={styles.summaryTopRow}>
-            <View>
-              <Text style={styles.summaryMicro}>BESPOKE SPECIFICATION</Text>
-              <Text style={styles.summaryPrice}>
-                ₹{currentGarment.price.toLocaleString('en-IN')}
-              </Text>
+        {/* ══════════════════════════════════════════════════════════
+             TAB 3 CONTENT: BESPOKE SPECS & COLOR TINT
+        ═══════════════════════════════════════════════════════════ */}
+        {activeTab === 'custom' && (
+          <View style={styles.controlsSection}>
+            <Text style={styles.sectionHeading}>GARMENT COLOR OVERLAY</Text>
+            <View style={styles.colorSwatchesRow}>
+              {[
+                { hex: '#FFFFFF', name: 'Raw White' },
+                { hex: '#4C1D95', name: 'Royal Purple' },
+                { hex: '#1C2536', name: 'Midnight Navy' },
+                { hex: '#18181B', name: 'Onyx Black' },
+                { hex: '#EECDAF', name: 'Peach Terracotta' },
+                { hex: '#4A7C6F', name: 'Sage Green' },
+              ].map(c => (
+                <TouchableOpacity
+                  key={c.hex}
+                  onPress={() => setActiveColorHex(c.hex)}
+                  style={[
+                    styles.colorCircle,
+                    { backgroundColor: c.hex },
+                    activeColorHex === c.hex && styles.colorCircleActive,
+                  ]}
+                />
+              ))}
             </View>
-            <View style={{ alignItems: 'flex-end' }}>
-              <Badge label="FIRST TRIAL GUARANTEED" variant="green" />
-              <Text style={styles.summarySub}>Zero Risk · Free Alterations</Text>
+
+            <Text style={[styles.sectionHeading, { marginTop: 16 }]}>TEXTILE MILL SELECTION</Text>
+            <View style={styles.fabricGrid}>
+              {[
+                { id: 'gots_cotton', label: 'Ahmedabad GOTS Cotton', desc: '280 GSM · Included' },
+                { id: 'selvedge', label: 'Japanese Selvedge Denim', desc: '14.5oz Okayama · +₹1,200' },
+                { id: 'french_terry', label: 'Organic French Terry', desc: '450 GSM Heavy · +₹800' },
+                { id: 'italian_linen', label: 'Pure Biella Italian Linen', desc: '210 GSM · +₹1,500' },
+              ].map(f => (
+                <TouchableOpacity
+                  key={f.id}
+                  onPress={() => setSelectedFabric(f.id)}
+                  style={[styles.fabricCard, selectedFabric === f.id && styles.fabricCardActive]}
+                >
+                  <Text style={[styles.fabricName, selectedFabric === f.id && styles.fabricNameActive]}>
+                    {f.label}
+                  </Text>
+                  <Text style={styles.fabricDesc}>{f.desc}</Text>
+                </TouchableOpacity>
+              ))}
             </View>
+          </View>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════
+             STICKY BOTTOM ACTION: PRICE & 1-TOUCH ADD TO BAG
+        ═══════════════════════════════════════════════════════════ */}
+        <View style={styles.bottomBar}>
+          <View>
+            <Text style={styles.bottomLabel}>TOTAL BESPOKE ORDER</Text>
+            <Text style={styles.bottomPrice}>₹{selectedGarment.price.toLocaleString('en-IN')}</Text>
           </View>
 
           <GoldButton
-            title="ADD BESPOKE OUTFIT TO BAG ✦"
+            title="ADD BESPOKE OUTFIT ✦"
             onPress={handleAddOutfitToBag}
             size="lg"
-            style={{ marginTop: 12 }}
+            style={{ flex: 1, marginLeft: 16 }}
           />
         </View>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -752,65 +869,110 @@ export default function TryOnScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
   },
-  topBar: {
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
+    paddingVertical: 10,
+    backgroundColor: '#000000',
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: '#262626',
   },
   title: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: '900',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
     letterSpacing: 1.5,
+    fontFamily: FONTS.display,
   },
   subTitle: {
-    fontSize: 9,
-    color: COLORS.goldDark,
-    letterSpacing: 0.5,
+    fontSize: 8,
+    color: '#A3A3A3',
+    letterSpacing: 0.8,
     marginTop: 2,
   },
-  shareBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#FAF8F0',
+  genderToggle: {
+    flexDirection: 'row',
+    backgroundColor: '#111111',
     borderWidth: 1,
-    borderColor: COLORS.border,
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderColor: '#333333',
+    borderRadius: RADIUS.sm,
   },
+  genderBtn: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  },
+  genderBtnActive: {
+    backgroundColor: '#FFFFFF',
+  },
+  genderText: {
+    fontSize: 9,
+    fontWeight: '800',
+    color: '#737373',
+  },
+  genderTextActive: {
+    color: '#000000',
+  },
+
+  tabNav: {
+    flexDirection: 'row',
+    backgroundColor: '#0A0A0A',
+    borderBottomWidth: 1,
+    borderBottomColor: '#262626',
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    gap: 8,
+  },
+  tabBtn: {
+    flex: 1,
+    paddingVertical: 8,
+    alignItems: 'center',
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm,
+  },
+  tabBtnActive: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
+  },
+  tabText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#A3A3A3',
+  },
+  tabTextActive: {
+    color: '#000000',
+  },
+
   scrollContent: {
     paddingBottom: 40,
   },
-  canvasContainer: {
-    padding: 16,
-    backgroundColor: '#FAF8F5',
-  },
-  imageCanvas: {
-    width: '100%',
-    height: 390,
-    backgroundColor: '#EDE8DF',
-    borderRadius: RADIUS.xl,
+
+  // Viewport
+  viewportContainer: {
+    margin: 16,
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm, // 0 sharp edges
     overflow: 'hidden',
-    position: 'relative',
-    borderWidth: 1.5,
-    borderColor: COLORS.border,
     ...SHADOWS.card,
   },
-  canvasImage: {
-    position: 'absolute',
-    inset: 0,
-    width: '100%',
-    height: '100%',
+  imageContainer: {
+    width: SLIDER_WIDTH,
+    height: 420,
+    position: 'relative',
+    backgroundColor: '#0D0D0D',
   },
-  afterWrap: {
+  modelImage: {
+    width: SLIDER_WIDTH,
+    height: 420,
+  },
+  afterOverlay: {
     position: 'absolute',
     top: 0,
     bottom: 0,
@@ -820,597 +982,610 @@ const styles = StyleSheet.create({
   colorTint: {
     position: 'absolute',
     inset: 0,
-  },
-  beforeLabel: {
-    position: 'absolute',
-    top: 12,
-    left: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.92)',
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: RADIUS.full,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    ...SHADOWS.soft,
-  },
-  afterLabel: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.92)',
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: RADIUS.full,
-    borderWidth: 1,
-    borderColor: COLORS.gold,
-    ...SHADOWS.soft,
-  },
-  labelText: {
-    fontSize: 9,
-    fontWeight: '900',
-    color: COLORS.textPrimary,
-    letterSpacing: 1,
+    opacity: 0.2,
   },
   sliderDivider: {
     position: 'absolute',
     top: 0,
     bottom: 0,
     width: 2,
-    backgroundColor: COLORS.gold,
-    zIndex: 10,
+    backgroundColor: '#FFFFFF',
+    marginLeft: -1,
   },
-  sliderArrowBadge: {
+  sliderHandle: {
     position: 'absolute',
     top: '50%',
-    left: -15,
+    left: -16,
     width: 32,
     height: 32,
-    borderRadius: 16,
-    backgroundColor: COLORS.gold,
+    backgroundColor: '#FFFFFF',
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: '#000000',
+    borderRadius: RADIUS.sm,
     alignItems: 'center',
     justifyContent: 'center',
-    ...SHADOWS.gold,
+    marginTop: -16,
+    ...SHADOWS.soft,
   },
-  sliderArrowText: {
-    color: '#fff',
-    fontSize: 14,
+  sliderHandleText: {
+    color: '#000000',
+    fontSize: 12,
     fontWeight: '900',
   },
-  aiLoadingOverlay: {
+  labelBefore: {
+    position: 'absolute',
+    top: 12,
+    left: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderWidth: 1,
+    borderColor: '#333333',
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    borderRadius: RADIUS.sm,
+  },
+  labelAfter: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    borderRadius: RADIUS.sm,
+  },
+  labelText: {
+    fontSize: 8,
+    fontWeight: '900',
+    color: '#000000',
+    letterSpacing: 0.8,
+  },
+  processingOverlay: {
     position: 'absolute',
     inset: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.88)',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 20,
+    gap: 12,
   },
-  aiLoadingText: {
-    fontSize: 11,
+  processingText: {
+    fontSize: 10,
     fontWeight: '800',
-    color: COLORS.goldDark,
-    letterSpacing: 1.5,
-    marginTop: 12,
+    color: '#FFFFFF',
+    letterSpacing: 1.2,
   },
-  hudBadge: {
-    position: 'absolute',
-    bottom: 12,
-    left: 12,
-    right: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.94)',
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
-    borderColor: COLORS.borderGold,
-    padding: 10,
-    ...SHADOWS.card,
-  },
-  hudTop: {
+  metaBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    padding: 12,
+    backgroundColor: '#111111',
+    borderTopWidth: 1,
+    borderTopColor: '#262626',
   },
-  hudModelName: {
-    fontSize: 11,
+  metaTitle: {
+    fontSize: 12,
     fontWeight: '800',
-    color: COLORS.textPrimary,
-  },
-  hudFitScore: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: COLORS.success,
-  },
-  hudSub: {
-    fontSize: 9,
-    color: COLORS.textSecondary,
-    marginTop: 2,
-  },
-  sliderControlBar: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 8,
-    marginTop: 12,
-  },
-  splitBtn: {
-    paddingVertical: 6,
-    paddingHorizontal: 14,
-    borderRadius: RADIUS.full,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  splitBtnActive: {
-    backgroundColor: COLORS.textPrimary,
-    borderColor: COLORS.textPrimary,
-  },
-  splitBtnText: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: COLORS.textSecondary,
-  },
-  splitBtnTextActive: {
     color: '#FFFFFF',
   },
-  cameraWrap: {
-    width: '100%',
-    height: 390,
-    borderRadius: RADIUS.xl,
-    overflow: 'hidden',
-    position: 'relative',
-    backgroundColor: '#000000',
+  metaSub: {
+    fontSize: 9,
+    color: '#A3A3A3',
+    marginTop: 2,
   },
-  arOverlay: {
-    ...StyleSheet.absoluteFillObject,
+
+  // Body Visualizer Silhouette Canvas
+  bodyCanvasContainer: {
+    margin: 16,
+    height: 420,
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm,
+    padding: 16,
+    justifyContent: 'space-between',
+    position: 'relative',
+    ...SHADOWS.card,
+  },
+  bodySilhouetteMount: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  arHeadGuide: {
-    width: 60,
-    height: 75,
-    borderRadius: 30,
-    borderWidth: 1.5,
-    borderColor: 'rgba(201, 168, 76, 0.7)',
-    borderStyle: 'dashed',
-    marginBottom: 8,
+  bvHead: {
+    width: 44,
+    height: 52,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    borderRadius: RADIUS.sm,
+    marginBottom: 6,
   },
-  arShoulderGuide: {
-    width: 170,
+  bvShoulders: {
+    height: 28,
+    backgroundColor: '#E5E5E5',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    borderRadius: RADIUS.sm,
+    marginBottom: 6,
+  },
+  bvTorso: {
+    backgroundColor: '#A3A3A3',
+    borderWidth: 1,
+    borderColor: '#D4D4D4',
+    borderRadius: RADIUS.sm,
+    marginBottom: 6,
+  },
+  bvHips: {
+    height: 32,
+    backgroundColor: '#E5E5E5',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    borderRadius: RADIUS.sm,
+    marginBottom: 6,
+  },
+  bvLegsRow: {
+    flexDirection: 'row',
+    gap: 14,
+  },
+  bvLeg: {
+    width: 26,
+    backgroundColor: '#737373',
+    borderWidth: 1,
+    borderColor: '#A3A3A3',
+    borderRadius: RADIUS.sm,
+  },
+  bvMetricsHud: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#000000',
+    borderWidth: 1,
+    borderColor: '#262626',
+    padding: 10,
+    borderRadius: RADIUS.sm,
+  },
+  bvShapeTag: {
+    fontSize: 9,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    letterSpacing: 1,
+  },
+  bvMetricsLine: {
+    fontSize: 8,
+    color: '#A3A3A3',
+    marginTop: 2,
+  },
+  bvBmiVal: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: '#FFFFFF',
+  },
+  bvBmiCat: {
+    fontSize: 8,
+    fontWeight: '800',
+  },
+
+  // Live Camera
+  cameraViewport: {
+    margin: 16,
+    height: 420,
+    backgroundColor: '#000000',
+    borderWidth: 1,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm,
+    overflow: 'hidden',
+  },
+  cameraView: {
+    flex: 1,
+    position: 'relative',
+  },
+  arOverlay: {
+    position: 'absolute',
+    inset: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  arHead: {
+    width: 70,
+    height: 90,
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
+    borderRadius: RADIUS.sm,
+    marginBottom: 10,
+  },
+  arShoulderLine: {
+    width: 190,
     height: 2,
-    backgroundColor: 'rgba(201, 168, 76, 0.7)',
+    backgroundColor: '#FFFFFF',
     marginBottom: 20,
   },
-  arTorsoGuide: {
-    width: 120,
-    height: 90,
-    borderRadius: 8,
-    borderWidth: 1.5,
-    borderColor: 'rgba(201, 168, 76, 0.5)',
-    borderStyle: 'dashed',
-  },
-  arHipsGuide: {
+  arTorsoBox: {
     width: 140,
-    height: 2,
-    backgroundColor: 'rgba(201, 168, 76, 0.7)',
-    marginTop: 10,
+    height: 120,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
+    borderRadius: RADIUS.sm,
   },
-  arGuideText: {
+  arGuidelineText: {
     position: 'absolute',
-    top: 20,
-    backgroundColor: 'rgba(0,0,0,0.65)',
+    top: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
     color: '#FFFFFF',
     fontSize: 10,
-    fontWeight: '700',
-    paddingHorizontal: 12,
+    fontWeight: '800',
     paddingVertical: 4,
-    borderRadius: RADIUS.full,
-    letterSpacing: 0.5,
+    paddingHorizontal: 12,
+    borderRadius: RADIUS.sm,
   },
-  cameraControls: {
+  cameraControlsBar: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 16,
     left: 0,
     right: 0,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-around',
-  },
-  camIconBtn: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    backgroundColor: 'rgba(0, 0, 0, 0.65)',
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  camShutterBtn: {
-    width: 68,
-    height: 68,
-    borderRadius: 34,
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
+  shutterBtn: {
+    width: 64,
+    height: 64,
+    borderRadius: RADIUS.sm,
     borderWidth: 3,
     borderColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
-  camShutterInner: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+  shutterInner: {
+    width: 48,
+    height: 48,
     backgroundColor: '#FFFFFF',
+    borderRadius: RADIUS.sm,
+  },
+  camIconBtn: {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderWidth: 1,
+    borderColor: '#333333',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: RADIUS.sm,
+  },
+  camIconText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  closeCamBtn: {
+    backgroundColor: '#111111',
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#262626',
+  },
+  closeCamText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 1,
   },
   permissionCard: {
-    width: '100%',
-    height: 390,
-    borderRadius: RADIUS.xl,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    padding: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...SHADOWS.card,
-  },
-  permissionTitle: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: COLORS.textPrimary,
-    marginBottom: 8,
-  },
-  permissionSub: {
-    fontSize: 12,
-    color: COLORS.textSecondary,
-    textAlign: 'center',
-    lineHeight: 18,
-  },
-  galleryFallbackBtn: {
-    marginTop: 14,
-    paddingVertical: 8,
-  },
-  galleryFallbackText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: COLORS.goldDark,
-  },
-  bodyCanvasContainer: {
-    width: '100%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: RADIUS.xl,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    padding: 16,
-    ...SHADOWS.card,
-  },
-  bodyVisualizerGraphic: {
-    height: 280,
-    backgroundColor: '#FAF8F5',
-    borderRadius: RADIUS.lg,
-    borderWidth: 1,
-    borderColor: COLORS.borderLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  bodySilhouetteWrap: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bodyHead: {
-    width: 38,
-    height: 48,
-    borderRadius: 19,
-    backgroundColor: '#D1C7B7',
-    marginBottom: 4,
-  },
-  bodyShoulders: {
-    height: 24,
-    borderRadius: 12,
-    marginBottom: 4,
-  },
-  bodyWaist: {
-    backgroundColor: '#B5A997',
-    borderRadius: 8,
-    marginBottom: 4,
-  },
-  bodyHips: {
-    height: 28,
-    backgroundColor: '#8C7E6A',
-    borderRadius: 10,
-    marginBottom: 4,
-  },
-  bodyLegsRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  bodyLeg: {
-    width: 22,
-    backgroundColor: '#6B5E4D',
-    borderRadius: 11,
-  },
-  metricsPill: {
-    position: 'absolute',
-    bottom: 8,
-    left: 8,
-    right: 8,
-    backgroundColor: 'rgba(255,255,255,0.92)',
-    padding: 8,
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    alignItems: 'center',
-  },
-  metricsPillText: {
-    fontSize: 10,
-    fontWeight: '900',
-    color: COLORS.goldDark,
-    letterSpacing: 0.8,
-  },
-  metricsPillSub: {
-    fontSize: 9,
-    color: COLORS.textSecondary,
-    marginTop: 2,
-  },
-  bmiStatsBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.borderLight,
-  },
-  bmiStatsMicro: {
-    fontSize: 9,
-    fontWeight: '800',
-    color: COLORS.textMuted,
-    letterSpacing: 1,
-  },
-  bmiStatsValue: {
-    fontSize: 24,
-    fontWeight: '900',
-    color: COLORS.textPrimary,
-  },
-  bmiSizeRec: {
-    fontSize: 10,
-    color: COLORS.textSecondary,
-    marginTop: 2,
-  },
-  tabBar: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 8,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
-  },
-  tabBtn: {
     flex: 1,
-    paddingVertical: 10,
-    borderRadius: RADIUS.md,
-    backgroundColor: '#F5F3ED',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 24,
+    textAlign: 'center',
   },
-  tabBtnActive: {
-    backgroundColor: COLORS.textPrimary,
-  },
-  tabBtnText: {
-    fontSize: 11,
+  permTitle: {
+    fontSize: 16,
     fontWeight: '800',
-    color: COLORS.textSecondary,
-  },
-  tabBtnTextActive: {
     color: '#FFFFFF',
   },
-  tabContent: {
-    padding: 16,
+  permSub: {
+    fontSize: 11,
+    color: '#A3A3A3',
+    textAlign: 'center',
+    marginTop: 4,
+    lineHeight: 16,
   },
-  sectionHeaderRow: {
+
+  // Photo Source Buttons
+  photoActionsRow: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+  photoActionBtnPrimary: {
+    flex: 1.4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: RADIUS.sm,
+    gap: 8,
+  },
+  photoActionBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#262626',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: RADIUS.sm,
+    gap: 6,
+  },
+  photoActionIcon: {
+    fontSize: 18,
+  },
+  photoActionTitle: {
+    fontSize: 9,
+    fontWeight: '900',
+    color: '#000000',
+  },
+  photoActionSub: {
+    fontSize: 7,
+    fontWeight: '700',
+    color: '#404040',
+  },
+
+  // Controls Section
+  controlsSection: {
+    paddingHorizontal: 16,
+  },
+  sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 8,
   },
-  sectionTitle: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: COLORS.textPrimary,
-    letterSpacing: 1,
+  sectionHeading: {
+    fontSize: 10,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    letterSpacing: 1.2,
     textTransform: 'uppercase',
   },
-  genderPills: {
-    flexDirection: 'row',
-    backgroundColor: '#F5F3ED',
-    borderRadius: RADIUS.full,
-    padding: 3,
-  },
-  genderPill: {
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: RADIUS.full,
-  },
-  genderPillActive: {
-    backgroundColor: '#FFFFFF',
-    ...SHADOWS.soft,
-  },
-  genderPillText: {
+  sectionMeta: {
     fontSize: 9,
-    fontWeight: '800',
-    color: COLORS.textMuted,
+    color: '#737373',
   },
-  genderPillTextActive: {
-    color: COLORS.textPrimary,
-  },
-  modelsScroll: {
-    paddingRight: 16,
+  modelsTray: {
     gap: 10,
-  },
-  uploadCard: {
-    width: 80,
-    height: 105,
-    borderRadius: RADIUS.lg,
-    backgroundColor: '#FAF8F0',
-    borderWidth: 1.5,
-    borderColor: COLORS.gold,
-    borderStyle: 'dashed',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  uploadCardTitle: {
-    fontSize: 9,
-    fontWeight: '900',
-    color: COLORS.goldDark,
-  },
-  uploadCardSub: {
-    fontSize: 8,
-    color: COLORS.textMuted,
+    paddingBottom: 4,
   },
   modelCard: {
     width: 80,
-    height: 105,
-    borderRadius: RADIUS.lg,
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm,
     overflow: 'hidden',
-    borderWidth: 1.5,
-    borderColor: COLORS.border,
-    backgroundColor: '#FFFFFF',
     alignItems: 'center',
   },
   modelCardActive: {
-    borderColor: COLORS.gold,
-    backgroundColor: '#FAF8F0',
-    ...SHADOWS.gold,
+    borderColor: '#FFFFFF',
+    borderWidth: 1.5,
   },
-  modelImg: {
+  modelThumb: {
     width: '100%',
-    height: 80,
+    height: 90,
   },
   modelName: {
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: '700',
-    color: COLORS.textPrimary,
-    marginTop: 4,
+    color: '#737373',
+    paddingVertical: 4,
   },
-  garmentsScroll: {
-    paddingRight: 16,
+  modelNameActive: {
+    color: '#FFFFFF',
+    fontWeight: '900',
   },
-  colorRow: {
+
+  catScroll: {
+    gap: 6,
+    paddingBottom: 10,
+  },
+  catPill: {
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm,
+  },
+  catPillActive: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
+  },
+  catPillText: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: '#A3A3A3',
+  },
+  catPillTextActive: {
+    color: '#000000',
+    fontWeight: '900',
+  },
+  garmentsTray: {
+    paddingBottom: 16,
+  },
+
+  // BMI Card
+  bmiCard: {
     flexDirection: 'row',
-    gap: 12,
-    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm,
+    padding: 14,
   },
-  colorCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: '#E8E4DC',
+  bmiHeaderLabel: {
+    fontSize: 8,
+    fontWeight: '900',
+    color: '#737373',
+    letterSpacing: 1,
   },
-  colorCircleActive: {
-    borderColor: COLORS.gold,
-    transform: [{ scale: 1.15 }],
-    ...SHADOWS.soft,
+  bmiDisplayVal: {
+    fontSize: 24,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    marginTop: 2,
+    fontFamily: FONTS.display,
   },
-  presetRow: {
+  bmiDisplayCat: {
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  bmiDisplaySize: {
+    fontSize: 9,
+    color: '#737373',
+    marginTop: 2,
+  },
+
+  presetGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
   },
   presetBtn: {
     paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: RADIUS.full,
-    backgroundColor: '#F5F3ED',
+    paddingHorizontal: 12,
+    backgroundColor: '#111111',
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm,
   },
   presetBtnActive: {
-    backgroundColor: COLORS.textPrimary,
-    borderColor: COLORS.textPrimary,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
   },
-  presetBtnText: {
-    fontSize: 11,
+  presetText: {
+    fontSize: 10,
     fontWeight: '700',
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
   },
-  presetBtnTextActive: {
-    color: '#FFFFFF',
+  presetTextActive: {
+    color: '#000000',
+    fontWeight: '900',
   },
-  slidersGrid: {
+
+  measurementsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 10,
   },
-  sliderBox: {
-    backgroundColor: '#FAF8F5',
+  metricCard: {
+    width: '48%',
+    backgroundColor: '#111111',
     borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: RADIUS.md,
-    padding: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm,
+    padding: 10,
   },
-  sliderLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: COLORS.textPrimary,
+  metricLabel: {
+    fontSize: 9,
+    color: '#737373',
+    fontWeight: '800',
+    textTransform: 'uppercase',
   },
-  sliderButtonsRow: {
+  metricVal: {
+    fontSize: 13,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    marginTop: 2,
+    marginBottom: 6,
+  },
+  stepperRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    gap: 6,
   },
   stepBtn: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#FFFFFF',
+    flex: 1,
+    backgroundColor: '#000000',
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#333333',
     alignItems: 'center',
-    justifyContent: 'center',
-    ...SHADOWS.soft,
+    paddingVertical: 4,
+    borderRadius: RADIUS.sm,
   },
   stepBtnText: {
+    color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '800',
-    color: COLORS.textPrimary,
-  },
-  stepValueText: {
-    fontSize: 12,
     fontWeight: '900',
-    color: COLORS.goldDark,
-    minWidth: 44,
-    textAlign: 'center',
   },
-  summaryBox: {
-    marginHorizontal: 16,
-    marginTop: 16,
-    backgroundColor: '#FAF8F5',
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: RADIUS.xl,
-    padding: 16,
-    ...SHADOWS.card,
-  },
-  summaryTopRow: {
+
+  // Color Swatches
+  colorSwatchesRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    gap: 10,
+    marginTop: 8,
   },
-  summaryMicro: {
-    fontSize: 9,
+  colorCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: RADIUS.sm,
+    borderWidth: 1,
+    borderColor: '#333333',
+  },
+  colorCircleActive: {
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
+  },
+
+  fabricGrid: {
+    gap: 8,
+    marginTop: 8,
+  },
+  fabricCard: {
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#262626',
+    padding: 10,
+    borderRadius: RADIUS.sm,
+  },
+  fabricCardActive: {
+    borderColor: '#FFFFFF',
+    backgroundColor: '#171717',
+  },
+  fabricName: {
+    fontSize: 11,
     fontWeight: '800',
-    color: COLORS.textMuted,
+    color: '#A3A3A3',
+  },
+  fabricNameActive: {
+    color: '#FFFFFF',
+  },
+  fabricDesc: {
+    fontSize: 9,
+    color: '#737373',
+    marginTop: 2,
+  },
+
+  // Bottom Sticky Bar
+  bottomBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    backgroundColor: '#000000',
+    borderTopWidth: 1,
+    borderTopColor: '#262626',
+    marginTop: 20,
+  },
+  bottomLabel: {
+    fontSize: 8,
+    fontWeight: '900',
+    color: '#737373',
     letterSpacing: 1,
   },
-  summaryPrice: {
-    fontSize: 22,
+  bottomPrice: {
+    fontSize: 18,
     fontWeight: '900',
-    color: COLORS.textPrimary,
-    marginTop: 2,
-  },
-  summarySub: {
-    fontSize: 9,
-    color: COLORS.textSecondary,
-    marginTop: 2,
+    color: '#FFFFFF',
   },
 });
