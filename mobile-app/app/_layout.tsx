@@ -1,45 +1,35 @@
-﻿import 'react-native-gesture-handler';
-import React from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { COLORS } from '../constants/theme';
 
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      <SafeAreaProvider>
-        <StatusBar style="dark" backgroundColor={COLORS.bg} />
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: '#FFFFFF',
-            },
-            headerTintColor: COLORS.textPrimary,
+    <>
+      <StatusBar style="light" backgroundColor="#000000" />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: '#000000' },
+          animation: 'fade',
+        }}
+      >
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="product/[id]"
+          options={{
+            headerShown: true,
+            headerTitle: 'BESPOKE SPECIFICATION',
+            headerStyle: { backgroundColor: '#000000' },
+            headerTintColor: '#FFFFFF',
             headerTitleStyle: {
-              fontWeight: '800',
-              fontSize: 16,
+              fontFamily: 'Cinzel',
+              fontSize: 13,
+              fontWeight: '900',
+              letterSpacing: 1.5,
             },
-            headerShadowVisible: false,
-            contentStyle: {
-              backgroundColor: COLORS.bg,
-            },
+            headerBackTitle: 'BACK',
           }}
-        >
-          <Stack.Screen
-            name="(tabs)"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="product/[id]"
-            options={{
-              title: 'NOVA STREET',
-              headerBackTitle: 'Back',
-            }}
-          />
-        </Stack>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+        />
+      </Stack>
+    </>
   );
 }
