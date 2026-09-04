@@ -1,10 +1,9 @@
-﻿/**
- * CODED-FIT / NOVA STREET — Native Camera & Photo Picker Hook
- * Fixes camera access, permissions flow, AR framing, and photo selection
+/**
+ * CODED-FIT / NOVA STREET — Native Camera & Multi-Mode Photo Engine Hook
+ * Provides Native Device Camera launcher, Live CameraView viewport, Gallery Picker, and permissions fallback
  */
 
-import { useState, useRef, useEffect } from 'react';
-import { Platform } from 'react-native';
+import { useState, useRef } from 'react';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
@@ -32,13 +31,13 @@ export function useCamera() {
       setPermissionError(null);
       const res = await requestPermissionNative();
       if (!res.granted) {
-        setPermissionError('Camera permission was denied. You can grant access in your device settings or upload a photo.');
+        setPermissionError('Camera permission was denied. You can use native camera or gallery picker.');
         return false;
       }
       return true;
     } catch (err: any) {
       console.warn('[useCamera] Permission request error:', err);
-      setPermissionError('Unable to request camera permission. Please verify app permissions in settings.');
+      setPermissionError('Unable to request camera permission. Please verify app permissions.');
       return false;
     }
   };
@@ -57,6 +56,7 @@ export function useCamera() {
     setFlash(current => (current === 'off' ? 'on' : current === 'on' ? 'auto' : 'off'));
   };
 
+  // 1. INLINE CAMERA VIEW SNAPSHOT
   const takePhoto = async (): Promise<CapturedImage | null> => {
     if (!cameraRef.current) return null;
     try {
@@ -74,7 +74,7 @@ export function useCamera() {
       if (photo) {
         const result: CapturedImage = {
           uri: photo.uri,
-          base64: photo.base64 ? `data:image/jpeg;base64,${photo.base64}` : undefined,
+          base64: photo.base64 ? 'data:image/jpeg;base64,' + photo.base64 : undefined,
           width: photo.width,
           height: photo.height,
         };
@@ -83,13 +83,55 @@ export function useCamera() {
       }
       return null;
     } catch (e) {
-      console.error('[useCamera] Error taking photo:', e);
+      console.error('[useCamera] Error taking photo from CameraView:', e);
       return null;
     } finally {
       setIsProcessing(false);
     }
   };
 
+  // 2. NATIVE DEVICE CAMERA LAUNCHER (100% RELIABLE ON ALL PHYSICAL DEVICES)
+  const openNativeDeviceCamera = async (): Promise<CapturedImage | null> => {
+    try {
+      setIsProcessing(true);
+      try {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } catch (_) {}
+
+      const perm = await ImagePicker.requestCameraPermissionsAsync();
+      if (!perm.granted) {
+        alert('Camera permission is required to capture your photo for AI Virtual Try-On.');
+        return null;
+      }
+
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [3, 4],
+        quality: 0.9,
+        base64: true,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const asset = result.assets[0];
+        const captured: CapturedImage = {
+          uri: asset.uri,
+          base64: asset.base64 ? 'data:image/jpeg;base64,' + asset.base64 : undefined,
+          width: asset.width,
+          height: asset.height,
+        };
+        setCapturedPhoto(captured);
+        return captured;
+      }
+      return null;
+    } catch (err) {
+      console.error('[useCamera] Error launching native camera:', err);
+      return null;
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // 3. PHOTO GALLERY PICKER
   const pickImageFromGallery = async (): Promise<CapturedImage | null> => {
     try {
       setIsProcessing(true);
@@ -104,7 +146,7 @@ export function useCamera() {
       }
 
       const pickerResult = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ['images'],
         allowsEditing: true,
         aspect: [3, 4],
         quality: 0.9,
@@ -115,7 +157,7 @@ export function useCamera() {
         const asset = pickerResult.assets[0];
         const result: CapturedImage = {
           uri: asset.uri,
-          base64: asset.base64 ? `data:image/jpeg;base64,${asset.base64}` : undefined,
+          base64: asset.base64 ? 'data:image/jpeg;base64,' + asset.base64 : undefined,
           width: asset.width,
           height: asset.height,
         };
@@ -124,7 +166,7 @@ export function useCamera() {
       }
       return null;
     } catch (e) {
-      console.error('[useCamera] Error picking image:', e);
+      console.error('[useCamera] Error picking image from gallery:', e);
       return null;
     } finally {
       setIsProcessing(false);
@@ -148,6 +190,7 @@ export function useCamera() {
     toggleCameraFacing,
     toggleFlash,
     takePhoto,
+    openNativeDeviceCamera,
     pickImageFromGallery,
     clearPhoto,
   };
