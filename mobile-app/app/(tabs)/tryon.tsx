@@ -410,8 +410,10 @@ export default function TryOnStudioScreen() {
             </TouchableOpacity>
           </View>
         ) : activeTab === 'body' ? (
+          /* ══════════════════════════════════════════════════════════
+               2. DYNAMIC MORPHING HUMAN BODY VISUALIZER CANVAS
+          ═══════════════════════════════════════════════════════════ */}
           <View style={styles.bodyCanvasContainer}>
-            {/* 2. DYNAMIC MORPHING HUMAN BODY VISUALIZER CANVAS */}
             {/* Morphing Silhouette Simulation */}
             <View style={styles.bodySilhouetteMount}>
               {/* Head */}
@@ -484,8 +486,10 @@ export default function TryOnStudioScreen() {
             </View>
           </View>
         ) : (
+          /* ══════════════════════════════════════════════════════════
+               3. BEFORE / AFTER INTERACTIVE COMPARISON SLIDER
+          ═══════════════════════════════════════════════════════════ */
           <View style={styles.viewportContainer}>
-            {/* 3. BEFORE / AFTER INTERACTIVE COMPARISON SLIDER */}
             <View style={styles.imageContainer} {...panResponder.panHandlers}>
               {/* BEFORE LAYER: Base Supermodel or User Uploaded Photo */}
               <Image
