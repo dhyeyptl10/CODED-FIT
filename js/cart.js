@@ -41,7 +41,7 @@ function addToCart(productId, size, qty = 1) {
     });
   }
   saveCart(cart);
-  showToast(`⚡ ${p.name} (Size: ${size || 'M'}) added to bag!`);
+  showToast(` ${p.name} (Size: ${size || 'M'}) added to bag!`);
   setTimeout(openCartDrawer, 500);
 }
 
@@ -134,7 +134,7 @@ function renderDrawerCart() {
   if (cart.length === 0) {
     drawerItems.innerHTML = `
       <div style="text-align:center;padding:48px 20px;">
-        <div style="font-size:48px;opacity:0.3;margin-bottom:16px;">🛍️</div>
+        <div style="font-size:48px;opacity:0.3;margin-bottom:16px;">️</div>
         <div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#6B6560;margin-bottom:12px;">YOUR BAG IS EMPTY</div>
         <a href="shop.html" onclick="closeCartDrawer()" style="
           display:inline-block;background:#C9A84C;color:#0A0A0A;
@@ -161,7 +161,7 @@ function renderDrawerCart() {
         <img src="${img}" alt="${name}" style="width:70px;height:88px;object-fit:cover;border-radius:10px;background:#1A1A1A;flex-shrink:0;">
         <div style="flex:1;min-width:0;">
           <div style="font-size:9px;font-weight:800;letter-spacing:1.5px;color:${isBespoke ? '#B85C38' : '#C9A84C'};margin-bottom:4px;text-transform:uppercase;">
-            ${isBespoke ? '✂️ BESPOKE' : '⚡ READY TO SHIP'}
+            ${isBespoke ? '️ BESPOKE' : ' READY TO SHIP'}
           </div>
           <div style="font-size:12px;font-weight:700;color:#F0EDE6;margin-bottom:4px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</div>
           <div style="font-size:11px;color:#6B6560;margin-bottom:8px;">Size: ${item.size} · Qty: ${item.qty || 1}</div>
@@ -184,7 +184,7 @@ function renderDrawerCart() {
   drawerSummary.innerHTML = `
     <div style="margin-bottom:16px;">
       <div style="font-size:10px;font-weight:700;color:${subtotal >= freeShipAt ? '#10B981' : '#8A8580'};letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">
-        ${subtotal >= freeShipAt ? '🎉 FREE SHIPPING UNLOCKED!' : `Add ₹${(freeShipAt - subtotal).toLocaleString('en-IN')} more for free shipping`}
+        ${subtotal >= freeShipAt ? ' FREE SHIPPING UNLOCKED!' : `Add ₹${(freeShipAt - subtotal).toLocaleString('en-IN')} more for free shipping`}
       </div>
       <div style="background:#1C1C1C;border-radius:4px;height:3px;overflow:hidden;">
         <div style="width:${progress}%;height:100%;background:linear-gradient(to right,#C9A84C,#10B981);border-radius:4px;transition:width 0.5s ease;"></div>
