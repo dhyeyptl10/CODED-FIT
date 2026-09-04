@@ -1,6 +1,6 @@
 /**
  * CODED-FIT / NOVA STREET — Mobile Shopping Bag & Fast Checkout
- * Haute-Couture White Luxury Theme: Items List, Delivery ETA, Biometric / UPI Checkout
+ * Haute-Couture Black & White Luxury: Sharp Monochrome Architecture
  */
 
 import React, { useState, useEffect } from 'react';
@@ -8,7 +8,6 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity,
   StyleSheet,
   Alert,
 } from 'react-native';
@@ -110,7 +109,7 @@ export default function CartScreen() {
                 <Text style={styles.etaTitle}>Delivering to {location.city}</Text>
                 <Text style={styles.etaSub}>{location.deliveryEstimate.dispatchBadge}</Text>
               </View>
-              <Badge label="EXPRESS" variant="green" size="sm" />
+              <Badge label="EXPRESS" variant="white" size="sm" />
             </View>
           )}
 
@@ -137,10 +136,10 @@ export default function CartScreen() {
 
             {discount > 0 && (
               <View style={styles.summaryRow}>
-                <Text style={[styles.summaryLabel, { color: COLORS.success }]}>
+                <Text style={[styles.summaryLabel, { color: '#22C55E' }]}>
                   Promo Applied ({promoCode})
                 </Text>
-                <Text style={[styles.summaryVal, { color: COLORS.success }]}>
+                <Text style={[styles.summaryVal, { color: '#22C55E' }]}>
                   - ₹{discount.toLocaleString('en-IN')}
                 </Text>
               </View>
@@ -148,7 +147,7 @@ export default function CartScreen() {
 
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Standard Shipping</Text>
-              <Text style={[styles.summaryVal, { color: shipping === 0 ? COLORS.success : COLORS.textPrimary }]}>
+              <Text style={[styles.summaryVal, { color: shipping === 0 ? '#22C55E' : '#FFFFFF' }]}>
                 {shipping === 0 ? 'FREE' : '₹' + shipping}
               </Text>
             </View>
@@ -177,24 +176,25 @@ export default function CartScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
   },
   header: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: '#262626',
   },
   title: {
     fontSize: 16,
     fontWeight: '900',
-    color: COLORS.textPrimary,
-    letterSpacing: 1.5,
+    color: '#FFFFFF',
+    letterSpacing: 2,
+    fontFamily: 'Cinzel',
   },
   subTitle: {
     fontSize: 9,
-    color: COLORS.goldDark,
+    color: '#A3A3A3',
     letterSpacing: 0.5,
     marginTop: 2,
   },
@@ -208,12 +208,12 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: '800',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
     marginBottom: 6,
   },
   emptySub: {
     fontSize: 12,
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
     textAlign: 'center',
     lineHeight: 18,
   },
@@ -223,23 +223,23 @@ const styles = StyleSheet.create({
   etaCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FAF8F5',
+    backgroundColor: '#111111',
     marginHorizontal: 16,
     marginTop: 12,
     padding: 12,
-    borderRadius: RADIUS.md,
+    borderRadius: RADIUS.sm, // 0 sharp
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#262626',
     gap: 10,
   },
   etaTitle: {
     fontSize: 11,
     fontWeight: '800',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
   },
   etaSub: {
     fontSize: 10,
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
     marginTop: 2,
   },
   itemsList: {
@@ -247,19 +247,19 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   summaryCard: {
-    backgroundColor: '#FAF8F5',
+    backgroundColor: '#111111',
     marginHorizontal: 16,
     marginTop: 8,
     padding: 16,
-    borderRadius: RADIUS.lg,
+    borderRadius: RADIUS.sm, // 0 sharp
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#262626',
   },
   summaryTitle: {
     fontSize: 11,
     fontWeight: '900',
-    color: COLORS.textPrimary,
-    letterSpacing: 1,
+    color: '#FFFFFF',
+    letterSpacing: 1.5,
     marginBottom: 12,
   },
   summaryRow: {
@@ -270,16 +270,16 @@ const styles = StyleSheet.create({
   },
   summaryLabel: {
     fontSize: 12,
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
   },
   summaryVal: {
     fontSize: 12,
     fontWeight: '700',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
   },
   totalRow: {
     borderTopWidth: 1,
-    borderTopColor: COLORS.border,
+    borderTopColor: '#262626',
     paddingTop: 10,
     marginTop: 4,
     marginBottom: 0,
@@ -287,11 +287,11 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 13,
     fontWeight: '900',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
   },
   totalVal: {
     fontSize: 18,
     fontWeight: '900',
-    color: COLORS.goldDark,
+    color: '#FFFFFF',
   },
 });

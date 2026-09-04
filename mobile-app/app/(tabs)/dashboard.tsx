@@ -1,6 +1,6 @@
 /**
  * CODED-FIT / NOVA STREET — UR PICKS VIP Dashboard & Tailoring Tracker
- * Haute-Couture White Luxury Theme: Saved 3D Looks, Bespoke Milestones, VIP Pass
+ * Haute-Couture Black & White Theme: Sharp Monochrome Architecture
  */
 
 import React, { useState } from 'react';
@@ -34,7 +34,7 @@ export default function DashboardScreen() {
             Bespoke Tailoring Ledger · Ahmedabad Atelier No. 042
           </Text>
         </View>
-        <Badge label="VIP MEMBER" variant="gold" size="sm" />
+        <Badge label="VIP MEMBER" variant="white" size="sm" />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -45,7 +45,7 @@ export default function DashboardScreen() {
               <Text style={styles.vipTier}>NOVA ATELIER PRIVILEGE</Text>
               <Text style={styles.vipName}>Dhyey Patel</Text>
             </View>
-            <Text style={{ fontSize: 28 }}>✦</Text>
+            <Text style={{ fontSize: 24, color: '#FFFFFF' }}>✦</Text>
           </View>
           <View style={styles.vipBottomRow}>
             <View>
@@ -99,7 +99,7 @@ export default function DashboardScreen() {
                 resizeMode="cover"
               />
               <View style={styles.lookDetails}>
-                <Badge label="AI TRY-ON MATCH" variant="green" size="sm" />
+                <Badge label="AI TRY-ON MATCH" variant="white" size="sm" />
                 <Text style={styles.lookTitle}>Gold Fluid Silk Midi</Text>
                 <Text style={styles.lookSub}>Fit Confidence: 99.4% · Sized: Custom 3D</Text>
                 <GoldButton
@@ -118,7 +118,7 @@ export default function DashboardScreen() {
                 resizeMode="cover"
               />
               <View style={styles.lookDetails}>
-                <Badge label="BESPOKE DENIM" variant="gold" size="sm" />
+                <Badge label="BESPOKE DENIM" variant="dark" size="sm" />
                 <Text style={styles.lookTitle}>Obsidian Boxy Selvedge</Text>
                 <Text style={styles.lookSub}>14.5oz Okayama Selvedge · Tailored Fit</Text>
                 <GoldButton
@@ -138,7 +138,7 @@ export default function DashboardScreen() {
             <View style={styles.orderCard}>
               <View style={styles.orderTop}>
                 <Text style={styles.orderNumber}>ORDER #NS-2026-0891</Text>
-                <Badge label="IN TAILORING" variant="gold" size="sm" />
+                <Badge label="IN TAILORING" variant="white" size="sm" />
               </View>
               <Text style={styles.orderItem}>Aether Drop-Shoulder Tee (Custom AI Fit)</Text>
 
@@ -206,7 +206,7 @@ export default function DashboardScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
   },
   header: {
     flexDirection: 'row',
@@ -214,19 +214,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: '#262626',
   },
   title: {
     fontSize: 16,
     fontWeight: '900',
-    color: COLORS.textPrimary,
-    letterSpacing: 1.5,
+    color: '#FFFFFF',
+    letterSpacing: 2,
+    fontFamily: 'Cinzel',
   },
   subTitle: {
     fontSize: 9,
-    color: COLORS.goldDark,
+    color: '#A3A3A3',
     letterSpacing: 0.5,
     marginTop: 2,
   },
@@ -235,10 +236,10 @@ const styles = StyleSheet.create({
   },
   vipCard: {
     margin: 16,
-    backgroundColor: '#FAF8F3',
+    backgroundColor: '#111111',
     borderWidth: 1.5,
-    borderColor: COLORS.gold,
-    borderRadius: RADIUS.xl,
+    borderColor: '#FFFFFF',
+    borderRadius: RADIUS.sm, // 0 sharp
     padding: 18,
     ...SHADOWS.card,
   },
@@ -251,13 +252,13 @@ const styles = StyleSheet.create({
   vipTier: {
     fontSize: 9,
     fontWeight: '800',
-    color: COLORS.goldDark,
+    color: '#A3A3A3',
     letterSpacing: 1.5,
   },
   vipName: {
     fontSize: 18,
     fontWeight: '900',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
     fontFamily: 'Cinzel',
     marginTop: 2,
   },
@@ -266,17 +267,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderTopWidth: 1,
-    borderTopColor: COLORS.borderGold,
+    borderTopColor: '#262626',
     paddingTop: 12,
   },
   vipStatLabel: {
     fontSize: 9,
-    color: COLORS.textMuted,
+    color: '#737373',
   },
   vipStatVal: {
     fontSize: 12,
     fontWeight: '800',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
     marginTop: 2,
   },
   subTabBar: {
@@ -287,23 +288,23 @@ const styles = StyleSheet.create({
   subTabBtn: {
     flex: 1,
     paddingVertical: 8,
-    borderRadius: RADIUS.md,
-    backgroundColor: '#FAF8F5',
+    borderRadius: RADIUS.sm,
+    backgroundColor: '#111111',
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#262626',
     alignItems: 'center',
   },
   subTabBtnActive: {
-    backgroundColor: COLORS.textPrimary,
-    borderColor: COLORS.textPrimary,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
   },
   subTabText: {
     fontSize: 10,
     fontWeight: '800',
-    color: COLORS.textSecondary,
+    color: '#737373',
   },
   subTabTextActive: {
-    color: '#FFFFFF',
+    color: '#000000',
   },
   tabContent: {
     padding: 16,
@@ -311,17 +312,17 @@ const styles = StyleSheet.create({
   },
   lookCard: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    borderRadius: RADIUS.lg,
+    backgroundColor: '#111111',
+    borderRadius: RADIUS.sm,
     padding: 12,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#262626',
     ...SHADOWS.card,
   },
   lookImage: {
     width: 80,
     height: 110,
-    borderRadius: RADIUS.md,
+    backgroundColor: '#0D0D0D',
   },
   lookDetails: {
     flex: 1,
@@ -331,19 +332,19 @@ const styles = StyleSheet.create({
   lookTitle: {
     fontSize: 13,
     fontWeight: '800',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
     marginTop: 4,
   },
   lookSub: {
     fontSize: 10,
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
   },
   orderCard: {
-    backgroundColor: '#FAF8F5',
-    borderRadius: RADIUS.lg,
+    backgroundColor: '#111111',
+    borderRadius: RADIUS.sm,
     padding: 14,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#262626',
   },
   orderTop: {
     flexDirection: 'row',
@@ -354,17 +355,17 @@ const styles = StyleSheet.create({
   orderNumber: {
     fontSize: 11,
     fontWeight: '800',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
   },
   orderItem: {
     fontSize: 12,
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
     marginBottom: 12,
   },
   timeline: {
     gap: 8,
     borderLeftWidth: 2,
-    borderLeftColor: COLORS.gold,
+    borderLeftColor: '#FFFFFF',
     paddingLeft: 12,
     marginLeft: 4,
   },
@@ -374,34 +375,34 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   timelineDotActive: {
-    color: COLORS.goldDark,
+    color: '#FFFFFF',
     fontSize: 12,
   },
   timelineTextActive: {
     fontSize: 10,
     fontWeight: '700',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
   },
   timelineDot: {
-    color: COLORS.textMuted,
+    color: '#404040',
     fontSize: 12,
   },
   timelineText: {
     fontSize: 10,
-    color: COLORS.textMuted,
+    color: '#737373',
   },
   profileCard: {
-    backgroundColor: '#FAF8F5',
-    borderRadius: RADIUS.lg,
+    backgroundColor: '#111111',
+    borderRadius: RADIUS.sm,
     padding: 16,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#262626',
   },
   profileTitle: {
     fontSize: 11,
     fontWeight: '900',
-    color: COLORS.textPrimary,
-    letterSpacing: 1,
+    color: '#FFFFFF',
+    letterSpacing: 1.5,
     marginBottom: 12,
   },
   profileGrid: {
@@ -411,21 +412,21 @@ const styles = StyleSheet.create({
   },
   profileItem: {
     width: '47%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: RADIUS.md,
+    backgroundColor: '#0A0A0A',
+    borderRadius: RADIUS.sm,
     padding: 12,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#262626',
     alignItems: 'center',
   },
   profileVal: {
     fontSize: 16,
     fontWeight: '900',
-    color: COLORS.goldDark,
+    color: '#FFFFFF',
   },
   profileLabel: {
     fontSize: 10,
-    color: COLORS.textSecondary,
+    color: '#737373',
     marginTop: 2,
   },
 });

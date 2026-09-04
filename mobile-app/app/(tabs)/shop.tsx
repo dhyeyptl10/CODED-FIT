@@ -1,6 +1,6 @@
 /**
  * CODED-FIT / NOVA STREET — Mobile Shop & Collection Screen
- * Haute-Couture White Luxury: Dual-Funnel Filter, Categories, Dynamic Grid
+ * Haute-Couture Black & White: Dual-Funnel Filter, Categories, Dynamic Grid
  */
 
 import React, { useState } from 'react';
@@ -77,7 +77,7 @@ export default function ShopScreen() {
             style={[styles.funnelPill, funnelFilter === 'rtw' && styles.funnelPillActive]}
           >
             <Text style={[styles.funnelPillText, funnelFilter === 'rtw' && styles.funnelPillTextActive]}>
-              ⚡ 24H RTW
+              24H RTW
             </Text>
           </TouchableOpacity>
 
@@ -86,7 +86,7 @@ export default function ShopScreen() {
             style={[styles.funnelPill, funnelFilter === 'custom-made' && styles.funnelPillActive]}
           >
             <Text style={[styles.funnelPillText, funnelFilter === 'custom-made' && styles.funnelPillTextActive]}>
-              ✂️ BESPOKE
+              BESPOKE
             </Text>
           </TouchableOpacity>
         </View>
@@ -139,24 +139,25 @@ export default function ShopScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
   },
   header: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: '#262626',
   },
   title: {
     fontSize: 16,
     fontWeight: '900',
-    color: COLORS.textPrimary,
-    letterSpacing: 1.5,
+    color: '#FFFFFF',
+    letterSpacing: 2,
+    fontFamily: 'Cinzel',
   },
   subTitle: {
     fontSize: 9,
-    color: COLORS.goldDark,
+    color: '#A3A3A3',
     letterSpacing: 0.5,
     marginTop: 2,
   },
@@ -166,32 +167,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: '#FAF8F5',
+    backgroundColor: '#0A0A0A',
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: '#262626',
   },
   segmentedControl: {
     flexDirection: 'row',
-    backgroundColor: '#EFECE6',
-    borderRadius: RADIUS.full,
-    padding: 3,
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#333333',
+    borderRadius: RADIUS.sm, // 0 sharp
   },
   segmentBtn: {
-    paddingVertical: 4,
+    paddingVertical: 5,
     paddingHorizontal: 10,
-    borderRadius: RADIUS.full,
   },
   segmentBtnActive: {
     backgroundColor: '#FFFFFF',
-    ...SHADOWS.soft,
   },
   segmentText: {
     fontSize: 9,
     fontWeight: '800',
-    color: COLORS.textMuted,
+    color: '#737373',
   },
   segmentTextActive: {
-    color: COLORS.textPrimary,
+    color: '#000000',
   },
   funnelPills: {
     flexDirection: 'row',
@@ -200,27 +200,27 @@ const styles = StyleSheet.create({
   funnelPill: {
     paddingVertical: 5,
     paddingHorizontal: 10,
-    borderRadius: RADIUS.full,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#111111',
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm,
   },
   funnelPillActive: {
-    backgroundColor: COLORS.textPrimary,
-    borderColor: COLORS.textPrimary,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
   },
   funnelPillText: {
     fontSize: 9,
     fontWeight: '800',
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
   },
   funnelPillTextActive: {
-    color: '#FFFFFF',
+    color: '#000000',
   },
   categoriesWrap: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: '#262626',
     paddingVertical: 8,
   },
   catScroll: {
@@ -230,23 +230,23 @@ const styles = StyleSheet.create({
   catPill: {
     paddingVertical: 6,
     paddingHorizontal: 14,
-    borderRadius: RADIUS.full,
-    backgroundColor: '#FAF8F5',
+    backgroundColor: '#111111',
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm,
   },
   catPillActive: {
-    backgroundColor: COLORS.gold,
-    borderColor: COLORS.goldDark,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
   },
   catPillText: {
     fontSize: 10,
     fontWeight: '700',
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
   },
   catPillTextActive: {
-    color: '#FFFFFF',
-    fontWeight: '800',
+    color: '#000000',
+    fontWeight: '900',
   },
   scrollContent: {
     paddingTop: 16,

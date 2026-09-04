@@ -1,6 +1,6 @@
 /**
  * CODED-FIT / NOVA STREET — Product Details & Tailoring Customizer
- * Haute-Couture White Luxury Theme: Gallery, Size Selector, Fabric Details, Try-On Shortcut
+ * Haute-Couture Black & White Theme: Sharp Monochrome Luxury
  */
 
 import React, { useState } from 'react';
@@ -11,7 +11,6 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
   Alert,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -24,8 +23,6 @@ import { Badge } from '../../components/ui/Badge';
 import { useShare } from '../../hooks/useShare';
 import { COLORS, RADIUS, SHADOWS } from '../../constants/theme';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
@@ -33,7 +30,6 @@ export default function ProductDetailScreen() {
 
   const product = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0] || 'M');
-  const [activeImageIdx, setActiveImageIdx] = useState<number>(0);
 
   const handleAddToCart = async () => {
     try {
@@ -56,7 +52,7 @@ export default function ProductDetailScreen() {
         {/* Product Image Viewer */}
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: product.images[activeImageIdx] || product.images[0] }}
+            source={{ uri: product.images[0] }}
             style={styles.mainImage}
             resizeMode="cover"
           />
@@ -65,7 +61,7 @@ export default function ProductDetailScreen() {
             onPress={() => shareProduct(product.name, product.price)}
             style={styles.shareBtn}
           >
-            <Text style={{ fontSize: 16 }}>📤</Text>
+            <Text style={{ fontSize: 16, color: '#FFFFFF' }}>📤</Text>
           </TouchableOpacity>
         </View>
 
@@ -73,8 +69,8 @@ export default function ProductDetailScreen() {
         <View style={styles.detailsContainer}>
           <View style={styles.topBadgeRow}>
             <Badge
-              label={product.funnel === 'rtw' ? '⚡ 24H EXPRESS DISPATCH' : '✂️ UNIT-OF-ONE BESPOKE'}
-              variant={product.funnel === 'rtw' ? 'green' : 'gold'}
+              label={product.funnel === 'rtw' ? '24H EXPRESS DISPATCH' : 'UNIT-OF-ONE BESPOKE'}
+              variant={product.funnel === 'rtw' ? 'white' : 'dark'}
             />
             <Text style={styles.hypeRating}>🔥 {product.hypeRating}% Demand</Text>
           </View>
@@ -168,7 +164,7 @@ export default function ProductDetailScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
   },
   scrollContent: {
     paddingBottom: 20,
@@ -176,7 +172,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: '100%',
     height: 380,
-    backgroundColor: COLORS.surface,
+    backgroundColor: '#0D0D0D',
     position: 'relative',
   },
   mainImage: {
@@ -189,15 +185,17 @@ const styles = StyleSheet.create({
     right: 16,
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFFFFF',
+    borderRadius: RADIUS.sm,
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#333333',
     alignItems: 'center',
     justifyContent: 'center',
     ...SHADOWS.soft,
   },
   detailsContainer: {
     padding: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
   },
   topBadgeRow: {
     flexDirection: 'row',
@@ -208,21 +206,21 @@ const styles = StyleSheet.create({
   hypeRating: {
     fontSize: 10,
     fontWeight: '800',
-    color: COLORS.rust,
+    color: '#EF4444',
   },
   productName: {
     fontSize: 20,
     fontWeight: '900',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
     fontFamily: 'Cinzel',
     lineHeight: 26,
   },
   fabricSubtitle: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: COLORS.goldDark,
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#A3A3A3',
     textTransform: 'uppercase',
-    letterSpacing: 0.8,
+    letterSpacing: 1,
     marginTop: 4,
   },
   priceRow: {
@@ -234,25 +232,25 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 22,
     fontWeight: '900',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
   },
   mrp: {
     fontSize: 14,
-    color: COLORS.textMuted,
+    color: '#737373',
     textDecorationLine: 'line-through',
   },
   discount: {
     fontSize: 11,
     fontWeight: '800',
-    color: COLORS.success,
+    color: '#22C55E',
   },
   tryOnShortcut: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FAF8F3',
+    backgroundColor: '#111111',
     borderWidth: 1.5,
-    borderColor: COLORS.gold,
-    borderRadius: RADIUS.lg,
+    borderColor: '#FFFFFF',
+    borderRadius: RADIUS.sm,
     padding: 14,
     marginTop: 16,
     gap: 12,
@@ -260,17 +258,17 @@ const styles = StyleSheet.create({
   tryOnShortcutTitle: {
     fontSize: 12,
     fontWeight: '800',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
   },
   tryOnShortcutSub: {
     fontSize: 10,
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
     marginTop: 2,
   },
   tryOnArrow: {
     fontSize: 18,
     fontWeight: '900',
-    color: COLORS.goldDark,
+    color: '#FFFFFF',
   },
   sectionWrap: {
     marginTop: 20,
@@ -284,14 +282,14 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 11,
     fontWeight: '900',
-    color: COLORS.textPrimary,
-    letterSpacing: 1,
+    color: '#FFFFFF',
+    letterSpacing: 1.5,
     textTransform: 'uppercase',
   },
   sizeGuideText: {
     fontSize: 10,
     fontWeight: '700',
-    color: COLORS.goldDark,
+    color: '#A3A3A3',
   },
   sizeRow: {
     flexDirection: 'row',
@@ -301,28 +299,28 @@ const styles = StyleSheet.create({
   sizePill: {
     paddingVertical: 10,
     paddingHorizontal: 16,
-    borderRadius: RADIUS.md,
-    backgroundColor: '#FAF8F5',
+    borderRadius: RADIUS.sm,
+    backgroundColor: '#111111',
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: '#262626',
     minWidth: 50,
     alignItems: 'center',
   },
   sizePillActive: {
-    backgroundColor: COLORS.textPrimary,
-    borderColor: COLORS.textPrimary,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
   },
   sizePillText: {
     fontSize: 12,
     fontWeight: '800',
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
   },
   sizePillTextActive: {
-    color: '#FFFFFF',
+    color: '#000000',
   },
   descriptionText: {
     fontSize: 12,
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
     lineHeight: 18,
     marginTop: 6,
   },
@@ -332,20 +330,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
     borderTopWidth: 1,
-    borderTopColor: COLORS.border,
+    borderTopColor: '#262626',
     ...SHADOWS.card,
   },
   bottomLabel: {
     fontSize: 8,
     fontWeight: '800',
-    color: COLORS.textMuted,
+    color: '#737373',
     letterSpacing: 1,
   },
   bottomPrice: {
     fontSize: 18,
     fontWeight: '900',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
   },
 });

@@ -1,6 +1,6 @@
 /**
  * CODED-FIT / NOVA STREET — Mobile Home Screen
- * Haute-Couture White Luxury: Brand Hero, Split Men/Women CTAs, Location-Aware ETA, Featured Collection & Tech Features
+ * Haute-Couture Black & White Minimalist Luxury: Editorial Banners, Dual-Funnel RTW/Bespoke, Express ETA
  */
 
 import React from 'react';
@@ -40,17 +40,15 @@ export default function HomeScreen() {
       {/* ── Top Announcement Marquee Bar ── */}
       <View style={styles.topMarquee}>
         <Text style={styles.marqueeText} numberOfLines={1}>
-          ✦ DUAL-FUNNEL HYBRID FASHION ✦ 24H DISPATCH & BESPOKE TAILORING ✦
+          ✦ DUAL-FUNNEL HYBRID FASHION ✦ 24H EXPRESS DISPATCH & BESPOKE 3D TAILORING ✦
         </Text>
       </View>
 
       {/* ── Brand Header ── */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.logoMain}>
-            NOVA <Text style={styles.logoGold}>STREET</Text>
-          </Text>
-          <Text style={styles.logoSub}>HYBRID CUSTOM-CURATED APPAREL · 2026</Text>
+          <Text style={styles.logoMain}>NOVA STREET</Text>
+          <Text style={styles.logoSub}>HYBRID BESPOKE APPAREL · 2026</Text>
         </View>
 
         {/* Live Location Delivery Badge */}
@@ -70,7 +68,7 @@ export default function HomeScreen() {
       >
         {/* ── HERO BANNER: Split Men / Women ── */}
         <View style={styles.heroSection}>
-          <Text style={styles.heroTitle}>WHERE EXPERT DESIGN MEETS YOUR EXACT FIT</Text>
+          <Text style={styles.heroTitle}>WHERE HIGH DESIGN MEETS EXACT FIT</Text>
           <Text style={styles.heroSubtitle}>
             Ahmedabad GOTS organic cottons fused with generative AI try-on and unit-of-one tailoring.
           </Text>
@@ -89,7 +87,7 @@ export default function HomeScreen() {
                 style={styles.heroModelImage}
               />
               <View style={styles.heroCardOverlay}>
-                <Badge label="COLLECTION" variant="gold" size="sm" />
+                <Badge label="COLLECTION" variant="white" size="sm" />
                 <Text style={styles.heroCardTitle}>MEN</Text>
                 <Text style={styles.heroCardLink}>Shop Releases →</Text>
               </View>
@@ -108,7 +106,7 @@ export default function HomeScreen() {
                 style={styles.heroModelImage}
               />
               <View style={styles.heroCardOverlay}>
-                <Badge label="COLLECTION" variant="gold" size="sm" />
+                <Badge label="COLLECTION" variant="white" size="sm" />
                 <Text style={styles.heroCardTitle}>WOMEN</Text>
                 <Text style={styles.heroCardLink}>Shop Releases →</Text>
               </View>
@@ -118,21 +116,19 @@ export default function HomeScreen() {
 
         {/* ── CTA BANNER: AI Try-On Studio ── */}
         <View style={styles.tryOnPromoCard}>
-          <View style={styles.tryOnPromoContent}>
-            <Badge label="NEW · AI VIRTUAL TRY-ON" variant="purple" size="sm" />
-            <Text style={styles.tryOnPromoTitle}>
-              Change Clothes in 1-Click with Generative AI
-            </Text>
-            <Text style={styles.tryOnPromoSub}>
-              Preview bespoke garments on AI supermodels or your live camera photo before you buy.
-            </Text>
-            <GoldButton
-              title="ENTER AI TRY-ON STUDIO ✦"
-              onPress={() => router.push('/tryon')}
-              size="md"
-              style={{ alignSelf: 'flex-start', marginTop: 12 }}
-            />
-          </View>
+          <Badge label="YOUCAM GENERATIVE AI" variant="white" size="sm" />
+          <Text style={styles.tryOnPromoTitle}>
+            Virtual Try-On & Dynamic Body Visualizer
+          </Text>
+          <Text style={styles.tryOnPromoSub}>
+            Preview clothes on editorial supermodels or your live camera photo with instant drape simulation.
+          </Text>
+          <GoldButton
+            title="ENTER AI TRY-ON STUDIO ✦"
+            onPress={() => router.push('/tryon')}
+            size="md"
+            style={{ alignSelf: 'flex-start', marginTop: 14 }}
+          />
         </View>
 
         {/* ── FEATURED COLLECTION GRID ── */}
@@ -162,7 +158,7 @@ export default function HomeScreen() {
             <Text style={styles.pillarIcon}>⚡</Text>
             <Text style={styles.pillarTitle}>24H EXPRESS DISPATCH</Text>
             <Text style={styles.pillarSub}>
-              Standard fits ship in under 24 hours directly from Ahmedabad.
+              Standard fits ship in under 24 hours directly from Ahmedabad ateliers.
             </Text>
           </View>
 
@@ -183,18 +179,18 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* ── SHARE APP WITH A FRIEND PROMO ── */}
+        {/* ── SHARE APP ── */}
         <View style={styles.sharePromoCard}>
-          <Text style={styles.sharePromoTitle}>GIVE ₹500, GET ₹500</Text>
+          <Text style={styles.sharePromoTitle}>SHARE NOVA STREET</Text>
           <Text style={styles.sharePromoSub}>
-            Share Nova Street with a friend and earn credits toward bespoke apparel.
+            Share with friends to unlock bespoke tailoring credits.
           </Text>
           <GoldButton
-            title="SHARE WITH CONTACTS 📤"
+            title="SHARE APP WITH CONTACTS 📤"
             variant="outline"
             onPress={shareWithFriend}
             size="md"
-            style={{ marginTop: 12 }}
+            style={{ marginTop: 12, alignSelf: 'stretch' }}
           />
         </View>
       </ScrollView>
@@ -205,19 +201,19 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
   },
   topMarquee: {
-    backgroundColor: '#FAF8F0',
+    backgroundColor: '#111111',
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: '#262626',
     paddingVertical: 5,
     alignItems: 'center',
   },
   marqueeText: {
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: '800',
-    color: COLORS.goldDark,
+    color: '#E5E5E5',
     letterSpacing: 1.2,
   },
   header: {
@@ -226,46 +222,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000000',
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: '#262626',
   },
   logoMain: {
     fontSize: 18,
     fontWeight: '900',
-    color: COLORS.textPrimary,
-    letterSpacing: 2,
+    color: '#FFFFFF',
+    letterSpacing: 2.5,
     fontFamily: 'Cinzel',
-  },
-  logoGold: {
-    color: COLORS.goldDark,
   },
   logoSub: {
     fontSize: 8,
     fontWeight: '700',
-    color: COLORS.textMuted,
+    color: '#737373',
     letterSpacing: 0.8,
     marginTop: 2,
   },
   locationPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.successLight,
+    backgroundColor: '#111111',
     borderWidth: 1,
-    borderColor: '#A7F3D0',
+    borderColor: '#333333',
     paddingVertical: 4,
     paddingHorizontal: 8,
-    borderRadius: RADIUS.full,
+    borderRadius: RADIUS.sm,
     gap: 4,
   },
   locationDot: {
     fontSize: 8,
-    color: COLORS.success,
+    color: '#22C55E',
   },
   locationCity: {
     fontSize: 9,
     fontWeight: '800',
-    color: COLORS.success,
+    color: '#FFFFFF',
   },
   scrollContent: {
     paddingBottom: 40,
@@ -273,19 +266,19 @@ const styles = StyleSheet.create({
 
   heroSection: {
     padding: 16,
-    backgroundColor: '#FAF8F5',
+    backgroundColor: '#0A0A0A',
   },
   heroTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '900',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
     letterSpacing: 1,
-    lineHeight: 26,
+    lineHeight: 24,
     fontFamily: 'Cinzel',
   },
   heroSubtitle: {
     fontSize: 11,
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
     lineHeight: 16,
     marginTop: 6,
     marginBottom: 16,
@@ -297,10 +290,12 @@ const styles = StyleSheet.create({
   heroModelCard: {
     flex: 1,
     height: 220,
-    borderRadius: RADIUS.lg,
+    borderRadius: RADIUS.sm, // 0 sharp edges
     overflow: 'hidden',
     position: 'relative',
-    backgroundColor: COLORS.surface,
+    backgroundColor: '#111111',
+    borderWidth: 1,
+    borderColor: '#262626',
     ...SHADOWS.card,
   },
   heroModelImage: {
@@ -310,12 +305,12 @@ const styles = StyleSheet.create({
   heroCardOverlay: {
     position: 'absolute',
     inset: 0,
-    backgroundColor: 'rgba(18, 18, 18, 0.35)',
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
     padding: 12,
     justifyContent: 'space-between',
   },
   heroCardTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '900',
     color: '#FFFFFF',
     letterSpacing: 1.5,
@@ -331,26 +326,25 @@ const styles = StyleSheet.create({
   tryOnPromoCard: {
     margin: 16,
     padding: 20,
-    borderRadius: RADIUS.xl,
-    backgroundColor: '#FAF8F3',
+    borderRadius: RADIUS.sm, // 0 sharp edges
+    backgroundColor: '#111111',
     borderWidth: 1.5,
-    borderColor: COLORS.gold,
+    borderColor: '#FFFFFF',
     ...SHADOWS.card,
   },
-  tryOnPromoContent: {},
   tryOnPromoTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '900',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
     letterSpacing: 0.5,
-    marginTop: 8,
-    lineHeight: 24,
+    marginTop: 10,
+    lineHeight: 23,
   },
   tryOnPromoSub: {
-    fontSize: 12,
-    color: COLORS.textSecondary,
-    lineHeight: 18,
-    marginTop: 4,
+    fontSize: 11,
+    color: '#A3A3A3',
+    lineHeight: 16,
+    marginTop: 6,
   },
 
   sectionHeader: {
@@ -362,20 +356,20 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '900',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
     letterSpacing: 1.2,
   },
   sectionSub: {
     fontSize: 9,
-    color: COLORS.textMuted,
+    color: '#737373',
     marginTop: 2,
   },
   seeAllText: {
     fontSize: 11,
     fontWeight: '800',
-    color: COLORS.goldDark,
+    color: '#FFFFFF',
     letterSpacing: 0.5,
   },
   productsGrid: {
@@ -390,10 +384,10 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   pillarCard: {
-    backgroundColor: '#FAF8F5',
+    backgroundColor: '#111111',
     borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: RADIUS.lg,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm, // 0 sharp edges
     padding: 14,
   },
   pillarIcon: {
@@ -403,12 +397,12 @@ const styles = StyleSheet.create({
   pillarTitle: {
     fontSize: 11,
     fontWeight: '800',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
     letterSpacing: 1,
   },
   pillarSub: {
     fontSize: 10,
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
     marginTop: 2,
     lineHeight: 15,
   },
@@ -416,10 +410,10 @@ const styles = StyleSheet.create({
   sharePromoCard: {
     marginHorizontal: 16,
     marginTop: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#111111',
     borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: RADIUS.xl,
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm, // 0 sharp edges
     padding: 18,
     alignItems: 'center',
     textAlign: 'center',
@@ -428,12 +422,12 @@ const styles = StyleSheet.create({
   sharePromoTitle: {
     fontSize: 14,
     fontWeight: '900',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
     letterSpacing: 1,
   },
   sharePromoSub: {
     fontSize: 11,
-    color: COLORS.textSecondary,
+    color: '#A3A3A3',
     marginTop: 4,
     textAlign: 'center',
   },
