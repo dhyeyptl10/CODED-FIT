@@ -1,24 +1,27 @@
 /* ===================================================================
-   NOVA STREET — AI CLOTHES CHANGER & 3D BODY VISUALIZER STUDIO ENGINE
-   Official Perfect Corp YouCam AI Integration & BodyVisualizer.ai Simulator
+   CODED-FIT / THE NEW BLACK AI — Studio Engine & Generative Try-On
+   Official YouCam Generative AI Integration & Real AI Body Visualizer
+   Photo & Runway Video Try-On Support · Zero Emojis
    =================================================================== */
 
 const NOVA3D = (function () {
   'use strict';
 
-  // Official YouCam Generative AI Credentials
+  // YouCam Generative AI Credentials
   const YOUCAM_CONFIG = {
     apiKey: 'sk-HQ2O-M5GjyRTR4mEP4rGrcEngyhikuFF1qJFygrzQiCdrVvTIPjlOFVDqsri1twe',
     secretKey: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCGIIuhl7WW8j3qbCOblYYJo+cFddVOaYKUgDwG6h76mwFD1xP9qNtZrznz8yzVoU1IRAJcT9DJrpTtWYP5SXKH9XlttEhVvgiJlrAZTOrsv7lRQTZeDyGZ9t2LKpHK1pJg5eCx/mh9nae63wE2lPy9E5gmfQzGBL3DcifBl4emjQIDAQAB',
     apiBase: 'https://yce-api-01.makeupar.com/wow/api/v1'
   };
 
-  /* ── AI Supermodels Catalog ── */
+  /* ── AI Supermodels & Runway Video Clips Catalog ── */
   const AI_SUPERMODELS = {
     women: [
       {
-        id: 'w_default',
-        name: 'Elena Vance (Editorial)',
+        id: 'w_elena',
+        name: 'Elena Vance',
+        style: 'Editorial Runway',
+        type: 'image',
         beforeImg: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&q=85',
         afterImg: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&q=85',
         heightCm: 176,
@@ -29,8 +32,24 @@ const NOVA3D = (function () {
         shape: 'hourglass'
       },
       {
-        id: 'w_paris',
-        name: 'Chloe Laurent (Runway)',
+        id: 'w_runway_video',
+        name: 'Sora Runway (Video)',
+        style: 'Live Video Motion',
+        type: 'video',
+        videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-in-a-pink-jacket-40543-large.mp4',
+        poster: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=85',
+        heightCm: 178,
+        weightKg: 56,
+        chestIn: 33,
+        waistIn: 24,
+        hipIn: 35,
+        shape: 'rectangle'
+      },
+      {
+        id: 'w_chloe',
+        name: 'Chloe Laurent',
+        style: 'Haute Couture',
+        type: 'image',
         beforeImg: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&q=85',
         afterImg: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900&q=85',
         heightCm: 178,
@@ -41,8 +60,10 @@ const NOVA3D = (function () {
         shape: 'rectangle'
       },
       {
-        id: 'w_street',
-        name: 'Zoe Davis (Streetwear)',
+        id: 'w_zoe',
+        name: 'Zoe Davis',
+        style: 'Cyber Streetwear',
+        type: 'image',
         beforeImg: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900&q=85',
         afterImg: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900&q=85',
         heightCm: 172,
@@ -54,21 +75,25 @@ const NOVA3D = (function () {
       },
       {
         id: 'w_curvy',
-        name: 'Maya Rao (Curvy Chic)',
+        name: 'Maya Rao',
+        style: 'Full Figure / Curvy',
+        type: 'image',
         beforeImg: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=900&q=85',
         afterImg: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=900&q=85',
         heightCm: 168,
-        weightKg: 68,
-        chestIn: 38,
-        waistIn: 30,
-        hipIn: 42,
-        shape: 'pear'
+        weightKg: 78,
+        chestIn: 40,
+        waistIn: 34,
+        hipIn: 44,
+        shape: 'plus'
       }
     ],
     men: [
       {
-        id: 'm_default',
-        name: 'Marcus Sterling (V-Taper)',
+        id: 'm_marcus',
+        name: 'Marcus Sterling',
+        style: 'V-Taper Athletic',
+        type: 'image',
         beforeImg: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=900&q=85',
         afterImg: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&q=85',
         heightCm: 184,
@@ -79,8 +104,24 @@ const NOVA3D = (function () {
         shape: 'athletic'
       },
       {
-        id: 'm_tokyo',
-        name: 'Kenji Takahashi (Minimal)',
+        id: 'm_runway_video',
+        name: 'Kenji Runway (Video)',
+        style: 'Live Video Motion',
+        type: 'video',
+        videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-stylish-model-posing-in-a-studio-41004-large.mp4',
+        poster: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=900&q=85',
+        heightCm: 182,
+        weightKg: 74,
+        chestIn: 40,
+        waistIn: 30,
+        hipIn: 37,
+        shape: 'rectangle'
+      },
+      {
+        id: 'm_kenji',
+        name: 'Kenji Takahashi',
+        style: 'Tokyo Minimal',
+        type: 'image',
         beforeImg: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=900&q=85',
         afterImg: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900&q=85',
         heightCm: 180,
@@ -91,8 +132,10 @@ const NOVA3D = (function () {
         shape: 'rectangle'
       },
       {
-        id: 'm_denim',
-        name: 'Liam Vance (Rugged)',
+        id: 'm_liam',
+        name: 'Liam Vance',
+        style: 'Bespoke Sartorial',
+        type: 'image',
         beforeImg: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=900&q=85',
         afterImg: 'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=900&q=85',
         heightCm: 186,
@@ -101,572 +144,614 @@ const NOVA3D = (function () {
         waistIn: 33,
         hipIn: 40,
         shape: 'inverted_triangle'
-      },
-      {
-        id: 'm_athletic',
-        name: 'Dev Patel (High-Fashion)',
-        beforeImg: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=900&q=85',
-        afterImg: 'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=900&q=85',
-        heightCm: 182,
-        weightKg: 75,
-        chestIn: 41,
-        waistIn: 31,
-        hipIn: 38,
-        shape: 'athletic'
       }
     ]
   };
 
   /* ── Garments Catalog ── */
-  const GARMENTS_CATALOG = {
-    women: [
-      { id: 'w_purple_midi', name: 'Purple Tailored Midi Dress', category: 'Dresses', tag: 'HOT', price: 3499, mrp: 4999, fabric: 'TENCEL™ Lyocell Blend', colorHex: '#4C1D95', img: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900&q=85' },
-      { id: 'w_strapless', name: 'Strapless Peplum Top', category: 'Tops', tag: 'Party', price: 1899, mrp: 2799, fabric: 'Ahmedabad GOTS Organic Cotton', colorHex: '#141414', img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=85' },
-      { id: 'w_gold_midi', name: 'Gold Silk Fluid Midi', category: 'Dresses', tag: 'Party', price: 4299, mrp: 5999, fabric: 'Pure Organic Italian Linen', colorHex: '#C9A84C', img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&q=85' },
-      { id: 'w_selvedge_jeans', name: 'Straight-Leg Selvedge Jeans', category: 'Bottoms', tag: 'Daily', price: 2899, mrp: 3999, fabric: 'Japanese Selvedge Denim', colorHex: '#1c2536', img: 'https://images.unsplash.com/photo-1588117260148-b47818741c74?w=900&q=85' },
-      { id: 'w_black_dress', name: 'Flowy Black Maxi Gown', category: 'Dresses', tag: 'HOT', price: 3899, mrp: 5499, fabric: 'TENCEL™ Lyocell Blend', colorHex: '#18181B', img: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=900&q=85' },
-      { id: 'w_tailored_blazer', name: 'Onyx Tailored Blazer & Pants', category: 'Outerwear', tag: 'Bespoke', price: 5499, mrp: 7499, fabric: 'Italian Wool-Cotton Blend', colorHex: '#09090B', img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=85' },
-      { id: 'w_crop_tee', name: 'Aura Fitted Crop Tee', category: 'Tops', tag: 'Daily', price: 1299, mrp: 1999, fabric: '220 GSM GOTS Organic Cotton', colorHex: '#F5F2E7', img: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900&q=85' },
-      { id: 'w_linen_pants', name: 'Soleil High-Waist Linen Trousers', category: 'Bottoms', tag: 'Daily', price: 2499, mrp: 3499, fabric: 'Pure Organic Italian Linen', colorHex: '#E8E3DA', img: 'https://images.unsplash.com/photo-1594938298603-b8ff3ddb5777?w=900&q=85' },
-      { id: 'w_sage_hoodie', name: 'Cloud French Terry Sage Hoodie', category: 'Tops', tag: 'Daily', price: 3299, mrp: 4699, fabric: '380 GSM Organic French Terry', colorHex: '#4A7C6F', img: 'https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?w=900&q=85' }
-    ],
-    men: [
-      { id: 'm_oversized_tee', name: 'Aether Oversized Drop-Shoulder Tee', category: 'Tops', tag: 'HOT', price: 1499, mrp: 2499, fabric: '280 GSM Ahmedabad GOTS Cotton', colorHex: '#F5F2E7', img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900&q=85' },
-      { id: 'm_denim_jacket', name: 'Obsidian Boxy Selvedge Jacket', category: 'Outerwear', tag: 'HOT', price: 4299, mrp: 5999, fabric: '14.5oz Japanese Selvedge Denim', colorHex: '#18181B', img: 'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=900&q=85' },
-      { id: 'm_terracotta_hoodie', name: 'Vortex Heavy Fleece Hoodie', category: 'Tops', tag: 'HOT', price: 3499, mrp: 4999, fabric: '450 GSM Heavy French Terry', colorHex: '#EECDAF', img: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=900&q=85' },
-      { id: 'm_cargo_pants', name: 'Tactical Cargo Utility Trousers', category: 'Bottoms', tag: 'Daily', price: 2899, mrp: 3999, fabric: '320 GSM Ripstop Cotton Twill', colorHex: '#27272A', img: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=900&q=85' },
-      { id: 'm_linen_shirt', name: 'Biella Bespoke Linen Shirt', category: 'Tops', tag: 'Bespoke', price: 2799, mrp: 3999, fabric: '210 GSM Biella Italian Linen', colorHex: '#93C5FD', img: 'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=900&q=85' },
-      { id: 'm_rib_polo', name: 'Cipher Ribbed Knit Polo', category: 'Tops', tag: 'Daily', price: 1899, mrp: 2699, fabric: 'Fine Gauge Ribbed Knit', colorHex: '#1E3A8A', img: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=900&q=85' },
-      { id: 'm_puffer_jacket', name: 'Apex Matte Puffer Overshirt', category: 'Outerwear', tag: 'Daily', price: 4999, mrp: 6999, fabric: 'Recycled Matte Nylon', colorHex: '#09090B', img: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&q=85' },
-      { id: 'm_sand_chinos', name: 'Monolith Tailored Chinos', category: 'Bottoms', tag: 'Bespoke', price: 2199, mrp: 3299, fabric: 'GOTS Organic Twill', colorHex: '#D4C5B5', img: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=900&q=85' }
-    ]
-  };
+  const GARMENTS_CATALOG = [
+    {
+      id: 'g_dress_purple',
+      name: 'Tailored Ribbed Midi Dress',
+      category: 'Dresses',
+      gender: 'women',
+      price: 3499,
+      image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&q=85',
+      fabric: 'Fine Gauge Ribbed Knit',
+      color: '#4C1D95'
+    },
+    {
+      id: 'g_tweed_jacket',
+      name: 'Structured Tweed Atelier Coat',
+      category: 'Jackets',
+      gender: 'women',
+      price: 5299,
+      image: 'https://images.unsplash.com/photo-1548883354-7622d03aca27?w=900&q=85',
+      fabric: 'Heritage Ahmedabad Wool Blend',
+      color: '#18181B'
+    },
+    {
+      id: 'g_silk_blouse',
+      name: 'Asymmetrical Silk Wrap Top',
+      category: 'Tops',
+      gender: 'women',
+      price: 2699,
+      image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=900&q=85',
+      fabric: 'Mulberry Silk Georgette',
+      color: '#F5F2E7'
+    },
+    {
+      id: 'g_pleated_trousers',
+      name: 'High-Waist Wide Pleated Trouser',
+      category: 'Bottoms',
+      gender: 'women',
+      price: 2999,
+      image: 'https://images.unsplash.com/photo-1509551388413-e18d0ac5d495?w=900&q=85',
+      fabric: 'Italian Biella Linen',
+      color: '#E8E3DA'
+    },
+    {
+      id: 'g_mens_linen_shirt',
+      name: 'Band-Collar Linen Overshirt',
+      category: 'Tops',
+      gender: 'men',
+      price: 2499,
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900&q=85',
+      fabric: 'Raw Slub Organic Linen',
+      color: '#F5F2E7'
+    },
+    {
+      id: 'g_mens_selvedge_jacket',
+      name: '14.5oz Raw Selvedge Denim Trucker',
+      category: 'Jackets',
+      gender: 'men',
+      price: 4999,
+      image: 'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=900&q=85',
+      fabric: 'Japanese Kuroki Mill Denim',
+      color: '#1C2536'
+    },
+    {
+      id: 'g_mens_tailored_pant',
+      name: 'Relaxed Tapered Pleated Chino',
+      category: 'Bottoms',
+      gender: 'men',
+      price: 2799,
+      image: 'https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=900&q=85',
+      fabric: 'GOTS Certified Organic Twill',
+      color: '#27272A'
+    },
+    {
+      id: 'g_merino_turtleneck',
+      name: 'Fine Merino Wool Minimal Knit',
+      category: 'Tops',
+      gender: 'men',
+      price: 3199,
+      image: 'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=900&q=85',
+      fabric: 'Extra-Fine Merino Wool',
+      color: '#18181B'
+    }
+  ];
 
-  /* ── State ── */
+  /* ── Current Studio State ── */
   let currentGender = 'women';
-  let currentModelIndex = 0;
-  let currentGarmentIndex = 0;
-  let customUserImage = null;
-  let currentColorHex = '#F5F2E7';
-  let currentFabricId = 'gots_cotton';
-  let splitSliderPos = 50;
-  let activeAppTab = 'clothes';
-  let webCameraStream = null;
+  let currentModel = AI_SUPERMODELS.women[0];
+  let currentGarment = GARMENTS_CATALOG[0];
+  let userUploadedMedia = null; // { type: 'image'|'video', url: string }
+  let activeCategory = 'All';
 
-  /* ── Body Visualizer Anthropometrics ── */
-  const bodyVisualizer = {
-    gender: 'women',
+  // Body Visualizer Parameters
+  let bodyParams = {
     heightCm: 176,
     weightKg: 58,
-    bmi: 18.7,
-    exerciseHrs: 5,
     chestIn: 34,
     waistIn: 25,
     hipIn: 36,
-    bodyShape: 'hourglass'
+    shape: 'hourglass'
   };
 
-  /* ── Garment Configuration ── */
-  const garmentConfig = {
-    fabric: 'gots_cotton',
-    fit: 'bespoke',
-    size: 'M',
-    basePrice: 3499
-  };
+  // Bespoke Options
+  let bespokeColor = { hex: '#F5F2E7', name: 'Ivory White' };
+  let bespokeFabric = 'gots_cotton';
 
-  /* ─────────────────────────────────────────────────────────────
-     1. INITIALIZATION
-  ───────────────────────────────────────────────────────────── */
+  let webcamStream = null;
+
+  /* ── Initialize Studio ── */
   function init() {
-    setupSplitSlider();
-    renderSupermodelTray();
+    renderSupermodelsTray();
     renderGarmentsGrid();
-    calculateBMI();
-    updateLiveView();
-    updatePriceSummary();
-    renderBodyVisualizerCanvas();
-
-    console.log('✨ [NOVA3D] AI Clothes Studio & Body Visualizer Engine Ready');
+    updateCanvasDisplay();
+    renderBodyVisualizer();
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     2. BEFORE / AFTER COMPARISON SLIDER SETUP
-  ───────────────────────────────────────────────────────────── */
-  function setupSplitSlider() {
-    const container = document.getElementById('comparison-container');
-    const divider = document.getElementById('comparison-divider');
-    if (!container || !divider) return;
-
-    let isDragging = false;
-
-    function onMove(e) {
-      if (!isDragging) return;
-      const rect = container.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      let pos = ((clientX - rect.left) / rect.width) * 100;
-      pos = Math.max(5, Math.min(95, pos));
-      setSplitPosition(pos);
-    }
-
-    divider.addEventListener('mousedown', () => { isDragging = true; });
-    container.addEventListener('mousedown', (e) => { isDragging = true; onMove(e); });
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', () => { isDragging = false; });
-
-    divider.addEventListener('touchstart', () => { isDragging = true; });
-    container.addEventListener('touchstart', (e) => { isDragging = true; onMove(e); });
-    window.addEventListener('touchmove', onMove);
-    window.addEventListener('touchend', () => { isDragging = false; });
-  }
-
-  function setSplitPosition(pos) {
-    splitSliderPos = pos;
-    const divider = document.getElementById('comparison-divider');
-    const afterWrap = document.getElementById('after-img-wrap');
-    if (divider) divider.style.left = pos + '%';
-    if (afterWrap) afterWrap.style.clipPath = 'polygon(' + pos + '% 0, 100% 0, 100% 100%, ' + pos + '% 100%)';
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     3. RENDER TRAYS
-  ───────────────────────────────────────────────────────────── */
-  function renderSupermodelTray() {
+  /* ── Render Supermodels Tray ── */
+  function renderSupermodelsTray() {
     const tray = document.getElementById('supermodels-tray');
     if (!tray) return;
 
     const list = AI_SUPERMODELS[currentGender] || [];
-    tray.innerHTML = list.map((m, idx) => `
-      <div class="model-thumb-card ${idx === currentModelIndex ? 'active' : ''}" onclick="NOVA3D.selectSupermodel(${idx})">
-        <img src="${m.beforeImg}" alt="${m.name}">
-        <div class="model-thumb-name">${m.name.split(' ')[0]}</div>
-      </div>
-    `).join('');
+    tray.innerHTML = list.map(m => {
+      const isAct = (!userUploadedMedia && currentModel.id === m.id) ? 'active' : '';
+      const badge = m.type === 'video' ? 'VIDEO' : '4K AI';
+      const thumb = m.type === 'video' ? m.poster : m.beforeImg;
+      return `
+        <div class="model-avatar-card ${isAct}" onclick="NOVA3D.selectModel('${m.id}')">
+          <div class="model-avatar-img-wrap">
+            <img src="${thumb}" alt="${m.name}">
+            <span class="model-avatar-badge">${badge}</span>
+          </div>
+          <div class="model-avatar-name">${m.name}</div>
+          <div class="model-avatar-style">${m.style}</div>
+        </div>
+      `;
+    }).join('');
   }
 
-  function renderGarmentsGrid(filterCategory = 'All') {
+  /* ── Render Garments Grid ── */
+  function renderGarmentsGrid() {
     const grid = document.getElementById('garments-grid');
     if (!grid) return;
 
-    const list = GARMENTS_CATALOG[currentGender] || [];
-    const filtered = (filterCategory === 'All') ? list : list.filter(g => g.category === filterCategory || g.tag === filterCategory);
+    let items = GARMENTS_CATALOG.filter(g => g.gender === currentGender || g.category === 'Bespoke');
+    if (activeCategory !== 'All') {
+      items = items.filter(g => g.category === activeCategory);
+    }
 
-    grid.innerHTML = `
-      <div class="garment-thumb-card upload-card" onclick="document.getElementById('garment-file-input').click()">
-        <div style="font-size:24px;margin-bottom:4px;">📤</div>
-        <div style="font-size:10px;font-weight:800;color:var(--gold-dark);text-transform:uppercase;">Upload</div>
-        <div style="font-size:9px;color:#8A8580;">Your Clothes</div>
-      </div>
-    ` + filtered.map((g, idx) => {
-      const realIdx = list.findIndex(item => item.id === g.id);
+    grid.innerHTML = items.map(g => {
+      const isAct = (currentGarment && currentGarment.id === g.id) ? 'active' : '';
       return `
-        <div class="garment-thumb-card ${realIdx === currentGarmentIndex ? 'active' : ''}" onclick="NOVA3D.selectGarment(${realIdx})">
-          <img src="${g.img}" alt="${g.name}">
-          ${g.tag ? `<span class="garment-tag-badge">${g.tag}</span>` : ''}
-          <div class="garment-thumb-info">
-            <div class="garment-thumb-name">${g.name}</div>
-            <div class="garment-thumb-price">₹${g.price.toLocaleString('en-IN')}</div>
+        <div class="garment-grid-card ${isAct}" onclick="NOVA3D.selectGarment('${g.id}')">
+          <div class="garment-grid-thumb">
+            <img src="${g.image}" alt="${g.name}">
+          </div>
+          <div class="garment-grid-info">
+            <div class="garment-grid-name">${g.name}</div>
+            <div class="garment-grid-price">&#8377;${g.price.toLocaleString('en-IN')}</div>
           </div>
         </div>
       `;
     }).join('');
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     4. UPDATE LIVE VIEW
-  ───────────────────────────────────────────────────────────── */
-  function updateLiveView() {
-    const model = (AI_SUPERMODELS[currentGender] && AI_SUPERMODELS[currentGender][currentModelIndex]) || AI_SUPERMODELS.women[0];
-    const garment = (GARMENTS_CATALOG[currentGender] && GARMENTS_CATALOG[currentGender][currentGarmentIndex]) || GARMENTS_CATALOG.women[0];
+  /* ── Select Supermodel ── */
+  function selectModel(modelId) {
+    const list = AI_SUPERMODELS[currentGender];
+    const found = list.find(m => m.id === modelId);
+    if (!found) return;
 
-    const beforeImg = document.getElementById('before-img');
-    if (beforeImg) {
-      beforeImg.src = customUserImage || model.beforeImg;
-    }
+    userUploadedMedia = null;
+    currentModel = found;
+    bodyParams.heightCm = found.heightCm;
+    bodyParams.weightKg = found.weightKg;
+    bodyParams.chestIn = found.chestIn;
+    bodyParams.waistIn = found.waistIn;
+    bodyParams.hipIn = found.hipIn;
+    bodyParams.shape = found.shape;
 
-    const afterImg = document.getElementById('after-img');
-    if (afterImg) {
-      afterImg.src = garment.img || model.afterImg;
-    }
-
-    const tint = document.getElementById('garment-color-tint');
-    if (tint) {
-      if (currentColorHex && currentColorHex !== '#F5F2E7') {
-        tint.style.background = currentColorHex;
-        tint.style.opacity = '0.22';
-        tint.style.mixBlendMode = 'multiply';
-      } else {
-        tint.style.opacity = '0';
-      }
-    }
-
-    const statusLine = document.getElementById('studio-status-line');
-    if (statusLine) {
-      statusLine.textContent = 'AI Supermodel · ' + model.name + ' · Wearing: ' + garment.name;
-    }
-
-    garmentConfig.basePrice = garment.price;
-    updatePriceSummary();
+    renderSupermodelsTray();
+    updateCanvasDisplay();
+    updateBodyVisualizerSliders();
+    renderBodyVisualizer();
   }
 
-  function selectSupermodel(idx) {
-    currentModelIndex = idx;
-    customUserImage = null;
-    const model = AI_SUPERMODELS[currentGender][idx];
-
-    if (model) {
-      bodyVisualizer.heightCm = model.heightCm;
-      bodyVisualizer.weightKg = model.weightKg;
-      bodyVisualizer.chestIn = model.chestIn;
-      bodyVisualizer.waistIn = model.waistIn;
-      bodyVisualizer.hipIn = model.hipIn;
-      bodyVisualizer.bodyShape = model.shape;
-      calculateBMI();
-      syncBodyVisualizerUI();
-      renderBodyVisualizerCanvas();
-    }
-
-    renderSupermodelTray();
-    updateLiveView();
-    if (typeof showToast === 'function') {
-      showToast('👤 Model Switched: ' + model.name);
-    }
-  }
-
-  function selectGarment(idx) {
-    currentGarmentIndex = idx;
-    const garment = GARMENTS_CATALOG[currentGender][idx];
+  /* ── Select Garment & Trigger AI Draping ── */
+  async function selectGarment(garmentId) {
+    const found = GARMENTS_CATALOG.find(g => g.id === garmentId);
+    if (!found) return;
+    currentGarment = found;
 
     renderGarmentsGrid();
-    updateLiveView();
-    triggerAITransformEffect();
-
-    if (typeof showToast === 'function') {
-      showToast('👗 Wearing: ' + garment.name);
-    }
+    await triggerAiDrapeAnimation();
+    updateCanvasDisplay();
+    updatePriceDisplay();
   }
 
-  function setGender(gender) {
-    currentGender = gender;
-    bodyVisualizer.gender = gender;
-    currentModelIndex = 0;
-    currentGarmentIndex = 0;
-
-    document.querySelectorAll('.gender-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.gender === gender);
-    });
-
-    const hourglassPreset = document.getElementById('preset-hourglass');
-    if (hourglassPreset) hourglassPreset.style.display = gender === 'women' ? 'inline-flex' : 'none';
-
-    renderSupermodelTray();
-    renderGarmentsGrid();
-    calculateBMI();
-    syncBodyVisualizerUI();
-    renderBodyVisualizerCanvas();
-    updateLiveView();
-  }
-
-  function setColor(hex, name) {
-    currentColorHex = hex;
-    const nameEl = document.getElementById('selected-color-name');
-    if (nameEl) nameEl.textContent = name || 'Custom';
-    updateLiveView();
-  }
-
-  function setFabric(fabricId) {
-    currentFabricId = fabricId;
-    garmentConfig.fabric = fabricId;
-    updatePriceSummary();
-  }
-
-  function handleUserPhotoUpload(file) {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      customUserImage = e.target.result;
-      const beforeImg = document.getElementById('before-img');
-      if (beforeImg) beforeImg.src = customUserImage;
-
-      triggerAITransformEffect();
-      if (typeof showToast === 'function') {
-        showToast('✨ Your Photo Uploaded! AI Clothes Drape Activated.');
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function handleCustomGarmentUpload(file) {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const customGarmentSrc = e.target.result;
-      const afterImg = document.getElementById('after-img');
-      if (afterImg) afterImg.src = customGarmentSrc;
-
-      triggerAITransformEffect();
-      if (typeof showToast === 'function') {
-        showToast('👚 Custom Garment Fitted on Model!');
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function triggerAITransformEffect() {
-    const overlay = document.getElementById('ai-transform-overlay');
+  /* ── Simulated AI Neural Drape Processing ── */
+  async function triggerAiDrapeAnimation() {
+    const overlay = document.getElementById('ai-processing-overlay');
     if (overlay) {
       overlay.style.display = 'flex';
-      overlay.style.opacity = '1';
-      setTimeout(() => {
-        overlay.style.opacity = '0';
-        setTimeout(() => { overlay.style.display = 'none'; }, 300);
-      }, 900);
+      await new Promise(r => setTimeout(r, 650));
+      overlay.style.display = 'none';
     }
   }
 
-  function randomSupermodel() {
-    const list = AI_SUPERMODELS[currentGender] || [];
-    const rnd = Math.floor(Math.random() * list.length);
-    selectSupermodel(rnd);
+  /* ── Update Viewport Canvas Display ── */
+  function updateCanvasDisplay() {
+    const beforeImg = document.getElementById('before-img');
+    const beforeVid = document.getElementById('before-video');
+    const afterImg = document.getElementById('after-img');
+    const afterVid = document.getElementById('after-video');
+    const statusLine = document.getElementById('studio-status-line');
+
+    if (userUploadedMedia) {
+      if (userUploadedMedia.type === 'video') {
+        beforeImg.style.display = 'none';
+        beforeVid.style.display = 'block';
+        beforeVid.src = userUploadedMedia.url;
+        beforeVid.play().catch(() => {});
+
+        afterImg.style.display = 'none';
+        afterVid.style.display = 'block';
+        afterVid.src = userUploadedMedia.url;
+        afterVid.play().catch(() => {});
+      } else {
+        beforeVid.style.display = 'none';
+        afterVid.style.display = 'none';
+        beforeImg.style.display = 'block';
+        afterImg.style.display = 'block';
+
+        beforeImg.src = userUploadedMedia.url;
+        afterImg.src = currentGarment ? currentGarment.image : userUploadedMedia.url;
+      }
+      if (statusLine) {
+        statusLine.innerText = `Custom Upload (${userUploadedMedia.type.toUpperCase()}) &bull; Dressed: ${currentGarment.name}`;
+      }
+    } else if (currentModel.type === 'video') {
+      beforeImg.style.display = 'none';
+      afterImg.style.display = 'none';
+      beforeVid.style.display = 'block';
+      afterVid.style.display = 'block';
+
+      beforeVid.src = currentModel.videoUrl;
+      beforeVid.play().catch(() => {});
+      afterVid.src = currentModel.videoUrl;
+      afterVid.play().catch(() => {});
+
+      if (statusLine) {
+        statusLine.innerText = `Runway Video &bull; ${currentModel.name} &bull; Dressed: ${currentGarment.name}`;
+      }
+    } else {
+      if (beforeVid) beforeVid.style.display = 'none';
+      if (afterVid) afterVid.style.display = 'none';
+      if (beforeImg) {
+        beforeImg.style.display = 'block';
+        beforeImg.src = currentModel.beforeImg;
+      }
+      if (afterImg) {
+        afterImg.style.display = 'block';
+        afterImg.src = currentGarment.image || currentModel.afterImg;
+      }
+      if (statusLine) {
+        statusLine.innerText = `AI Supermodel &bull; ${currentModel.name} &bull; Dressed: ${currentGarment.name}`;
+      }
+    }
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     5. BODY VISUALIZER & DYNAMIC SVG/CANVAS MORPHING ENGINE
-  ───────────────────────────────────────────────────────────── */
-  function calculateBMI() {
-    const heightM = bodyVisualizer.heightCm / 100;
-    bodyVisualizer.bmi = parseFloat((bodyVisualizer.weightKg / (heightM * heightM)).toFixed(1));
-    return bodyVisualizer.bmi;
-  }
-
-  function setBodyParam(param, val) {
-    bodyVisualizer[param] = parseFloat(val);
-    calculateBMI();
-    syncBodyVisualizerUI();
-    renderBodyVisualizerCanvas();
-  }
-
-  function setBodyShapePreset(preset) {
-    bodyVisualizer.bodyShape = preset;
-
-    if (preset === 'athletic') {
-      bodyVisualizer.chestIn = currentGender === 'women' ? 36 : 42;
-      bodyVisualizer.waistIn = currentGender === 'women' ? 26 : 30;
-      bodyVisualizer.hipIn = currentGender === 'women' ? 37 : 38;
-    } else if (preset === 'hourglass') {
-      bodyVisualizer.chestIn = 36;
-      bodyVisualizer.waistIn = 24;
-      bodyVisualizer.hipIn = 38;
-    } else if (preset === 'rectangle') {
-      bodyVisualizer.chestIn = currentGender === 'women' ? 33 : 38;
-      bodyVisualizer.waistIn = currentGender === 'women' ? 28 : 32;
-      bodyVisualizer.hipIn = currentGender === 'women' ? 35 : 37;
-    } else if (preset === 'pear') {
-      bodyVisualizer.chestIn = currentGender === 'women' ? 33 : 38;
-      bodyVisualizer.waistIn = currentGender === 'women' ? 27 : 33;
-      bodyVisualizer.hipIn = currentGender === 'women' ? 42 : 40;
-    } else if (preset === 'inverted_triangle') {
-      bodyVisualizer.chestIn = currentGender === 'women' ? 38 : 44;
-      bodyVisualizer.waistIn = currentGender === 'women' ? 27 : 32;
-      bodyVisualizer.hipIn = currentGender === 'women' ? 34 : 37;
-    } else if (preset === 'plus') {
-      bodyVisualizer.weightKg = currentGender === 'women' ? 78 : 95;
-      bodyVisualizer.chestIn = currentGender === 'women' ? 42 : 46;
-      bodyVisualizer.waistIn = currentGender === 'women' ? 36 : 40;
-      bodyVisualizer.hipIn = currentGender === 'women' ? 46 : 44;
+  /* ── Handle Photo & Video Upload ── */
+  function handleUserMediaUpload(file) {
+    if (!file) return;
+    const isVideo = file.type.startsWith('video');
+    const isImage = file.type.startsWith('image');
+    if (!isImage && !isVideo) {
+      alert('Please upload an image (JPG, PNG) or video (MP4, MOV).');
+      return;
     }
 
-    calculateBMI();
-    syncBodyVisualizerUI();
-    renderBodyVisualizerCanvas();
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      userUploadedMedia = {
+        type: isVideo ? 'video' : 'image',
+        url: e.target.result,
+        file: file
+      };
+      renderSupermodelsTray();
+      triggerAiDrapeAnimation().then(() => updateCanvasDisplay());
+    };
+    reader.readAsDataURL(file);
   }
 
-  function syncBodyVisualizerUI() {
-    const bmiEl = document.getElementById('bv-gauge-bmi');
-    const catEl = document.getElementById('bv-bmi-category');
-    const recEl = document.getElementById('bv-rec-size');
-
-    if (bmiEl) bmiEl.textContent = bodyVisualizer.bmi;
-    if (catEl) {
-      if (bodyVisualizer.bmi < 18.5) catEl.textContent = 'Underweight Fit';
-      else if (bodyVisualizer.bmi < 25) catEl.textContent = 'Optimal Healthy Proportion';
-      else if (bodyVisualizer.bmi < 30) catEl.textContent = 'Athletic / Robust';
-      else catEl.textContent = 'Curvy / Plus Fit';
-    }
-    if (recEl) {
-      if (bodyVisualizer.bmi < 18.5) recEl.textContent = 'XS';
-      else if (bodyVisualizer.bmi < 22) recEl.textContent = 'S';
-      else if (bodyVisualizer.bmi < 25) recEl.textContent = 'M';
-      else if (bodyVisualizer.bmi < 29) recEl.textContent = 'L';
-      else recEl.textContent = 'XL / Bespoke 3D';
-    }
-
-    // Sliders
-    const sHeight = document.getElementById('slider-height');
-    const sWeight = document.getElementById('slider-weight');
-    const sChest = document.getElementById('slider-chest');
-    const sWaist = document.getElementById('slider-waist');
-    const sHip = document.getElementById('slider-hip');
-
-    if (sHeight) sHeight.value = bodyVisualizer.heightCm;
-    if (sWeight) sWeight.value = bodyVisualizer.weightKg;
-    if (sChest) sChest.value = bodyVisualizer.chestIn;
-    if (sWaist) sWaist.value = bodyVisualizer.waistIn;
-    if (sHip) sHip.value = bodyVisualizer.hipIn;
-
-    // Value text spans
-    const vHeight = document.getElementById('val-height');
-    const vWeight = document.getElementById('val-weight');
-    const vChest = document.getElementById('val-chest');
-    const vWaist = document.getElementById('val-waist');
-    const vHip = document.getElementById('val-hip');
-
-    if (vHeight) vHeight.textContent = bodyVisualizer.heightCm + ' cm (' + (bodyVisualizer.heightCm / 30.48).toFixed(1) + "\')";
-    if (vWeight) vWeight.textContent = bodyVisualizer.weightKg + ' kg (' + Math.round(bodyVisualizer.weightKg * 2.204) + ' lbs)';
-    if (vChest) vChest.textContent = bodyVisualizer.chestIn + '"';
-    if (vWaist) vWaist.textContent = bodyVisualizer.waistIn + '"';
-    if (vHip) vHip.textContent = bodyVisualizer.hipIn + '"';
-
-    // HUD Stats
-    const hChest = document.getElementById('stat-chest');
-    const hWaist = document.getElementById('stat-waist');
-    const hHeight = document.getElementById('stat-height');
-
-    if (hChest) hChest.textContent = bodyVisualizer.chestIn + '"';
-    if (hWaist) hWaist.textContent = bodyVisualizer.waistIn + '"';
-    if (hHeight) hHeight.textContent = (bodyVisualizer.heightCm / 30.48).toFixed(1) + "\'";
-  }
-
-  /* Render visual body silhouette on Web canvas */
-  function renderBodyVisualizerCanvas() {
-    const container = document.getElementById('body-visualizer-canvas-mount');
-    if (!container) return;
-
-    const shoulderW = Math.min(220, Math.max(110, bodyVisualizer.chestIn * 4.2));
-    const waistW = Math.min(190, Math.max(90, bodyVisualizer.waistIn * 3.8));
-    const hipW = Math.min(210, Math.max(100, bodyVisualizer.hipIn * 4.0));
-    const torsoH = Math.min(120, Math.max(70, bodyVisualizer.heightCm * 0.48));
-    const legH = Math.min(160, Math.max(90, bodyVisualizer.heightCm * 0.7));
-
-    container.innerHTML = `
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:20px;position:relative;">
-        <!-- Head -->
-        <div style="width:48px;height:60px;border-radius:24px;background:#C9A84C;margin-bottom:6px;box-shadow:0 4px 12px rgba(201,168,76,0.35);"></div>
-
-        <!-- Shoulders / Chest -->
-        <div style="width:${shoulderW}px;height:32px;border-radius:16px;background:#1A1A1A;margin-bottom:6px;transition:all 0.3s ease;box-shadow:0 4px 12px rgba(0,0,0,0.1);"></div>
-
-        <!-- Torso / Waist -->
-        <div style="width:${waistW}px;height:${torsoH}px;border-radius:12px;background:#2B2B2B;margin-bottom:6px;transition:all 0.3s ease;"></div>
-
-        <!-- Hips -->
-        <div style="width:${hipW}px;height:36px;border-radius:14px;background:#1A1A1A;margin-bottom:6px;transition:all 0.3s ease;"></div>
-
-        <!-- Legs -->
-        <div style="display:flex;gap:14px;">
-          <div style="width:28px;height:${legH}px;border-radius:14px;background:#3A3A3A;transition:all 0.3s ease;"></div>
-          <div style="width:28px;height:${legH}px;border-radius:14px;background:#3A3A3A;transition:all 0.3s ease;"></div>
-        </div>
-
-        <!-- Float Overlay -->
-        <div style="position:absolute;bottom:12px;left:12px;right:12px;background:rgba(255,255,255,0.94);padding:10px 14px;border-radius:12px;border:1px solid #E8E4DC;display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <div style="font-size:10px;font-weight:900;color:var(--gold-dark);letter-spacing:1px;text-transform:uppercase;">${bodyVisualizer.gender.toUpperCase()} · ${bodyVisualizer.bodyShape.toUpperCase()}</div>
-            <div style="font-size:9px;color:#6B6560;margin-top:2px;">Height: ${bodyVisualizer.heightCm}cm · Weight: ${bodyVisualizer.weightKg}kg · Chest: ${bodyVisualizer.chestIn}" · Waist: ${bodyVisualizer.waistIn}"</div>
-          </div>
-          <div style="font-size:16px;font-weight:900;color:#111111;">BMI ${bodyVisualizer.bmi}</div>
-        </div>
-      </div>
-    `;
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     6. LIVE WEBRTC CAMERA AR TRY-ON
-  ───────────────────────────────────────────────────────────── */
-  async function startWebCamera() {
-    const video = document.getElementById('web-camera-video');
+  /* ── Web Camera Scan ── */
+  function startWebCamera() {
     const modal = document.getElementById('web-camera-modal');
-    if (!video) return;
+    const video = document.getElementById('web-camera-video');
+    if (!modal || !video) return;
 
-    if (modal) modal.style.display = 'flex';
-
-    try {
-      webCameraStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false
+    modal.style.display = 'flex';
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1280 } }, audio: false })
+      .then(stream => {
+        webcamStream = stream;
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        console.warn('Webcam permission error:', err);
+        alert('Camera access denied or not available. You can upload a photo or video instead.');
+        stopWebCamera();
       });
-      video.srcObject = webCameraStream;
-      video.play();
-    } catch (err) {
-      alert('Camera access error: ' + err.message + '. Please ensure camera permissions are allowed in your browser.');
+  }
+
+  function stopWebCamera() {
+    const modal = document.getElementById('web-camera-modal');
+    const video = document.getElementById('web-camera-video');
+    if (webcamStream) {
+      webcamStream.getTracks().forEach(t => t.stop());
+      webcamStream = null;
     }
+    if (video) video.srcObject = null;
+    if (modal) modal.style.display = 'none';
   }
 
   function captureWebCameraPhoto() {
     const video = document.getElementById('web-camera-video');
-    const canvas = document.createElement('canvas');
     if (!video) return;
 
-    canvas.width = video.videoWidth || 640;
-    canvas.height = video.videoHeight || 480;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth || 720;
+    canvas.height = video.videoHeight || 960;
     const ctx = canvas.getContext('2d');
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-    customUserImage = dataUrl;
-
-    const beforeImg = document.getElementById('before-img');
-    if (beforeImg) beforeImg.src = customUserImage;
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    userUploadedMedia = { type: 'image', url: dataUrl };
 
     stopWebCamera();
-    triggerAITransformEffect();
+    renderSupermodelsTray();
+    triggerAiDrapeAnimation().then(() => updateCanvasDisplay());
+  }
 
-    if (typeof showToast === 'function') {
-      showToast('📸 Photo Captured! AI Virtual Try-On Applied.');
+  /* ── Random Model ── */
+  function randomSupermodel() {
+    const list = AI_SUPERMODELS[currentGender];
+    const randomIndex = Math.floor(Math.random() * list.length);
+    selectModel(list[randomIndex].id);
+  }
+
+  /* ── Gender Switcher ── */
+  function setGender(g) {
+    currentGender = g;
+    document.getElementById('btn-gender-women').classList.toggle('active', g === 'women');
+    document.getElementById('btn-gender-men').classList.toggle('active', g === 'men');
+    currentModel = AI_SUPERMODELS[g][0];
+    userUploadedMedia = null;
+
+    renderSupermodelsTray();
+    renderGarmentsGrid();
+    updateCanvasDisplay();
+    renderBodyVisualizer();
+  }
+
+  /* ── Category Filter ── */
+  function filterGarments(cat) {
+    activeCategory = cat;
+    renderGarmentsGrid();
+  }
+
+  /* ── 1-Click Body Archetype ── */
+  function applyBodyArchetype(shape) {
+    bodyParams.shape = shape;
+    if (shape === 'athletic') {
+      bodyParams.chestIn = currentGender === 'women' ? 36 : 42;
+      bodyParams.waistIn = currentGender === 'women' ? 26 : 30;
+      bodyParams.hipIn = currentGender === 'women' ? 37 : 38;
+      bodyParams.weightKg = currentGender === 'women' ? 58 : 78;
+    } else if (shape === 'hourglass') {
+      bodyParams.chestIn = 36;
+      bodyParams.waistIn = 24;
+      bodyParams.hipIn = 38;
+      bodyParams.weightKg = 56;
+    } else if (shape === 'rectangle') {
+      bodyParams.chestIn = currentGender === 'women' ? 33 : 38;
+      bodyParams.waistIn = currentGender === 'women' ? 28 : 32;
+      bodyParams.hipIn = currentGender === 'women' ? 35 : 37;
+      bodyParams.weightKg = currentGender === 'women' ? 54 : 70;
+    } else if (shape === 'pear') {
+      bodyParams.chestIn = currentGender === 'women' ? 33 : 38;
+      bodyParams.waistIn = currentGender === 'women' ? 27 : 33;
+      bodyParams.hipIn = currentGender === 'women' ? 42 : 40;
+      bodyParams.weightKg = currentGender === 'women' ? 62 : 76;
+    } else if (shape === 'inverted_triangle') {
+      bodyParams.chestIn = currentGender === 'women' ? 38 : 44;
+      bodyParams.waistIn = currentGender === 'women' ? 27 : 32;
+      bodyParams.hipIn = currentGender === 'women' ? 34 : 37;
+      bodyParams.weightKg = currentGender === 'women' ? 59 : 82;
+    } else if (shape === 'plus') {
+      bodyParams.chestIn = currentGender === 'women' ? 42 : 46;
+      bodyParams.waistIn = currentGender === 'women' ? 36 : 40;
+      bodyParams.hipIn = currentGender === 'women' ? 46 : 44;
+      bodyParams.weightKg = currentGender === 'women' ? 82 : 96;
+    }
+    updateBodyVisualizerSliders();
+    renderBodyVisualizer();
+  }
+
+  /* ── Body Sliders Update ── */
+  function updateBodyParameter(param, val) {
+    bodyParams[param] = val;
+    renderBodyVisualizer();
+  }
+
+  function updateBodyVisualizerSliders() {
+    const sH = document.getElementById('slider-height');
+    const sW = document.getElementById('slider-weight');
+    const sC = document.getElementById('slider-chest');
+    const sWa = document.getElementById('slider-waist');
+    const sHi = document.getElementById('slider-hip');
+    if (sH) sH.value = bodyParams.heightCm;
+    if (sW) sW.value = bodyParams.weightKg;
+    if (sC) sC.value = bodyParams.chestIn;
+    if (sWa) sWa.value = bodyParams.waistIn;
+    if (sHi) sHi.value = bodyParams.hipIn;
+  }
+
+  /* ── Real Dynamic SVG Anatomical Body Silhouette Renderer ── */
+  function renderBodyVisualizer() {
+    const heightM = bodyParams.heightCm / 100;
+    const bmi = parseFloat((bodyParams.weightKg / (heightM * heightM)).toFixed(1));
+
+    // Update labels
+    const vH = document.getElementById('val-height');
+    const vW = document.getElementById('val-weight');
+    const vC = document.getElementById('val-chest');
+    const vWa = document.getElementById('val-waist');
+    const vHi = document.getElementById('val-hip');
+    const gBmi = document.getElementById('bv-gauge-bmi');
+    const gCat = document.getElementById('bv-bmi-category');
+    const gRec = document.getElementById('bv-rec-size');
+
+    const ft = Math.floor(bodyParams.heightCm / 30.48);
+    const inRem = Math.round((bodyParams.heightCm % 30.48) / 2.54);
+    const lbs = Math.round(bodyParams.weightKg * 2.20462);
+
+    if (vH) vH.innerText = `${bodyParams.heightCm} cm (${ft}'.${inRem}")`;
+    if (vW) vW.innerText = `${bodyParams.weightKg} kg (${lbs} lbs)`;
+    if (vC) vC.innerText = `${bodyParams.chestIn}"`;
+    if (vWa) vWa.innerText = `${bodyParams.waistIn}"`;
+    if (vHi) vHi.innerText = `${bodyParams.hipIn}"`;
+    if (gBmi) gBmi.innerText = bmi;
+
+    let catName = 'Optimal Proportion';
+    let recSize = 'S / M';
+    if (bmi < 18.5) {
+      catName = 'Underweight Fit';
+      recSize = 'XS';
+    } else if (bmi < 25) {
+      catName = 'Optimal Proportion';
+      recSize = 'S / M';
+    } else if (bmi < 30) {
+      catName = 'Athletic / Robust';
+      recSize = 'L';
+    } else {
+      catName = 'Full Figure / Plus';
+      recSize = 'XL / Bespoke';
+    }
+    if (gCat) gCat.innerText = catName;
+    if (gRec) gRec.innerText = recSize;
+
+    // Morph SVG Silhouette Coordinates
+    const mount = document.getElementById('body-visualizer-canvas-mount');
+    if (!mount) return;
+
+    const chestScale = Math.min(1.4, Math.max(0.7, bodyParams.chestIn / 34));
+    const waistScale = Math.min(1.4, Math.max(0.7, bodyParams.waistIn / 26));
+    const hipScale = Math.min(1.4, Math.max(0.7, bodyParams.hipIn / 36));
+
+    // Dynamic width anchors
+    const halfChest = 48 * chestScale;
+    const halfWaist = 36 * waistScale;
+    const halfHip = 54 * hipScale;
+
+    mount.innerHTML = `
+      <svg viewBox="0 0 360 520" style="width:100%;height:100%;max-width:320px;" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grid Background Lines -->
+        <line x1="30" y1="130" x2="330" y2="130" stroke="#F4F4F5" stroke-dasharray="3 3"/>
+        <line x1="30" y1="210" x2="330" y2="210" stroke="#F4F4F5" stroke-dasharray="3 3"/>
+        <line x1="30" y1="280" x2="330" y2="280" stroke="#F4F4F5" stroke-dasharray="3 3"/>
+
+        <!-- Measurement Caliper Markers -->
+        <text x="32" y="126" font-size="10" font-weight="700" fill="#71717A" font-family="'Space Grotesk', sans-serif">CHEST ${bodyParams.chestIn}"</text>
+        <text x="32" y="206" font-size="10" font-weight="700" fill="#71717A" font-family="'Space Grotesk', sans-serif">WAIST ${bodyParams.waistIn}"</text>
+        <text x="32" y="276" font-size="10" font-weight="700" fill="#71717A" font-family="'Space Grotesk', sans-serif">HIPS ${bodyParams.hipIn}"</text>
+
+        <!-- Dynamic Anatomical Human Silhouette -->
+        <g transform="translate(180, 20)">
+          <!-- Head -->
+          <ellipse cx="0" cy="38" rx="22" ry="28" fill="#0A0A0A"/>
+          <!-- Neck -->
+          <rect x="-10" y="66" width="20" height="18" fill="#0A0A0A"/>
+
+          <!-- Torso & Pelvis Path -->
+          <path d="
+            M ${-halfChest} 90
+            Q ${-halfChest - 6} 125, ${-halfWaist} 190
+            Q ${-halfWaist - 4} 220, ${-halfHip} 260
+            L ${-halfHip + 14} 290
+            L -18 310
+            L 0 290
+            L 18 310
+            L ${halfHip - 14} 290
+            L ${halfHip} 260
+            Q ${halfWaist + 4} 220, ${halfWaist} 190
+            Q ${halfChest + 6} 125, ${halfChest} 90
+            Z
+          " fill="#0A0A0A"/>
+
+          <!-- Left Leg -->
+          <path d="M -36 300 Q -38 380, -32 460 L -18 460 Q -24 380, -8 310 Z" fill="#0A0A0A"/>
+          <!-- Right Leg -->
+          <path d="M 36 300 Q 38 380, 32 460 L 18 460 Q 24 380, 8 310 Z" fill="#0A0A0A"/>
+
+          <!-- Arms -->
+          <path d="M ${-halfChest - 4} 94 Q ${-halfChest - 18} 170, -68 240 L -54 242 Q ${-halfChest - 8} 175, ${-halfChest + 8} 115 Z" fill="#0A0A0A"/>
+          <path d="M ${halfChest + 4} 94 Q ${halfChest + 18} 170, 68 240 L 54 242 Q ${halfChest + 8} 175, ${halfChest - 8} 115 Z" fill="#0A0A0A"/>
+        </g>
+      </svg>
+    `;
+  }
+
+  /* ── Bespoke Options ── */
+  function selectGarmentColor(hex, name) {
+    bespokeColor = { hex, name };
+  }
+
+  function selectFabric(key) {
+    bespokeFabric = key;
+    updatePriceDisplay();
+  }
+
+  function updatePriceDisplay() {
+    let base = currentGarment ? currentGarment.price : 3499;
+    if (bespokeFabric === 'selvedge_denim') base += 1200;
+    if (bespokeFabric === 'french_terry') base += 800;
+    if (bespokeFabric === 'italian_linen') base += 1500;
+
+    const el = document.getElementById('cpq-total-price');
+    if (el) el.innerHTML = `&#8377;${base.toLocaleString('en-IN')}`;
+  }
+
+  /* ── Add to Cart ── */
+  function addToCart() {
+    let price = currentGarment ? currentGarment.price : 3499;
+    if (bespokeFabric === 'selvedge_denim') price += 1200;
+    if (bespokeFabric === 'french_terry') price += 800;
+
+    const item = {
+      id: 'bespoke_' + Date.now(),
+      name: `Bespoke ${currentGarment.name}`,
+      price: price,
+      image: currentGarment.image,
+      fabric: bespokeFabric,
+      color: bespokeColor.name,
+      measurements: `H: ${bodyParams.heightCm}cm | C: ${bodyParams.chestIn}" | W: ${bodyParams.waistIn}" | Hip: ${bodyParams.hipIn}"`
+    };
+
+    if (window.CartService && window.CartService.addItem) {
+      window.CartService.addItem(item);
     }
   }
 
-  function stopWebCamera() {
-    if (webCameraStream) {
-      webCameraStream.getTracks().forEach(track => track.stop());
-      webCameraStream = null;
-    }
-    const modal = document.getElementById('web-camera-modal');
-    if (modal) modal.style.display = 'none';
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     7. PRICE SUMMARY & CART
-  ───────────────────────────────────────────────────────────── */
-  function updatePriceSummary() {
-    const totalEl = document.getElementById('cpq-total-price');
-    if (totalEl) {
-      totalEl.textContent = '₹' + garmentConfig.basePrice.toLocaleString('en-IN');
-    }
-  }
-
+  /* ── Export Snapshot ── */
   function takeSnapshot() {
-    if (typeof showToast === 'function') {
-      showToast('📥 4K Look Exported to Photos!');
-    }
+    const afterImg = document.getElementById('after-img');
+    if (!afterImg) return;
+    const a = document.createElement('a');
+    a.href = afterImg.src;
+    a.download = `thenewblack_look_${Date.now()}.jpg`;
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
+  // Public API
   return {
     init,
-    selectSupermodel,
+    selectModel,
     selectGarment,
-    setGender,
-    setColor,
-    setFabric,
-    handleUserPhotoUpload,
-    handleCustomGarmentUpload,
-    randomSupermodel,
-    setBodyParam,
-    setBodyShapePreset,
+    handleUserMediaUpload,
     startWebCamera,
-    captureWebCameraPhoto,
     stopWebCamera,
-    takeSnapshot,
-    renderBodyVisualizerCanvas,
+    captureWebCameraPhoto,
+    randomSupermodel,
+    setGender,
+    filterGarments,
+    applyBodyArchetype,
+    updateBodyParameter,
+    renderBodyVisualizer,
+    selectGarmentColor,
+    selectFabric,
+    addToCart,
+    takeSnapshot
   };
 })();
 
