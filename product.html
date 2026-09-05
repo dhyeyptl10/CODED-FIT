@@ -6,19 +6,51 @@
 <title>Product | NOVA STREET</title>
 <meta name="description" content="Shop premium ready-to-wear and bespoke made-to-measure garments at Nova Street. GOTS organic cotton, crafted in Ahmedabad.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/studio3d.css">
+<style>
+  .sticky-bottom-bar {
+    position: fixed; bottom: -80px; left: 0; right: 0;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border-gold);
+    padding: 12px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 990;
+    transition: bottom 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .sticky-bottom-bar.visible { bottom: 0; }
+  .sticky-info-thumb { width: 44px; height: 52px; object-fit: cover; border-radius: 6px; }
+  .detail-accordion-item {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+    cursor: pointer;
+  }
+  .detail-accordion-title {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px; font-weight: 800; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--text);
+  }
+  .detail-accordion-content {
+    display: none; padding-top: 14px; font-size: 13.5px;
+    color: var(--text-dim); line-height: 1.8;
+  }
+  .detail-accordion-item.active .detail-accordion-content { display: block; }
+  .detail-accordion-item.active .accordion-arrow { transform: rotate(180deg); }
+  .accordion-arrow { transition: transform 0.3s ease; color: var(--gold); }
+</style>
 </head>
 <body class="theme-dark">
 
-<div class="cursor-follower" id="cursor-badge">BUY</div>
+<div class="cursor-follower" id="cursor-badge">EXPLORE</div>
 
 <!-- Announcement Bar -->
 <div class="c-announcement">
   <div class="c-announcement-marquee">
     <div class="c-announcement-track">
-      ✦ DUAL-FUNNEL HYBRID FASHION ✦ READY-TO-SHIP 24H DISPATCH & BESPOKE MADE-TO-MEASURE 7-14 DAYS ✦ CODE <strong>NOVA10</strong> FOR 10% OFF ✦ AHMEDABAD GOTS ORGANIC COTTON ✦ FREE SHIPPING ABOVE ₹2999 ✦ DUAL-FUNNEL HYBRID FASHION ✦ READY-TO-SHIP 24H DISPATCH & BESPOKE MADE-TO-MEASURE 7-14 DAYS ✦
+      ✦ DUAL-FUNNEL HYBRID FASHION &nbsp;&nbsp; ✦ READY-TO-SHIP 24H DISPATCH &amp; BESPOKE MADE-TO-MEASURE 7-14 DAYS &nbsp;&nbsp; ✦ CODE <strong>NOVA10</strong> FOR 10% OFF &nbsp;&nbsp; ✦ AHMEDABAD GOTS ORGANIC COTTON &nbsp;&nbsp; ✦ FREE SHIPPING ABOVE ₹2999 &nbsp;&nbsp; ✦ DUAL-FUNNEL HYBRID FASHION &nbsp;&nbsp; ✦ READY-TO-SHIP 24H DISPATCH &amp; BESPOKE MADE-TO-MEASURE 7-14 DAYS &nbsp;&nbsp; ✦ CODE <strong>NOVA10</strong> FOR 10% OFF &nbsp;&nbsp;
     </div>
   </div>
 </div>
@@ -34,7 +66,7 @@
       <a href="index.html">Home</a>
       <a href="shop.html" class="active">Collection</a>
       <a href="customize.html">Studio</a>
-      <a href="dashboard.html">UR PICKS</a>
+      <a href="dashboard.html">UR Picks</a>
     </nav>
     <div class="nav-right-actions">
       <a href="customize.html" class="dash-pill-link">✂️ Try-On Studio</a>
@@ -51,65 +83,83 @@
   <div class="mobile-nav-drawer" id="mobile-nav-drawer">
     <div class="mobile-nav-header">
       <div class="logo-text" style="font-size:20px;">NOVA <span>STREET</span></div>
-      <button onclick="closeMobileMenu()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#F0EDE6">✕</button>
+      <button onclick="closeMobileMenu()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);">✕</button>
     </div>
     <nav class="mobile-nav-links">
       <a href="index.html" onclick="closeMobileMenu()">Home</a>
       <a href="shop.html" class="active" onclick="closeMobileMenu()">Collection</a>
       <a href="customize.html" onclick="closeMobileMenu()">Try-On Studio</a>
-      <a href="dashboard.html" onclick="closeMobileMenu()">UR PICKS</a>
+      <a href="dashboard.html" onclick="closeMobileMenu()">UR Picks</a>
       <a href="cart.html" onclick="closeMobileMenu()">Shopping Bag</a>
     </nav>
   </div>
 </header>
 
 <!-- Product Detail -->
-<section class="c-section" style="padding-top: 48px;">
+<section class="c-section" style="padding-top: 40px;">
   <div id="product-content">
-    <!-- Rendered by JS -->
-    <div style="text-align:center;padding:80px 20px;color:#6B6560;">
+    <div style="text-align:center;padding:80px 20px;color:var(--text-dim);">
       <div style="font-size:40px;margin-bottom:16px;">⏳</div>
-      <div style="font-size:14px;">Loading product...</div>
+      <div style="font-size:14px;letter-spacing:1px;">Loading haute-couture piece...</div>
     </div>
   </div>
 </section>
 
 <!-- Related Products -->
 <section class="c-section" style="padding-top: 0;" id="related-section" style="display:none;">
-  <div class="c-section-header">
-    <span class="t-micro-1">YOU MAY ALSO LIKE</span>
-  </div>
+  <div class="section-header">02 + Complete The Wardrobe</div>
+  <h2 style="font-family:'Cinzel',serif; font-size:clamp(1.4rem,3vw,2.2rem); font-weight:700; text-transform:uppercase; margin-bottom:32px;">You May Also Covet</h2>
   <div class="c-product-grid" id="related-grid"></div>
 </section>
+
+<!-- Sticky Bottom Add-To-Bag Bar (shows on scroll) -->
+<div class="sticky-bottom-bar" id="sticky-bar">
+  <div style="display:flex; align-items:center; gap:16px;">
+    <img id="sticky-thumb" src="" alt="Thumbnail" class="sticky-info-thumb">
+    <div>
+      <div id="sticky-name" style="font-family:'Cinzel',serif; font-size:13px; font-weight:700; color:var(--text);"></div>
+      <div id="sticky-price" style="font-size:13px; font-weight:800; color:var(--gold);"></div>
+    </div>
+  </div>
+  <div style="display:flex; align-items:center; gap:12px;">
+    <button onclick="handleAddToCart()" class="c-btn filled-gold" style="padding:10px 24px;">
+      ADD TO BAG ✦
+    </button>
+  </div>
+</div>
 
 <!-- Footer -->
 <footer>
   <div class="footer-grid">
     <div>
-      <div class="logo-text" style="margin-bottom:12px;">NOVA <span>STREET</span></div>
-      <p style="font-size:13px;color:#6B6560;max-width:300px;margin-bottom:20px;">Hybrid D2C custom-curated apparel. GOTS organic mills in Ahmedabad, crafted with unit-of-one precision.</p>
+      <div style="font-family:'Cinzel',serif; font-size:22px; font-weight:900; letter-spacing:5px; margin-bottom:14px;">
+        NOVA <span style="color:var(--gold);">STREET</span>
+      </div>
+      <p style="font-size:13px; color:var(--text-muted); max-width:280px; line-height:1.8; margin-bottom:20px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px;">
+        Hybrid D2C custom-curated apparel label. GOTS organic mills in Ahmedabad, crafted with unit-of-one precision.
+      </p>
     </div>
     <div>
-      <h4 class="t-micro-1" style="color:#C9A84C;margin-bottom:16px;">COLLECTION</h4>
-      <ul style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:#8A8580;">
+      <h4 class="t-micro-1" style="color:var(--gold);margin-bottom:16px;">COLLECTION</h4>
+      <ul style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--text-dim);">
         <li><a href="shop.html">Shop Men</a></li>
         <li><a href="shop.html?gender=women">Shop Women</a></li>
         <li><a href="customize.html">Bespoke Studio</a></li>
       </ul>
     </div>
     <div>
-      <h4 class="t-micro-1" style="color:#C9A84C;margin-bottom:16px;">TECHNOLOGY</h4>
-      <ul style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:#8A8580;">
+      <h4 class="t-micro-1" style="color:var(--gold);margin-bottom:16px;">TECHNOLOGY</h4>
+      <ul style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--text-dim);">
         <li><a href="customize.html">AI Try-On Studio</a></li>
         <li><a href="customize.html">CPQ Configurator</a></li>
       </ul>
     </div>
     <div>
-      <h4 class="t-micro-1" style="color:#C9A84C;margin-bottom:16px;">NEWSLETTER</h4>
-      <p style="font-size:12px;color:#6B6560;margin-bottom:14px;">VIP access to bespoke fabric drops.</p>
-      <div style="display:flex;background:#1A1A1A;border-radius:40px;padding:4px;border:1px solid rgba(255,255,255,0.08);">
-        <input type="email" placeholder="Your email address" style="background:transparent;border:none;padding:10px 16px;color:#F0EDE6;font-size:12px;flex:1;outline:none;font-family:inherit;">
-        <button onclick="showToast('🎉 Subscribed!')" style="background:#C9A84C;border:none;color:#0A0A0A;padding:8px 18px;border-radius:30px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">JOIN</button>
+      <h4 class="t-micro-1" style="color:var(--gold);margin-bottom:16px;">VIP NEWSLETTER</h4>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">VIP access to bespoke fabric drops &amp; private launches.</p>
+      <div style="display:flex;background:var(--dark-2);border-radius:40px;padding:4px;border:1px solid var(--border);">
+        <input type="email" placeholder="Your email address" style="background:transparent;border:none;padding:10px 16px;color:var(--text);font-size:12px;flex:1;outline:none;font-family:inherit;">
+        <button onclick="showToast('🎉 Subscribed!')" style="background:var(--gold);border:none;color:#000;padding:8px 18px;border-radius:30px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">JOIN</button>
       </div>
     </div>
   </div>
@@ -124,8 +174,8 @@
 <div class="cart-drawer" id="cart-drawer">
   <div class="cart-drawer-header">
     <div>
-      <div class="t-micro-1">YOUR SHOPPING BAG</div>
-      <div class="t-micro-2">NOVA STREET STORE</div>
+      <div class="t-micro-1" style="color:var(--text);">YOUR SHOPPING BAG</div>
+      <div class="t-micro-2" style="margin-top:4px;">NOVA STREET STORE</div>
     </div>
     <div class="cart-drawer-close" onclick="closeCartDrawer()">✕</div>
   </div>
@@ -136,7 +186,6 @@
 <script src="js/products.js"></script>
 <script src="js/cart.js"></script>
 <script>
-/* ── Standard Utilities ── */
 const cursorBadge = document.getElementById('cursor-badge');
 if (cursorBadge) {
   document.addEventListener('mousemove', (e) => {
@@ -154,6 +203,14 @@ function closeMobileMenu() {
   document.getElementById('mobile-nav-overlay').classList.remove('active');
   document.getElementById('hamburger-btn').classList.remove('open');
 }
+function openCartDrawer() {
+  document.getElementById('cart-drawer').classList.add('open');
+  document.getElementById('cart-drawer-overlay').classList.add('open');
+}
+function closeCartDrawer() {
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.getElementById('cart-drawer-overlay').classList.remove('open');
+}
 function showToast(msg) {
   const t = document.createElement('div');
   t.className = 'toast-notification';
@@ -163,17 +220,20 @@ function showToast(msg) {
   setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3500);
 }
 
-/* ── Product Page Logic ── */
 let selectedSize = null;
 let currentProduct = null;
-let currentImageIndex = 0;
 
 function renderProduct(p) {
   currentProduct = p;
   const off = discountPercent(p.mrp, p.price);
-  const isBespoke = p.funnel === 'custom-made';
+  const isBespoke = p.funnel === 'custom-made' || p.funnel === 'bespoke';
 
   document.title = `${p.name} | NOVA STREET`;
+
+  // Set sticky info
+  document.getElementById('sticky-thumb').src = p.images[0];
+  document.getElementById('sticky-name').textContent = p.name;
+  document.getElementById('sticky-price').textContent = `₹${p.price.toLocaleString('en-IN')}`;
 
   const sizeBtns = p.sizes.map(s => {
     const oos = p.outOfStock.includes(s);
@@ -181,8 +241,8 @@ function renderProduct(p) {
   }).join('');
 
   document.getElementById('product-content').innerHTML = `
-    <div style="margin-bottom:20px;">
-      <a href="shop.html" style="font-size:11px;color:#6B6560;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;transition:color 0.2s;" onmouseenter="this.style.color='#C9A84C'" onmouseleave="this.style.color='#6B6560'">
+    <div style="margin-bottom:24px;">
+      <a href="shop.html" style="font-size:11px;color:var(--text-muted);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;transition:color 0.2s;" onmouseenter="this.style.color='var(--gold)'" onmouseleave="this.style.color='var(--text-muted)'">
         ← BACK TO COLLECTION
       </a>
     </div>
@@ -190,129 +250,134 @@ function renderProduct(p) {
     <div class="product-detail-grid">
       <!-- Gallery -->
       <div class="product-gallery">
-        <div style="position:relative;border-radius:24px;overflow:hidden;background:#141414;aspect-ratio:4/5;">
+        <div style="position:relative;border-radius:var(--radius-xl);overflow:hidden;background:#111;aspect-ratio:4/5;border:1px solid var(--border);">
           <img id="main-product-img" src="${p.images[0]}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;transition:opacity 0.4s ease;">
-          ${isBespoke ? `<div style="position:absolute;top:16px;left:16px;background:#B85C38;color:#fff;font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:20px;">✂️ BESPOKE</div>` : `<div class="c-badge">${p.badge}</div>`}
+          <div class="c-badge ${isBespoke ? 'bespoke' : ''}" style="top:18px;left:18px;">
+            ${isBespoke ? '✂️ BESPOKE' : (p.badge || '24H DISPATCH')}
+          </div>
         </div>
 
         ${p.images.length > 1 ? `
-        <div class="product-thumbnails" style="margin-top:12px;">
+        <div class="product-thumbnails" style="margin-top:16px;">
           ${p.images.map((img, i) => `
             <img src="${img}" alt="${p.name} ${i+1}"
               class="product-thumbnail ${i === 0 ? 'active' : ''}"
               onclick="switchImage('${img}', this)"
-              style="width:72px;height:90px;object-fit:cover;border-radius:12px;cursor:pointer;border:2px solid ${i === 0 ? '#C9A84C' : 'transparent'};transition:border-color 0.2s ease;">
+              style="width:76px;height:96px;object-fit:cover;border-radius:10px;cursor:pointer;border:2px solid ${i === 0 ? 'var(--gold)' : 'transparent'};transition:border-color 0.2s ease;">
           `).join('')}
         </div>` : ''}
       </div>
 
       <!-- Product Info -->
-      <div style="padding-top:8px;">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-          <span style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:${isBespoke ? '#B85C38' : '#C9A84C'};">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <span style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:${isBespoke ? 'var(--rust)' : 'var(--gold)'};">
             ${isBespoke ? '✂️ BESPOKE MADE-TO-MEASURE (7-14 DAYS)' : '⚡ READY TO SHIP (24 HOURS)'}
           </span>
         </div>
 
-        <h1 style="font-family:'Cinzel',serif;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:800;text-transform:uppercase;color:#F0EDE6;line-height:1.1;margin-bottom:14px;">
+        <h1 style="font-family:'Cinzel',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:800;text-transform:uppercase;color:var(--text);line-height:1.1;margin-bottom:16px;">
           ${p.name}
         </h1>
 
-        <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap;">
-          <span style="font-family:'Cinzel',serif;font-size:28px;font-weight:800;color:#C9A84C;">₹${p.price.toLocaleString('en-IN')}</span>
-          <span style="font-size:16px;color:#6B6560;text-decoration:line-through;">₹${p.mrp.toLocaleString('en-IN')}</span>
-          <span style="background:rgba(16,185,129,0.12);color:#10B981;font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;">${off}% OFF</span>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap;">
+          <span style="font-family:'Cinzel',serif;font-size:32px;font-weight:900;color:var(--gold);">₹${p.price.toLocaleString('en-IN')}</span>
+          <span style="font-size:17px;color:var(--text-muted);text-decoration:line-through;">₹${p.mrp.toLocaleString('en-IN')}</span>
+          <span style="background:rgba(16,185,129,0.12);color:var(--success);font-size:11px;font-weight:800;padding:6px 14px;border-radius:20px;">${off}% OFF</span>
         </div>
 
-        <div style="background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:24px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="background:var(--dark-1);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;margin-bottom:28px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
             <div>
-              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:#6B6560;text-transform:uppercase;margin-bottom:4px;">FABRIC</div>
-              <div style="font-size:12px;font-weight:600;color:#F0EDE6;">${p.fabric}</div>
+              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">FABRIC</div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);">${p.fabric}</div>
             </div>
             <div>
-              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:#6B6560;text-transform:uppercase;margin-bottom:4px;">COLOUR</div>
-              <div style="font-size:12px;font-weight:600;color:#F0EDE6;">${p.color}</div>
+              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">COLOUR</div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);">${p.color}</div>
             </div>
             <div>
-              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:#6B6560;text-transform:uppercase;margin-bottom:4px;">DISPATCH</div>
-              <div style="font-size:12px;font-weight:600;color:#C9A84C;">${p.dispatch}</div>
+              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">DISPATCH</div>
+              <div style="font-size:13px;font-weight:600;color:var(--gold);">${p.dispatch}</div>
             </div>
             <div>
-              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:#6B6560;text-transform:uppercase;margin-bottom:4px;">STOCK</div>
-              <div style="font-size:12px;font-weight:600;color:${p.stockLeft < 10 ? '#EF4444' : '#10B981'};">
-                ${p.stockLeft < 5 ? `🔥 Only ${p.stockLeft} left!` : `${p.stockLeft} available`}
+              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">ATELIER STOCK</div>
+              <div style="font-size:13px;font-weight:600;color:${p.stockLeft < 10 ? '#EF4444' : 'var(--success)'};">
+                ${p.stockLeft < 5 ? `🔥 Only ${p.stockLeft} crafted left!` : `${p.stockLeft} in stock`}
               </div>
             </div>
           </div>
         </div>
 
         <!-- Size Selector -->
-        <div style="margin-bottom:24px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#6B6560;">SELECT SIZE</span>
-            <span style="font-size:11px;color:#C9A84C;cursor:pointer;font-weight:700;" onclick="showToast('📏 Size guide: XS=36, S=38, M=40, L=42, XL=44, XXL=46 (inches)')">SIZE GUIDE →</span>
+        <div style="margin-bottom:28px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+            <span style="font-size:10px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);">SELECT SIZE</span>
+            <span style="font-size:11px;color:var(--gold);cursor:pointer;font-weight:700;" onclick="showToast('📏 Size guide: XS=36, S=38, M=40, L=42, XL=44, XXL=46 (inches)')">SIZE GUIDE →</span>
           </div>
           <div class="size-grid">
             ${sizeBtns}
           </div>
-          ${p.outOfStock.length > 0 ? `<div style="font-size:11px;color:#6B6560;margin-top:8px;">Strikethrough sizes are sold out</div>` : ''}
+          ${p.outOfStock.length > 0 ? `<div style="font-size:11px;color:var(--text-muted);margin-top:8px;">Strikethrough sizes are currently out of stock</div>` : ''}
         </div>
 
         <!-- CTA Buttons -->
-        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;">
-          <button onclick="handleAddToCart()" style="
-            width:100%;background:#C9A84C;color:#0A0A0A;
-            border:none;padding:18px;border-radius:16px;
-            font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
-            cursor:pointer;font-family:inherit;transition:all 0.2s ease;
-          " onmouseenter="this.style.background='#E8C96A'" onmouseleave="this.style.background='#C9A84C'">
+        <div id="main-cta-group" style="display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
+          <button onclick="handleAddToCart()" class="c-btn filled-gold is-large" style="width:100%;border-radius:40px;">
             ADD TO BAG ✦
           </button>
-          <a href="customize.html" style="
-            display:block;width:100%;background:transparent;color:#C9A84C;
-            border:1.5px solid rgba(201,168,76,0.4);padding:16px;border-radius:16px;
-            font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
-            text-align:center;transition:all 0.2s ease;
-          " onmouseenter="this.style.background='rgba(201,168,76,0.1)'" onmouseleave="this.style.background='transparent'">
-            🪞 TRY IN STUDIO
+          <a href="customize.html" class="c-btn outline-gold is-large" style="width:100%;border-radius:40px;">
+            🪞 3D VIRTUAL TRY-ON STUDIO
           </a>
         </div>
 
-        <!-- Description -->
-        <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:24px;margin-bottom:24px;">
-          <h4 style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#6B6560;margin-bottom:12px;">ABOUT THIS GARMENT</h4>
-          <p style="font-size:14px;color:#8A8580;line-height:1.8;">${p.description}</p>
+        <!-- Accordions -->
+        <div style="margin-top:24px;">
+          <div class="detail-accordion-item active" onclick="this.classList.toggle('active')">
+            <div class="detail-accordion-title">
+              <span>About This Piece</span>
+              <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="detail-accordion-content">
+              ${p.description}
+            </div>
+          </div>
+
+          <div class="detail-accordion-item" onclick="this.classList.toggle('active')">
+            <div class="detail-accordion-title">
+              <span>Atelier Craftsmanship &amp; Sustainability</span>
+              <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="detail-accordion-content">
+              Woven in our certified GOTS organic textile hub in Ahmedabad. Each thread is dyed using eco-friendly botanical vats with zero water runoff. Unit-of-one laser patterned to eliminate textile waste.
+            </div>
+          </div>
+
+          <div class="detail-accordion-item" onclick="this.classList.toggle('active')">
+            <div class="detail-accordion-title">
+              <span>Shipping &amp; Complimentary Fit Guarantee</span>
+              <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="detail-accordion-content">
+              Express door-to-door delivery with live tracking. If the fit isn't immaculate, our Ahmedabad master tailors will alter or rebuild your garment with zero questions asked.
+            </div>
+          </div>
         </div>
 
         <!-- Trust Badges -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div style="background:#141414;border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;display:flex;align-items:center;gap:10px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:32px;">
+          <div style="background:var(--dark-1);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;display:flex;align-items:center;gap:10px;">
             <span style="font-size:20px;">🌿</span>
             <div>
-              <div style="font-size:10px;font-weight:800;color:#10B981;letter-spacing:1px;">GOTS CERTIFIED</div>
-              <div style="font-size:11px;color:#6B6560;margin-top:2px;">Organic cotton</div>
+              <div style="font-size:10px;font-weight:800;color:var(--success);letter-spacing:1px;">GOTS CERTIFIED</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">100% Organic cotton</div>
             </div>
           </div>
-          <div style="background:#141414;border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;display:flex;align-items:center;gap:10px;">
+          <div style="background:var(--dark-1);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;display:flex;align-items:center;gap:10px;">
             <span style="font-size:20px;">🔒</span>
             <div>
-              <div style="font-size:10px;font-weight:800;color:#C9A84C;letter-spacing:1px;">SECURE PAYMENT</div>
-              <div style="font-size:11px;color:#6B6560;margin-top:2px;">100% safe checkout</div>
-            </div>
-          </div>
-          <div style="background:#141414;border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;display:flex;align-items:center;gap:10px;">
-            <span style="font-size:20px;">🚚</span>
-            <div>
-              <div style="font-size:10px;font-weight:800;color:#C9A84C;letter-spacing:1px;">FREE SHIPPING</div>
-              <div style="font-size:11px;color:#6B6560;margin-top:2px;">Orders above ₹2999</div>
-            </div>
-          </div>
-          <div style="background:#141414;border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;display:flex;align-items:center;gap:10px;">
-            <span style="font-size:20px;">✅</span>
-            <div>
-              <div style="font-size:10px;font-weight:800;color:#C9A84C;letter-spacing:1px;">FIT GUARANTEE</div>
-              <div style="font-size:11px;color:#6B6560;margin-top:2px;">${isBespoke ? 'Free alterations' : '15-day returns'}</div>
+              <div style="font-size:10px;font-weight:800;color:var(--gold);letter-spacing:1px;">SECURE CHECKOUT</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Encrypted processing</div>
             </div>
           </div>
         </div>
@@ -320,44 +385,52 @@ function renderProduct(p) {
     </div>
   `;
 
-  // Render related products
   renderRelated(p);
+
+  // Setup sticky observer
+  const ctaGroup = document.getElementById('main-cta-group');
+  const stickyBar = document.getElementById('sticky-bar');
+  if (ctaGroup && stickyBar) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          stickyBar.classList.add('visible');
+        } else {
+          stickyBar.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0 });
+    observer.observe(ctaGroup);
+  }
 }
 
 function switchImage(src, el) {
   const main = document.getElementById('main-product-img');
   if (main) {
     main.style.opacity = '0';
-    setTimeout(() => { main.src = src; main.style.opacity = '1'; }, 250);
+    setTimeout(() => { main.src = src; main.style.opacity = '1'; }, 200);
   }
   document.querySelectorAll('.product-thumbnail').forEach(t => {
     t.style.borderColor = 'transparent';
   });
-  el.style.borderColor = '#C9A84C';
+  el.style.borderColor = 'var(--gold)';
 }
 
 function selectSize(size, el) {
   selectedSize = size;
   document.querySelectorAll('.size-btn:not(.out-of-stock)').forEach(b => {
     b.classList.remove('active');
-    b.style.background = '#1A1A1A';
-    b.style.borderColor = 'rgba(255,255,255,0.08)';
-    b.style.color = '#6B6560';
   });
   el.classList.add('active');
-  el.style.background = '#C9A84C';
-  el.style.borderColor = '#C9A84C';
-  el.style.color = '#0A0A0A';
 }
 
 function handleAddToCart() {
   if (!selectedSize) {
-    showToast('👆 Please select a size first');
-    // Highlight size selector
+    showToast('👆 Please select your size first');
     const sizeBtns = document.querySelectorAll('.size-btn:not(.out-of-stock)');
-    sizeBtns.forEach(b => { b.style.borderColor = '#C9A84C'; });
+    sizeBtns.forEach(b => { b.style.borderColor = 'var(--gold)'; });
     setTimeout(() => {
-      sizeBtns.forEach(b => { if (!b.classList.contains('active')) b.style.borderColor = 'rgba(255,255,255,0.08)'; });
+      sizeBtns.forEach(b => { if (!b.classList.contains('active')) b.style.borderColor = 'var(--border)'; });
     }, 1200);
     return;
   }
@@ -375,7 +448,7 @@ function handleAddToCart() {
   document.querySelectorAll('.cart-count').forEach(el => el.textContent = cart.length);
 
   showToast(`✦ ${p.name} (${selectedSize}) added to bag!`);
-  setTimeout(openCartDrawer, 600);
+  setTimeout(openCartDrawer, 500);
 }
 
 function renderRelated(p) {
@@ -388,17 +461,18 @@ function renderRelated(p) {
   document.getElementById('related-section').style.display = 'block';
   document.getElementById('related-grid').innerHTML = related.map(prod => {
     const off = discountPercent(prod.mrp, prod.price);
+    const isB = prod.funnel === 'custom-made' || prod.funnel === 'bespoke';
     return `
       <div class="c-product-card" onclick="location.href='product.html?id=${prod.id}'"
         onmouseenter="cursorBadge.classList.add('active');cursorBadge.textContent='VIEW';"
         onmouseleave="cursorBadge.classList.remove('active');">
         <div class="c-product-img-wrap">
-          <span class="c-badge">${prod.badge}</span>
+          <span class="c-badge ${isB ? 'bespoke' : ''}">${prod.badge || (isB ? 'BESPOKE' : '24H')}</span>
           <img src="${prod.images[0]}" alt="${prod.name}" loading="lazy">
         </div>
         <div class="c-product-info">
-          <div class="c-product-funnel" style="color:${prod.funnel === 'custom-made' ? '#B85C38' : '#C9A84C'};">
-            ${prod.funnel === 'custom-made' ? '✂️ BESPOKE' : '⚡ READY TO SHIP'}
+          <div class="c-product-funnel" style="color:${isB ? 'var(--rust)' : 'var(--gold)'};">
+            ${isB ? '✂️ BESPOKE · 7-14 DAYS' : '⚡ READY TO SHIP · 24H'}
           </div>
           <h3 class="c-product-name">${prod.name}</h3>
           <div class="c-product-price">
@@ -412,7 +486,6 @@ function renderRelated(p) {
   }).join('');
 }
 
-/* ── Load Product from URL ── */
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');
 
@@ -423,9 +496,7 @@ if (productId && typeof PRODUCTS !== 'undefined') {
   } else {
     document.getElementById('product-content').innerHTML = `
       <div style="text-align:center;padding:100px 20px;">
-        <div style="font-size:48px;margin-bottom:16px;">😕</div>
-        <h2 style="font-family:'Cinzel',serif;font-size:24px;text-transform:uppercase;color:#F0EDE6;margin-bottom:12px;">Product Not Found</h2>
-        <p style="color:#6B6560;margin-bottom:28px;">This product doesn't exist or has been removed.</p>
+        <h2 style="font-family:'Cinzel',serif;font-size:24px;text-transform:uppercase;color:var(--text);margin-bottom:12px;">Piece Not Found</h2>
         <a href="shop.html" class="c-btn filled-gold">BACK TO COLLECTION →</a>
       </div>
     `;
@@ -433,8 +504,7 @@ if (productId && typeof PRODUCTS !== 'undefined') {
 } else {
   document.getElementById('product-content').innerHTML = `
     <div style="text-align:center;padding:100px 20px;">
-      <div style="font-size:48px;margin-bottom:16px;">👋</div>
-      <h2 style="font-family:'Cinzel',serif;font-size:24px;text-transform:uppercase;color:#F0EDE6;margin-bottom:12px;">No Product Selected</h2>
+      <h2 style="font-family:'Cinzel',serif;font-size:24px;text-transform:uppercase;color:var(--text);margin-bottom:12px;">No Piece Selected</h2>
       <a href="shop.html" class="c-btn filled-gold">BROWSE COLLECTION →</a>
     </div>
   `;

@@ -3,405 +3,733 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova Street - Hybrid Custom-Curated Label</title>
+    <title>Nova Street — Hybrid Custom-Curated Label</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/studio3d.css">
     <style>
-        body.dark-theme { background-color: #0A0A0A; color: #F0EDE6; font-family: 'Outfit', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
-        h1, h2, h3, h4, h5, .logo-text, .cinzel { font-family: 'Cinzel', serif; }
-        a { text-decoration: none; color: inherit; }
-        * { box-sizing: border-box; }
-        
-        /* Shared */
-        .c-announcement { background: #0A0A0A; color: #C9A84C; font-size: 11px; letter-spacing: 1px; padding: 8px 0; overflow: hidden; border-bottom: 1px solid #1A1A1A; }
-        .c-announcement-marquee { white-space: nowrap; overflow: hidden; display: flex; }
-        .c-announcement-track { animation: marquee 20s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        
-        header { background: rgba(10,10,10,0.85); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #1A1A1A; }
-        .nav-wrap { display: flex; justify-content: space-between; align-items: center; padding: 16px 40px; }
-        .logo-cinch { display: flex; flex-direction: column; }
-        .logo-text { font-size: 24px; font-weight: 800; letter-spacing: 2px; }
-        .logo-text span { color: #C9A84C; }
-        .logo-tagline { font-size: 9px; color: #8A8580; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
-        .nav-links { display: flex; gap: 32px; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
-        .nav-links a.active { color: #C9A84C; }
-        .nav-links a:hover { color: #C9A84C; transition: 0.3s; }
-        .nav-right-actions { display: flex; align-items: center; gap: 24px; font-size: 12px; font-weight: 500; }
-        .dash-pill-link { border: 1px solid #C9A84C; color: #C9A84C; padding: 6px 14px; border-radius: 20px; transition: 0.3s; }
-        .dash-pill-link:hover { background: #C9A84C; color: #0A0A0A; }
-        .cart-trigger { cursor: pointer; display: flex; align-items: center; gap: 6px; }
-        .cart-count { background: #C9A84C; color: #0A0A0A; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
-        
-        .hamburger-btn { display: none; background: none; border: none; flex-direction: column; gap: 4px; cursor: pointer; }
-        .hamburger-btn span { display: block; width: 24px; height: 2px; background: #F0EDE6; transition: 0.3s; }
-        .mobile-nav-drawer { position: fixed; top: 0; right: -300px; width: 300px; height: 100vh; background: #141414; z-index: 200; transition: 0.4s ease; padding: 24px; }
-        .mobile-nav-drawer.open { right: 0; }
-        .mobile-nav-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 199; display: none; }
-        .mobile-nav-overlay.active { display: block; }
-        .mobile-nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .mobile-nav-links { display: flex; flex-direction: column; gap: 20px; font-size: 16px; font-weight: 500; text-transform: uppercase; }
-        
-        /* Cursor */
-        .cursor-follower { position: fixed; width: 60px; height: 60px; border-radius: 50%; background: rgba(201,168,76,0.15); border: 1px solid #C9A84C; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #C9A84C; letter-spacing: 1px; backdrop-filter: blur(2px); mix-blend-mode: screen; transition: width 0.2s, height 0.2s; }
-        
-        /* Cart Drawer */
-        .cart-drawer { position: fixed; top: 0; right: -400px; width: 100%; max-width: 400px; height: 100vh; background: #141414; z-index: 200; transition: right 0.4s ease; display: flex; flex-direction: column; border-left: 1px solid #1A1A1A; }
-        .cart-drawer.open { right: 0; }
-        .cart-drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 199; opacity: 0; pointer-events: none; transition: 0.4s; }
-        .cart-drawer-overlay.active { opacity: 1; pointer-events: all; }
-        .cart-drawer-header { padding: 24px; border-bottom: 1px solid #1A1A1A; display: flex; justify-content: space-between; align-items: center; }
-        .t-micro-1 { font-size: 12px; font-weight: 700; letter-spacing: 2px; }
-        .t-micro-2 { font-size: 10px; color: #8A8580; margin-top: 4px; }
-        .cart-drawer-close { font-size: 20px; cursor: pointer; color: #8A8580; }
-        .cart-drawer-body { flex: 1; overflow-y: auto; padding: 24px; }
-        .cart-drawer-footer { padding: 24px; border-top: 1px solid #1A1A1A; background: #0A0A0A; }
-        
-        /* Footer */
-        footer { background: #050505; padding: 80px 40px 20px; border-top: 1px solid #1A1A1A; }
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 40px; margin-bottom: 60px; max-width: 1400px; margin-left: auto; margin-right: auto; }
-        .footer-bottom { display: flex; justify-content: space-between; font-size: 10px; color: #6B6560; letter-spacing: 1px; padding-top: 20px; border-top: 1px solid #1A1A1A; max-width: 1400px; margin: 0 auto; }
-        
-        /* Toast */
-        .toast-notification { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px); background: #C9A84C; color: #0A0A0A; padding: 12px 24px; border-radius: 30px; font-size: 12px; font-weight: 600; opacity: 0; transition: 0.4s; z-index: 1000; box-shadow: 0 10px 30px rgba(201,168,76,0.3); pointer-events: none; }
-        .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+      /* ── Page-specific enhancements ── */
+      .hero-card { position: relative; border-radius: 12px; overflow: hidden; cursor: pointer; }
+      .hero-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.7s; }
+      .hero-card:hover img { transform: scale(1.05); }
+      .hero-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,6,6,0.9), transparent); display: flex; align-items: flex-end; padding: 36px; justify-content: space-between; }
+      .hero-card-title { font-size: 2.5rem; font-family: 'Cinzel', serif; font-weight: 900; letter-spacing: 2px; }
+      .cta-arrow { background: var(--gold); color: #000; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; transition: 0.3s; }
+      .cta-arrow:hover { background: var(--gold-light); transform: scale(1.1); }
 
-        /* Index Specific */
-        .hero-cinch { position: relative; width: 100%; height: calc(100vh - 120px); display: flex; flex-direction: column; overflow: hidden; padding: 20px; }
-        .hero-text-wrap { text-align: center; margin-bottom: 30px; z-index: 10; position: relative; }
-        .hero-title { font-size: 6vw; margin: 0; line-height: 1; letter-spacing: -2px; }
-        .hero-sub { color: #C9A84C; font-size: 14px; letter-spacing: 4px; text-transform: uppercase; margin-top: 10px; }
-        .hero-split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex: 1; max-width: 1600px; margin: 0 auto; width: 100%; position: relative; z-index: 5; }
-        .hero-card { position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; }
-        .hero-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.7s; }
-        .hero-card:hover img { transform: scale(1.05); }
-        .hero-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,0.9), transparent); display: flex; align-items: flex-end; padding: 40px; justify-content: space-between; }
-        .hero-card-title { font-size: 32px; font-family: 'Cinzel', serif; font-weight: 600; }
-        .cta-arrow { background: #F0EDE6; color: #0A0A0A; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .hero-floating-badge { position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); background: #141414; border: 1px solid #333; padding: 12px 24px; border-radius: 30px; font-size: 11px; letter-spacing: 2px; z-index: 20; white-space: nowrap; }
+      /* Brand story section */
+      .brand-story-grid {
+        display: grid; grid-template-columns: 1fr 1fr;
+        min-height: 80vh; overflow: hidden;
+      }
+      .brand-story-text-side {
+        background: var(--black);
+        display: flex; flex-direction: column; justify-content: center;
+        padding: 80px 64px;
+      }
+      .brand-story-img-side {
+        position: relative; overflow: hidden;
+      }
+      .brand-story-img-side img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s ease;
+      }
+      .brand-story-img-side:hover img { transform: scale(1.03); }
 
-        .c-section { padding: 100px 40px; max-width: 1400px; margin: 0 auto; }
-        .section-header { font-size: 12px; color: #C9A84C; letter-spacing: 3px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-        .section-header::before { content: ''; width: 40px; height: 1px; background: #C9A84C; }
-        .brand-statement { font-size: 48px; font-family: 'Cinzel', serif; max-width: 800px; line-height: 1.1; margin-bottom: 30px; }
-        
-        .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 60px; }
-        .tech-card { background: #141414; padding: 40px; border-radius: 8px; border: 1px solid #1A1A1A; transition: 0.3s; }
-        .tech-card:hover { border-color: #C9A84C; transform: translateY(-5px); }
-        .tech-icon { font-size: 32px; margin-bottom: 20px; }
-        
-        .c-product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 32px; margin-top: 40px; }
-        .product-card { background: #141414; border-radius: 4px; overflow: hidden; position: relative; }
-        .product-img-wrap { position: relative; padding-top: 125%; }
-        .product-img-wrap img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-        .product-info { padding: 20px; }
-        
-        .voting-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
-        .voting-card { position: relative; border-radius: 8px; overflow: hidden; padding-top: 100%; }
-        .voting-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
-        .voting-content { position: absolute; inset: 0; padding: 24px; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(to top, #0A0A0A, transparent); }
-        
-        .studio-cta { background: #141414; padding: 80px 40px; text-align: center; border-radius: 12px; border: 1px solid #222; margin: 100px auto; max-width: 1400px; position: relative; overflow: hidden; }
-        .studio-cta h2 { font-size: 56px; margin: 0 0 16px; color: #F0EDE6; }
-        .studio-cta p { font-size: 16px; color: #8A8580; margin-bottom: 40px; }
-        .btn-gold { background: #C9A84C; color: #0A0A0A; padding: 16px 32px; font-size: 14px; font-weight: 700; border-radius: 40px; display: inline-block; transition: 0.3s; }
-        .btn-gold:hover { background: #F0EDE6; }
-        
-        @media (max-width: 768px) {
-            .nav-links, .nav-right-actions { display: none; }
-            .hamburger-btn { display: flex; }
-            .hero-split-grid, .tech-grid, .voting-grid { grid-template-columns: 1fr; }
-            .brand-statement { font-size: 32px; }
-            .studio-cta h2 { font-size: 36px; }
-        }
+      /* Brand pillars */
+      .brand-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+      .pillar-item {
+        padding: 48px 40px;
+        border-right: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+      }
+      .pillar-item:last-child { border-right: none; }
+      .pillar-number { font-family: 'Cinzel', serif; font-size: 48px; color: var(--gold); opacity: 0.2; font-weight: 900; line-height: 1; margin-bottom: 16px; }
+      .pillar-title { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; color: var(--text); }
+      .pillar-desc { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
+
+      @media (max-width: 768px) {
+        .brand-story-grid { grid-template-columns: 1fr; }
+        .brand-story-text-side { padding: 48px 24px; }
+        .brand-story-img-side { min-height: 50vh; }
+        .brand-pillars { grid-template-columns: 1fr; }
+        .pillar-item { border-right: none; }
+      }
     </style>
 </head>
-<body class="dark-theme">
-    <div class="cursor-follower" id="cursor-badge">EXPLORE</div>
+<body>
 
-    <div class="c-announcement">
-      <div class="c-announcement-marquee">
-        <div class="c-announcement-track">
-          ✦ DUAL-FUNNEL HYBRID FASHION ✦ READY-TO-SHIP 24H DISPATCH & BESPOKE MADE-TO-MEASURE 7-14 DAYS ✦ CODE <strong>NOVA10</strong> FOR 10% OFF ✦ AHMEDABAD GOTS ORGANIC COTTON ✦ FREE SHIPPING ABOVE ₹2999 ✦ DUAL-FUNNEL HYBRID FASHION ✦ READY-TO-SHIP 24H DISPATCH & BESPOKE MADE-TO-MEASURE 7-14 DAYS ✦ CODE <strong>NOVA10</strong> FOR 10% OFF ✦
-        </div>
+<!-- ══════════════════════════════════════
+     PAGE LOADER
+══════════════════════════════════════ -->
+<div class="page-loader" id="page-loader">
+  <div class="loader-logo shimmer-text">NOVA STREET</div>
+  <div class="loader-line"></div>
+  <div class="loader-sub">Hybrid Custom-Curated Label · Est. 2026</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CUSTOM CURSOR
+══════════════════════════════════════ -->
+<div class="cursor-follower" id="cursor-badge">EXPLORE</div>
+
+<!-- ══════════════════════════════════════
+     ANNOUNCEMENT BAR
+══════════════════════════════════════ -->
+<div class="c-announcement">
+  <div class="c-announcement-marquee">
+    <div class="c-announcement-track">
+      ✦ DUAL-FUNNEL HYBRID FASHION &nbsp;&nbsp; ✦ READY-TO-SHIP 24H DISPATCH &amp; BESPOKE MADE-TO-MEASURE 7-14 DAYS &nbsp;&nbsp; ✦ CODE <strong>NOVA10</strong> FOR 10% OFF &nbsp;&nbsp; ✦ AHMEDABAD GOTS ORGANIC COTTON &nbsp;&nbsp; ✦ FREE SHIPPING ABOVE ₹2999 &nbsp;&nbsp; ✦ AI-POWERED 3D TRY-ON STUDIO &nbsp;&nbsp; ✦ INDIA'S FIRST HYBRID D2C LABEL &nbsp;&nbsp; ✦ DUAL-FUNNEL HYBRID FASHION &nbsp;&nbsp; ✦ READY-TO-SHIP 24H DISPATCH &amp; BESPOKE MADE-TO-MEASURE 7-14 DAYS &nbsp;&nbsp; ✦ CODE <strong>NOVA10</strong> FOR 10% OFF &nbsp;&nbsp; ✦ AHMEDABAD GOTS ORGANIC COTTON &nbsp;&nbsp; ✦ FREE SHIPPING ABOVE ₹2999 &nbsp;&nbsp; ✦ AI-POWERED 3D TRY-ON STUDIO &nbsp;&nbsp; ✦ INDIA'S FIRST HYBRID D2C LABEL &nbsp;&nbsp;
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     HEADER / NAV
+══════════════════════════════════════ -->
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo-cinch">
+      <div class="logo-text">NOVA <span>STREET</span></div>
+      <div class="logo-tagline">Hybrid Custom-Curated Label · Est. 2026</div>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="shop.html">Collection</a>
+      <a href="customize.html">Studio</a>
+      <a href="dashboard.html">UR Picks</a>
+    </nav>
+    <div class="nav-right-actions">
+      <a href="customize.html" class="dash-pill-link">✂️ Try-On Studio</a>
+      <div class="cart-trigger" onclick="openCartDrawer()">
+        <span>BAG</span>
+        <span class="cart-count" id="nav-cart-count">0</span>
       </div>
     </div>
-
-    <header>
-      <div class="nav-wrap">
-        <a href="index.html" class="logo-cinch">
-          <div class="logo-text">NOVA <span>STREET</span></div>
-          <div class="logo-tagline">Hybrid Custom-Curated Label · Est. 2026</div>
-        </a>
-        <nav class="nav-links">
-          <a href="index.html" class="active">Home</a>
-          <a href="shop.html">Collection</a>
-          <a href="customize.html">Studio</a>
-          <a href="dashboard.html">UR PICKS</a>
-        </nav>
-        <div class="nav-right-actions">
-          <a href="customize.html" class="dash-pill-link">✂️ Try-On Studio</a>
-          <div class="cart-trigger" onclick="openCartDrawer()">
-            <span>BAG</span>
-            <span class="cart-count">0</span>
-          </div>
-        </div>
-        <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-      <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileMenu()"></div>
-      <div class="mobile-nav-drawer" id="mobile-nav-drawer">
-        <div class="mobile-nav-header">
-          <div class="logo-text" style="font-size:20px;">NOVA <span>STREET</span></div>
-          <button onclick="closeMobileMenu()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#F0EDE6">✕</button>
-        </div>
-        <nav class="mobile-nav-links">
-          <a href="index.html" onclick="closeMobileMenu()">Home</a>
-          <a href="shop.html" onclick="closeMobileMenu()">Collection</a>
-          <a href="customize.html" onclick="closeMobileMenu()">Try-On Studio</a>
-          <a href="dashboard.html" onclick="closeMobileMenu()">UR PICKS</a>
-          <a href="cart.html" onclick="closeMobileMenu()">Shopping Bag</a>
-        </nav>
-      </div>
-    </header>
-
-    <main>
-        <section class="hero-cinch">
-            <div class="hero-text-wrap">
-                <h1 class="hero-title cinzel">NOVA STREET</h1>
-                <div class="hero-sub">Hybrid Custom-Curated Label · Expert Design + Your Measurements</div>
-            </div>
-            
-            <div class="hero-split-grid">
-                <a href="shop.html?gender=men" class="hero-card">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=85" alt="Shop Men">
-                    <div class="hero-card-overlay">
-                        <div class="hero-card-title">SHOP MEN</div>
-                        <div class="cta-arrow">→</div>
-                    </div>
-                </a>
-                <a href="shop.html?gender=women" class="hero-card">
-                    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1200&q=85" alt="Shop Women">
-                    <div class="hero-card-overlay">
-                        <div class="hero-card-title">SHOP WOMEN</div>
-                        <div class="cta-arrow">→</div>
-                    </div>
-                </a>
-            </div>
-            <div class="hero-floating-badge">DUAL-FUNNEL · READY-TO-SHIP + BESPOKE MADE-TO-MEASURE</div>
-        </section>
-
-        <section class="c-section">
-            <div class="section-header">01 + HYBRID D2C MODEL</div>
-            <h2 class="brand-statement">Where Expert Design Meets Your Exact Measurements.</h2>
-            <p style="color: #8A8580; max-width: 600px; line-height: 1.6; margin-bottom: 40px; font-size: 16px;">India's first AI-powered hybrid fashion label. We fuse hyper-local GOTS organic manufacturing from Ahmedabad with cutting edge 3D configuration. Choose ready-to-wear for 24h dispatch or enter our studio for millimeter-perfect bespoke tailoring.</p>
-            <div style="display:flex; gap: 20px;">
-                <a href="shop.html" class="btn-gold">Shop Ready-To-Ship →</a>
-                <a href="customize.html" class="btn-gold" style="background:transparent; border: 1px solid #C9A84C; color: #C9A84C;">Bespoke Studio ✂️</a>
-            </div>
-
-            <div class="tech-grid">
-                <div class="tech-card">
-                    <div class="tech-icon">🤖</div>
-                    <h3 style="font-size: 18px; margin-bottom: 12px; color: #C9A84C;">AI BODY SCANNING</h3>
-                    <p style="font-size: 14px; color: #8A8580;">Take 2 photos. Our proprietary AI calculates 80+ measurements in 45 seconds with 99% accuracy.</p>
-                </div>
-                <div class="tech-card">
-                    <div class="tech-icon">🧍</div>
-                    <h3 style="font-size: 18px; margin-bottom: 12px; color: #C9A84C;">3D BODY VISUALIZER & SIMULATOR</h3>
-                    <p style="font-size: 14px; color: #8A8580;">Simulate your exact body shape using BMI, height, weight & exercise sliders. Try on real-world outfits with live 360° drape.</p>
-                </div>
-                <div class="tech-card">
-                    <div class="tech-icon">👕</div>
-                    <h3 style="font-size: 18px; margin-bottom: 12px; color: #C9A84C;">FIRST GARMENT TRIAL</h3>
-                    <p style="font-size: 14px; color: #8A8580;">We ship your prototype first. Perfect fit guaranteed before we craft your final bespoke piece.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="c-section">
-            <div class="section-header">05 + FEATURED COLLECTION</div>
-            <div class="c-product-grid" id="featured-product-grid"></div>
-        </section>
-
-        <section class="c-section">
-            <div class="section-header">04 + COMMUNITY CO-CREATION</div>
-            <h2 class="brand-statement" style="font-size: 36px;">VOTE ON UPCOMING LIMITED FABRICS</h2>
-            <div class="voting-grid">
-                <div class="voting-card">
-                    <img src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=600&q=80" alt="Japanese Indigo Selvedge">
-                    <div class="voting-content">
-                        <h4 style="font-size: 20px; margin: 0 0 8px;">Japanese Indigo Selvedge</h4>
-                        <p style="font-size: 12px; color: #C9A84C; margin: 0 0 16px;">1,240 Votes</p>
-                        <button onclick="showToast('✅ Vote recorded for Japanese Indigo!')" style="background:#F0EDE6; color:#0A0A0A; border:none; padding:10px; font-weight:700; border-radius:4px; cursor:pointer;">VOTE NOW</button>
-                    </div>
-                </div>
-                <div class="voting-card">
-                    <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80" alt="Terracotta French Terry">
-                    <div class="voting-content">
-                        <h4 style="font-size: 20px; margin: 0 0 8px;">Terracotta French Terry</h4>
-                        <p style="font-size: 12px; color: #C9A84C; margin: 0 0 16px;">2,180 Votes</p>
-                        <button onclick="showToast('✅ Vote recorded for Terracotta Terry!')" style="background:#F0EDE6; color:#0A0A0A; border:none; padding:10px; font-weight:700; border-radius:4px; cursor:pointer;">VOTE NOW</button>
-                    </div>
-                </div>
-                <div class="voting-card">
-                    <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600&q=80" alt="Organic Biella Linen">
-                    <div class="voting-content">
-                        <h4 style="font-size: 20px; margin: 0 0 8px;">Organic Biella Linen</h4>
-                        <p style="font-size: 12px; color: #C9A84C; margin: 0 0 16px;">940 Votes</p>
-                        <button onclick="showToast('✅ Vote recorded for Biella Linen!')" style="background:#F0EDE6; color:#0A0A0A; border:none; padding:10px; font-weight:700; border-radius:4px; cursor:pointer;">VOTE NOW</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="studio-cta">
-            <h2 class="cinzel">BUILD YOUR PERFECT GARMENT</h2>
-            <p>Choose every detail. Fabric, fit, colour, collar — all yours.</p>
-            <a href="customize.html" class="btn-gold">Launch Try-On Studio ✂️</a>
-        </section>
-    </main>
-
-    <div class="cart-drawer-overlay" id="cart-drawer-overlay" onclick="closeCartDrawer()"></div>
-    <div class="cart-drawer" id="cart-drawer">
-      <div class="cart-drawer-header">
-        <div>
-          <div class="t-micro-1">YOUR SHOPPING BAG</div>
-          <div class="t-micro-2">NOVA STREET STORE</div>
-        </div>
-        <div class="cart-drawer-close" onclick="closeCartDrawer()">✕</div>
-      </div>
-      <div class="cart-drawer-body" id="drawer-cart-items"></div>
-      <div class="cart-drawer-footer" id="drawer-cart-summary"></div>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+    <div class="mobile-nav-header">
+      <div class="logo-text" style="font-size:20px;">NOVA <span>STREET</span></div>
+      <button onclick="closeMobileMenu()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);">✕</button>
     </div>
+    <nav class="mobile-nav-links">
+      <a href="index.html" onclick="closeMobileMenu()">Home</a>
+      <a href="shop.html" onclick="closeMobileMenu()">Collection</a>
+      <a href="customize.html" onclick="closeMobileMenu()">Try-On Studio</a>
+      <a href="dashboard.html" onclick="closeMobileMenu()">UR Picks</a>
+      <a href="cart.html" onclick="closeMobileMenu()">Shopping Bag</a>
+    </nav>
+  </div>
+</header>
 
-    <footer>
-      <div class="footer-grid">
-        <div>
-          <div class="logo-text" style="margin-bottom:12px;">NOVA <span>STREET</span></div>
-          <p style="font-size:13px;color:#6B6560;max-width:300px;margin-bottom:20px;">Hybrid D2C custom-curated apparel label. GOTS organic mills in Ahmedabad, crafted with unit-of-one precision.</p>
-          <div style="display:flex;gap:14px;font-size:18px;">📷 🐦 ▶️ 🌐</div>
-        </div>
-        <div>
-          <h4 class="t-micro-1" style="color:#C9A84C;margin-bottom:16px;">COLLECTION</h4>
-          <ul style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:#8A8580;list-style:none;padding:0;margin:0;">
-            <li><a href="shop.html">Shop Men</a></li>
-            <li><a href="shop.html?gender=women">Shop Women</a></li>
-            <li><a href="customize.html">Bespoke Studio</a></li>
-            <li><a href="dashboard.html">UR PICKS & Deals</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="t-micro-1" style="color:#C9A84C;margin-bottom:16px;">TECHNOLOGY</h4>
-          <ul style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:#8A8580;list-style:none;padding:0;margin:0;">
-            <li><a href="customize.html">AI Try-On Studio</a></li>
-            <li><a href="customize.html">CPQ Configurator</a></li>
-            <li><a href="cart.html">First Garment Trial</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="t-micro-1" style="color:#C9A84C;margin-bottom:16px;">NEWSLETTER</h4>
-          <p style="font-size:12px;color:#6B6560;margin-bottom:14px;">VIP access to bespoke fabric drops & exclusive launches.</p>
-          <div style="display:flex;background:#1A1A1A;border-radius:40px;padding:4px;border:1px solid rgba(255,255,255,0.08);">
-            <input type="email" placeholder="Your email address" style="background:transparent;border:none;padding:10px 16px;color:#F0EDE6;font-size:12px;flex:1;outline:none;font-family:inherit;">
-            <button onclick="showToast('🎉 Subscribed! Welcome to Nova Street VIP.')" style="background:#C9A84C;border:none;color:#0A0A0A;padding:8px 18px;border-radius:30px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">JOIN</button>
-          </div>
-        </div>
+<!-- ══════════════════════════════════════
+     HERO — PARALLAX SLIDESHOW
+══════════════════════════════════════ -->
+<section class="hero-parallax" id="hero">
+  <div class="hero-slides">
+    <div class="hero-slide active">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=90" alt="Nova Street Editorial">
+    </div>
+    <div class="hero-slide">
+      <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1920&q=90" alt="Nova Street Women">
+    </div>
+    <div class="hero-slide">
+      <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&q=90" alt="Nova Street Men">
+    </div>
+    <div class="hero-slide">
+      <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1920&q=90" alt="Nova Street New Season">
+    </div>
+    <div class="hero-slide">
+      <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=1920&q=90" alt="Nova Street Bespoke">
+    </div>
+  </div>
+  <div class="hero-gradient"></div>
+
+  <div class="hero-content">
+    <div class="hero-label">Hybrid Custom-Curated Label</div>
+    <h1>NOVA<br><span>STREET</span></h1>
+    <p class="hero-subtitle">Expert Design Meets Your Exact Measurements</p>
+    <div class="hero-cta-row">
+      <a href="shop.html" class="c-btn filled-gold is-large">Explore Collection →</a>
+      <a href="customize.html" class="c-btn outline-white is-large">Bespoke Studio ✂️</a>
+    </div>
+  </div>
+
+  <!-- Slide dots -->
+  <div class="hero-dots" id="hero-dots">
+    <div class="hero-dot active" onclick="goToSlide(0)"></div>
+    <div class="hero-dot" onclick="goToSlide(1)"></div>
+    <div class="hero-dot" onclick="goToSlide(2)"></div>
+    <div class="hero-dot" onclick="goToSlide(3)"></div>
+    <div class="hero-dot" onclick="goToSlide(4)"></div>
+  </div>
+
+  <!-- Scrolling text strip -->
+  <div class="hero-scroll-strip">
+    <div class="hero-scroll-text">
+      <span>LUXURY</span><span class="dot">✦</span>
+      <span>CRAFTED IN AHMEDABAD</span><span class="dot">✦</span>
+      <span>GOTS ORGANIC COTTON</span><span class="dot">✦</span>
+      <span>BESPOKE TAILORING</span><span class="dot">✦</span>
+      <span>READY TO SHIP 24H</span><span class="dot">✦</span>
+      <span>AI TRY-ON STUDIO</span><span class="dot">✦</span>
+      <span>INDIA'S FINEST</span><span class="dot">✦</span>
+      <span>LUXURY</span><span class="dot">✦</span>
+      <span>CRAFTED IN AHMEDABAD</span><span class="dot">✦</span>
+      <span>GOTS ORGANIC COTTON</span><span class="dot">✦</span>
+      <span>BESPOKE TAILORING</span><span class="dot">✦</span>
+      <span>READY TO SHIP 24H</span><span class="dot">✦</span>
+      <span>AI TRY-ON STUDIO</span><span class="dot">✦</span>
+      <span>INDIA'S FINEST</span><span class="dot">✦</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     STORIES / CATEGORY BUBBLES
+══════════════════════════════════════ -->
+<section class="stories-section reveal-fade">
+  <div class="stories-row">
+    <a href="shop.html" class="story-bubble-wrap">
+      <div class="story-bubble">
+        <img src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=200&q=80" alt="New In">
       </div>
-      <div class="footer-bottom">
-        <span>© 2026 NOVA STREET HYBRID D2C LABEL. ALL RIGHTS RESERVED.</span>
-        <span>PRIVACY POLICY · TERMS OF SERVICE · AHMEDABAD GOTS TEXTILE HUB</span>
+      <span class="story-label">New In</span>
+    </a>
+    <a href="shop.html?gender=men" class="story-bubble-wrap">
+      <div class="story-bubble">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="Men">
       </div>
-    </footer>
+      <span class="story-label">Men</span>
+    </a>
+    <a href="shop.html?gender=women" class="story-bubble-wrap">
+      <div class="story-bubble">
+        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80" alt="Women">
+      </div>
+      <span class="story-label">Women</span>
+    </a>
+    <a href="customize.html" class="story-bubble-wrap">
+      <div class="story-bubble">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&q=80" alt="Bespoke">
+      </div>
+      <span class="story-label">Bespoke</span>
+    </a>
+    <a href="shop.html?cat=Hoodies" class="story-bubble-wrap">
+      <div class="story-bubble">
+        <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=200&q=80" alt="Hoodies">
+      </div>
+      <span class="story-label">Hoodies</span>
+    </a>
+    <a href="shop.html?cat=Jackets" class="story-bubble-wrap">
+      <div class="story-bubble">
+        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=200&q=80" alt="Jackets">
+      </div>
+      <span class="story-label">Jackets</span>
+    </a>
+    <a href="shop.html?cat=Dresses" class="story-bubble-wrap">
+      <div class="story-bubble">
+        <img src="https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=200&q=80" alt="Dresses">
+      </div>
+      <span class="story-label">Dresses</span>
+    </a>
+    <a href="shop.html?cat=Bottoms" class="story-bubble-wrap">
+      <div class="story-bubble">
+        <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=200&q=80" alt="Bottoms">
+      </div>
+      <span class="story-label">Bottoms</span>
+    </a>
+  </div>
+</section>
 
-    <script src="js/products.js"></script>
-    <script src="js/cart.js"></script>
-    <script>
-    // Fallback Mock Data
-    const MOCK_PRODUCTS = [
-        { id: 1, name: "Onyx Silk Blend Shirt", price: 3499, image: "https://images.unsplash.com/photo-1596755094514-f87e32f6b717?w=500&q=80", gender: "men", category: "Shirts", funnel: "ready" },
-        { id: 4, name: "Midnight Cargo Trouser", price: 4299, image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&q=80", gender: "men", category: "Bottoms", funnel: "bespoke" },
-        { id: 6, name: "Graphite Oversized Hoodie", price: 2999, image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80", gender: "men", category: "Hoodies", funnel: "ready" },
-        { id: 9, name: "Ember Draped Dress", price: 5499, image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=500&q=80", gender: "women", category: "Dresses", funnel: "bespoke" },
-        { id: 10, name: "Pearl Ribbed Top", price: 1899, image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=500&q=80", gender: "women", category: "T-Shirts", funnel: "ready" },
-        { id: 14, name: "Obsidian Leather Jacket", price: 8999, image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&q=80", gender: "women", category: "Jackets", funnel: "ready" }
-    ];
+<!-- ══════════════════════════════════════
+     BRAND STORY — EDITORIAL
+══════════════════════════════════════ -->
+<section class="brand-story-grid">
+  <div class="brand-story-text-side reveal-left">
+    <div class="section-header">01 + Our Philosophy</div>
+    <h2 style="font-family:'Cinzel',serif; font-size: clamp(2rem,4vw,4rem); font-weight:700; text-transform:uppercase; line-height:1.05; margin-bottom:28px;">
+      Where Expert<br>Design Meets<br>Your Exact<br>Measurements.
+    </h2>
+    <p style="font-family:'Cormorant Garamond',serif; font-size:20px; font-style:italic; color:rgba(245,240,232,0.7); line-height:1.8; margin-bottom:32px; max-width:500px;">
+      India's first AI-powered hybrid fashion label. We fuse hyper-local GOTS organic manufacturing from Ahmedabad with cutting-edge 3D body configuration and bespoke tailoring.
+    </p>
+    <p style="font-size:14px; color:var(--text-muted); line-height:1.8; margin-bottom:40px; max-width:480px;">
+      Choose ready-to-wear for 24h dispatch, or enter our studio for millimeter-perfect bespoke tailoring. Every garment is a unit-of-one, crafted with obsessive precision.
+    </p>
+    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+      <a href="shop.html" class="c-btn filled-gold">Shop Ready-To-Ship →</a>
+      <a href="customize.html" class="c-btn outline-gold">Bespoke Studio ✂️</a>
+    </div>
+  </div>
+  <div class="brand-story-img-side reveal-right">
+    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=900&q=90" alt="Nova Street Brand Story">
+  </div>
+</section>
 
-    const cursorBadge = document.getElementById('cursor-badge');
-    if (cursorBadge) {
-      document.addEventListener('mousemove', (e) => {
-        cursorBadge.style.left = e.clientX + 'px';
-        cursorBadge.style.top = e.clientY + 'px';
-      });
-    }
-    
-    function toggleMobileMenu() {
-      document.getElementById('mobile-nav-drawer').classList.toggle('open');
-      document.getElementById('mobile-nav-overlay').classList.toggle('active');
-      document.getElementById('hamburger-btn').classList.toggle('open');
-    }
-    function closeMobileMenu() {
-      document.getElementById('mobile-nav-drawer').classList.remove('open');
-      document.getElementById('mobile-nav-overlay').classList.remove('active');
-      document.getElementById('hamburger-btn').classList.remove('open');
-    }
-    function openCartDrawer() {
-      document.getElementById('cart-drawer').classList.add('open');
-      document.getElementById('cart-drawer-overlay').classList.add('active');
-    }
-    function closeCartDrawer() {
-      document.getElementById('cart-drawer').classList.remove('open');
-      document.getElementById('cart-drawer-overlay').classList.remove('active');
-    }
-    function showToast(msg) {
-      const t = document.createElement('div');
-      t.className = 'toast-notification';
-      t.textContent = msg;
-      document.body.appendChild(t);
-      setTimeout(() => t.classList.add('show'), 50);
-      setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3500);
-    }
+<!-- ══════════════════════════════════════
+     BRAND PILLARS
+══════════════════════════════════════ -->
+<div class="brand-pillars reveal-up">
+  <div class="pillar-item">
+    <div class="pillar-number">01</div>
+    <div class="pillar-title">AI Body Scanning</div>
+    <p class="pillar-desc">Take 2 photos. Our proprietary AI calculates 80+ measurements in 45 seconds with 99% accuracy.</p>
+  </div>
+  <div class="pillar-item">
+    <div class="pillar-number">02</div>
+    <div class="pillar-title">3D Visualizer</div>
+    <p class="pillar-desc">Simulate your exact body shape using BMI, height, weight sliders. Try on real-world outfits with live 360° drape.</p>
+  </div>
+  <div class="pillar-item">
+    <div class="pillar-number">03</div>
+    <div class="pillar-title">First Garment Trial</div>
+    <p class="pillar-desc">We ship your prototype first. Perfect fit guaranteed before we craft your final bespoke piece.</p>
+  </div>
+</div>
 
-    function renderCinchCard(p) {
-        const img = p.images ? p.images[0] : (p.image || '');
-        const off = p.mrp ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0;
-        const isBespoke = p.funnel === 'custom-made';
-        return `
-        <div class="c-product-card" onclick="location.href='product.html?id=${p.id}'"
-          onmouseenter="if(cursorBadge){cursorBadge.classList.add('active');cursorBadge.textContent='VIEW';}"
-          onmouseleave="if(cursorBadge){cursorBadge.classList.remove('active');}">
-          <div class="c-product-img-wrap">
-            ${p.badge ? `<span class="c-badge">${p.badge}</span>` : ''}
-            <img src="${img}" alt="${p.name}" loading="lazy">
-          </div>
-          <div class="c-product-info">
-            <div style="font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:${isBespoke ? '#B85C38' : '#C9A84C'};margin-bottom:6px;">
-              ${isBespoke ? '✂️ BESPOKE (7-14 DAYS)' : '⚡ READY TO SHIP (24H)'}
-            </div>
-            <h3 class="c-product-name">${p.name}</h3>
-            <div class="c-product-price">
-              ₹${p.price.toLocaleString('en-IN')}
-              ${p.mrp ? `<span class="price-strike">₹${p.mrp.toLocaleString('en-IN')}</span>` : ''}
-              ${off > 0 ? `<span class="price-off">${off}% OFF</span>` : ''}
-            </div>
-          </div>
-        </div>`;
-    }
+<!-- ══════════════════════════════════════
+     FEATURED COLLECTION — HORIZONTAL CAROUSEL
+══════════════════════════════════════ -->
+<section class="h-scroll-section">
+  <div class="h-scroll-header">
+    <div>
+      <div class="section-header">05 + Featured Collection</div>
+      <h2 style="font-family:'Cinzel',serif; font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; text-transform:uppercase;">Featured Releases</h2>
+    </div>
+    <div style="display:flex; align-items:center; gap:16px;">
+      <a href="shop.html" style="font-size:11px; font-weight:800; letter-spacing:2px; color:var(--gold); text-transform:uppercase;">View All →</a>
+      <div class="h-scroll-nav">
+        <button class="h-scroll-btn" onclick="scrollCarousel(-1)" aria-label="Previous">‹</button>
+        <button class="h-scroll-btn" onclick="scrollCarousel(1)" aria-label="Next">›</button>
+      </div>
+    </div>
+  </div>
+  <div class="h-scroll-track" id="featured-carousel">
+    <!-- Rendered by JS -->
+  </div>
+</section>
 
-    // Render 6 featured products — 3 men + 3 women
-    document.addEventListener('DOMContentLoaded', () => {
-        const grid = document.getElementById('featured-product-grid');
-        if (!grid) return;
-        const source = window.PRODUCTS || MOCK_PRODUCTS;
-        const men   = source.filter(p => p.gender === 'men').slice(0, 3);
-        const women = source.filter(p => p.gender === 'women').slice(0, 3);
-        const featured = [...men, ...women];
-        grid.innerHTML = featured.map(p => renderCinchCard(p)).join('');
+<!-- ══════════════════════════════════════
+     EDITORIAL FULL-BLEED (Zara/Gucci style)
+══════════════════════════════════════ -->
+<section class="full-bleed-editorial reveal-fade">
+  <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&q=90" alt="Nova Street New Season Editorial">
+  <div class="full-bleed-overlay">
+    <div class="full-bleed-tag">New Season · AW26</div>
+    <h2 class="full-bleed-title">New<br>Season</h2>
+    <p class="full-bleed-sub">The AW26 Collection has arrived. Limited bespoke slots available.</p>
+    <a href="shop.html" class="c-btn filled-gold">Shop The Collection →</a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     TECHNOLOGY CARDS
+══════════════════════════════════════ -->
+<section class="c-section">
+  <div class="section-header reveal-up">02 + Our Technology</div>
+  <div style="display:grid; grid-template-columns:1fr 1.2fr; gap:48px; align-items:center; margin-bottom:60px;" class="reveal-up">
+    <div>
+      <h2 style="font-family:'Cinzel',serif; font-size:clamp(1.8rem,3.5vw,3.5rem); font-weight:700; text-transform:uppercase; line-height:1.05; margin-bottom:20px;">
+        India's First AI-Powered Fashion Platform
+      </h2>
+      <p style="font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; color:rgba(245,240,232,0.7); line-height:1.8;">
+        Where cutting-edge technology meets artisanal craftsmanship.
+      </p>
+    </div>
+    <div></div>
+  </div>
+  <div class="feature-cards-grid stagger-children reveal-up">
+    <div class="feature-card">
+      <div class="feature-card-icon">🤖</div>
+      <div class="feature-card-title">AI Body Scanning</div>
+      <p class="feature-card-desc">Take 2 photos. Our proprietary AI calculates 80+ measurements in 45 seconds with 99% accuracy. No tape measures. No guesswork.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-icon">🧍</div>
+      <div class="feature-card-title">3D Body Visualizer</div>
+      <p class="feature-card-desc">Simulate your exact body shape using BMI, height, weight &amp; exercise sliders. Try on real-world outfits with live 360° drape simulation.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-icon">👕</div>
+      <div class="feature-card-title">First Garment Trial</div>
+      <p class="feature-card-desc">We ship your prototype first. Perfect fit guaranteed before we craft your final bespoke piece. Zero risk. Pure precision.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     COMMUNITY VOTING
+══════════════════════════════════════ -->
+<section class="c-section">
+  <div class="section-header reveal-up">04 + Community Co-Creation</div>
+  <div style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:48px;" class="reveal-up">
+    <h2 style="font-family:'Cinzel',serif; font-size:clamp(1.5rem,3vw,2.8rem); font-weight:700; text-transform:uppercase; max-width:500px; line-height:1.1;">
+      Vote On Upcoming Limited Fabrics
+    </h2>
+    <p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px; color:var(--text-muted); max-width:300px; text-align:right;">
+      Your vote shapes the next collection.
+    </p>
+  </div>
+  <div class="voting-grid stagger-children reveal-up">
+    <div class="voting-card">
+      <img class="voting-card-img" src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=600&q=80" alt="Japanese Indigo Selvedge">
+      <div class="voting-content">
+        <div style="font-size:9px; font-weight:800; letter-spacing:2px; color:var(--gold); text-transform:uppercase; margin-bottom:8px;">Fabric Drop #1</div>
+        <h4 style="font-family:'Cinzel',serif; font-size:18px; margin:0 0 8px; font-weight:700;">Japanese Indigo Selvedge</h4>
+        <div class="vote-progress"><div class="vote-progress-bar" style="width:58%;"></div></div>
+        <p style="font-size:11px; color:var(--gold); margin:8px 0 16px; font-weight:700;">1,240 Votes · 58%</p>
+        <button class="vote-btn" onclick="castVote(this, 'Japanese Indigo')">VOTE NOW</button>
+      </div>
+    </div>
+    <div class="voting-card">
+      <img class="voting-card-img" src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80" alt="Terracotta French Terry">
+      <div class="voting-content">
+        <div style="font-size:9px; font-weight:800; letter-spacing:2px; color:var(--gold); text-transform:uppercase; margin-bottom:8px;">Fabric Drop #2</div>
+        <h4 style="font-family:'Cinzel',serif; font-size:18px; margin:0 0 8px; font-weight:700;">Terracotta French Terry</h4>
+        <div class="vote-progress"><div class="vote-progress-bar" style="width:78%;"></div></div>
+        <p style="font-size:11px; color:var(--gold); margin:8px 0 16px; font-weight:700;">2,180 Votes · 78%</p>
+        <button class="vote-btn" onclick="castVote(this, 'Terracotta Terry')">VOTE NOW</button>
+      </div>
+    </div>
+    <div class="voting-card">
+      <img class="voting-card-img" src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600&q=80" alt="Organic Biella Linen">
+      <div class="voting-content">
+        <div style="font-size:9px; font-weight:800; letter-spacing:2px; color:var(--gold); text-transform:uppercase; margin-bottom:8px;">Fabric Drop #3</div>
+        <h4 style="font-family:'Cinzel',serif; font-size:18px; margin:0 0 8px; font-weight:700;">Organic Biella Linen</h4>
+        <div class="vote-progress"><div class="vote-progress-bar" style="width:40%;"></div></div>
+        <p style="font-size:11px; color:var(--gold); margin:8px 0 16px; font-weight:700;">940 Votes · 40%</p>
+        <button class="vote-btn" onclick="castVote(this, 'Biella Linen')">VOTE NOW</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     PRESS STRIP
+══════════════════════════════════════ -->
+<div class="press-strip reveal-fade">
+  <p class="press-label">As Seen In</p>
+  <div class="press-logos">
+    <span class="press-name">Vogue India</span>
+    <span class="press-dot">✦</span>
+    <span class="press-name">Harper's Bazaar</span>
+    <span class="press-dot">✦</span>
+    <span class="press-name">GQ India</span>
+    <span class="press-dot">✦</span>
+    <span class="press-name">Elle</span>
+    <span class="press-dot">✦</span>
+    <span class="press-name">Architectural Digest</span>
+    <span class="press-dot">✦</span>
+    <span class="press-name">Condé Nast</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STUDIO CTA
+══════════════════════════════════════ -->
+<section class="c-section" style="padding-top:80px; padding-bottom:80px;">
+  <div class="studio-cta-banner reveal-up">
+    <div class="section-header" style="justify-content:center;">03 + Bespoke Studio</div>
+    <h2 style="font-family:'Cinzel',serif; font-size:clamp(2rem,5vw,5rem); font-weight:900; text-transform:uppercase; margin-bottom:16px;">
+      Build Your Perfect Garment
+    </h2>
+    <p style="font-family:'Cormorant Garamond',serif; font-size:22px; font-style:italic; color:rgba(245,240,232,0.6); margin-bottom:44px;">
+      Choose every detail. Fabric, fit, colour, collar — all yours.
+    </p>
+    <a href="customize.html" class="c-btn filled-gold is-large">Launch Try-On Studio ✂️</a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     UGC INSTAGRAM GRID
+══════════════════════════════════════ -->
+<section class="ugc-section reveal-fade">
+  <div class="ugc-header">
+    <div class="section-header" style="justify-content:center;">06 + Community</div>
+    <h2 style="font-family:'Cinzel',serif;">Follow Our Story</h2>
+    <p>@novastreet · Tag us to be featured</p>
+  </div>
+  <div class="ugc-grid">
+    <div class="ugc-item">
+      <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80" alt="Nova Street Community">
+      <div class="ugc-item-overlay">
+        <div class="ugc-icon">📷</div>
+        <div class="ugc-handle">@novastreet</div>
+      </div>
+    </div>
+    <div class="ugc-item">
+      <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80" alt="Nova Street Community">
+      <div class="ugc-item-overlay">
+        <div class="ugc-icon">📷</div>
+        <div class="ugc-handle">@novastreet</div>
+      </div>
+    </div>
+    <div class="ugc-item">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Nova Street Community">
+      <div class="ugc-item-overlay">
+        <div class="ugc-icon">📷</div>
+        <div class="ugc-handle">@novastreet</div>
+      </div>
+    </div>
+    <div class="ugc-item">
+      <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&q=80" alt="Nova Street Community">
+      <div class="ugc-item-overlay">
+        <div class="ugc-icon">📷</div>
+        <div class="ugc-handle">@novastreet</div>
+      </div>
+    </div>
+    <div class="ugc-item">
+      <img src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=600&q=80" alt="Nova Street Community">
+      <div class="ugc-item-overlay">
+        <div class="ugc-icon">📷</div>
+        <div class="ugc-handle">@novastreet</div>
+      </div>
+    </div>
+    <div class="ugc-item">
+      <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&q=80" alt="Nova Street Community">
+      <div class="ugc-item-overlay">
+        <div class="ugc-icon">📷</div>
+        <div class="ugc-handle">@novastreet</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div style="font-family:'Cinzel',serif; font-size:22px; font-weight:900; letter-spacing:5px; margin-bottom:14px;">
+        NOVA <span style="color:var(--gold);">STREET</span>
+      </div>
+      <p style="font-size:13px; color:var(--text-muted); max-width:280px; line-height:1.8; margin-bottom:24px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px;">
+        Hybrid D2C custom-curated apparel label. GOTS organic mills in Ahmedabad, crafted with unit-of-one precision.
+      </p>
+      <div class="footer-social">
+        <a href="#" title="Instagram">📷</a>
+        <a href="#" title="Twitter">🐦</a>
+        <a href="#" title="YouTube">▶️</a>
+        <a href="#" title="TikTok">🎵</a>
+      </div>
+    </div>
+    <div>
+      <h4 style="font-size:10px; font-weight:800; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:20px;">Collection</h4>
+      <ul style="display:flex; flex-direction:column; gap:12px; padding:0; margin:0;">
+        <li><a href="shop.html">Shop Men</a></li>
+        <li><a href="shop.html?gender=women">Shop Women</a></li>
+        <li><a href="customize.html">Bespoke Studio</a></li>
+        <li><a href="dashboard.html">UR PICKS &amp; Deals</a></li>
+        <li><a href="shop.html">New Arrivals</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="font-size:10px; font-weight:800; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:20px;">Technology</h4>
+      <ul style="display:flex; flex-direction:column; gap:12px; padding:0; margin:0;">
+        <li><a href="customize.html">AI Try-On Studio</a></li>
+        <li><a href="customize.html">CPQ Configurator</a></li>
+        <li><a href="cart.html">First Garment Trial</a></li>
+        <li><a href="customize.html">3D Body Visualizer</a></li>
+        <li><a href="qr.html">Download App</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="font-size:10px; font-weight:800; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:14px;">VIP Newsletter</h4>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px; line-height:1.7;">VIP access to bespoke fabric drops &amp; exclusive launches. Join 50,000+ members.</p>
+      <div class="footer-newsletter-input-row">
+        <input type="email" placeholder="Your email address" class="footer-newsletter-input">
+        <button onclick="showToast('🎉 Welcome to Nova Street VIP!')" class="footer-newsletter-btn">JOIN</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Nova Street Hybrid D2C Label. All Rights Reserved.</span>
+    <span>Privacy Policy · Terms of Service · Ahmedabad GOTS Textile Hub</span>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════
+     CART DRAWER
+══════════════════════════════════════ -->
+<div class="cart-drawer-overlay" id="cart-drawer-overlay" onclick="closeCartDrawer()"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-drawer-header">
+    <div>
+      <div class="t-micro-1" style="color:var(--text);">YOUR SHOPPING BAG</div>
+      <div class="t-micro-2" style="margin-top:4px;">NOVA STREET STORE</div>
+    </div>
+    <div class="cart-drawer-close" onclick="closeCartDrawer()">✕</div>
+  </div>
+  <div class="cart-drawer-body" id="drawer-cart-items"></div>
+  <div class="cart-drawer-footer" id="drawer-cart-summary"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════ -->
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script>
+// ── Fallback Mock Products ──
+const MOCK_PRODUCTS = [
+  { id: 1,  name: "Onyx Silk Blend Shirt",    price: 3499, mrp: 4999, image: "https://images.unsplash.com/photo-1596755094514-f87e32f6b717?w=500&q=80", gender: "men",   category: "Shirts",   funnel: "ready",   badge: "NEW" },
+  { id: 4,  name: "Midnight Cargo Trouser",   price: 4299, mrp: 5999, image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&q=80", gender: "men",   category: "Bottoms",  funnel: "bespoke"  },
+  { id: 6,  name: "Graphite Oversized Hoodie",price: 2999, mrp: 3999, image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80", gender: "men",   category: "Hoodies",  funnel: "ready",   badge: "BESTSELLER" },
+  { id: 7,  name: "Crimson Velvet Jacket",    price: 7999, mrp: 10999,image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500&q=80", gender: "men",   category: "Jackets",  funnel: "bespoke"  },
+  { id: 9,  name: "Ember Draped Dress",       price: 5499, mrp: 7499, image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=500&q=80", gender: "women", category: "Dresses",  funnel: "bespoke", badge: "LIMITED" },
+  { id: 10, name: "Pearl Ribbed Top",         price: 1899, mrp: 2499, image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=500&q=80", gender: "women", category: "T-Shirts", funnel: "ready",   badge: "NEW" },
+  { id: 13, name: "Sapphire Silk Slip",       price: 4699, mrp: 5999, image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&q=80", gender: "women", category: "Dresses",  funnel: "bespoke"  },
+  { id: 14, name: "Obsidian Leather Jacket",  price: 8999, mrp: 11999,image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&q=80", gender: "women", category: "Jackets",  funnel: "ready",   badge: "EXCLUSIVE" },
+];
+
+// ── PAGE LOADER ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('page-loader').classList.add('hidden');
+  }, 1600);
+});
+
+// ── CUSTOM CURSOR ──
+const cursorBadge = document.getElementById('cursor-badge');
+if (cursorBadge) {
+  document.addEventListener('mousemove', (e) => {
+    cursorBadge.style.left = e.clientX + 'px';
+    cursorBadge.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .c-product-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursorBadge.classList.add('active');
+      cursorBadge.textContent = el.dataset.cursor || 'VIEW';
     });
-    </script>
+    el.addEventListener('mouseleave', () => cursorBadge.classList.remove('active'));
+  });
+}
+
+// ── HERO SLIDESHOW ──
+let currentSlide = 0;
+const slides = document.querySelectorAll('.hero-slide');
+const dots   = document.querySelectorAll('.hero-dot');
+
+function goToSlide(n) {
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide].classList.remove('active');
+  currentSlide = (n + slides.length) % slides.length;
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+}
+
+setInterval(() => goToSlide(currentSlide + 1), 4000);
+
+// ── SCROLL REVEAL ──
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.reveal-up, .reveal-fade, .reveal-left, .reveal-right').forEach(el => {
+  revealObserver.observe(el);
+});
+
+// ── NAV MOBILE ──
+function toggleMobileMenu() {
+  document.getElementById('mobile-nav-drawer').classList.toggle('open');
+  document.getElementById('mobile-nav-overlay').classList.toggle('active');
+  document.getElementById('hamburger-btn').classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-nav-drawer').classList.remove('open');
+  document.getElementById('mobile-nav-overlay').classList.remove('active');
+  document.getElementById('hamburger-btn').classList.remove('open');
+}
+
+// ── CART DRAWER ──
+function openCartDrawer() {
+  document.getElementById('cart-drawer').classList.add('open');
+  document.getElementById('cart-drawer-overlay').classList.add('open');
+}
+function closeCartDrawer() {
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.getElementById('cart-drawer-overlay').classList.remove('open');
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast-notification';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.classList.add('show'), 50);
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 500); }, 3500);
+}
+
+// ── WISHLIST ──
+function toggleWishlist(btn) {
+  btn.classList.toggle('active');
+  btn.textContent = btn.classList.contains('active') ? '♥' : '♡';
+  if (btn.classList.contains('active')) showToast('❤️ Added to wishlist!');
+}
+
+// ── VOTE ──
+function castVote(btn, fabric) {
+  btn.textContent = '✓ VOTED';
+  btn.style.background = 'var(--success)';
+  btn.disabled = true;
+  showToast('✅ Vote recorded for ' + fabric + '!');
+}
+
+// ── PRODUCT CARD RENDERER ──
+function renderProductCard(p) {
+  const img = p.images ? p.images[0] : (p.image || '');
+  const off = p.mrp ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0;
+  const isBespoke = p.funnel === 'custom-made' || p.funnel === 'bespoke';
+  return `
+  <div class="c-product-card h-scroll-item" onclick="location.href='product.html?id=${p.id}'" style="width:280px;"
+    onmouseenter="if(cursorBadge){cursorBadge.classList.add('active');cursorBadge.textContent='VIEW';}"
+    onmouseleave="if(cursorBadge){cursorBadge.classList.remove('active');}">
+    <div class="c-product-img-wrap">
+      ${p.badge ? `<span class="c-badge">${p.badge}</span>` : ''}
+      <button class="wishlist-btn" onclick="event.stopPropagation();toggleWishlist(this)" title="Wishlist">♡</button>
+      <img src="${img}" alt="${p.name}" loading="lazy">
+      <div class="c-product-quick-overlay">
+        <div class="quick-view-pill">QUICK VIEW</div>
+      </div>
+    </div>
+    <div class="c-product-info">
+      <div class="c-product-funnel" style="color:${isBespoke ? 'var(--rust)' : 'var(--gold)'};">
+        ${isBespoke ? '✂️ BESPOKE · 7-14 DAYS' : '⚡ READY TO SHIP · 24H'}
+      </div>
+      <h3 class="c-product-name">${p.name}</h3>
+      <div class="c-product-price">
+        ₹${p.price.toLocaleString('en-IN')}
+        ${p.mrp ? `<span class="price-strike">₹${p.mrp.toLocaleString('en-IN')}</span>` : ''}
+        ${off > 0 ? `<span class="price-off">${off}% OFF</span>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── CAROUSEL SCROLL ──
+function scrollCarousel(dir) {
+  const carousel = document.getElementById('featured-carousel');
+  carousel.scrollBy({ left: dir * 300, behavior: 'smooth' });
+}
+
+// ── RENDER FEATURED PRODUCTS ──
+document.addEventListener('DOMContentLoaded', () => {
+  const carousel = document.getElementById('featured-carousel');
+  if (!carousel) return;
+  const source = window.PRODUCTS || MOCK_PRODUCTS;
+  carousel.innerHTML = source.map(p => renderProductCard(p)).join('');
+});
+</script>
 </body>
 </html>

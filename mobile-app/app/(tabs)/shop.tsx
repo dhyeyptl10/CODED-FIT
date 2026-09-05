@@ -1,6 +1,6 @@
 /**
  * CODED-FIT / NOVA STREET — Mobile Shop & Collection Screen
- * Haute-Couture Black & White: Dual-Funnel Filter, Categories, Dynamic Grid
+ * Ultra-Luxury Haute Couture: Gold Segmented Controls, Pill Badges, Dynamic Filtering & Product Grid
  */
 
 import React, { useState } from 'react';
@@ -39,9 +39,9 @@ export default function ShopScreen() {
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       {/* ── Top Header ── */}
       <View style={styles.header}>
-        <Text style={styles.title}>COLLECTION</Text>
+        <Text style={styles.title}>COLLECTION <Text style={styles.titleGold}>RELEASES</Text></Text>
         <Text style={styles.subTitle}>
-          {filteredProducts.length} Bespoke & RTW Releases Available
+          {filteredProducts.length} Pieces Available · Ahmedabad Ateliers
         </Text>
       </View>
 
@@ -77,7 +77,7 @@ export default function ShopScreen() {
             style={[styles.funnelPill, funnelFilter === 'rtw' && styles.funnelPillActive]}
           >
             <Text style={[styles.funnelPillText, funnelFilter === 'rtw' && styles.funnelPillTextActive]}>
-              24H RTW
+              ⚡ 24H RTW
             </Text>
           </TouchableOpacity>
 
@@ -86,7 +86,7 @@ export default function ShopScreen() {
             style={[styles.funnelPill, funnelFilter === 'custom-made' && styles.funnelPillActive]}
           >
             <Text style={[styles.funnelPillText, funnelFilter === 'custom-made' && styles.funnelPillTextActive]}>
-              BESPOKE
+              ✂️ BESPOKE
             </Text>
           </TouchableOpacity>
         </View>
@@ -131,6 +131,14 @@ export default function ShopScreen() {
             />
           ))}
         </View>
+
+        {filteredProducts.length === 0 && (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyEmoji}>🧵</Text>
+            <Text style={styles.emptyTitle}>NO PIECES FOUND</Text>
+            <Text style={styles.emptySub}>Try adjusting your filters.</Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -143,23 +151,26 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#000000',
+    paddingVertical: 14,
+    backgroundColor: '#050505',
     borderBottomWidth: 1,
-    borderBottomColor: '#262626',
+    borderBottomColor: '#1A1A1A',
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '900',
     color: '#FFFFFF',
-    letterSpacing: 2,
+    letterSpacing: 2.5,
     fontFamily: 'Cinzel',
   },
+  titleGold: {
+    color: '#D4AF37',
+  },
   subTitle: {
-    fontSize: 9,
-    color: '#A3A3A3',
-    letterSpacing: 0.5,
-    marginTop: 2,
+    fontSize: 9.5,
+    color: '#8A8580',
+    letterSpacing: 0.8,
+    marginTop: 3,
   },
   filterBar: {
     flexDirection: 'row',
@@ -169,29 +180,33 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: '#0A0A0A',
     borderBottomWidth: 1,
-    borderBottomColor: '#262626',
+    borderBottomColor: '#1A1A1A',
   },
   segmentedControl: {
     flexDirection: 'row',
-    backgroundColor: '#111111',
+    backgroundColor: '#141414',
     borderWidth: 1,
-    borderColor: '#333333',
-    borderRadius: RADIUS.sm, // 0 sharp
+    borderColor: '#262626',
+    borderRadius: RADIUS.sm,
+    padding: 2,
   },
   segmentBtn: {
     paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
+    borderRadius: 2,
   },
   segmentBtnActive: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#D4AF37',
   },
   segmentText: {
     fontSize: 9,
     fontWeight: '800',
     color: '#737373',
+    letterSpacing: 0.8,
   },
   segmentTextActive: {
     color: '#000000',
+    fontWeight: '900',
   },
   funnelPills: {
     flexDirection: 'row',
@@ -200,28 +215,30 @@ const styles = StyleSheet.create({
   funnelPill: {
     paddingVertical: 5,
     paddingHorizontal: 10,
-    backgroundColor: '#111111',
+    backgroundColor: '#121212',
     borderWidth: 1,
     borderColor: '#262626',
     borderRadius: RADIUS.sm,
   },
   funnelPillActive: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#FFFFFF',
+    backgroundColor: 'rgba(212, 175, 55, 0.15)',
+    borderColor: '#D4AF37',
   },
   funnelPillText: {
     fontSize: 9,
     fontWeight: '800',
-    color: '#A3A3A3',
+    color: '#8A8580',
+    letterSpacing: 0.5,
   },
   funnelPillTextActive: {
-    color: '#000000',
+    color: '#D4AF37',
+    fontWeight: '900',
   },
   categoriesWrap: {
-    backgroundColor: '#000000',
+    backgroundColor: '#070707',
     borderBottomWidth: 1,
-    borderBottomColor: '#262626',
-    paddingVertical: 8,
+    borderBottomColor: '#1A1A1A',
+    paddingVertical: 10,
   },
   catScroll: {
     paddingHorizontal: 16,
@@ -232,17 +249,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     backgroundColor: '#111111',
     borderWidth: 1,
-    borderColor: '#262626',
-    borderRadius: RADIUS.sm,
+    borderColor: '#222222',
+    borderRadius: RADIUS.full,
   },
   catPillActive: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#FFFFFF',
+    backgroundColor: '#D4AF37',
+    borderColor: '#D4AF37',
   },
   catPillText: {
     fontSize: 10,
     fontWeight: '700',
     color: '#A3A3A3',
+    letterSpacing: 0.5,
   },
   catPillTextActive: {
     color: '#000000',
@@ -257,5 +275,27 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingHorizontal: 16,
     justifyContent: 'space-between',
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60,
+  },
+  emptyEmoji: {
+    fontSize: 48,
+    marginBottom: 12,
+    opacity: 0.4,
+  },
+  emptyTitle: {
+    fontFamily: 'Cinzel',
+    fontSize: 16,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    letterSpacing: 1.5,
+  },
+  emptySub: {
+    fontSize: 12,
+    color: '#737373',
+    marginTop: 4,
   },
 });

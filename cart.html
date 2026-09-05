@@ -3,302 +3,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova Street - Shopping Bag</title>
+    <title>Shopping Bag | NOVA STREET</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        body.dark-theme { background-color: #0A0A0A; color: #F0EDE6; font-family: 'Outfit', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
-        h1, h2, h3, h4, h5, .logo-text, .cinzel { font-family: 'Cinzel', serif; }
-        a { text-decoration: none; color: inherit; }
-        * { box-sizing: border-box; }
-        
-        /* Shared */
-        .c-announcement { background: #0A0A0A; color: #C9A84C; font-size: 11px; letter-spacing: 1px; padding: 8px 0; overflow: hidden; border-bottom: 1px solid #1A1A1A; }
-        .c-announcement-marquee { white-space: nowrap; overflow: hidden; display: flex; }
-        .c-announcement-track { animation: marquee 20s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        
-        header { background: rgba(10,10,10,0.85); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #1A1A1A; }
-        .nav-wrap { display: flex; justify-content: space-between; align-items: center; padding: 16px 40px; }
-        .logo-cinch { display: flex; flex-direction: column; }
-        .logo-text { font-size: 24px; font-weight: 800; letter-spacing: 2px; }
-        .logo-text span { color: #C9A84C; }
-        .logo-tagline { font-size: 9px; color: #8A8580; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
-        .nav-links { display: flex; gap: 32px; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
-        .nav-links a.active { color: #C9A84C; }
-        .nav-links a:hover { color: #C9A84C; transition: 0.3s; }
-        .nav-right-actions { display: flex; align-items: center; gap: 24px; font-size: 12px; font-weight: 500; }
-        .dash-pill-link { border: 1px solid #C9A84C; color: #C9A84C; padding: 6px 14px; border-radius: 20px; transition: 0.3s; }
-        .dash-pill-link:hover { background: #C9A84C; color: #0A0A0A; }
-        .cart-trigger { cursor: pointer; display: flex; align-items: center; gap: 6px; }
-        .cart-count { background: #C9A84C; color: #0A0A0A; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
-        
-        .hamburger-btn { display: none; background: none; border: none; flex-direction: column; gap: 4px; cursor: pointer; }
-        .hamburger-btn span { display: block; width: 24px; height: 2px; background: #F0EDE6; transition: 0.3s; }
-        .mobile-nav-drawer { position: fixed; top: 0; right: -300px; width: 300px; height: 100vh; background: #141414; z-index: 200; transition: 0.4s ease; padding: 24px; }
-        .mobile-nav-drawer.open { right: 0; }
-        .mobile-nav-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 199; display: none; }
-        .mobile-nav-overlay.active { display: block; }
-        .mobile-nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .mobile-nav-links { display: flex; flex-direction: column; gap: 20px; font-size: 16px; font-weight: 500; text-transform: uppercase; }
-        
-        /* Cursor */
-        .cursor-follower { position: fixed; width: 60px; height: 60px; border-radius: 50%; background: rgba(201,168,76,0.15); border: 1px solid #C9A84C; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #C9A84C; letter-spacing: 1px; backdrop-filter: blur(2px); mix-blend-mode: screen; transition: width 0.2s, height 0.2s; }
-        
-        /* Toast */
-        .toast-notification { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px); background: #C9A84C; color: #0A0A0A; padding: 12px 24px; border-radius: 30px; font-size: 12px; font-weight: 600; opacity: 0; transition: 0.4s; z-index: 1000; box-shadow: 0 10px 30px rgba(201,168,76,0.3); pointer-events: none; }
-        .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-        /* Cart Specific */
-        .c-section { padding: 60px 40px; max-width: 1400px; margin: 0 auto; min-height: 70vh; }
-        .cart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 60px; margin-top: 40px; }
-        
-        .cart-item-row { display: flex; gap: 20px; padding-bottom: 30px; border-bottom: 1px solid #1A1A1A; margin-bottom: 30px; }
-        .cart-item-img { width: 120px; height: 150px; object-fit: cover; border-radius: 4px; }
-        .cart-item-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .cart-item-title { font-size: 20px; font-family: 'Cinzel'; margin: 0 0 8px; }
-        .cart-item-meta { font-size: 12px; color: #8A8580; margin-bottom: 4px; text-transform: uppercase; }
-        .cart-item-price { font-size: 16px; font-weight: 600; color: #F0EDE6; }
-        
-        .qty-control { display: flex; align-items: center; gap: 12px; background: #141414; padding: 6px 12px; border-radius: 20px; width: fit-content; border: 1px solid #222; }
-        .qty-btn { background: none; border: none; color: #8A8580; cursor: pointer; font-size: 16px; }
-        .qty-val { font-size: 14px; font-weight: 600; min-width: 20px; text-align: center; }
-        
-        .summary-card { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 32px; position: sticky; top: 120px; }
-        .summary-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 16px; color: #8A8580; }
-        .summary-total { display: flex; justify-content: space-between; font-size: 24px; font-family: 'Cinzel'; font-weight: 600; color: #C9A84C; margin: 24px 0; padding-top: 24px; border-top: 1px solid #222; }
-        
-        .promo-box { display: flex; margin-bottom: 32px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
-        .promo-box input { flex: 1; background: #0A0A0A; border: none; padding: 12px 16px; color: #F0EDE6; font-family: 'Outfit'; outline: none; text-transform: uppercase; }
-        .promo-box button { background: #333; color: #F0EDE6; border: none; padding: 0 24px; cursor: pointer; font-weight: 600; font-family: 'Outfit'; transition: 0.3s; }
-        .promo-box button:hover { background: #C9A84C; color: #0A0A0A; }
-        
-        .btn-checkout { background: #C9A84C; color: #0A0A0A; width: 100%; padding: 18px; font-size: 16px; font-weight: 700; border: none; border-radius: 4px; cursor: pointer; font-family: 'Outfit'; transition: 0.3s; }
-        .btn-checkout:hover { background: #F0EDE6; }
-        
-        .trust-badges { display: flex; justify-content: space-between; margin-top: 24px; font-size: 11px; color: #8A8580; text-align: center; gap: 8px; }
-        .trust-badge { flex: 1; background: #0A0A0A; padding: 12px; border-radius: 4px; border: 1px solid #1A1A1A; }
-
-        .empty-cart { text-align: center; padding: 80px 0; }
-        .empty-cart h2 { font-size: 32px; margin-bottom: 16px; }
-        .empty-cart p { color: #8A8580; margin-bottom: 32px; }
-
-        footer { background: #050505; border-top: 1px solid #1A1A1A; }
-        .footer-bottom { display: flex; justify-content: space-between; font-size: 10px; color: #6B6560; letter-spacing: 1px; padding: 20px 40px; max-width: 1400px; margin: 0 auto; }
-
-        @media (max-width: 768px) {
-            .nav-links, .nav-right-actions { display: none; }
-            .hamburger-btn { display: flex; }
-            .cart-grid { grid-template-columns: 1fr; gap: 40px; }
-            .c-section { padding: 40px 20px; }
-        }
+      .shipping-bar-wrap {
+        background: var(--dark-1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 16px 20px;
+        margin-bottom: 28px;
+      }
+      .shipping-bar-title {
+        display: flex; justify-content: space-between; align-items: center;
+        font-size: 11px; font-weight: 700; color: var(--text);
+        letter-spacing: 1px; margin-bottom: 8px;
+      }
+      .shipping-progress {
+        width: 100%; height: 4px; background: var(--surface);
+        border-radius: 2px; overflow: hidden;
+      }
+      .shipping-progress-fill {
+        height: 100%; background: linear-gradient(to right, var(--gold), var(--gold-light));
+        border-radius: 2px; transition: width 0.6s ease;
+      }
+      .cart-grid {
+        display: grid; grid-template-columns: 1.5fr 1fr; gap: 48px;
+        margin-top: 32px; align-items: start;
+      }
+      .cart-item-card {
+        display: flex; gap: 20px; padding: 24px 0;
+        border-bottom: 1px solid var(--border);
+        position: relative;
+      }
+      .cart-item-card:first-child { padding-top: 0; }
+      .cart-item-thumb {
+        width: 110px; height: 138px; object-fit: cover;
+        border-radius: var(--radius-sm); background: #111;
+        border: 1px solid var(--border);
+      }
+      .qty-control {
+        display: inline-flex; align-items: center;
+        background: var(--dark-2); border: 1px solid var(--border);
+        border-radius: 30px; padding: 4px 12px; gap: 12px;
+      }
+      .qty-btn {
+        background: none; border: none; color: var(--text);
+        font-size: 16px; cursor: pointer; padding: 0 4px;
+      }
+      .qty-btn:hover { color: var(--gold); }
+      .qty-val { font-size: 13px; font-weight: 800; min-width: 18px; text-align: center; }
+      .summary-card {
+        background: var(--dark-1); border: 1px solid var(--border-gold);
+        border-radius: var(--radius-xl); padding: 32px;
+        position: sticky; top: 100px;
+      }
+      .promo-row {
+        display: flex; gap: 8px; margin-bottom: 24px;
+      }
+      .promo-input {
+        flex: 1; background: var(--dark-2); border: 1px solid var(--border);
+        border-radius: var(--radius-sm); padding: 12px 16px;
+        color: var(--text); font-family: inherit; font-size: 12px;
+        font-weight: 700; letter-spacing: 1px; outline: none; text-transform: uppercase;
+      }
+      .promo-input:focus { border-color: var(--gold); }
+      .promo-btn {
+        background: var(--dark-3); color: var(--gold);
+        border: 1px solid var(--border-gold); border-radius: var(--radius-sm);
+        padding: 0 20px; font-weight: 800; font-size: 11px;
+        letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
+      }
+      .promo-btn:hover { background: var(--gold); color: #000; }
+      .summary-line {
+        display: flex; justify-content: space-between; font-size: 13.5px;
+        margin-bottom: 14px; color: var(--text-dim);
+      }
+      .summary-total {
+        display: flex; justify-content: space-between; font-family: 'Cinzel', serif;
+        font-size: 24px; font-weight: 800; color: var(--gold);
+        padding-top: 20px; margin-top: 20px; border-top: 1px solid var(--border);
+      }
+      .trust-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 24px;
+      }
+      .trust-col {
+        background: var(--dark-2); border: 1px solid var(--border);
+        border-radius: var(--radius-sm); padding: 10px; text-align: center;
+        font-size: 10.5px; color: var(--text-muted); font-weight: 600;
+      }
+      @media (max-width: 860px) {
+        .cart-grid { grid-template-columns: 1fr; gap: 36px; }
+      }
     </style>
 </head>
-<body class="dark-theme">
-    <div class="cursor-follower" id="cursor-badge">BAG</div>
+<body>
 
-    <div class="c-announcement">
-      <div class="c-announcement-marquee">
-        <div class="c-announcement-track">
-          ✦ DUAL-FUNNEL HYBRID FASHION ✦ READY-TO-SHIP 24H DISPATCH & BESPOKE MADE-TO-MEASURE 7-14 DAYS ✦ CODE <strong>NOVA10</strong> FOR 10% OFF ✦ AHMEDABAD GOTS ORGANIC COTTON ✦ FREE SHIPPING ABOVE ₹2999 ✦ DUAL-FUNNEL HYBRID FASHION ✦ READY-TO-SHIP 24H DISPATCH & BESPOKE MADE-TO-MEASURE 7-14 DAYS ✦ CODE <strong>NOVA10</strong> FOR 10% OFF ✦
+<div class="cursor-follower" id="cursor-badge">BAG</div>
+
+<!-- Announcement Bar -->
+<div class="c-announcement">
+  <div class="c-announcement-marquee">
+    <div class="c-announcement-track">
+      ✦ DUAL-FUNNEL HYBRID FASHION &nbsp;&nbsp; ✦ READY-TO-SHIP 24H DISPATCH &amp; BESPOKE MADE-TO-MEASURE 7-14 DAYS &nbsp;&nbsp; ✦ CODE <strong>NOVA10</strong> FOR 10% OFF &nbsp;&nbsp; ✦ AHMEDABAD GOTS ORGANIC COTTON &nbsp;&nbsp; ✦ FREE SHIPPING ABOVE ₹2999 &nbsp;&nbsp; ✦ DUAL-FUNNEL HYBRID FASHION &nbsp;&nbsp;
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo-cinch">
+      <div class="logo-text">NOVA <span>STREET</span></div>
+      <div class="logo-tagline">Hybrid Custom-Curated Label · Est. 2026</div>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Collection</a>
+      <a href="customize.html">Studio</a>
+      <a href="dashboard.html">UR Picks</a>
+    </nav>
+    <div class="nav-right-actions">
+      <a href="customize.html" class="dash-pill-link">✂️ Try-On Studio</a>
+    </div>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+    <div class="mobile-nav-header">
+      <div class="logo-text" style="font-size:20px;">NOVA <span>STREET</span></div>
+      <button onclick="closeMobileMenu()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);">✕</button>
+    </div>
+    <nav class="mobile-nav-links">
+      <a href="index.html" onclick="closeMobileMenu()">Home</a>
+      <a href="shop.html" onclick="closeMobileMenu()">Collection</a>
+      <a href="customize.html" onclick="closeMobileMenu()">Try-On Studio</a>
+      <a href="dashboard.html" onclick="closeMobileMenu()">UR Picks</a>
+      <a href="cart.html" onclick="closeMobileMenu()" class="active">Shopping Bag</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="c-section" style="padding-top:40px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--border); padding-bottom:20px;">
+      <div>
+        <div class="section-header">01 + ATELIER BAG</div>
+        <h1 style="font-family:'Cinzel',serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:800; text-transform:uppercase; margin:0;">
+          Your Shopping Bag
+        </h1>
+      </div>
+      <a href="shop.html" style="font-size:11px; font-weight:800; color:var(--gold); letter-spacing:1.5px; text-transform:uppercase;">
+        ← Continue Browsing
+      </a>
+    </div>
+
+    <!-- Free Shipping Progress Tracker -->
+    <div id="shipping-tracker-wrap"></div>
+
+    <div id="cart-container">
+      <!-- Injected by JS -->
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 NOVA STREET HYBRID D2C LABEL. ALL RIGHTS RESERVED.</span>
+    <span>PRIVACY POLICY · TERMS OF SERVICE · AHMEDABAD GOTS TEXTILE HUB</span>
+  </div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script>
+const cursorBadge = document.getElementById('cursor-badge');
+if (cursorBadge) {
+  document.addEventListener('mousemove', (e) => {
+    cursorBadge.style.left = e.clientX + 'px';
+    cursorBadge.style.top  = e.clientY + 'px';
+  });
+}
+function toggleMobileMenu() {
+  document.getElementById('mobile-nav-drawer').classList.toggle('open');
+  document.getElementById('mobile-nav-overlay').classList.toggle('active');
+  document.getElementById('hamburger-btn').classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-nav-drawer').classList.remove('open');
+  document.getElementById('mobile-nav-overlay').classList.remove('active');
+  document.getElementById('hamburger-btn').classList.remove('open');
+}
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast-notification';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.classList.add('show'), 50);
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3500);
+}
+
+let myCart = JSON.parse(localStorage.getItem('NOVA_CART') || '[]');
+let discountApplied = false;
+
+if (myCart.length === 0 && !localStorage.getItem('NOVA_DEMO_CART_SET')) {
+  myCart = [
+    { id: 1, name: "Onyx Silk Blend Shirt", price: 3499, mrp: 4999, image: "https://images.unsplash.com/photo-1596755094514-f87e32f6b717?w=500&q=80", qty: 1, size: "M", funnel: "ready" },
+    { id: 4, name: "Midnight Cargo Trouser", price: 4299, mrp: 5999, image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&q=80", qty: 1, size: "Bespoke", funnel: "bespoke" }
+  ];
+  localStorage.setItem('NOVA_CART', JSON.stringify(myCart));
+  localStorage.setItem('NOVA_DEMO_CART_SET', 'true');
+}
+
+function renderCartPage() {
+  const container = document.getElementById('cart-container');
+  const trackerWrap = document.getElementById('shipping-tracker-wrap');
+
+  if (myCart.length === 0) {
+    trackerWrap.innerHTML = '';
+    container.innerHTML = `
+      <div style="text-align:center; padding:100px 20px;">
+        <div style="font-size:56px; margin-bottom:16px; opacity:0.3;">👜</div>
+        <h2 style="font-family:'Cinzel',serif; font-size:24px; text-transform:uppercase; margin-bottom:12px;">Your Bag Is Empty</h2>
+        <p style="color:var(--text-muted); margin-bottom:28px;">Discover our dual-funnel collection and start your custom journey.</p>
+        <a href="shop.html" class="c-btn filled-gold is-large">EXPLORE COLLECTION →</a>
+      </div>
+    `;
+    return;
+  }
+
+  let subtotal = 0;
+  myCart.forEach(item => {
+    subtotal += item.price * item.qty;
+  });
+
+  // Shipping progress (Free shipping at ₹2999)
+  const freeShipThreshold = 2999;
+  const progressPct = Math.min(100, Math.round((subtotal / freeShipThreshold) * 100));
+  const amountNeeded = freeShipThreshold - subtotal;
+
+  trackerWrap.innerHTML = `
+    <div class="shipping-bar-wrap" style="margin-top:20px;">
+      <div class="shipping-bar-title">
+        <span>${amountNeeded <= 0 ? '🎉 COMPLIMENTARY EXPRESS DISPATCH UNLOCKED' : `Add ₹${amountNeeded.toLocaleString('en-IN')} more to unlock FREE Express Dispatch`}</span>
+        <span style="color:var(--gold);">${progressPct}%</span>
+      </div>
+      <div class="shipping-progress">
+        <div class="shipping-progress-fill" style="width:${progressPct}%;"></div>
+      </div>
+    </div>
+  `;
+
+  let itemsHtml = '<div>';
+  myCart.forEach((item, idx) => {
+    const isB = item.funnel === 'custom-made' || item.funnel === 'bespoke';
+    itemsHtml += `
+      <div class="cart-item-card">
+        <img src="${item.image || (item.images ? item.images[0] : '')}" class="cart-item-thumb" alt="${item.name}">
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="font-size:9px; font-weight:800; letter-spacing:1.5px; color:${isB ? 'var(--rust)' : 'var(--gold)'}; text-transform:uppercase; margin-bottom:4px;">
+              ${isB ? '✂️ BESPOKE MADE-TO-MEASURE' : '⚡ 24H EXPRESS READY-TO-SHIP'} · SIZE: ${item.size}
+            </div>
+            <h3 style="font-family:'Cinzel',serif; font-size:16px; font-weight:700; color:var(--text); margin-bottom:6px;">
+              ${item.name}
+            </h3>
+            <div style="font-size:16px; font-weight:800; color:var(--gold);">
+              ₹${(item.price * item.qty).toLocaleString('en-IN')}
+              ${item.qty > 1 ? `<span style="font-size:12px; color:var(--text-muted); font-weight:400;">(₹${item.price.toLocaleString('en-IN')} each)</span>` : ''}
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
+            <div class="qty-control">
+              <button class="qty-btn" onclick="updateQty(${idx}, -1)">−</button>
+              <span class="qty-val">${item.qty}</span>
+              <button class="qty-btn" onclick="updateQty(${idx}, 1)">+</button>
+            </div>
+            <button onclick="removeItem(${idx})" style="background:none; border:none; color:var(--text-muted); font-size:11px; letter-spacing:1px; cursor:pointer; text-transform:uppercase; text-decoration:underline;">
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  itemsHtml += '</div>';
+
+  const shipping = subtotal >= freeShipThreshold ? 0 : 250;
+  const discount = discountApplied ? Math.round(subtotal * 0.10) : 0;
+  const total = subtotal + shipping - discount;
+
+  container.innerHTML = `
+    <div class="cart-grid">
+      ${itemsHtml}
+      <div>
+        <div class="summary-card">
+          <div class="section-header" style="margin-bottom:12px;">ORDER BREAKDOWN</div>
+          <h3 style="font-family:'Cinzel',serif; font-size:20px; font-weight:700; margin-bottom:20px;">ATELIER SUMMARY</h3>
+
+          <div class="promo-row">
+            <input type="text" id="promo-code" class="promo-input" placeholder="PROMO: NOVA10" ${discountApplied ? 'disabled value="NOVA10"' : ''}>
+            <button class="promo-btn" onclick="applyPromo()">${discountApplied ? 'APPLIED' : 'APPLY'}</button>
+          </div>
+
+          <div class="summary-line">
+            <span>Subtotal</span>
+            <span style="color:var(--text);">₹${subtotal.toLocaleString('en-IN')}</span>
+          </div>
+          ${discountApplied ? `
+          <div class="summary-line" style="color:var(--gold);">
+            <span>VIP Code (NOVA10)</span>
+            <span>−₹${discount.toLocaleString('en-IN')}</span>
+          </div>` : ''}
+          <div class="summary-line">
+            <span>Express Dispatch</span>
+            <span style="color:var(--text);">${shipping === 0 ? '<span style="color:var(--success);font-weight:800;">FREE</span>' : '₹'+shipping}</span>
+          </div>
+
+          <div class="summary-total">
+            <span>TOTAL</span>
+            <span>₹${total.toLocaleString('en-IN')}</span>
+          </div>
+
+          <button class="c-btn filled-gold block-btn is-large" onclick="showToast('Proceeding to encrypted payment gateway...')" style="margin-top:24px; border-radius:40px;">
+            SECURE CHECKOUT 🔒
+          </button>
+
+          <div class="trust-grid">
+            <div class="trust-col">🌱<br>GOTS Pure</div>
+            <div class="trust-col">✂️<br>Fit Proof</div>
+            <div class="trust-col">🛡️<br>Encrypted</div>
+          </div>
         </div>
       </div>
     </div>
+  `;
+}
 
-    <header>
-      <div class="nav-wrap">
-        <a href="index.html" class="logo-cinch">
-          <div class="logo-text">NOVA <span>STREET</span></div>
-          <div class="logo-tagline">Hybrid Custom-Curated Label · Est. 2026</div>
-        </a>
-        <nav class="nav-links">
-          <a href="index.html">Home</a>
-          <a href="shop.html">Collection</a>
-          <a href="customize.html">Studio</a>
-          <a href="dashboard.html">UR PICKS</a>
-        </nav>
-        <div class="nav-right-actions">
-          <a href="customize.html" class="dash-pill-link">✂️ Try-On Studio</a>
-        </div>
-        <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-      <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileMenu()"></div>
-      <div class="mobile-nav-drawer" id="mobile-nav-drawer">
-        <div class="mobile-nav-header">
-          <div class="logo-text" style="font-size:20px;">NOVA <span>STREET</span></div>
-          <button onclick="closeMobileMenu()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#F0EDE6">✕</button>
-        </div>
-        <nav class="mobile-nav-links">
-          <a href="index.html" onclick="closeMobileMenu()">Home</a>
-          <a href="shop.html" onclick="closeMobileMenu()">Collection</a>
-          <a href="customize.html" onclick="closeMobileMenu()">Try-On Studio</a>
-          <a href="dashboard.html" onclick="closeMobileMenu()">UR PICKS</a>
-          <a href="cart.html" onclick="closeMobileMenu()" class="active">Shopping Bag</a>
-        </nav>
-      </div>
-    </header>
+function updateQty(idx, change) {
+  myCart[idx].qty += change;
+  if (myCart[idx].qty < 1) myCart[idx].qty = 1;
+  localStorage.setItem('NOVA_CART', JSON.stringify(myCart));
+  renderCartPage();
+}
 
-    <main>
-        <section class="c-section">
-            <h1 class="cinzel" style="font-size: 36px; margin: 0; border-bottom: 1px solid #1A1A1A; padding-bottom: 20px;">SHOPPING BAG</h1>
-            
-            <div id="cart-container">
-                <!-- Injected via JS -->
-            </div>
-        </section>
-    </main>
+function removeItem(idx) {
+  myCart.splice(idx, 1);
+  localStorage.setItem('NOVA_CART', JSON.stringify(myCart));
+  renderCartPage();
+}
 
-    <footer>
-      <div class="footer-bottom">
-        <span>© 2026 NOVA STREET HYBRID D2C LABEL. ALL RIGHTS RESERVED.</span>
-        <span>PRIVACY POLICY · TERMS OF SERVICE · AHMEDABAD GOTS TEXTILE HUB</span>
-      </div>
-    </footer>
+function applyPromo() {
+  const code = document.getElementById('promo-code').value.toUpperCase().trim();
+  if (code === 'NOVA10') {
+    discountApplied = true;
+    showToast('🎉 10% VIP Discount Applied!');
+    renderCartPage();
+  } else if (code) {
+    showToast('❌ Invalid VIP Code');
+  }
+}
 
-    <script src="js/products.js"></script>
-    <script src="js/cart.js"></script>
-    <script>
-    const cursorBadge = document.getElementById('cursor-badge');
-    if (cursorBadge) {
-      document.addEventListener('mousemove', (e) => {
-        cursorBadge.style.left = e.clientX + 'px';
-        cursorBadge.style.top = e.clientY + 'px';
-      });
-    }
-    
-    function toggleMobileMenu() {
-      document.getElementById('mobile-nav-drawer').classList.toggle('open');
-      document.getElementById('mobile-nav-overlay').classList.toggle('active');
-      document.getElementById('hamburger-btn').classList.toggle('open');
-    }
-    function closeMobileMenu() {
-      document.getElementById('mobile-nav-drawer').classList.remove('open');
-      document.getElementById('mobile-nav-overlay').classList.remove('active');
-      document.getElementById('hamburger-btn').classList.remove('open');
-    }
-    function showToast(msg) {
-      const t = document.createElement('div');
-      t.className = 'toast-notification';
-      t.textContent = msg;
-      document.body.appendChild(t);
-      setTimeout(() => t.classList.add('show'), 50);
-      setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3500);
-    }
-
-    // Cart Logic Inline Fallback
-    // Normally handled by js/cart.js, simulating the logic here:
-    let myCart = JSON.parse(localStorage.getItem('NOVA_CART') || '[]');
-    let discountApplied = false;
-
-    // Put some dummy data if empty for demonstration
-    if(myCart.length === 0 && !localStorage.getItem('NOVA_DEMO_CART_SET')) {
-        myCart = [
-            { id: 1, name: "Onyx Silk Blend Shirt", price: 3499, image: "https://images.unsplash.com/photo-1596755094514-f87e32f6b717?w=500&q=80", qty: 1, size: "M" },
-            { id: 4, name: "Midnight Cargo Trouser", price: 4299, image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&q=80", qty: 1, size: "Bespoke" }
-        ];
-        localStorage.setItem('NOVA_CART', JSON.stringify(myCart));
-        localStorage.setItem('NOVA_DEMO_CART_SET', 'true');
-    }
-
-    function renderCartPage() {
-        const container = document.getElementById('cart-container');
-        if(myCart.length === 0) {
-            container.innerHTML = `
-                <div class="empty-cart">
-                    <h2 class="cinzel">YOUR BAG IS EMPTY</h2>
-                    <p>Discover our dual-funnel collection and start your custom journey.</p>
-                    <a href="shop.html" style="background:#C9A84C; color:#0A0A0A; padding:14px 32px; border-radius:30px; font-weight:700; text-decoration:none;">EXPLORE COLLECTION</a>
-                </div>
-            `;
-            return;
-        }
-
-        let subtotal = 0;
-        let itemsHtml = '<div id="cart-items-full">';
-        myCart.forEach((item, idx) => {
-            subtotal += item.price * item.qty;
-            itemsHtml += `
-            <div class="cart-item-row">
-                <img src="${item.image}" class="cart-item-img" alt="${item.name}">
-                <div class="cart-item-details">
-                    <div>
-                        <div class="cart-item-meta">NOVA STREET · SIZE: ${item.size}</div>
-                        <h3 class="cart-item-title">${item.name}</h3>
-                        <div class="cart-item-price">₹${item.price}</div>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div class="qty-control">
-                            <button class="qty-btn" onclick="updateQty(${idx}, -1)">-</button>
-                            <div class="qty-val">${item.qty}</div>
-                            <button class="qty-btn" onclick="updateQty(${idx}, 1)">+</button>
-                        </div>
-                        <button onclick="removeItem(${idx})" style="background:none; border:none; color:#8A8580; text-decoration:underline; cursor:pointer; font-size:12px;">Remove</button>
-                    </div>
-                </div>
-            </div>`;
-        });
-        itemsHtml += '</div>';
-
-        const shipping = subtotal >= 2999 ? 0 : 250;
-        const discount = discountApplied ? Math.round(subtotal * 0.10) : 0;
-        const total = subtotal + shipping - discount;
-
-        container.innerHTML = `
-            <div class="cart-grid">
-                ${itemsHtml}
-                <div>
-                    <div class="summary-card">
-                        <h3 class="cinzel" style="margin:0 0 24px; font-size:20px;">ORDER SUMMARY</h3>
-                        <div class="promo-box">
-                            <input type="text" id="promo-code" placeholder="PROMO CODE" ${discountApplied ? 'disabled value="NOVA10"' : ''}>
-                            <button onclick="applyPromo()">${discountApplied ? 'APPLIED' : 'APPLY'}</button>
-                        </div>
-                        <div class="summary-row"><span>Subtotal</span> <span style="color:#F0EDE6;">₹${subtotal}</span></div>
-                        ${discountApplied ? `<div class="summary-row" style="color:#C9A84C;"><span>Discount (NOVA10)</span> <span>-₹${discount}</span></div>` : ''}
-                        <div class="summary-row"><span>Shipping</span> <span style="color:#F0EDE6;">${shipping === 0 ? 'FREE' : '₹'+shipping}</span></div>
-                        <div class="summary-total"><span>TOTAL</span> <span>₹${total}</span></div>
-                        <button class="btn-checkout" onclick="showToast('Proceeding to secure checkout...')">CHECKOUT SECURELY 🔒</button>
-                        
-                        <div class="trust-badges">
-                            <div class="trust-badge">🌱<br>GOTS Organic</div>
-                            <div class="trust-badge">🔄<br>Easy Returns</div>
-                            <div class="trust-badge">🛡️<br>Secure Pay</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    function updateQty(idx, change) {
-        myCart[idx].qty += change;
-        if(myCart[idx].qty < 1) myCart[idx].qty = 1;
-        localStorage.setItem('NOVA_CART', JSON.stringify(myCart));
-        renderCartPage();
-    }
-
-    function removeItem(idx) {
-        myCart.splice(idx, 1);
-        localStorage.setItem('NOVA_CART', JSON.stringify(myCart));
-        renderCartPage();
-    }
-
-    function applyPromo() {
-        const code = document.getElementById('promo-code').value.toUpperCase();
-        if(code === 'NOVA10') {
-            discountApplied = true;
-            showToast('🎉 10% Discount Applied!');
-            renderCartPage();
-        } else if (code) {
-            showToast('❌ Invalid Promo Code');
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', renderCartPage);
-    </script>
+document.addEventListener('DOMContentLoaded', renderCartPage);
+</script>
 </body>
 </html>
