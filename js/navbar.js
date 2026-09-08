@@ -628,6 +628,33 @@
         opacity: 1;
         transform: translateX(-50%) translateY(0);
       }
+
+      /* ── GLOBAL MOTION SYSTEM (subtle, premium, respects reduced-motion) ── */
+      @keyframes cfFadeUp {
+        from { opacity: 0; transform: translateY(22px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes cfKenBurns {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.12); }
+      }
+      @keyframes cfPulseRing {
+        0% { box-shadow: 0 0 0 0 rgba(225,6,0,0.55); }
+        70% { box-shadow: 0 0 0 14px rgba(225,6,0,0); }
+        100% { box-shadow: 0 0 0 0 rgba(225,6,0,0); }
+      }
+      .cf-reveal { opacity: 0; }
+      .cf-reveal.cf-inview { animation: cfFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards; }
+      .cf-hero-video {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        object-fit: cover; opacity: 0.5;
+      }
+      .cf-hero-video-fallback { animation: cfKenBurns 24s ease-in-out infinite alternate; }
+      .cf-cta-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+      .cf-cta-lift:hover { transform: translateY(-2px); }
+      @media (prefers-reduced-motion: reduce) {
+        .cf-reveal.cf-inview, .cf-hero-video-fallback { animation: none; opacity: 1; }
+      }
     `;
     document.head.appendChild(style);
   }
@@ -666,11 +693,13 @@
     const navLinks = [
       { label: 'MEN',           href: 'shop.html?cat=men' },
       { label: 'WOMEN',         href: 'shop.html?cat=women' },
+      { label: 'KIDS',          href: 'shop.html?cat=kids' },
       { label: 'NEW DROPS',     href: 'shop.html?cat=new' },
       { label: 'OVERSIZED',     href: 'shop.html?cat=oversized' },
       { label: 'SHIRTS',        href: 'shop.html?cat=shirts' },
       { label: 'TROUSERS',      href: 'shop.html?cat=trousers' },
       { label: '3D CUSTOM STUDIO', href: 'customize.html', crimson: true },
+      { label: 'BODY VISUALIZER', href: 'body-visualizer.html', crimson: true },
       { label: 'AI FIT PROFILE',   href: 'fit-profile.html' },
       { label: 'CONCIERGE',        href: 'concierge.html' }
     ];
@@ -935,6 +964,28 @@
     renderMasterNav();
     injectCartDrawer();
     renderDrawerItems();
+    initReveal();
+  }
+
+  /* Scroll-reveal: adds .cf-inview to cards/sections as they enter viewport */
+  function initReveal() {
+    try {
+      const sel = '.product-item-card, .archetype-card, .trust-item, .micro-spec-card, .spec-card, .custom-sec-box, .physics-card';
+      const els = document.querySelectorAll(sel);
+      if (!('IntersectionObserver' in window) || !els.length) return;
+      els.forEach(el => el.classList.add('cf-reveal'));
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(en => {
+          if (en.isIntersecting) { en.target.classList.add('cf-inview'); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.08 });
+      els.forEach(el => io.observe(el));
+      // Re-scan after dynamic catalog renders (shop grid replaces nodes)
+      const rearm = () => {
+        document.querySelectorAll(sel + ':not(.cf-reveal)').forEach(el => { el.classList.add('cf-reveal'); io.observe(el); });
+      };
+      window.CF_rearmReveal = rearm;
+    } catch (e) {}
   }
 
   if (document.readyState === 'loading') {
