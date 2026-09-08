@@ -8,7 +8,7 @@ const MEN_LOOKS = {
   hoodie:    'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=1000&q=85',
   jacket:    'https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=1000&q=85',
   trouser:   'https://images.unsplash.com/photo-1542272604-787c3835535d?w=1000&q=85',
-  balloon:   'https://images.unsplash.com/photo-1593030941791-ef63b2dbb821?w=1000&q=85',
+  balloon:   'https://images.unsplash.com/photo-1542272604-787c3835535d?w=1000&q=85',
   trench:    'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1000&q=85',
   full_look: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1000&q=85'
 };
@@ -133,7 +133,7 @@ const PRODUCTS = [
     },
     images: [
       "https://images.unsplash.com/photo-1542272604-787c3835535d?w=1000&q=85",
-      "https://images.unsplash.com/photo-1594938298603-b8ff3ddb5777?w=1000&q=85"
+      "https://images.unsplash.com/photo-1588117260148-b47818741c74?w=1000&q=85"
     ],
     sizes: ["28", "30", "32", "34", "36", "BESPOKE"],
     description: "Double front pleats cascading into an architectural barrel taper. High rise with elasticated rear waistband extension for all-day biomechanical mobility."
@@ -244,7 +244,7 @@ const PRODUCTS = [
     },
     images: [
       "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1000&q=85",
-      "https://images.unsplash.com/photo-1594938298603-b8ff3ddb5777?w=1000&q=85"
+      "https://images.unsplash.com/photo-1588117260148-b47818741c74?w=1000&q=85"
     ],
     sizes: ["36R", "38R", "40R", "42R", "BESPOKE"],
     description: "Soft unconstructed Neapolitan shoulder architecture hand-tailored with Indian handloom raw merino wool. Zero shoulder padding allows natural drape matching your upper back slope."
@@ -503,6 +503,358 @@ const PRODUCTS = [
     ],
     sizes: ["S", "M", "L", "XL"],
     description: "Exaggerated MA-1 flight bomber with gathered arm seam ruche, heavyweight 2x2 wool-blend rib cuffs, and dual zipped sleeve utility pockets."
+  },
+  {
+    id: 14,
+    code: "CP-DR-01",
+    name: "Scarlet Wrap Midi Dress",
+    category: "Dresses",
+    subCategory: "Dresses",
+    collection: "Drop 09: Monsoon Nomad",
+    price: 3799,
+    mrp: 5299,
+    badge: "NEW ARRIVAL",
+    tagline: "TENCEL SATIN // TRUE-WRAP WAIST",
+    drapeProfile: "Fluid Bias Drape",
+    fabric: "TENCEL Lyocell Satin Blend",
+    fabricDensity: "240 GSM TENCEL Satin",
+    productionVelocity: "ready-to-wear",
+    colorway: "Scarlet Noir",
+    colorHex: "#7F1D1D",
+    gender: "women",
+    recoTag: "RECO: TRUE TO SIZE",
+    biometricSync: "Waist-Tie Calibration",
+    drapeCoeff: "0.30 μ",
+    thermalIndex: "18°C to 34°C Breathable",
+    hardware: "Concealed Side Zip",
+    doorstepTrial: true,
+    measurements: { chestWidth: '36.0" (91.4 CM)', waistWidth: '28.0" (71.1 CM)', dressLength: '46.0" (116.8 CM)' },
+    images: [
+      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1000&q=85",
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1000&q=85"
+    ],
+    sizes: ["XS", "S", "M", "L"],
+    description: "Editorial wrap midi dress in fluid TENCEL satin with true-wrap waist tie and side slit. Cut for hourglass and pear proportions."
+  },
+  {
+    id: 15,
+    code: "CP-TP-01",
+    name: "Ivory Sculpted Knit Top",
+    category: "Tops",
+    subCategory: "Tops",
+    collection: "Drop 09: Monsoon Nomad",
+    price: 1899,
+    mrp: 2799,
+    badge: "NEW ARRIVAL",
+    tagline: "GOTS KNIT // SQUARE NECKLINE",
+    drapeProfile: "Second-Skin Sculpt",
+    fabric: "220 GSM GOTS Organic Cotton Knit",
+    fabricDensity: "220 GSM Organic Knit",
+    productionVelocity: "ready-to-wear",
+    colorway: "Ivory",
+    colorHex: "#F5F2E7",
+    gender: "women",
+    recoTag: "RECO: TRUE TO SIZE",
+    biometricSync: "Bust-Dart Calibration",
+    drapeCoeff: "0.34 μ",
+    thermalIndex: "16°C to 32°C Breathable",
+    hardware: "Tag-Free Neckline",
+    doorstepTrial: true,
+    measurements: { chestWidth: '35.0" (88.9 CM)', sleeveLength: '23.5" (59.7 CM)', frontDrop: '24.0" (61.0 CM)' },
+    images: [
+      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=1000&q=85",
+      "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1000&q=85"
+    ],
+    sizes: ["XS", "S", "M", "L", "XL"],
+    description: "Second-skin sculpted knit top in breathable GOTS cotton with square neckline and long sleeves. Pairs with high-rise tailoring."
+  },
+  {
+    id: 16,
+    code: "CP-TR-04",
+    name: "Noir High-Waist Wide-Leg Trouser",
+    category: "Bespoke Trousers",
+    subCategory: "Bottoms",
+    collection: "Drop 09: Monsoon Nomad",
+    price: 2799,
+    mrp: 3999,
+    badge: "BESTSELLER",
+    tagline: "SELVEDGE STRETCH // ZERO-GAP WAIST",
+    drapeProfile: "Wide-Leg Fluid Drape",
+    fabric: "Japanese Selvedge Denim with Comfort Stretch",
+    fabricDensity: "12oz Selvedge Stretch Denim",
+    productionVelocity: "ready-to-wear",
+    colorway: "Washed Indigo",
+    colorHex: "#1C2536",
+    gender: "women",
+    recoTag: "CALIBRATED: ZERO-GAP WAIST",
+    biometricSync: "Waist-to-Hip Ratio Sync",
+    drapeCoeff: "0.44 μ",
+    thermalIndex: "14°C to 30°C All-Season",
+    hardware: "Concealed Hook & Bar",
+    doorstepTrial: true,
+    measurements: { waistWidth: '28.0" (71.1 CM)', hipWidth: '38.0" (96.5 CM)', inseamLength: '30.0" (76.2 CM)' },
+    images: [
+      "https://images.unsplash.com/photo-1588117260148-b47818741c74?w=1000&q=80",
+      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1000&q=80"
+    ],
+    sizes: ["26", "28", "30", "32", "34"],
+    description: "High-rise wide-leg trouser in comfort-stretch selvedge denim with clean front and ankle-grazing hem. Zero-gap waistband engineering."
+  },
+  {
+    id: 17,
+    code: "CP-DR-02",
+    name: "Rouge Atelier Blazer Dress",
+    category: "Dresses",
+    subCategory: "Dresses",
+    collection: "Drop 09: Monsoon Nomad",
+    price: 4999,
+    mrp: 6999,
+    badge: "MADE-TO-MEASURE",
+    tagline: "WOOL-BLEND TAILORING // PEAK LAPEL",
+    drapeProfile: "Structured Hourglass",
+    fabric: "Italian Wool-Blend Barathea",
+    fabricDensity: "260 GSM Wool Barathea",
+    productionVelocity: "made-to-measure",
+    colorway: "Rouge Noir",
+    colorHex: "#3B0A0A",
+    gender: "women",
+    recoTag: "BESPOKE CONTOUR FIT",
+    biometricSync: "Bust-Waist Contour Sync",
+    drapeCoeff: "0.58 μ",
+    thermalIndex: "12°C to 26°C Tailored Warmth",
+    hardware: "Single Horn Button",
+    doorstepTrial: true,
+    measurements: { chestWidth: '36.5" (92.7 CM)', waistWidth: '28.5" (72.4 CM)', dressLength: '38.0" (96.5 CM)' },
+    images: [
+      "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1000&q=85",
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1000&q=85"
+    ],
+    sizes: ["XS", "S", "M", "L", "BESPOKE"],
+    description: "Sculpted blazer dress with peak lapels, single-button closure, and bespoke bust-waist contouring. Boardroom to after-hours in one silhouette."
+  },
+  {
+    id: 18,
+    code: "CP-TP-02",
+    name: "Cloud Soft Knit Co-ord Top",
+    category: "Tops",
+    subCategory: "Tops",
+    collection: "Drop 09: Monsoon Nomad",
+    price: 2299,
+    mrp: 3299,
+    badge: "NEW ARRIVAL",
+    tagline: "BRUSHED KNIT // CO-ORD READY",
+    drapeProfile: "Soft Relaxed Drape",
+    fabric: "260 GSM Brushed Cotton-Modal Knit",
+    fabricDensity: "260 GSM Brushed Knit",
+    productionVelocity: "ready-to-wear",
+    colorway: "Marigold Sand",
+    colorHex: "#D4C5B5",
+    gender: "women",
+    recoTag: "RECO: TRUE TO SIZE",
+    biometricSync: "Standard Knit Block",
+    drapeCoeff: "0.36 μ",
+    thermalIndex: "16°C to 30°C Soft Warmth",
+    hardware: "None — Pull-On",
+    doorstepTrial: true,
+    measurements: { chestWidth: '37.0" (94.0 CM)', sleeveLength: '22.0" (55.9 CM)', frontDrop: '23.0" (58.4 CM)' },
+    images: [
+      "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1000&q=85",
+      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=1000&q=85"
+    ],
+    sizes: ["XS", "S", "M", "L", "XL"],
+    description: "Cloud-soft co-ord knit top in brushed cotton-modal with relaxed sleeves. Matches the Drop 09 knit skirt for a full co-ord look."
+  },
+  {
+    id: 19,
+    code: "CP-DR-03",
+    name: "Ivory Bias-Cut Gown",
+    category: "Dresses",
+    subCategory: "Dresses",
+    collection: "Drop 09: Monsoon Nomad",
+    price: 5499,
+    mrp: 7999,
+    badge: "MADE-TO-MEASURE",
+    tagline: "BIAS CUT // FLOOR SWEEP",
+    drapeProfile: "Liquid Bias Drape",
+    fabric: "Pure Organic Silk-Linen Voile",
+    fabricDensity: "140 GSM Silk-Linen Voile",
+    productionVelocity: "made-to-measure",
+    colorway: "Ivory Veil",
+    colorHex: "#EFE9DC",
+    gender: "women",
+    recoTag: "BESPOKE LENGTH INCLUDED",
+    biometricSync: "Hollow-to-Hem Calibration",
+    drapeCoeff: "0.26 μ",
+    thermalIndex: "Evening Occasion",
+    hardware: "Concealed Back Zip",
+    doorstepTrial: true,
+    measurements: { chestWidth: '35.5" (90.2 CM)', waistWidth: '27.5" (69.9 CM)', dressLength: '58.0" (147.3 CM)' },
+    images: [
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1000&q=85",
+      "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=1000&q=85"
+    ],
+    sizes: ["XS", "S", "M", "L", "BESPOKE"],
+    description: "Liquid bias-cut evening gown that pours over the body. Bespoke hollow-to-hem length and bust contouring included in every order."
+  },
+  {
+    id: 20,
+    code: "CP-TR-05",
+    name: "Onyx Tailored Cigarette Pant",
+    category: "Bespoke Trousers",
+    subCategory: "Bottoms",
+    collection: "Drop 09: Monsoon Nomad",
+    price: 2999,
+    mrp: 4299,
+    badge: "BESTSELLER",
+    tagline: "JAPANESE TWILL // ANKLE CROP",
+    drapeProfile: "Tailored Slim Taper",
+    fabric: "310 GSM Dense Japanese Twill",
+    fabricDensity: "Japanese Dense Twill",
+    productionVelocity: "ready-to-wear",
+    colorway: "Onyx Black",
+    colorHex: "#111215",
+    gender: "women",
+    recoTag: "CALIBRATED: ANKLE CROP",
+    biometricSync: "Inseam Pre-Set Sync",
+    drapeCoeff: "0.46 μ",
+    thermalIndex: "14°C to 30°C All-Season",
+    hardware: "Slanted Side Zip",
+    doorstepTrial: true,
+    measurements: { waistWidth: '28.5" (72.4 CM)', hipWidth: '37.5" (95.3 CM)', inseamLength: '27.0" (68.6 CM)' },
+    images: [
+      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1000&q=80",
+      "https://images.unsplash.com/photo-1588117260148-b47818741c74?w=1000&q=80"
+    ],
+    sizes: ["26", "28", "30", "32", "34"],
+    description: "Precision cigarette pant in dense Japanese twill with ankle crop and slanted side zip. Sharp enough for tailoring, soft enough for all day."
+  },
+  {
+    id: 21,
+    code: "CP-KD-01",
+    name: "Junior Explorer Graphic Tee",
+    category: "Kids Tees",
+    subCategory: "Kids Tops",
+    collection: "Drop 09: Junior Atelier",
+    price: 899,
+    mrp: 1299,
+    badge: "NEW ARRIVAL",
+    tagline: "180 GSM COMBED COTTON // TAG-FREE",
+    drapeProfile: "Classic Kids Relaxed",
+    fabric: "180 GSM Soft Combed Cotton",
+    fabricDensity: "180 GSM Combed Cotton",
+    productionVelocity: "ready-to-wear",
+    colorway: "Cloud White",
+    colorHex: "#F5F2E7",
+    gender: "kids",
+    recoTag: "RECO: TRUE TO SIZE",
+    biometricSync: "Kids Growth Block",
+    drapeCoeff: "0.34 μ",
+    thermalIndex: "All-Season Play",
+    hardware: "None — Pull-On",
+    doorstepTrial: false,
+    measurements: { chestWidth: '26.0" (66.0 CM)', sleeveLength: '6.0" (15.2 CM)', frontDrop: '18.0" (45.7 CM)' },
+    images: [
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=1000&q=85",
+      "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1000&q=85"
+    ],
+    sizes: ["2-4Y", "6-8Y", "10-12Y"],
+    description: "Everyday kids tee in soft combed cotton with reinforced shoulder seams and tag-free neckline. Playground-tested durability."
+  },
+  {
+    id: 22,
+    code: "CP-KD-02",
+    name: "Junior Field Cargo Pants",
+    category: "Kids Bottoms",
+    subCategory: "Kids Bottoms",
+    collection: "Drop 09: Junior Atelier",
+    price: 1499,
+    mrp: 2199,
+    badge: "BESTSELLER",
+    tagline: "240 GSM TWILL // ADJUSTABLE WAIST",
+    drapeProfile: "Kids Relaxed Taper",
+    fabric: "240 GSM Cotton Twill with Stretch",
+    fabricDensity: "240 GSM Stretch Twill",
+    productionVelocity: "ready-to-wear",
+    colorway: "Field Olive",
+    colorHex: "#3E4A3D",
+    gender: "kids",
+    recoTag: "GROWS-WITH-THEM HEMS",
+    biometricSync: "Kids Growth Block",
+    drapeCoeff: "0.42 μ",
+    thermalIndex: "All-Season Play",
+    hardware: "Adjustable Waist Tabs",
+    doorstepTrial: false,
+    measurements: { waistWidth: '22.0" (55.9 CM)', hipWidth: '28.0" (71.1 CM)', inseamLength: '20.0" (50.8 CM)' },
+    images: [
+      "https://images.unsplash.com/photo-1542272604-787c3835535d?w=1000&q=85",
+      "https://images.unsplash.com/photo-1540479859555-17af45c78602?w=1000&q=85"
+    ],
+    sizes: ["2-4Y", "6-8Y", "10-12Y"],
+    description: "Kids cargo pants with adjustable waist, knee reinforcement, and roomy pockets. Grows-with-them adjustable hems."
+  },
+  {
+    id: 23,
+    code: "CP-KD-03",
+    name: "Junior Cloud Hoodie",
+    category: "Kids Fleece",
+    subCategory: "Kids Tops",
+    collection: "Drop 09: Junior Atelier",
+    price: 1699,
+    mrp: 2499,
+    badge: "NEW ARRIVAL",
+    tagline: "320 GSM BRUSHED FLEECE // SAFE HOOD",
+    drapeProfile: "Kids Cozy Relaxed",
+    fabric: "320 GSM Brushed Fleece Cotton",
+    fabricDensity: "320 GSM Brushed Fleece",
+    productionVelocity: "ready-to-wear",
+    colorway: "Oat Milk",
+    colorHex: "#EECDAF",
+    gender: "kids",
+    recoTag: "RECO: TRUE TO SIZE",
+    biometricSync: "Kids Growth Block",
+    drapeCoeff: "0.40 μ",
+    thermalIndex: "Cool-Season Warmth",
+    hardware: "No-Drawcord Safe Hood",
+    doorstepTrial: false,
+    measurements: { chestWidth: '28.0" (71.1 CM)', sleeveLength: '16.0" (40.6 CM)', frontDrop: '19.0" (48.3 CM)' },
+    images: [
+      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=1000&q=85",
+      "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=1000&q=85"
+    ],
+    sizes: ["2-4Y", "6-8Y", "10-12Y"],
+    description: "Cloud-soft kids hoodie in brushed-back fleece with double-lined hood and kangaroo pocket. No-drawcord safe design."
+  },
+  {
+    id: 24,
+    code: "CP-KD-04",
+    name: "Junior Raw Denim Jacket",
+    category: "Kids Jackets",
+    subCategory: "Kids Jackets",
+    collection: "Drop 09: Junior Atelier",
+    price: 2199,
+    mrp: 3199,
+    badge: "LIMITED",
+    tagline: "10oz SOFT DENIM // SNAP BUTTONS",
+    drapeProfile: "Kids Classic Trucker",
+    fabric: "10oz Soft Selvedge Denim",
+    fabricDensity: "10oz Soft Denim",
+    productionVelocity: "ready-to-wear",
+    colorway: "Vintage Wash",
+    colorHex: "#1C2536",
+    gender: "kids",
+    recoTag: "ROOM-TO-GROW SLEEVES",
+    biometricSync: "Kids Growth Block",
+    drapeCoeff: "0.52 μ",
+    thermalIndex: "Cool-Season Layer",
+    hardware: "Matte Snap Buttons",
+    doorstepTrial: false,
+    measurements: { chestWidth: '29.0" (73.7 CM)', sleeveLength: '17.0" (43.2 CM)', frontDrop: '18.5" (47.0 CM)' },
+    images: [
+      "https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=1000&q=85",
+      "https://images.unsplash.com/photo-1476234251651-f353703a034d?w=1000&q=85"
+    ],
+    sizes: ["2-4Y", "6-8Y", "10-12Y"],
+    description: "Miniaturised raw denim trucker jacket in soft-washed selvedge with snap buttons and room-to-grow sleeves."
   }
 ];
 
@@ -591,4 +943,30 @@ function getProductByCode(code) {
 
 function discountPercent(mrp, price) {
   return Math.round(((mrp - price) / mrp) * 100);
+}
+
+/* ─── CATALOG FILTERS (single source of truth for ?cat= links) ───
+   Keys: all | men | women | kids | oversized | shirts | trousers | new */
+function catalogMatches(p, key) {
+  if (!p) return false;
+  const cat = String(p.category || '').toLowerCase();
+  const sub = String(p.subCategory || '').toLowerCase();
+  const both = cat + ' ' + sub;
+  switch (key) {
+    case 'men': return p.gender === 'men' || p.gender === 'unisex';
+    case 'women': return p.gender === 'women' || p.gender === 'unisex';
+    case 'kids': return p.gender === 'kids';
+    case 'oversized': return both.includes('oversized') || /oversized|boxy|balloon|relaxed/i.test(p.name || '') || /oversized/i.test(p.drapeProfile || '');
+    case 'shirts': return both.includes('shirt') || both.includes('poplin');
+    case 'trousers': return both.includes('trouser') || both.includes('bottom') || cat === 'bespoke trousers';
+    case 'new': return /new|limited/i.test(p.badge || '');
+    default: return true;
+  }
+}
+
+function catalogCounts() {
+  const keys = ['all', 'men', 'women', 'kids', 'oversized', 'shirts', 'trousers', 'new'];
+  const out = {};
+  keys.forEach(k => { out[k] = PRODUCTS.filter(p => catalogMatches(p, k)).length; });
+  return out;
 }
