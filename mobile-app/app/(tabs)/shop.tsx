@@ -17,16 +17,22 @@ import { CartService } from '../../services/cart';
 import { ProductCard } from '../../components/ProductCard';
 import { COLORS, RADIUS, SHADOWS } from '../../constants/theme';
 
-const CATEGORIES = ['All', 'Tops', 'Outerwear', 'Bottoms', 'Dresses'];
+const CATEGORIES = ['All', 'T-Shirts', 'Tops', 'Hoodies', 'Jackets', 'Bottoms', 'Dresses', 'Kids'];
 
 export default function ShopScreen() {
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [genderFilter, setGenderFilter] = useState<'all' | 'men' | 'women'>('all');
+  const [genderFilter, setGenderFilter] = useState<'all' | 'men' | 'women' | 'kids'>('all');
   const [funnelFilter, setFunnelFilter] = useState<'all' | 'rtw' | 'custom-made'>('all');
 
   const filteredProducts = PRODUCTS.filter(p => {
-    const matchCategory = selectedCategory === 'All' || p.category === selectedCategory;
-    const matchGender = genderFilter === 'all' || p.gender === genderFilter || p.gender === 'unisex';
+    const matchCategory =
+      selectedCategory === 'All' ||
+      p.category === selectedCategory ||
+      (selectedCategory === 'Kids' && p.gender === 'kids');
+    const matchGender =
+      genderFilter === 'all' ||
+      p.gender === genderFilter ||
+      ((genderFilter === 'men' || genderFilter === 'women') && p.gender === 'unisex');
     const matchFunnel = funnelFilter === 'all' || p.funnel === funnelFilter;
     return matchCategory && matchGender && matchFunnel;
   });
@@ -49,7 +55,7 @@ export default function ShopScreen() {
       <View style={styles.filterBar}>
         {/* Gender Toggle */}
         <View style={styles.segmentedControl}>
-          {(['all', 'men', 'women'] as const).map(g => (
+          {(['all', 'men', 'women', 'kids'] as const).map(g => (
             <TouchableOpacity
               key={g}
               onPress={() => setGenderFilter(g)}
