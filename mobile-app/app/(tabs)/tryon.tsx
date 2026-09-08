@@ -3,7 +3,7 @@
  * Haute-Couture Black & White Luxury Theme (Sharp Non-Curved Edges, Pitch Black & Crisp White)
  * Features:
  *  1. Multi-Mode Camera Engine (Inline CameraView + 100% Reliable Native Device Camera + Gallery)
- *  2. Real AI Virtual Try-On with YouCam API Credentials (sk-HQ2O-M5GjyRTR4mEP4rGrcEngyhikuFF1qJFygrzQiCdrVvTIPjlOFVDqsri1twe)
+ *  2. Real AI Virtual Try-On powered by CODED-FIT Backend Proxy (/api/try-on)
  *  3. Dynamic Morphing 2D/3D Human Body Visualizer Canvas reacting to Height, Weight, Chest, Waist, Hips & Archetypes
  *  4. Live Radial BMI Meter & Anthropometric Ledger
  *  5. Interactive Draggable Before / After Split Slider
@@ -58,6 +58,7 @@ export default function TryOnStudioScreen() {
   const [selectedGarment, setSelectedGarment] = useState<YouCamGarment>(garmentsForGender[0] || YOUCAM_GARMENTS[0]);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [customUserPhoto, setCustomUserPhoto] = useState<string | null>(null);
+  const [tryOnResultImage, setTryOnResultImage] = useState<string | null>(null);
 
   // Camera & Try-On State
   const [showLiveCamera, setShowLiveCamera] = useState<boolean>(false);
@@ -169,7 +170,7 @@ export default function TryOnStudioScreen() {
   ).current;
 
   // Execute Try-On API Call
-  const handleTryOnGarment = async (garment: YouCamGarment) => {
+  const handleTryOnGarment = async (garment: YouCamGarment, modelPhotoUri = customUserPhoto) => {
     setSelectedGarment(garment);
     setIsProcessingTryOn(true);
 
@@ -179,7 +180,7 @@ export default function TryOnStudioScreen() {
 
     try {
       const result = await YouCamService.executeClothesTryOn({
-        modelImageUrl: customUserPhoto || selectedModel.beforeImageUrl,
+        modelImageUrl: modelPhotoUri || selectedModel.beforeImageUrl,
         garmentImageUrl: garment.imageUrl,
         garmentType: garment.garmentType,
         bodyParameters: {
@@ -193,6 +194,7 @@ export default function TryOnStudioScreen() {
 
       if (result.success) {
         setFitScore(result.fitScore);
+        setTryOnResultImage(result.resultImageUrl);
       }
     } catch (e) {
       console.warn('Try-On error:', e);
@@ -206,8 +208,9 @@ export default function TryOnStudioScreen() {
     const photo = await takePhoto();
     if (photo) {
       setCustomUserPhoto(photo.uri);
+      setTryOnResultImage(null);
       setShowLiveCamera(false);
-      handleTryOnGarment(selectedGarment);
+      handleTryOnGarment(selectedGarment, photo.uri);
     }
   };
 
@@ -216,8 +219,9 @@ export default function TryOnStudioScreen() {
     const photo = await openNativeDeviceCamera();
     if (photo) {
       setCustomUserPhoto(photo.uri);
+      setTryOnResultImage(null);
       setShowLiveCamera(false);
-      handleTryOnGarment(selectedGarment);
+      handleTryOnGarment(selectedGarment, photo.uri);
     }
   };
 
@@ -226,8 +230,9 @@ export default function TryOnStudioScreen() {
     const photo = await pickImageFromGallery();
     if (photo) {
       setCustomUserPhoto(photo.uri);
+      setTryOnResultImage(null);
       setShowLiveCamera(false);
-      handleTryOnGarment(selectedGarment);
+      handleTryOnGarment(selectedGarment, photo.uri);
     }
   };
 
@@ -251,6 +256,10 @@ export default function TryOnStudioScreen() {
       sizes: [bmiInfo.size],
       inStock: true,
       hypeRating: 99,
+      badge: 'BESPOKE OPTION' as const,
+      dispatch: 'Crafted in 4 days',
+      stockLeft: 1,
+      outOfStock: [],
     };
 
     await CartService.addItem(productMock, bmiInfo.size, 1);
@@ -311,7 +320,7 @@ export default function TryOnStudioScreen() {
           style={[styles.tabBtn, activeTab === 'clothes' && styles.tabBtnActive]}
         >
           <Text style={[styles.tabText, activeTab === 'clothes' && styles.tabTextActive]}>
-            👗 AI Try-On
+            AI Try-On
           </Text>
         </TouchableOpacity>
 
@@ -320,7 +329,7 @@ export default function TryOnStudioScreen() {
           style={[styles.tabBtn, activeTab === 'body' && styles.tabBtnActive]}
         >
           <Text style={[styles.tabText, activeTab === 'body' && styles.tabTextActive]}>
-            🧍 Body Visualizer
+            Body Visualizer
           </Text>
         </TouchableOpacity>
 
@@ -329,7 +338,7 @@ export default function TryOnStudioScreen() {
           style={[styles.tabBtn, activeTab === 'custom' && styles.tabBtnActive]}
         >
           <Text style={[styles.tabText, activeTab === 'custom' && styles.tabTextActive]}>
-            ✂️ Bespoke Specs
+            Bespoke Specs
           </Text>
         </TouchableOpacity>
       </View>
@@ -361,7 +370,7 @@ export default function TryOnStudioScreen() {
                 {/* Camera Action Overlay Controls */}
                 <View style={styles.cameraControlsBar}>
                   <TouchableOpacity onPress={toggleFlash} style={styles.camIconBtn}>
-                    <Text style={styles.camIconText}>{flash === 'off' ? '⚡ OFF' : '⚡ ON'}</Text>
+                    <Text style={styles.camIconText}>{flash === 'off' ? 'OFF' : 'ON'}</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
@@ -372,13 +381,13 @@ export default function TryOnStudioScreen() {
                   </TouchableOpacity>
 
                   <TouchableOpacity onPress={toggleCameraFacing} style={styles.camIconBtn}>
-                    <Text style={styles.camIconText}>🔄 FLIP</Text>
+                    <Text style={styles.camIconText}>FLIP</Text>
                   </TouchableOpacity>
                 </View>
               </CameraView>
             ) : (
               <View style={styles.permissionCard}>
-                <Text style={{ fontSize: 32, marginBottom: 8 }}>📸</Text>
+                <Text style={{ fontSize: 32, marginBottom: 8 }}>CAMERA</Text>
                 <Text style={styles.permTitle}>Camera Access Required</Text>
                 <Text style={styles.permSub}>
                   Grant camera permissions to try on garments directly on your live photo.
@@ -504,12 +513,12 @@ export default function TryOnStudioScreen() {
               <View
                 style={[
                   styles.afterOverlay,
-                  { left: splitPos + '%' },
+                  { left: `${splitPos}%` as `${number}%` },
                 ]}
               >
                 <Image
                   source={{
-                    uri: selectedGarment.imageUrl || selectedModel.afterImageUrl,
+                    uri: tryOnResultImage || selectedGarment.imageUrl || selectedModel.afterImageUrl,
                   }}
                   style={[
                     styles.modelImage,
@@ -533,7 +542,7 @@ export default function TryOnStudioScreen() {
               </View>
 
               {/* SLIDER DIVIDER HANDLE */}
-              <View style={[styles.sliderDivider, { left: splitPos + '%' }]}>
+              <View style={[styles.sliderDivider, { left: `${splitPos}%` as `${number}%` }]}>
                 <View style={styles.sliderHandle}>
                   <Text style={styles.sliderHandleText}>⇄</Text>
                 </View>
@@ -582,7 +591,7 @@ export default function TryOnStudioScreen() {
             onPress={handleLaunchNativeCamera}
             style={styles.photoActionBtnPrimary}
           >
-            <Text style={styles.photoActionIcon}>📸</Text>
+            <Text style={styles.photoActionIcon}>CAMERA</Text>
             <View>
               <Text style={styles.photoActionTitle}>TAKE PHOTO</Text>
               <Text style={styles.photoActionSub}>Native Device Camera</Text>
@@ -594,7 +603,7 @@ export default function TryOnStudioScreen() {
             onPress={() => setShowLiveCamera(prev => !prev)}
             style={styles.photoActionBtn}
           >
-            <Text style={styles.photoActionIcon}>📹</Text>
+            <Text style={styles.photoActionIcon}>VIDEO</Text>
             <View>
               <Text style={styles.photoActionTitle}>LIVE AR</Text>
               <Text style={styles.photoActionSub}>Viewfinder</Text>
@@ -606,13 +615,38 @@ export default function TryOnStudioScreen() {
             onPress={handlePickGallery}
             style={styles.photoActionBtn}
           >
-            <Text style={styles.photoActionIcon}>📁</Text>
+            <Text style={styles.photoActionIcon}>FILE</Text>
             <View>
               <Text style={styles.photoActionTitle}>UPLOAD</Text>
               <Text style={styles.photoActionSub}>Photo Gallery</Text>
             </View>
           </TouchableOpacity>
         </View>
+
+        <View style={styles.userPhotoCard}>
+          <View style={styles.userPhotoCopy}>
+            <Text style={styles.userPhotoEyebrow}>AI FIT CHECK</Text>
+            <Text style={styles.userPhotoTitle}>{customUserPhoto ? 'YOUR PHOTO IS READY' : 'TRY IT ON YOUR PHOTO'}</Text>
+            <Text style={styles.userPhotoSub}>
+              {customUserPhoto ? 'Choose a garment below, then check the drape.' : 'Upload a full-body photo or take one with your camera.'}
+            </Text>
+          </View>
+          {customUserPhoto ? (
+            <Image source={{ uri: customUserPhoto }} style={styles.userPhotoThumb} />
+          ) : (
+            <Text style={styles.userPhotoIcon}>AI</Text>
+          )}
+        </View>
+
+        {customUserPhoto && (
+          <TouchableOpacity
+            style={styles.checkTryOnButton}
+            onPress={() => handleTryOnGarment(selectedGarment, customUserPhoto)}
+            disabled={isProcessingTryOn}
+          >
+            {isProcessingTryOn ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.checkTryOnText}>CHECK TRY-ON WITH THIS PHOTO</Text>}
+          </TouchableOpacity>
+        )}
 
         {/* ══════════════════════════════════════════════════════════
              TAB 1 CONTENT: AI CLOTHES CHANGER (SUPERMODELS & GARMENTS)
@@ -714,12 +748,12 @@ export default function TryOnStudioScreen() {
             </Text>
             <View style={styles.presetGrid}>
               {[
-                { id: 'athletic', label: '⚡ Athletic V-Taper' },
+                { id: 'athletic', label: 'Athletic V-Taper' },
                 { id: 'hourglass', label: '⏳ Hourglass' },
-                { id: 'rectangle', label: '🟩 Lean / Rectangle' },
-                { id: 'pear', label: '🍐 Pear / Triangle' },
-                { id: 'inverted_triangle', label: '🔻 Inverted Triangle' },
-                { id: 'plus', label: '➕ Plus / Robust' },
+                { id: 'rectangle', label: 'Lean / Rectangle' },
+                { id: 'pear', label: 'Pear / Triangle' },
+                { id: 'inverted_triangle', label: 'Inverted Triangle' },
+                { id: 'plus', label: 'Plus / Robust' },
               ].map(p => (
                 <TouchableOpacity
                   key={p.id}
@@ -873,7 +907,7 @@ export default function TryOnStudioScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: COLORS.bg,
   },
   header: {
     flexDirection: 'row',
@@ -881,28 +915,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: '#000000',
+    backgroundColor: COLORS.card,
     borderBottomWidth: 1,
-    borderBottomColor: '#262626',
+    borderBottomColor: COLORS.border,
   },
   title: {
     fontSize: 13,
     fontWeight: '900',
-    color: '#FFFFFF',
+    color: COLORS.textPrimary,
     letterSpacing: 1.5,
     fontFamily: FONTS.display,
   },
   subTitle: {
     fontSize: 8,
-    color: '#A3A3A3',
+    color: COLORS.textMuted,
     letterSpacing: 0.8,
     marginTop: 2,
   },
   genderToggle: {
     flexDirection: 'row',
-    backgroundColor: '#111111',
+    backgroundColor: COLORS.cardSecondary,
     borderWidth: 1,
-    borderColor: '#333333',
+    borderColor: COLORS.border,
     borderRadius: RADIUS.sm,
   },
   genderBtn: {
@@ -910,7 +944,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   genderBtnActive: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.accent,
   },
   genderText: {
     fontSize: 9,
@@ -918,14 +952,14 @@ const styles = StyleSheet.create({
     color: '#737373',
   },
   genderTextActive: {
-    color: '#000000',
+    color: COLORS.white,
   },
 
   tabNav: {
     flexDirection: 'row',
-    backgroundColor: '#0A0A0A',
+    backgroundColor: COLORS.bg,
     borderBottomWidth: 1,
-    borderBottomColor: '#262626',
+    borderBottomColor: COLORS.border,
     paddingHorizontal: 16,
     paddingVertical: 6,
     gap: 8,
@@ -934,22 +968,22 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 8,
     alignItems: 'center',
-    backgroundColor: '#111111',
+    backgroundColor: COLORS.card,
     borderWidth: 1,
-    borderColor: '#262626',
+    borderColor: COLORS.border,
     borderRadius: RADIUS.sm,
   },
   tabBtnActive: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#FFFFFF',
+    backgroundColor: COLORS.accent,
+    borderColor: COLORS.accent,
   },
   tabText: {
     fontSize: 10,
     fontWeight: '800',
-    color: '#A3A3A3',
+    color: COLORS.textMuted,
   },
   tabTextActive: {
-    color: '#000000',
+    color: COLORS.white,
   },
 
   scrollContent: {
@@ -1333,6 +1367,26 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#404040',
   },
+  userPhotoCard: {
+    marginHorizontal: 16,
+    marginBottom: 10,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.card,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: RADIUS.sm,
+  },
+  userPhotoCopy: { flex: 1, paddingRight: 10 },
+  userPhotoEyebrow: { color: COLORS.accent, fontSize: 9, fontWeight: '900', letterSpacing: 1 },
+  userPhotoTitle: { color: COLORS.textPrimary, fontSize: 14, fontWeight: '900', marginTop: 3 },
+  userPhotoSub: { color: COLORS.textMuted, fontSize: 10, lineHeight: 14, marginTop: 3 },
+  userPhotoThumb: { width: 56, height: 70, borderRadius: RADIUS.sm },
+  userPhotoIcon: { width: 56, height: 56, textAlign: 'center', textAlignVertical: 'center', color: COLORS.accent, backgroundColor: COLORS.goldLight, fontSize: 16, fontWeight: '900', borderRadius: RADIUS.sm },
+  checkTryOnButton: { marginHorizontal: 16, marginBottom: 16, backgroundColor: COLORS.accent, minHeight: 44, alignItems: 'center', justifyContent: 'center', borderRadius: RADIUS.sm },
+  checkTryOnText: { color: COLORS.white, fontSize: 11, fontWeight: '900', letterSpacing: 0.6 },
 
   // Controls Section
   controlsSection: {

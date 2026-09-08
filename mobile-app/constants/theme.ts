@@ -5,46 +5,46 @@
 
 export const COLORS = {
   // Backgrounds & Canvas
-  bg: '#000000',
-  bgSecondary: '#070707',
-  bgWarm: '#0D0D0D',
+  bg: '#F7F7FC',
+  bgSecondary: '#FFFFFF',
+  bgWarm: '#F0F0F8',
   
   // Cards & Surfaces (Sharp & Sleek Monochromatic with Gold Subtle Accents)
-  card: '#111111',
-  cardElevated: '#171717',
-  cardSecondary: '#1C1C1C',
-  surface: '#141414',
-  surfaceActive: '#262626',
+  card: '#FFFFFF',
+  cardElevated: '#FFFFFF',
+  cardSecondary: '#F0F0F8',
+  surface: '#FFFFFF',
+  surfaceActive: '#E8E8F2',
 
   // Borders
-  border: '#222222',
-  borderLight: '#333333',
-  borderDark: '#141414',
-  borderAccent: '#FFFFFF',
-  borderMuted: '#1A1A1A',
-  borderGold: 'rgba(212, 175, 55, 0.35)',
-  borderGoldSolid: '#D4AF37',
+  border: '#E3E3EC',
+  borderLight: '#D7D7E2',
+  borderDark: '#C8C8D4',
+  borderAccent: '#0B0B0D',
+  borderMuted: '#ECECF4',
+  borderGold: 'rgba(201, 0, 45, 0.25)',
+  borderGoldSolid: '#C9002D',
   
   // High-Contrast Typography
-  textPrimary: '#FFFFFF',
-  textSecondary: '#F5F5F0',
-  textMuted: '#999999',
-  textLight: '#737373',
-  textDim: '#525252',
+  textPrimary: '#0B0B0D',
+  textSecondary: '#35353C',
+  textMuted: '#6D6D76',
+  textLight: '#85858D',
+  textDim: '#A0A0AA',
 
   // True Regal Gold Accents
-  gold: '#D4AF37',
-  goldLight: '#F5E6A3',
-  goldDark: '#A8892C',
-  goldMuted: 'rgba(212, 175, 55, 0.12)',
-  goldGlow: 'rgba(212, 175, 55, 0.28)',
+  gold: '#C9002D',
+  goldLight: '#FFDCE4',
+  goldDark: '#9E0024',
+  goldMuted: 'rgba(201, 0, 45, 0.10)',
+  goldGlow: 'rgba(201, 0, 45, 0.18)',
   
   // Primary Luxury Accents
-  accent: '#D4AF37',
-  accentDark: '#000000',
-  accentMuted: '#404040',
-  accentSoft: 'rgba(212, 175, 55, 0.08)',
-  accentGlow: 'rgba(212, 175, 55, 0.2)',
+  accent: '#C9002D',
+  accentDark: '#0B0B0D',
+  accentMuted: '#70707A',
+  accentSoft: 'rgba(201, 0, 45, 0.08)',
+  accentGlow: 'rgba(201, 0, 45, 0.2)',
   
   // Status Colors
   success: '#22C55E',
@@ -58,8 +58,8 @@ export const COLORS = {
   // Pure Bases
   white: '#FFFFFF',
   black: '#000000',
-  overlay: 'rgba(0, 0, 0, 0.82)',
-  glassDark: 'rgba(10, 10, 10, 0.94)',
+  overlay: 'rgba(11, 11, 13, 0.82)',
+  glassDark: 'rgba(255, 255, 255, 0.96)',
 };
 
 export const FONTS = {

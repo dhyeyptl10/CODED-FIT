@@ -106,9 +106,9 @@ export default function TabsLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#050505',
+    backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(212, 175, 55, 0.25)',
+    borderTopColor: '#E3E3EC',
     height: Platform.OS === 'ios' ? 76 : 66,
     paddingBottom: Platform.OS === 'ios' ? 14 : 6,
     paddingTop: 8,
@@ -133,25 +133,25 @@ const styles = StyleSheet.create({
   },
   iconText: {
     fontSize: 18,
-    color: '#666666',
+    color: '#777780',
     fontWeight: '600',
   },
   iconTextActive: {
-    color: '#D4AF37',
-    textShadowColor: 'rgba(212, 175, 55, 0.5)',
+    color: '#C9002D',
+    textShadowColor: 'rgba(201, 0, 45, 0.2)',
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 8,
   },
   labelText: {
     fontSize: 8.5,
     fontWeight: '700',
-    color: '#666666',
+    color: '#777780',
     letterSpacing: 1.2,
     marginTop: 3,
     textTransform: 'uppercase',
   },
   labelTextActive: {
-    color: '#D4AF37',
+    color: '#C9002D',
     fontWeight: '800',
   },
   activeIndicator: {
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     bottom: -6,
     width: 22,
     height: 2,
-    backgroundColor: '#D4AF37',
+    backgroundColor: '#C9002D',
     borderRadius: 1,
     shadowColor: '#D4AF37',
     shadowOffset: { width: 0, height: 0 },
@@ -178,10 +178,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 3,
     borderWidth: 1,
-    borderColor: '#050505',
+    borderColor: '#FFFFFF',
   },
   badgeText: {
-    color: '#000000',
+    color: '#FFFFFF',
     fontSize: 9,
     fontWeight: '900',
   },
