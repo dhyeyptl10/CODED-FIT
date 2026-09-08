@@ -13,7 +13,7 @@ export default function RootLayout() {
 
   return (
     <>
-      <StatusBar style="dark" backgroundColor={COLORS.bgSecondary} />
+      <StatusBar style="dark" />
       <Stack
         screenOptions={{
           headerShown: false,
@@ -22,6 +22,17 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="jarvis"
+          options={{
+            headerShown: true,
+            headerTitle: 'JARVIS ASSISTANT',
+            headerStyle: { backgroundColor: '#000000' },
+            headerTintColor: '#FFFFFF',
+            headerTitleStyle: { fontSize: 13, fontWeight: '900' },
+            headerBackTitle: 'BACK',
+          }}
+        />
         <Stack.Screen
           name="product/[id]"
           options={{
@@ -47,9 +58,9 @@ export default function RootLayout() {
             <Text style={styles.sheetEyebrow}>CODED FIT ATELIER OS</Text>
             <Text style={styles.sheetTitle}>ACTIVE CALIBRATION ENGINE</Text>
             {[
-              ['60-SEC AI FIT SCANNER', '2 front snaps calibrate 18 biometric nodes.'],
-              ['3D BESPOKE STUDIO', 'Tweak sleeve drape, collar spread, and monogram initials.'],
-              ['FIRST GARMENT COVENANT', 'Free re-tailoring and remakes at your doorstep.'],
+              ['PHOTO BODY SCAN', 'Front photo se estimated measurements + confidence. Medical-grade claim nahi.'],
+              ['3D BESPOKE STUDIO', 'Sleeve drape, collar spread aur monogram — live 3D me dekho.'],
+              ['FIRST GARMENT COVENANT', 'Pehle trial garment par fit confirm, phir final production.'],
             ].map(([title, body]) => (
               <View key={title} style={styles.featureRow}>
                 <Text style={styles.featureTitle}>{title}</Text>
