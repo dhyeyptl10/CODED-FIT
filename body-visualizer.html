@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Body Visualizer + 3D Try-On | CODED FIT</title>
+<meta name="description" content="Upload your photo, get real pose-landmark detection, estimated measurements with confidence, and a parametric 3D avatar to try outfits on. No fake claims.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Real pose detection: MediaPipe Pose (client-side, no photo leaves device for landmarks) -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469240/pose.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+<style>
+:root{--crimson:#e10600;--ink:#0d0e12;--line:#e5e5e9;--mut:#666}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;background:#f7f7f8;color:#111}
+.bv-wrap{max-width:1380px;margin:0 auto;padding:20px 24px 60px}
+.bv-hero{background:#0d0e12;color:#fff;border-radius:6px;padding:28px 28px;margin-top:16px;display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center}
+.bv-hero h1{font-family:Syne,sans-serif;font-size:30px;margin:6px 0 8px;text-transform:uppercase}
+.bv-hero p{color:#bbb;font-size:13.5px;line-height:1.6;max-width:640px}
+.tag{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;color:var(--crimson);letter-spacing:1px;text-transform:uppercase}
+.stepper{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap}
+.step{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:800;padding:8px 12px;border:1px solid var(--line);background:#fff;border-radius:3px;color:#888;text-transform:uppercase}
+.step.active{background:#0d0e12;color:#fff;border-color:#0d0e12}
+.step.done{border-color:var(--crimson);color:var(--crimson)}
+.grid2{display:grid;grid-template-columns:420px 1fr;gap:20px;align-items:start}
+.card{background:#fff;border:1px solid var(--line);border-radius:4px;padding:20px}
+.card h3{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:800;text-transform:uppercase;margin:0 0 12px}
+label.fl{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#555;text-transform:uppercase;margin:12px 0 5px;letter-spacing:.5px}
+input[type=number],input[type=text],select{width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:3px;font-size:13px;font-family:'JetBrains Mono',monospace}
+input[type=range]{width:100%}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:none;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-top:12px}
+.btn-red{background:var(--crimson);color:#fff}.btn-red:hover{background:#b80500}
+.btn-dark{background:#111;color:#fff}.btn-ghost{background:#fff;border:1px solid #111;color:#111}
+.btn-sm{width:auto;padding:9px 14px;font-size:10px;margin-top:8px}
+.hint{font-size:12px;color:#666;line-height:1.6}
+.warn{background:#fff7e6;border:1px solid #f0d48a;padding:10px 12px;border-radius:3px;font-size:12px;color:#664d03;margin-top:10px}
+.ok{background:#eefbf3;border:1px solid #9adbb0;padding:10px 12px;border-radius:3px;font-size:12px;color:#14532d;margin-top:10px}
+.err{background:#fdecec;border:1px solid #f5a3a3;padding:10px 12px;border-radius:3px;font-size:12px;color:#7a1010;margin-top:10px}
+#photo-canvas,#pose-canvas{width:100%;border-radius:4px;background:#111;display:block}
+.view3d{position:relative;background:#0b0c0f;border-radius:4px;overflow:hidden;min-height:520px}
+#avatar3d{position:absolute;inset:0}
+.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;z-index:5;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#bbb}
+.camrow{position:absolute;left:12px;top:52px;display:flex;flex-direction:column;gap:6px;z-index:5}
+.camrow button{background:rgba(0,0,0,.65);border:1px solid #444;color:#ccc;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:800;padding:6px 10px;border-radius:3px;cursor:pointer;text-align:left}
+.camrow button.active,.camrow button:hover{background:#fff;color:#000;border-color:#fff}
+.bottombar{position:absolute;left:12px;right:12px;bottom:12px;display:flex;justify-content:space-between;align-items:center;z-index:5;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#999}
+.conf{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.conf div{background:#f6f6f8;border:1px solid #eee;padding:8px 10px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10.5px}
+.conf b{display:block;font-size:13px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.g{background:#16a34a}.y{background:#eab308}.r{background:#dc2626}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.sw{width:34px;height:34px;border-radius:3px;cursor:pointer;border:2px solid transparent}
+.sw.sel{border-color:#000;outline:2px solid var(--crimson)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid #ccc;background:#fff;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:800;cursor:pointer;border-radius:3px;text-transform:uppercase}
+.chip.sel{background:#111;color:#fff;border-color:#111}
+.split{position:relative;overflow:hidden;border-radius:4px;background:#111}
+.split img{width:100%;display:block}
+#afterWrap{position:absolute;inset:0;overflow:hidden}
+#splitRange{width:100%;margin-top:10px}
+video#cam{width:100%;border-radius:4px;background:#000}
+.consent{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:#444;margin-top:12px;line-height:1.5}
+@media(max-width:1080px){.bv-hero{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="cf-navbar-mount"></div>
+<div class="bv-wrap">
+  <div class="bv-hero">
+    <div>
+      <div class="tag">// CODED FIT · AI BODY VISUALIZER · REAL 3D TRY-ON</div>
+      <h1>Photo upload karo.<br>Apna 3D avatar banao.<br>Kapde try karo.</h1>
+      <p>Front photo se <b>real pose landmarks</b> (MediaPipe, on-device) detect hote hain → height ko scale maan kar <b>estimated measurements + confidence</b> banta hai → usi proportion ka <b>parametric 3D avatar</b> banta hai → us par outfit, color, size change karke <b>360°</b> me dekho. Ye medical-grade measurement nahi hai — tailor-grade estimate hai, jo aap edit kar sakte ho.</p>
+      <div class="hint" style="color:#8f8f96">Hindi / Hinglish me bhi chalega: “mujhe thoda loose fit chahiye”, “collar mandarin kar do” — neeche Fit Assistant me likh sakte ho.</div>
+    </div>
+    <div class="card" style="background:#141519;border-color:#26272d;color:#ddd">
+      <h3 style="color:#fff">Privacy first</h3>
+      <div class="hint" style="color:#aaa">• Pose landmarks aapke browser me bante hain, photo server par tabhi jaati hai jab aap “Save Fit Profile” dabate ho.<br>• Delete-my-data se photo + measurements turant delete.<br>• Backend secrets (YouCam / Razorpay) sirf <code>server/.env</code> me — frontend me kabhi nahi.</div>
+      <button class="btn btn-red btn-sm" onclick="document.getElementById('step-photo').scrollIntoView({behavior:'smooth'})">START BODY SCAN →</button>
+    </div>
+  </div>
+
+  <div class="stepper" id="stepper">
+    <div class="step active" data-s="1">1 · Details</div>
+    <div class="step" data-s="2">2 · Photo</div>
+    <div class="step" data-s="3">3 · Landmarks</div>
+    <div class="step" data-s="4">4 · Measurements</div>
+    <div class="step" data-s="5">5 · 3D Try-On</div>
+  </div>
+
+  <div class="grid2">
+    <!-- LEFT: workflow -->
+    <div>
+      <div class="card" id="step-details">
+        <h3>1 · Body details (scale ke liye zaroori)</h3>
+        <div class="row2">
+          <div><label class="fl">Height (cm) *</label><input type="number" id="in-height" value="172" min="120" max="230"></div>
+          <div><label class="fl">Weight (kg) *</label><input type="number" id="in-weight" value="70" min="35" max="200"></div>
+        </div>
+        <div class="row2">
+          <div><label class="fl">Gender</label><select id="in-gender"><option value="men">Men</option><option value="women">Women</option></select></div>
+          <div><label class="fl">Preferred fit</label><select id="in-fit"><option value="regular">Regular</option><option value="slim">Slim</option><option value="relaxed">Relaxed</option><option value="oversized">Oversized</option></select></div>
+        </div>
+        <label class="fl">Body shape (optional, avatar ko refine karega)</label>
+        <select id="in-shape"><option value="auto">Auto (photo se)</option><option value="athletic">Athletic V-Taper</option><option value="rectangle">Lean / Rectangle</option><option value="pear">Pear / Triangle</option><option value="inverted_triangle">Inverted Triangle</option><option value="hourglass">Hourglass</option><option value="plus">Plus</option></select>
+        <div class="consent"><input type="checkbox" id="consent" checked style="width:auto;margin-top:3px"><span>I consent to on-device body analysis of my photo for try-on. I can delete my photo + data anytime.</span></div>
+      </div>
+
+      <div class="card" id="step-photo" style="margin-top:16px">
+        <h3>2 · Photo — upload ya camera</h3>
+        <div class="hint">Guide: seedha khade ho, poora sharir (sir se pair tak) frame me, haath thode khule, achhi roshni, ek hi vyakti. Front photo best hai.</div>
+        <div class="row2" style="margin-top:8px">
+          <button class="btn btn-dark btn-sm" onclick="document.getElementById('file').click()">📷 UPLOAD PHOTO</button>
+          <button class="btn btn-ghost btn-sm" id="btn-cam" onclick="BV.toggleCamera()">🎥 CAMERA ON</button>
+        </div>
+        <input type="file" id="file" accept="image/*" style="display:none">
+        <video id="cam" playsinline style="display:none;margin-top:10px"></video>
+        <button class="btn btn-ghost btn-sm" id="btn-snap" style="display:none" onclick="BV.snap()">CAPTURE FRAME</button>
+        <div style="margin-top:10px"><canvas id="photo-canvas"></canvas></div>
+        <div id="quality"></div>
+        <button class="btn btn-red" id="btn-detect" onclick="BV.analyze()">DETECT BODY LANDMARKS →</button>
+        <div class="hint" style="margin-top:8px">⚡ Photo upload karte hi <b>auto-detect + auto 3D avatar</b> chalta hai — ye button sirf retry ke liye hai. Pose model pehli baar CDN se load hota hai (~2–5 MB).</div>
+        <button class="btn btn-ghost btn-sm" onclick="BV.manualMode()">SKIP PHOTO → MANUAL MEASUREMENTS</button>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>3 · Landmarks + quality</h3>
+        <canvas id="pose-canvas"></canvas>
+        <div id="landmark-status" class="hint" style="margin-top:8px">Abhi photo analyze nahi hui.</div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>4 · Estimated measurements (editable)</h3>
+        <div class="warn">⚠️ Ye <b>estimate</b> hai (photo + height/weight se), tailoring-grade approx. Confidence ke saath dikhaya gaya hai. Perfect accuracy ka daava nahi karte.</div>
+        <div class="row2">
+          <div><label class="fl">Chest (in)</label><input type="number" id="m-chest" step="0.1" value="40"></div>
+          <div><label class="fl">Waist (in)</label><input type="number" id="m-waist" step="0.1" value="32"></div>
+        </div>
+        <div class="row2">
+          <div><label class="fl">Shoulder (in)</label><input type="number" id="m-shoulder" step="0.1" value="18"></div>
+          <div><label class="fl">Hip (in)</label><input type="number" id="m-hip" step="0.1" value="38"></div>
+        </div>
+        <div class="row2">
+          <div><label class="fl">Inseam (in)</label><input type="number" id="m-inseam" step="0.1" value="30"></div>
+          <div><label class="fl">Neck (in)</label><input type="number" id="m-neck" step="0.1" value="15.5"></div>
+        </div>
+        <div class="conf" id="conf-box"></div>
+        <button class="btn btn-dark" onclick="BV.buildAvatar()">GENERATE 3D AVATAR →</button>
+        <div class="row2">
+          <button class="btn btn-ghost btn-sm" onclick="BV.saveProfile()">SAVE FIT PROFILE</button>
+          <button class="btn btn-ghost btn-sm" onclick="BV.wipe()">DELETE MY DATA</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>5 · Body sculpt — game studio sliders</h3>
+        <div class="hint">Photo wale panel jaisa: slider ghumao, 3D body turant badlega. <b>Red sliders</b> measurements me save hote hain (fit math par asar), grey sirf look refine karte hain.</div>
+        <div id="sculpt-sliders" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: 3D + photo try-on -->
+    <div>
+      <div class="card">
+        <h3>6 · Aapka 3D avatar + outfit try-on (360°)</h3>
+        <div class="view3d"><div id="avatar3d"></div>
+          <div class="hud"><span id="hud-left">● AVATAR READY — DRAG TO ROTATE</span><span>WEBGL · R128</span></div>
+          <div class="camrow">
+            <button class="active" onclick="BV.view('front',this)">FRONT [0°]</button>
+            <button onclick="BV.view('side',this)">SIDE [90°]</button>
+            <button onclick="BV.view('back',this)">BACK [180°]</button>
+            <button onclick="BV.toggleSpin(this)">⟳ AUTO-ROTATE</button>
+          </div>
+          <div class="bottombar"><span>DRAG = ROTATE · SCROLL = ZOOM</span><span id="hud-size">SIZE M</span></div>
+        </div>
+        <label class="fl">Garment</label>
+        <div class="chips" id="g-chips">
+          <div class="chip sel" data-g="overshirt">Overshirt</div><div class="chip" data-g="shirt">Shirt</div><div class="chip" data-g="tee">Tee</div><div class="chip" data-g="kurta">Kurta</div>
+        </div>
+        <label class="fl">Color</label>
+        <div class="swatches" id="g-colors"></div>
+        <label class="fl">Skin tone (avatar tumhare jaisa lage)</label>
+        <div class="swatches" id="skin-tones"></div>
+        <div class="row2">
+          <div><label class="fl">Size</label><div class="chips" id="g-sizes"><div class="chip" data-s="S">S</div><div class="chip sel" data-s="M">M</div><div class="chip" data-s="L">L</div><div class="chip" data-s="XL">XL</div><div class="chip" data-s="Bespoke">Bespoke</div></div></div>
+          <div><label class="fl">Collar (shirt)</label><div class="chips" id="g-collar"><div class="chip sel" data-c="spread">Spread</div><div class="chip" data-c="mandarin">Mandarin</div><div class="chip" data-c="cuban">Cuban</div></div></div>
+        </div>
+        <div id="fit-zones" style="margin-top:12px"></div>
+        <div class="row2">
+          <button class="btn btn-red btn-sm" onclick="BV.addToBag()">ADD TO BAG →</button>
+          <button class="btn btn-ghost btn-sm" onclick="BV.downloadAvatar()">DOWNLOAD AVATAR PNG</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>Fit assistant (English · Hindi · Hinglish)</h3>
+        <div class="hint">Try: “mujhe thoda loose fit chahiye” · “isko black kar do” · “collar mandarin kar do” · “peeche se dikhao”</div>
+        <div class="row2"><input type="text" id="ai-in" placeholder="..."><button class="btn btn-dark btn-sm" style="margin-top:0" onclick="BV.assistant()">ASK →</button></div>
+        <div id="ai-out" class="hint" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/navbar.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/products.js"></script>
+<script src="js/body-visualizer.js"></script>
+<script src="js/trust.js"></script><script src="js/aiAssistant.js"></script></body>
+</html>
