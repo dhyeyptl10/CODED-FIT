@@ -101,7 +101,7 @@ const NOVA3D = (function () {
       { id: 'w_black_dress', name: 'Flowy Black Maxi Gown', category: 'Dresses', tag: 'HOT', price: 3899, mrp: 5499, fabric: 'TENCEL™ Lyocell Blend', colorHex: '#18181B', img: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=900&q=85' },
       { id: 'w_tailored_blazer', name: 'Onyx Tailored Blazer & Pants', category: 'Outerwear', tag: 'Bespoke', price: 5499, mrp: 7499, fabric: 'Italian Wool-Cotton Blend', colorHex: '#09090B', img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=85' },
       { id: 'w_crop_tee', name: 'Aura Fitted Crop Tee', category: 'Tops', tag: 'Daily', price: 1299, mrp: 1999, fabric: '220 GSM GOTS Organic Cotton', colorHex: '#F5F2E7', img: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900&q=85' },
-      { id: 'w_linen_pants', name: 'Soleil High-Waist Linen Trousers', category: 'Bottoms', tag: 'Daily', price: 2499, mrp: 3499, fabric: 'Pure Organic Italian Linen', colorHex: '#E8E3DA', img: 'https://images.unsplash.com/photo-1594938298603-b8ff3ddb5777?w=900&q=85' },
+      { id: 'w_linen_pants', name: 'Soleil High-Waist Linen Trousers', category: 'Bottoms', tag: 'Daily', price: 2499, mrp: 3499, fabric: 'Pure Organic Italian Linen', colorHex: '#E8E3DA', img: 'https://images.unsplash.com/photo-1588117260148-b47818741c74?w=900&q=85' },
       { id: 'w_sage_hoodie', name: 'Cloud French Terry Sage Hoodie', category: 'Tops', tag: 'Daily', price: 3299, mrp: 4699, fabric: '380 GSM Organic French Terry', colorHex: '#4A7C6F', img: 'https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?w=900&q=85' }
     ],
     men: [

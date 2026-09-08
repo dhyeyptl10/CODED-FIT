@@ -655,11 +655,11 @@ const TRYON3D = (function () {
   }
 
   function updateBiometrics(param, val) {
-    if (param === 'shoulder') state.biometrics.shoulderWidth = val;
-    if (param === 'chest') state.biometrics.chestCircumference = val;
-    if (param === 'waist') state.biometrics.waistCircumference = val;
-    
-    buildParametricMannequin();
+    if (param === 'shoulder') state.avatarMeasurements.shoulderInches = val;
+    if (param === 'chest') state.avatarMeasurements.chestInches = val;
+    if (param === 'waist') state.avatarMeasurements.waistInches = val;
+
+    buildProceduralAvatar();
     buildGarmentMeshes();
   }
 

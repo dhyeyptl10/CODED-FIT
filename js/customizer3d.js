@@ -147,7 +147,7 @@ const BESPOKE_STUDIO = (function () {
       price: total,
       qty: 1,
       size: 'Custom Fit',
-      image: 'https://images.unsplash.com/photo-1596755094514-f87e32f6b717?w=500&q=80',
+      image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500&q=80',
       funnel: 'made-to-measure',
       customData: {
         fabric: config.fabric.name,
