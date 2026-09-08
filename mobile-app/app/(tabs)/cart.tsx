@@ -28,7 +28,7 @@ export default function CartScreen() {
   const [promoCode, setPromoCode] = useState<string>('FIRST500');
   const [isCheckingOut, setIsCheckingOut] = useState<boolean>(false);
 
-  const { authenticateBiometric } = useAuth();
+  const { authenticate } = useAuth();
   const { location } = useLocation();
 
   useEffect(() => {
@@ -40,13 +40,13 @@ export default function CartScreen() {
     setCart(items);
   };
 
-  const handleUpdateQty = async (productId: string, size: string, color: string | undefined, newQty: number) => {
-    await CartService.updateQty(productId, size, color, newQty);
+  const handleUpdateQty = async (cartId: string, newQty: number) => {
+    await CartService.updateQty(cartId, newQty);
     loadCart();
   };
 
-  const handleRemove = async (productId: string, size: string, color?: string) => {
-    await CartService.removeItem(productId, size, color);
+  const handleRemove = async (cartId: string) => {
+    await CartService.removeItem(cartId);
     loadCart();
   };
 
@@ -61,7 +61,7 @@ export default function CartScreen() {
     } catch (_) {}
 
     setIsCheckingOut(true);
-    const authSuccess = await authenticateBiometric();
+    const authSuccess = await authenticate();
 
     setIsCheckingOut(false);
     if (authSuccess) {

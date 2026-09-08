@@ -39,6 +39,10 @@ export interface CartTotals {
 }
 
 export class CartService {
+  static async getItemCount(): Promise<number> {
+    const cart = await this.getCart();
+    return cart.reduce((total, item) => total + item.qty, 0);
+  }
   /**
    * Fetch all items in the user's shopping bag
    */

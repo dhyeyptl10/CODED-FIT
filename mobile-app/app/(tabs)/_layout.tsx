@@ -75,7 +75,7 @@ export default function TabsLayout() {
         name="tryon"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon icon="◎" label="AI Studio" focused={focused} />
+            <TabIcon icon="◎" label="Custom" focused={focused} />
           ),
         }}
       />
@@ -85,7 +85,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ focused }) => (
             <TabIcon
               icon="⊕"
-              label="Bag"
+              label="AI"
               focused={focused}
               badgeCount={cartCount}
             />
@@ -96,7 +96,7 @@ export default function TabsLayout() {
         name="dashboard"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon icon="◉" label="VIP Club" focused={focused} />
+            <TabIcon icon="◉" label="Account" focused={focused} />
           ),
         }}
       />

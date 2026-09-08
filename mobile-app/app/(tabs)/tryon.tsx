@@ -34,6 +34,7 @@ import {
   YouCamGarment,
 } from '../../services/youcam';
 import { CartService } from '../../services/cart';
+import { Product } from '../../services/products';
 import { useCamera } from '../../hooks/useCamera';
 import { GoldButton } from '../../components/ui/GoldButton';
 import { Badge } from '../../components/ui/Badge';
@@ -193,7 +194,7 @@ export default function TryOnStudioScreen() {
       });
 
       if (result.success) {
-        setFitScore(result.fitScore);
+        if (result.fitScore !== null) setFitScore(result.fitScore);
         setTryOnResultImage(result.resultImageUrl);
       }
     } catch (e) {
@@ -242,19 +243,18 @@ export default function TryOnStudioScreen() {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch (_) {}
 
-    const productMock = {
+    const productMock: Product = {
       id: 'custom_vto_' + selectedGarment.id + '_' + Date.now(),
       name: selectedGarment.name + ' (AI Bespoke Fit)',
       price: selectedGarment.price,
       mrp: Math.round(selectedGarment.price * 1.35),
       fabric: selectedGarment.fabric,
       gender: gender,
-      category: selectedGarment.category,
+      category: selectedGarment.category as Product['category'],
       funnel: 'custom-made' as const,
       images: [selectedGarment.imageUrl],
       description: 'Laser tailored to ' + heightCm + 'cm, ' + weightKg + 'kg, ' + chestIn + '" chest, ' + waistIn + '" waist.',
       sizes: [bmiInfo.size],
-      inStock: true,
       hypeRating: 99,
       badge: 'BESPOKE OPTION' as const,
       dispatch: 'Crafted in 4 days',

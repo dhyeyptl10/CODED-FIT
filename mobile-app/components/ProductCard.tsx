@@ -74,8 +74,8 @@ export function ProductCard({ product, onQuickAdd, cardWidth }: ProductCardProps
         {/* Top-Left Badges */}
         <View style={styles.badgeOverlay}>
           <Badge
-            label={product.funnel === 'rtw' ? '24H RTW' : 'BESPOKE'}
-            variant={product.funnel === 'rtw' ? 'white' : 'dark'}
+            label={product.funnel === 'ready-to-wear' ? '24H RTW' : 'BESPOKE'}
+            variant={product.funnel === 'ready-to-wear' ? 'white' : 'dark'}
             size="sm"
           />
           {discountPct > 0 && (
@@ -128,10 +128,10 @@ export function ProductCard({ product, onQuickAdd, cardWidth }: ProductCardProps
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: '#0F0F0F',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#202020',
-    borderRadius: RADIUS.md,
+    borderColor: '#E7E7EF',
+    borderRadius: 5,
     marginBottom: 16,
     overflow: 'hidden',
     shadowColor: '#000000',
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   imageWrap: {
     width: '100%',
     position: 'relative',
-    backgroundColor: '#0A0A0A',
+    backgroundColor: '#F1F1F3',
   },
   productImage: {
     width: '100%',
@@ -174,33 +174,33 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    backgroundColor: 'rgba(255, 255, 255, 0.96)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderColor: '#E2E2E7',
     alignItems: 'center',
     justifyContent: 'center',
   },
   wishlistBtnActive: {
-    backgroundColor: 'rgba(212, 175, 55, 0.25)',
-    borderColor: '#D4AF37',
+    backgroundColor: '#FFE5EA',
+    borderColor: '#C9002D',
   },
   wishlistIcon: {
-    color: '#FFFFFF',
+    color: '#15151B',
     fontSize: 16,
     lineHeight: 18,
   },
   wishlistIconActive: {
-    color: '#D4AF37',
+    color: '#C9002D',
   },
   quickAddBtn: {
     position: 'absolute',
     bottom: 8,
     right: 8,
-    backgroundColor: '#D4AF37',
+    backgroundColor: '#050505',
     paddingVertical: 5,
     paddingHorizontal: 12,
     borderRadius: RADIUS.sm,
-    shadowColor: '#D4AF37',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.4,
     shadowRadius: 4,
@@ -209,17 +209,17 @@ const styles = StyleSheet.create({
   quickAddText: {
     fontSize: 9.5,
     fontWeight: '900',
-    color: '#000000',
+    color: '#FFFFFF',
     letterSpacing: 0.8,
   },
   infoWrap: {
     padding: 12,
-    backgroundColor: '#0F0F0F',
+    backgroundColor: '#FFFFFF',
   },
   fabricText: {
     fontSize: 8,
     fontWeight: '800',
-    color: '#D4AF37',
+    color: '#6D6D76',
     letterSpacing: 1.2,
     textTransform: 'uppercase',
     marginBottom: 4,
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
   nameText: {
     fontSize: 11.5,
     fontWeight: '700',
-    color: '#F5F5F0',
+    color: '#111116',
     lineHeight: 16,
     marginBottom: 8,
     letterSpacing: 0.3,
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   priceText: {
     fontSize: 14,
     fontWeight: '900',
-    color: '#D4AF37',
+    color: '#111116',
     letterSpacing: 0.5,
   },
   mrpText: {

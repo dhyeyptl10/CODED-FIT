@@ -22,9 +22,9 @@ export interface YouCamTryOnRequest {
 export interface YouCamTryOnResult {
   success: boolean;
   resultImageUrl: string;
-  fitScore: number;
+  fitScore: number | null;
   message?: string;
-  biometricNodesDetected?: number;
+  biometricNodesDetected?: number | null;
   processingTimeMs?: number;
   drapePrecision?: string;
 }

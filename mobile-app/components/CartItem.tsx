@@ -18,12 +18,12 @@ import { COLORS, RADIUS } from '../constants/theme';
 
 interface CartItemProps {
   item: CartItemType;
-  onUpdateQty: (productId: string, size: string, color: string | undefined, qty: number) => void;
-  onRemove: (productId: string, size: string, color?: string) => void;
+  onUpdateQty: (cartId: string, qty: number) => void;
+  onRemove: (cartId: string) => void;
 }
 
 export function CartItem({ item, onUpdateQty, onRemove }: CartItemProps) {
-  const { product, size, color, qty } = item;
+  const { product, size, selectedColor, qty } = item;
 
   return (
     <View style={styles.container}>
@@ -36,14 +36,14 @@ export function CartItem({ item, onUpdateQty, onRemove }: CartItemProps) {
       <View style={styles.details}>
         <View style={styles.topRow}>
           <Badge
-            label={product.funnel === 'rtw' ? '24H EXPRESS' : 'BESPOKE 3D'}
+            label={product.funnel === 'ready-to-wear' ? '24H EXPRESS' : 'BESPOKE 3D'}
             variant="dark"
             size="sm"
           />
           <TouchableOpacity
             onPress={() => {
               try { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); } catch (_) {}
-              onRemove(product.id, size, color);
+              onRemove(item.cartId);
             }}
           >
             <Text style={styles.removeText}>✕</Text>
@@ -51,7 +51,7 @@ export function CartItem({ item, onUpdateQty, onRemove }: CartItemProps) {
         </View>
 
         <Text style={styles.name} numberOfLines={1}>{product.name}</Text>
-        <Text style={styles.meta}>Size: {size} {color ? '· ' + color : ''}</Text>
+        <Text style={styles.meta}>Size: {size} {selectedColor ? '· ' + selectedColor : ''}</Text>
 
         <View style={styles.bottomRow}>
           <Text style={styles.price}>₹{(product.price * qty).toLocaleString('en-IN')}</Text>
@@ -59,14 +59,14 @@ export function CartItem({ item, onUpdateQty, onRemove }: CartItemProps) {
           {/* Qty Counter */}
           <View style={styles.qtyControl}>
             <TouchableOpacity
-              onPress={() => onUpdateQty(product.id, size, color, qty - 1)}
+              onPress={() => onUpdateQty(item.cartId, qty - 1)}
               style={styles.qtyBtn}
             >
               <Text style={styles.qtyBtnText}>-</Text>
             </TouchableOpacity>
             <Text style={styles.qtyVal}>{qty}</Text>
             <TouchableOpacity
-              onPress={() => onUpdateQty(product.id, size, color, qty + 1)}
+              onPress={() => onUpdateQty(item.cartId, qty + 1)}
               style={styles.qtyBtn}
             >
               <Text style={styles.qtyBtnText}>+</Text>

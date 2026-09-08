@@ -58,7 +58,7 @@ export default function ProductDetailScreen() {
           />
 
           <TouchableOpacity
-            onPress={() => shareProduct(product.name, product.price)}
+            onPress={() => shareProduct(product)}
             style={styles.shareBtn}
           >
             <Text style={{ fontSize: 16, color: '#FFFFFF' }}>SHARE</Text>
@@ -69,8 +69,8 @@ export default function ProductDetailScreen() {
         <View style={styles.detailsContainer}>
           <View style={styles.topBadgeRow}>
             <Badge
-              label={product.funnel === 'rtw' ? '24H EXPRESS DISPATCH' : 'UNIT-OF-ONE BESPOKE'}
-              variant={product.funnel === 'rtw' ? 'white' : 'dark'}
+              label={product.funnel === 'ready-to-wear' ? '24H EXPRESS DISPATCH' : 'UNIT-OF-ONE BESPOKE'}
+              variant={product.funnel === 'ready-to-wear' ? 'white' : 'dark'}
             />
             <Text style={styles.hypeRating}> {product.hypeRating}% Demand</Text>
           </View>
