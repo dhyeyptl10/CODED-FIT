@@ -1,0 +1,13 @@
+{
+  "name": "coded-fit",
+  "version": "1.0.0",
+  "description": "CODED FIT — Precision Hybrid Fashion-Tech Platform",
+  "scripts": {
+    "start": "cd server && node server.js",
+    "seed": "cd server && node seed.js",
+    "server": "cd server && node server.js"
+  },
+  "keywords": ["fashion-tech", "3d-try-on", "threejs", "webrtc", "ollama", "razorpay"],
+  "author": "CODED FIT Atelier",
+  "license": "ISC"
+}

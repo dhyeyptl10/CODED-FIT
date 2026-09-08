@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Biometric Fit Profile #CF-8821 | CODED FIT [BLR-ATELIER]</title>
+  <meta name="description" content="Manage your CODED FIT 3D Digital Twin measurements. Torso tapering, shoulder pitch, chest ease, and biometric calibration.">
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/studio3d.css">
+
+  <style>
+    body.fitprofile-page-body {
+      background: #090a0d;
+      color: #f5f5f7;
+    }
+    .fit-layout-container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 32px;
+    }
+    .fit-cards-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 36px;
+      margin-top: 32px;
+    }
+    .spec-card {
+      background: #0f1013;
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-xs);
+      padding: 36px;
+    }
+    .metric-input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .metric-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .metric-field label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .metric-field input, .metric-field select {
+      background: #181a20;
+      border: 1px solid var(--border-dark);
+      border-radius: 2px;
+      padding: 12px 14px;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .metric-field input:focus, .metric-field select:focus {
+      border-color: var(--crimson);
+    }
+    .twin-visualizer-box {
+      background: #08090b;
+      border: 1px dashed rgba(225, 6, 0, 0.4);
+      border-radius: 4px;
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) {
+      .fit-cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="fitprofile-page-body">
+  <!-- MASTER UNIFIED NAVBAR MOUNT -->
+  <div id="cf-navbar-mount"></div>
+
+  <!-- ── 3. MAIN FIT PROFILE INTERFACE ── -->
+  <main class="fit-layout-container">
+    <div>
+      <span class="section-tag-prefix">// PROPRIETARY ANTHROPOMETRICS</span>
+      <h1 style="font-family:var(--font-heading);font-size:36px;font-weight:900;text-transform:uppercase;color:#fff;margin-top:4px;">
+        AI BIOMETRIC FIT PROFILE #CF-8821
+      </h1>
+      <p style="font-size:13.5px;color:#aaa;max-width:700px;line-height:1.6;margin-top:6px;">
+        Your anatomical digital twin powers instant size recommendations across ready-to-wear pieces and provides millimetric precision for bespoke laser cutting.
+      </p>
+    </div>
+
+    <div class="fit-cards-grid">
+      <!-- Measurements Form -->
+      <div class="spec-card">
+        <div style="font-family:var(--font-mono);font-size:11px;font-weight:800;color:var(--crimson);text-transform:uppercase;margin-bottom:20px;">
+          1. VOLUMETRIC TORSO MEASUREMENTS
+        </div>
+
+        <form onsubmit="saveFitProfile(event)">
+          <div class="metric-input-row">
+            <div class="metric-field">
+              <label>Height (cm)</label>
+              <input type="number" id="f-height" value="185" required>
+            </div>
+            <div class="metric-field">
+              <label>Weight (kg)</label>
+              <input type="number" id="f-weight" value="78" required>
+            </div>
+          </div>
+
+          <div class="metric-input-row">
+            <div class="metric-field">
+              <label>Chest Circumference (in)</label>
+              <input type="number" id="f-chest" value="41.2" step="0.1" required>
+            </div>
+            <div class="metric-field">
+              <label>Waist Width (in)</label>
+              <input type="number" id="f-waist" value="32.5" step="0.1" required>
+            </div>
+          </div>
+
+          <div class="metric-input-row">
+            <div class="metric-field">
+              <label>Shoulder Seam Pitch (in)</label>
+              <input type="number" id="f-shoulder" value="18.2" step="0.1" required>
+            </div>
+            <div class="metric-field">
+              <label>Inseam Length (in)</label>
+              <input type="number" id="f-inseam" value="30.5" step="0.1" required>
+            </div>
+          </div>
+
+          <div style="font-family:var(--font-mono);font-size:11px;font-weight:800;color:var(--crimson);text-transform:uppercase;margin:28px 0 16px;">
+            2. SILHOUETTE BEHAVIOR PROFILE
+          </div>
+
+          <div class="metric-input-row">
+            <div class="metric-field">
+              <label>Torso Archetype</label>
+              <select id="f-archetype">
+                <option value="athletic" selected>Athletic V-Taper (1.28 Ratio)</option>
+                <option value="lean">Lean Architectural</option>
+                <option value="broad">Broad Muscular</option>
+                <option value="relaxed">Relaxed Classic</option>
+              </select>
+            </div>
+            <div class="metric-field">
+              <label>Drape Tendency</label>
+              <select id="f-drape">
+                <option value="slouch" selected>Architectural Slouch (-1.5" Drop)</option>
+                <option value="rigid">Rigid Box Drape</option>
+                <option value="tailored">Zero-Break Clean</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-coded btn-crimson" style="width:100%;margin-top:20px;">
+            CALIBRATE &amp; LOCK FIT PROFILE →
+          </button>
+        </form>
+      </div>
+
+      <!-- Right Digital Twin Status -->
+      <div class="spec-card" style="display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:11px;font-weight:800;color:var(--crimson);text-transform:uppercase;margin-bottom:20px;">
+            CALIBRATION DIAGNOSTICS
+          </div>
+
+          <div class="twin-visualizer-box">
+            <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;color:#10b981;margin-bottom:8px;">
+              ● DIGITAL TWIN VERIFIED (CLO-3D NEURAL RIG)
+            </div>
+            <h3 style="font-family:var(--font-heading);font-size:26px;font-weight:900;color:#fff;text-transform:uppercase;">
+              CALIBRATED SIZE: L [CF-FIT]
+            </h3>
+            <p style="font-size:12.5px;color:#aaa;line-height:1.6;margin-top:8px;">
+              Profile calibrated to <strong>41.2" Chest</strong> and <strong>18.2" Shoulders</strong>. All overshirts automatically compensate with -1.5" drop-shoulder pitch.
+            </p>
+          </div>
+
+          <div style="font-family:var(--font-mono);font-size:11px;line-height:1.8;color:#888;">
+            <div>• TORSO TAPERING: <strong style="color:#fff;">V-SHAPE 1.28</strong></div>
+            <div>• ARM SCYE VOLUME: <strong style="color:#fff;">+1.4" CLEAN CLEARANCE</strong></div>
+            <div>• INSEAM PRE-SET: <strong style="color:#fff;">30.5" ZERO-BREAK</strong></div>
+            <div>• ENCRYPTION: <strong style="color:var(--crimson);">256-BIT ATELIER HASH #CF-8821</strong></div>
+          </div>
+        </div>
+
+        <div style="margin-top:32px;">
+          <a href="customize.html" class="btn-coded btn-crimson" style="width:100%;text-align:center;margin-bottom:8px;">
+            OPEN IN 3D TRY-ON STUDIO →
+          </a>
+          <a href="shop.html" class="btn-coded btn-dark-outline" style="width:100%;text-align:center;">
+            SHOP CALIBRATED DROPS
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── 4. FOOTER ── -->
+  <footer class="site-footer">
+    <div class="footer-bottom-bar">
+      <div>ISO 9001:2015 CERTIFIED PRECISION ATELIER // BENGALURU, INDIA</div>
+      <div>© 2025 CODED FIT PRIVATE LIMITED. ALL RIGHTS RESERVED.</div>
+    </div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+    function saveFitProfile(e) {
+      e.preventDefault();
+      window.CF_showToast("Biometric Fit Profile #CF-8821 synchronized with Atelier Lab!");
+    }
+  </script>
+</body>
+</html>

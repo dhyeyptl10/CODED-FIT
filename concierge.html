@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hinglish Voice &amp; Drape Matrix | CODED FIT [NEURAL ATELIER v3.4]</title>
+  <meta name="description" content="Fashion intelligence synchronized with your Biometric Fit Profile #CF-8821. Instant climate-adjusted, pattern-cut ensembles.">
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/studio3d.css">
+
+  <style>
+    body.concierge-body {
+      background: #f7f7f8;
+      color: #111;
+    }
+    .concierge-body header.site-header {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e2e5;
+    }
+    .concierge-body .brand-logo { color: #000; }
+    .concierge-body .main-nav-links a { color: #444; }
+    .concierge-body .main-nav-links a.active { color: #000; }
+
+    .concierge-main-layout {
+      max-width: 1720px;
+      margin: 0 auto;
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 32px;
+    }
+
+    /* Left Console: Voice Chat & Audio Waveform */
+    .concierge-left-card {
+      background: #fff;
+      border: 1px solid #e2e2e5;
+      padding: 24px;
+      border-radius: var(--radius-xs);
+    }
+
+    .voice-active-banner {
+      background: #0d0e12;
+      border-radius: var(--radius-xs);
+      padding: 16px 20px;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .voice-spectrogram-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+    }
+
+    .voice-bar {
+      width: 4px;
+      background: var(--crimson);
+      border-radius: 2px;
+      animation: voice-pulse 1s infinite alternate ease-in-out;
+    }
+    .voice-bar:nth-child(1) { height: 10px; animation-delay: 0.1s; }
+    .voice-bar:nth-child(2) { height: 24px; animation-delay: 0.3s; }
+    .voice-bar:nth-child(3) { height: 32px; animation-delay: 0.2s; }
+    .voice-bar:nth-child(4) { height: 18px; animation-delay: 0.4s; }
+    .voice-bar:nth-child(5) { height: 28px; animation-delay: 0.15s; }
+    .voice-bar:nth-child(6) { height: 14px; animation-delay: 0.35s; }
+
+    @keyframes voice-pulse {
+      0% { transform: scaleY(0.4); }
+      100% { transform: scaleY(1.3); }
+    }
+
+    .chat-dialog-history {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .user-bubble {
+      background: #111215;
+      color: #fff;
+      padding: 16px;
+      border-radius: var(--radius-xs);
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    .ai-synthesis-box {
+      background: #f4f4f6;
+      border-left: 3px solid var(--crimson);
+      padding: 16px;
+      border-radius: 2px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .ai-tags-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .ai-tag-pill {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--crimson);
+      background: rgba(225, 6, 0, 0.08);
+      padding: 3px 6px;
+      border-radius: 2px;
+    }
+
+    .voice-input-strip {
+      display: flex;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: var(--radius-xs);
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    .voice-input-strip input {
+      flex: 1;
+      border: none;
+      padding: 14px 16px;
+      font-size: 13px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .voice-input-strip button {
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 0 20px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    /* Right Recommendation Look Panel (Image 3) */
+    .recommendation-panel {
+      background: #fff;
+      border: 1px solid #e2e2e5;
+      padding: 24px;
+      border-radius: var(--radius-xs);
+    }
+
+    .ensemble-pieces-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .ensemble-card {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      background: #fbfbfb;
+      border: 1px solid #e2e2e5;
+      padding: 12px;
+      border-radius: var(--radius-xs);
+    }
+
+    .ensemble-thumb {
+      width: 64px;
+      height: 76px;
+      object-fit: cover;
+      border-radius: 2px;
+      background: #eee;
+    }
+
+    .ensemble-info { flex: 1; }
+    .ensemble-info .item-seq { font-family: var(--font-mono); font-size: 9px; color: var(--crimson); font-weight: 800; }
+    .ensemble-info .item-name { font-family: var(--font-heading); font-size: 13px; font-weight: 800; color: #000; text-transform: uppercase; margin: 2px 0; }
+    .ensemble-info .item-meta { font-family: var(--font-mono); font-size: 9.5px; color: #666; }
+    .ensemble-price { font-family: var(--font-mono); font-size: 14px; font-weight: 800; color: #000; }
+
+    /* Biometric Match Radar Bottom */
+    .biometric-radar-card {
+      max-width: 1720px;
+      margin: 0 auto 40px;
+      padding: 0 32px;
+    }
+
+    .radar-inner-box {
+      background: #fff;
+      border: 1px solid #e2e2e5;
+      padding: 24px;
+      border-radius: var(--radius-xs);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .radar-stat-box {
+      border-right: 1px solid #eee;
+      padding-right: 20px;
+    }
+    .radar-stat-box:last-child { border-right: none; }
+
+    @media (max-width: 1024px) {
+      .concierge-main-layout { grid-template-columns: 1fr; }
+      .radar-inner-box { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="concierge-body">
+  <!-- MASTER UNIFIED NAVBAR MOUNT -->
+  <div id="cf-navbar-mount"></div>
+
+  <!-- ── 3. TITLE & STATUS BANNER (IMAGE 3) ── -->
+  <div style="max-width:1720px;margin:32px auto 0;padding:0 32px;display:flex;justify-content:space-between;align-items:flex-end;">
+    <div>
+      <span class="section-tag-prefix" style="color:var(--crimson);">● CODED FIT AI // NEURAL ATELIER CONCIERGE v3.4</span>
+      <h1 style="font-family:var(--font-heading);font-size:36px;font-weight:900;text-transform:uppercase;color:#000;margin-top:4px;">
+        HINGLISH VOICE &amp; DRAPE MATRIX
+      </h1>
+      <p style="font-size:13px;color:#666;margin-top:4px;">
+        Fashion intelligence synchronized with your Biometric Fit Profile <strong>#CF-8821</strong>. Instant climate-adjusted, pattern-cut ensembles.
+      </p>
+    </div>
+
+    <div style="display:flex;gap:12px;">
+      <span class="status-pill" style="background:#000;color:#fff;font-family:var(--font-mono);font-size:10px;padding:6px 12px;border-radius:2px;">
+        ● NLP ENGINE ACTIVE // HINGLISH + EN DUAL-LAYER
+      </span>
+      <span class="status-pill" style="background:#000;color:var(--crimson);font-family:var(--font-mono);font-size:10px;padding:6px 12px;border-radius:2px;">
+        LATENCY: 42ms
+      </span>
+    </div>
+  </div>
+
+  <!-- ── 4. CONCIERGE WORKSPACE (IMAGE 3) ── -->
+  <main class="concierge-main-layout">
+
+    <!-- ── LEFT CONSOLE: VOICE DIALOGUE ── -->
+    <div class="concierge-left-card">
+      <!-- Voice Waveform Active Banner -->
+      <div class="voice-active-banner">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--crimson);margin-bottom:4px;">
+            ● MIC ACTIVE // LISTENING... [BLR-VOICE-V4]
+          </div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:#888;">
+            REAL-TIME HINGLISH SPECTROGRAM // 98.2% SENSITIVITY
+          </div>
+        </div>
+        <div class="voice-spectrogram-box">
+          <div class="voice-bar"></div>
+          <div class="voice-bar"></div>
+          <div class="voice-bar"></div>
+          <div class="voice-bar"></div>
+          <div class="voice-bar"></div>
+          <div class="voice-bar"></div>
+        </div>
+        <button style="background:none;border:1px solid #444;color:#ccc;font-family:var(--font-mono);font-size:9.5px;padding:4px 8px;border-radius:2px;cursor:pointer;">
+          MUTE
+        </button>
+      </div>
+
+      <!-- Dialogue History -->
+      <div class="chat-dialog-history">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:#888;margin-bottom:4px;">YOU // VOICE INPUT</div>
+          <div class="user-bubble">
+            "Mujhe Bangalore monsoon ke liye water-resistant tactical jacket chahiye jo bulky na lage aur gym body par fit baithe."
+          </div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:#999;margin-top:4px;">11:42:09 IST • HINGLISH DETECTED</div>
+        </div>
+
+        <div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--crimson);margin-bottom:4px;font-weight:800;">● CODED FIT AI // SYNTHESIZING</div>
+          <div class="ai-synthesis-box">
+            Analyzing Profile <strong>#CF-8821</strong> (Athletic V-Taper, 18.2" Shoulder, 33" Waist)... Found 2 optimal pieces tailored to Bangalore's 18°C-26°C humidity swing. Applying your <strong>-1.5" slouch drape bias</strong> so the shoulders hang clean without tenting at the lower ribs.
+            <div class="ai-tags-row">
+              <span class="ai-tag-pill">V-TAPER LOCK</span>
+              <span class="ai-tag-pill">DWR FABRIC</span>
+              <span class="ai-tag-pill">99.4% CALIBRATED</span>
+            </div>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:#999;margin-top:4px;">11:42:11 IST • INFERENCE COMPLETE</div>
+        </div>
+      </div>
+
+      <!-- Presets Chips -->
+      <div style="font-family:var(--font-mono);font-size:9.5px;color:#777;margin-bottom:8px;">HINGLISH PROMPT PRESETS:</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div class="voice-chip" style="background:#f9f9f9;border:1px solid #ddd;color:#333;" onclick="setPreset('Goa sundowner ke liye breathable linen look oversized')">
+          ✦ "Goa sundowner ke liye breathable linen look oversized"
+        </div>
+        <div class="voice-chip" style="background:#f9f9f9;border:1px solid #ddd;color:#333;" onclick="setPreset('Mere 41.2 inch chest ke according relaxed cargo outfit')">
+          ✦ "Mere 41.2 inch chest ke according relaxed cargo outfit"
+        </div>
+        <div class="voice-chip" style="background:#f9f9f9;border:1px solid #ddd;color:#333;" onclick="setPreset('Black hybrid overshirt ke saath matching trousers')">
+          ✦ "Black hybrid overshirt ke saath matching trousers"
+        </div>
+      </div>
+
+      <!-- Input strip -->
+      <div class="voice-input-strip">
+        <input type="text" id="voice-query-input" placeholder="Speak Hinglish or type tailoring query...">
+        <button onclick="sendQuery()">SEND</button>
+      </div>
+    </div>
+
+    <!-- ── RIGHT PANEL: CURATED LOOK & BUNDLE (IMAGE 3) ── -->
+    <div class="recommendation-panel">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <span style="font-family:var(--font-mono);font-size:10px;font-weight:800;color:var(--crimson);">AI RECOMMENDATION // DROP PROTOCOL 09</span>
+          <h2 style="font-family:var(--font-heading);font-size:22px;font-weight:900;text-transform:uppercase;color:#000;margin-top:4px;">
+            CURATED LOOK // PROTOCOL: MONSOON TACTICAL STYLING
+          </h2>
+        </div>
+        <div style="background:#f0f0f2;padding:6px 12px;border-radius:2px;text-align:right;">
+          <div style="font-family:var(--font-mono);font-size:9px;color:#666;">AVATAR CONFIDENCE</div>
+          <strong style="font-family:var(--font-mono);font-size:13px;color:var(--crimson);">99.4% FIT-MATCH</strong>
+        </div>
+      </div>
+
+      <!-- 3 Recommended Pieces -->
+      <div class="ensemble-pieces-list">
+        <!-- 01 -->
+        <div class="ensemble-card">
+          <img src="https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=200&q=80" class="ensemble-thumb" alt="Overshirt">
+          <div class="ensemble-info">
+            <span class="item-seq">01 // TOP PIECE • 99.4% DRAPE</span>
+            <h4 class="item-name">ARCHETYPE DROP-SHOULDER OVERSHIRT</h4>
+            <span class="item-meta">280 GSM Merino Twill - Slate Ash // BIOMETRIC SLOUCH CUT</span>
+          </div>
+          <div class="ensemble-price">₹3,499</div>
+        </div>
+
+        <!-- 02 -->
+        <div class="ensemble-card">
+          <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=200&q=80" class="ensemble-thumb" alt="Pants">
+          <div class="ensemble-info">
+            <span class="item-seq">02 // BOTTOM PIECE • INSEAM 30.5"</span>
+            <h4 class="item-name">WATER-REPELLENT PARACHUTE UTILITY PANT</h4>
+            <span class="item-meta">DWR Micro-Ripstop - Pitch Black // AUTO-LOCKED CUFF</span>
+          </div>
+          <div class="ensemble-price">₹2,899</div>
+        </div>
+
+        <!-- 03 -->
+        <div class="ensemble-card">
+          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&q=80" class="ensemble-thumb" alt="Inner">
+          <div class="ensemble-info">
+            <span class="item-seq">03 // INNER LAYER • BREATHE 98/100</span>
+            <h4 class="item-name">AERO-DRAPE MODAL TEE</h4>
+            <span class="item-meta">190 GSM Bamboo Modal - Chalk White // SEAMLESS UNDERARM</span>
+          </div>
+          <div class="ensemble-price">₹1,299</div>
+        </div>
+      </div>
+
+      <!-- Bundle Pass Action Card -->
+      <div style="background:#111215;color:#fff;padding:20px;border-radius:var(--radius-xs);margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div>
+            <div style="font-family:var(--font-mono);font-size:9.5px;color:#888;">COMBINED ENSEMBLE SPEC:</div>
+            <div style="font-family:var(--font-mono);font-size:20px;font-weight:800;color:#fff;">
+              AI BUNDLE PASS: ₹6,799 <span style="font-size:13px;color:#888;text-decoration:line-through;">₹7,697</span>
+            </div>
+          </div>
+          <span style="background:var(--crimson);font-family:var(--font-mono);font-size:9.5px;padding:3px 6px;border-radius:2px;font-weight:800;">
+            SAVE ₹898
+          </span>
+        </div>
+
+        <button class="btn-bundle-add" style="margin-bottom:8px;" onclick="addConciergeLookToBag()">
+          ADD COMPLETE LOOK TO BAG (AI-CALIBRATED)
+        </button>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <a href="customize.html" class="btn-card-action" style="background:#222;color:#fff;text-align:center;padding:12px;">
+            INSPECT IN 3D AVATAR
+          </a>
+          <a href="customize.html?tab=3d" class="btn-card-action" style="background:#222;color:#fff;text-align:center;padding:12px;">
+            CUSTOMIZE IN STUDIO
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── 5. LIVE BIOMETRIC MATCH RADAR (IMAGE 3) ── -->
+  <section class="biometric-radar-card">
+    <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;color:var(--crimson);text-transform:uppercase;margin-bottom:8px;">
+      // LIVE BIOMETRIC MATCH RADAR • TARGET: TORSO ARCHETYPE ATHLETIC-04
+    </div>
+
+    <div class="radar-inner-box">
+      <div class="radar-stat-box">
+        <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;font-weight:800;margin-bottom:4px;">
+          <span>SHOULDER LINE DRAPE</span>
+          <span style="color:var(--crimson);">99.8%</span>
+        </div>
+        <div style="font-size:11px;color:#666;">Drop angle bias: -1.5" slouch applied</div>
+      </div>
+
+      <div class="radar-stat-box">
+        <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;font-weight:800;margin-bottom:4px;">
+          <span>WAIST TAPER FIT</span>
+          <span style="color:var(--crimson);">0% SAG</span>
+        </div>
+        <div style="font-size:11px;color:#666;">Lateral rib ease: +2.1" clean clearance</div>
+      </div>
+
+      <div class="radar-stat-box">
+        <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;font-weight:800;margin-bottom:4px;">
+          <span>CLIMATE COMFORT</span>
+          <span style="color:var(--crimson);">24.2 CLO</span>
+        </div>
+        <div style="font-size:11px;color:#666;">Atmospheric index: Tropical Monsoon Rated</div>
+      </div>
+    </div>
+
+    <div style="font-family:var(--font-mono);font-size:9px;color:#888;margin-top:8px;">
+      MEASUREMENT VAULT: LAT 12.9716° N // BLR LAB SERVER // ZERO TOLERANCE TAILORING
+    </div>
+  </section>
+
+  <!-- ── 6. FOOTER ── -->
+  <footer class="site-footer">
+    <div class="footer-top-grid">
+      <div class="footer-brand-col">
+        <span class="brand-logo">CODED FIT<span class="logo-dot">.</span></span>
+        <p>India's pioneer generative-pattern streetwear laboratory. Synthesizing Savile Row artisanal handcraft with neural garment draping for bespoke luxury wear.</p>
+      </div>
+      <div class="footer-links-col">
+        <h4>SHOP CATALOG</h4>
+        <ul>
+          <li><a href="shop.html">Bespoke Trousers</a></li>
+          <li><a href="shop.html">Heavyweight Tees</a></li>
+          <li><a href="shop.html">Tactical Outerwear</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4>ATELIER TECH</h4>
+        <ul>
+          <li><a href="customize.html">3D WebGL Configurator</a></li>
+          <li><a href="fit-profile.html">Indian Torso Morph Index</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4>SUPPORT</h4>
+        <ul>
+          <li><a href="cart.html">Doorstep Trial Booking</a></li>
+          <li><a href="cart.html">Alteration Requests</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4>BRAND &amp; LAB</h4>
+        <ul>
+          <li><a href="shop.html">Bengaluru Atelier Tour</a></li>
+          <li><a href="shop.html">Privacy Calibration</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom-bar">
+      <div>ISO 9001:2015 CERTIFIED PRECISION ATELIER // BENGALURU, INDIA</div>
+      <div>© 2025 CODED FIT PRIVATE LIMITED. ALL RIGHTS RESERVED.</div>
+    </div>
+  </footer>
+
+  <!-- ── 7. SLIDE-OVER CART DRAWER ── -->
+  <div class="cart-drawer-backdrop" id="cart-drawer-backdrop" onclick="closeCartDrawer()"></div>
+  <div class="cart-drawer-panel" id="cart-drawer-panel">
+    <div class="cart-drawer-header">
+      <h3>SHOPPING BAG (<span id="drawer-cart-count">0</span>)</h3>
+      <button class="cart-close-btn" onclick="closeCartDrawer()">✕</button>
+    </div>
+    <div class="cart-drawer-items" id="cart-drawer-items"></div>
+    <div class="cart-drawer-footer">
+      <div class="cart-subtotal-row">
+        <span>ESTIMATED SUB-TOTAL:</span>
+        <strong id="drawer-subtotal">₹0</strong>
+      </div>
+      <a href="cart.html" class="btn-coded btn-crimson" style="width:100%;text-align:center;">
+        PROCEED TO RAZORPAY CHECKOUT →
+      </a>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+
+  <script>
+    function setPreset(text) {
+      document.getElementById('voice-query-input').value = text;
+    }
+
+    function sendQuery() {
+      const q = document.getElementById('voice-query-input').value;
+      if (!q) return;
+      alert(`CODED FIT AI Synthesizing query: "${q}"... calibrated against Profile #CF-8821.`);
+    }
+
+    function addConciergeLookToBag() {
+      const p1 = getProductById(1);
+      const p5 = getProductById(5);
+      const p10 = getProductById(10);
+      if (typeof CART !== 'undefined' && CART.addItem) {
+        if (p1) CART.addItem(p1);
+        if (p5) CART.addItem(p5);
+        if (p10) CART.addItem(p10);
+      }
+      alert("Monsoon Tactical Styling Bundle (3 Pieces) added to Bag!");
+      openCartDrawer();
+    }
+
+    function openCartDrawer() {
+      document.getElementById('cart-drawer-backdrop').classList.add('active');
+      document.getElementById('cart-drawer-panel').classList.add('open');
+      if (typeof updateCartDrawerUI === 'function') updateCartDrawerUI();
+    }
+
+    function closeCartDrawer() {
+      document.getElementById('cart-drawer-backdrop').classList.remove('active');
+      document.getElementById('cart-drawer-panel').classList.remove('open');
+    }
+  </script>
+</body>
+</html>

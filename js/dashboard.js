@@ -131,7 +131,7 @@ function addOutfitBundleToCart() {
     addToCart(outfitState.jacket.id, sizeJacket, 1);
   }
 
-  showToast("🔥 UR PICKS OUTFIT BUNDLE ADDED TO BAG WITH 15% EXTRA OFF!");
+  showToast(" UR PICKS OUTFIT BUNDLE ADDED TO BAG WITH 15% EXTRA OFF!");
 }
 
 // Drop Countdown Radar

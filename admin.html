@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — CODED FIT [BLR-ATELIER]</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'Inter', sans-serif; background: #090a0c; color: #e0e0e0; }
+
+    /* LAYOUT */
+    .admin-root {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .admin-sidebar {
+      background: #0d0e11;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-brand {
+      padding: 20px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .sidebar-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      display: flex;
+      align-items: baseline;
+      gap: 3px;
+    }
+
+    .sidebar-logo .dot { color: #e10600; }
+
+    .sidebar-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 800;
+      color: #e10600;
+      letter-spacing: 0.5px;
+    }
+
+    .sidebar-admin-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .sidebar-menu {
+      padding: 16px 0;
+      flex: 1;
+    }
+
+    .sidebar-section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+      padding: 10px 18px 6px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 18px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      text-decoration: none;
+    }
+
+    .sidebar-link:hover { color: #fff; background: rgba(255,255,255,0.04); }
+
+    .sidebar-link.active {
+      color: #fff;
+      border-left-color: #e10600;
+      background: rgba(225,6,0,0.08);
+      font-weight: 600;
+    }
+
+    .sidebar-link-icon { font-size: 14px; opacity: 0.7; }
+
+    .sidebar-link-badge {
+      margin-left: auto;
+      background: #e10600;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 10px;
+    }
+
+    .sidebar-footer {
+      padding: 16px 18px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* MAIN CONTENT */
+    .admin-main {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* TOP BAR */
+    .admin-topbar {
+      background: #0d0e11;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 28px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar-page-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .topbar-breadcrumb {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar-live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #22c55e;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .topbar-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+
+    .topbar-action-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: #fff;
+      background: #e10600;
+      border: none;
+      padding: 7px 14px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    }
+
+    .topbar-action-btn:hover { background: #c00500; }
+
+    .topbar-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.5px;
+    }
+
+    /* CONTENT AREA */
+    .admin-content {
+      padding: 24px 28px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    /* KPI CARDS */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: #111316;
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 18px 20px;
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+
+    .kpi-card.orders::before { background: #e10600; }
+    .kpi-card.revenue::before { background: #22c55e; }
+    .kpi-card.clients::before { background: #3b82f6; }
+    .kpi-card.defect::before { background: #f59e0b; }
+
+    .kpi-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .kpi-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .kpi-delta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: #22c55e;
+    }
+
+    .kpi-delta.down { color: #e10600; }
+
+    .kpi-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: rgba(255,255,255,0.3);
+      margin-top: 2px;
+    }
+
+    /* GRID LAYOUTS */
+    .admin-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .admin-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .admin-grid-60-40 {
+      display: grid;
+      grid-template-columns: 60% 38%;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* PANEL */
+    .admin-panel {
+      background: #111316;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .panel-subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .panel-action {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      color: #e10600;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: none;
+      border: none;
+      text-decoration: none;
+    }
+
+    .panel-body { padding: 16px 18px; }
+
+    /* ORDERS TABLE */
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .orders-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .orders-table td {
+      padding: 10px 12px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: middle;
+    }
+
+    .orders-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .order-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .order-client {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .status-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 1px;
+    }
+
+    .status-badge.confirmed { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+    .status-badge.processing { background: rgba(225,6,0,0.15); color: #e10600; border: 1px solid rgba(225,6,0,0.3); }
+    .status-badge.dispatched { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+    .status-badge.delivered { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.1); }
+    .status-badge.pending { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+
+    .order-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .table-action-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 4px 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.15s;
+    }
+
+    .table-action-btn:hover { color: #e10600; border-color: rgba(225,6,0,0.4); }
+
+    /* MINI CHART */
+    .mini-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 60px;
+    }
+
+    .chart-bar {
+      flex: 1;
+      background: rgba(225,6,0,0.3);
+      border-radius: 2px 2px 0 0;
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .chart-bar:hover { background: #e10600; }
+    .chart-bar.today { background: #e10600; }
+
+    .chart-bar-label {
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      color: rgba(255,255,255,0.3);
+      white-space: nowrap;
+    }
+
+    /* PRODUCT TABLE */
+    .product-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .product-row:last-child { border-bottom: none; }
+
+    .product-img-thumb {
+      width: 40px; height: 50px;
+      object-fit: cover;
+      background: #1a1c22;
+      flex-shrink: 0;
+    }
+
+    .product-info { flex: 1; min-width: 0; }
+
+    .product-name-row {
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-sku {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: rgba(255,255,255,0.3);
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    .product-stock {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .product-stock.high { color: #22c55e; }
+    .product-stock.low { color: #f59e0b; }
+    .product-stock.out { color: #e10600; }
+
+    /* ACTIVITY FEED */
+    .activity-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .activity-item:last-child { border-bottom: none; }
+
+    .activity-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .activity-dot.order { background: #22c55e; }
+    .activity-dot.dispatch { background: #3b82f6; }
+    .activity-dot.alteration { background: #f59e0b; }
+    .activity-dot.alert { background: #e10600; }
+
+    .activity-text {
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.5;
+    }
+
+    .activity-text strong { color: #fff; }
+
+    .activity-time {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: rgba(255,255,255,0.25);
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+
+    /* STAT ROW */
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .stat-row:last-child { border-bottom: none; }
+
+    .stat-row-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .stat-row-bar-wrap { flex: 1; margin: 0 14px; }
+
+    .stat-row-bar {
+      height: 3px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .stat-row-bar-fill {
+      height: 100%;
+      background: #e10600;
+      border-radius: 2px;
+    }
+
+    .stat-row-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    /* NAVIGATION TABS */
+    .admin-tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 20px;
+    }
+
+    .admin-tab {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      padding: 12px 20px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .admin-tab.active { color: #fff; border-bottom-color: #e10600; }
+    .admin-tab:hover { color: rgba(255,255,255,0.7); }
+
+    /* SECTION HIDDEN */
+    .admin-section { display: none; }
+    .admin-section.active { display: block; }
+
+    /* SEARCH / FILTER ROW */
+    .filter-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .filter-input {
+      flex: 1;
+      background: #0a0a0c;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      padding: 9px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      outline: none;
+      border-radius: 1px;
+    }
+
+    .filter-input:focus { border-color: #e10600; }
+
+    .filter-select {
+      background: #0a0a0c;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.7);
+      padding: 9px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* TOAST */
+    .coded-toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111; color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 700;
+      padding: 12px 24px;
+      border-left: 3px solid #e10600;
+      z-index: 99999; opacity: 0;
+      transition: all 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .coded-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: rgba(255,255,255,0.2);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    /* PRODUCTION PROGRESS */
+    .production-item {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .production-item:last-child { border-bottom: none; }
+
+    .production-img {
+      width: 70px; height: 85px;
+      object-fit: cover;
+      background: #1a1c22;
+    }
+
+    .production-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .production-stage {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: #e10600;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .production-progress-bar {
+      height: 3px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .production-progress-fill {
+      height: 100%;
+      background: #e10600;
+      border-radius: 2px;
+    }
+
+    .production-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="coded-toast" id="coded-toast"></div>
+
+  <div class="admin-root">
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo">CODED FIT<span class="dot">.</span></div>
+        <div class="sidebar-badge">[BLR-ATELIER]</div>
+        <div class="sidebar-admin-tag">ADMIN CONTROL PANEL</div>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="sidebar-section-label">CORE</div>
+        <a class="sidebar-link active" onclick="showSection('dashboard')">
+          <span class="sidebar-link-icon">&#9632;</span> Dashboard
+          <span class="sidebar-link-badge" id="live-orders-badge">0</span>
+        </a>
+        <a class="sidebar-link" onclick="showSection('orders')">
+          <span class="sidebar-link-icon">&#9638;</span> Orders
+        </a>
+        <a class="sidebar-link" onclick="showSection('products')">
+          <span class="sidebar-link-icon">&#9670;</span> Products
+        </a>
+        <a class="sidebar-link" onclick="showSection('clients')">
+          <span class="sidebar-link-icon">&#9679;</span> Clients
+        </a>
+
+        <div class="sidebar-section-label">ATELIER</div>
+        <a class="sidebar-link" onclick="showSection('production')">
+          <span class="sidebar-link-icon">&#9650;</span> Production
+        </a>
+        <a class="sidebar-link" onclick="showSection('alterations')">
+          <span class="sidebar-link-icon">&#9998;</span> Alterations
+        </a>
+        <a class="sidebar-link" onclick="showSection('dispatch')">
+          <span class="sidebar-link-icon">&#8635;</span> Dispatch
+        </a>
+
+        <div class="sidebar-section-label">CONFIG</div>
+        <a class="sidebar-link" href="index.html" target="_blank">
+          <span class="sidebar-link-icon">&#8599;</span> View Store
+        </a>
+        <a class="sidebar-link" onclick="showSection('analytics')">
+          <span class="sidebar-link-icon">&#8801;</span> Analytics
+        </a>
+        <a class="sidebar-link" onclick="showSection('settings')">
+          <span class="sidebar-link-icon">&#9673;</span> Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        CODED FIT // ADMIN v4.2<br>
+        BLR ATELIER &bull; SERVER: NOMINAL
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+      <!-- TOP BAR -->
+      <div class="admin-topbar">
+        <div class="topbar-left">
+          <div>
+            <div class="topbar-page-title" id="page-title">Dashboard</div>
+            <div class="topbar-breadcrumb">CODED FIT ADMIN // ATELIER CONTROL SYSTEM</div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-live-indicator">
+            <div class="topbar-dot"></div>
+            LIVE
+          </div>
+          <div class="topbar-time" id="admin-clock">--:--:--</div>
+          <button class="topbar-action-btn" onclick="exportData()">EXPORT DATA</button>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="admin-content">
+
+        <!-- ── DASHBOARD SECTION ── -->
+        <div class="admin-section active" id="section-dashboard">
+
+          <!-- KPIs -->
+          <div class="kpi-grid">
+            <div class="kpi-card orders">
+              <div class="kpi-label">ACTIVE COMMISSIONS</div>
+              <div class="kpi-value" id="kpi-active">0</div>
+              <div class="kpi-delta" id="kpi-active-delta">+0 today</div>
+              <div class="kpi-sub">In production pipeline</div>
+            </div>
+            <div class="kpi-card revenue">
+              <div class="kpi-label">TOTAL REVENUE (TODAY)</div>
+              <div class="kpi-value" id="kpi-revenue">&#8377;0</div>
+              <div class="kpi-delta">LIVE</div>
+              <div class="kpi-sub">All payment methods</div>
+            </div>
+            <div class="kpi-card clients">
+              <div class="kpi-label">TOTAL CLIENTS</div>
+              <div class="kpi-value">2,841</div>
+              <div class="kpi-delta">+14 THIS WEEK</div>
+              <div class="kpi-sub">Biometric profiles</div>
+            </div>
+            <div class="kpi-card defect">
+              <div class="kpi-label">DEFECT RATE</div>
+              <div class="kpi-value">0.00%</div>
+              <div class="kpi-delta">ZERO DEFECT RECORD</div>
+              <div class="kpi-sub">All-time quality index</div>
+            </div>
+          </div>
+
+          <div class="admin-grid-60-40">
+            <!-- Recent Orders -->
+            <div class="admin-panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Recent Orders</div>
+                  <div class="panel-subtitle">Last 10 transactions</div>
+                </div>
+                <button class="panel-action" onclick="showSection('orders')">VIEW ALL &rarr;</button>
+              </div>
+              <div style="overflow-x:auto;">
+                <table class="orders-table" id="recent-orders-table">
+                  <thead>
+                    <tr>
+                      <th>ORDER ID</th>
+                      <th>CLIENT</th>
+                      <th>ITEMS</th>
+                      <th>AMOUNT</th>
+                      <th>STATUS</th>
+                      <th>ACTIONS</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recent-orders-body">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Activity Feed -->
+            <div class="admin-panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Activity Feed</div>
+                  <div class="panel-subtitle">Real-time atelier events</div>
+                </div>
+              </div>
+              <div class="panel-body" id="activity-feed">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-grid-3">
+            <!-- Revenue Chart -->
+            <div class="admin-panel">
+              <div class="panel-header">
+                <div class="panel-title">Revenue (7 Days)</div>
+              </div>
+              <div class="panel-body">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;">
+                  <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:900;color:#fff;">&#8377;1,24,820</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#22c55e;">+28.4% vs LAST WK</div>
+                </div>
+                <div class="mini-chart" id="revenue-chart">
+                  <!-- Populated by JS -->
+                </div>
+                <div style="height:20px;"></div>
+              </div>
+            </div>
+
+            <!-- Top Products -->
+            <div class="admin-panel">
+              <div class="panel-header">
+                <div class="panel-title">Top Products</div>
+                <button class="panel-action" onclick="showSection('products')">VIEW ALL</button>
+              </div>
+              <div class="panel-body" id="top-products">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Production Status -->
+            <div class="admin-panel">
+              <div class="panel-header">
+                <div class="panel-title">Production Pipeline</div>
+                <button class="panel-action" onclick="showSection('production')">VIEW ALL</button>
+              </div>
+              <div class="panel-body">
+                <div class="stat-row">
+                  <div class="stat-row-label">Laser Cutting</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:65%"></div></div></div>
+                  <div class="stat-row-val">65%</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Pattern Gen</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:88%"></div></div></div>
+                  <div class="stat-row-val">88%</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Stitching</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:42%"></div></div></div>
+                  <div class="stat-row-val">42%</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">QC Check</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:100%;background:#22c55e"></div></div></div>
+                  <div class="stat-row-val" style="color:#22c55e">PASS</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Dispatch</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:73%"></div></div></div>
+                  <div class="stat-row-val">73%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ORDERS SECTION ── -->
+        <div class="admin-section" id="section-orders">
+          <div class="filter-row">
+            <input class="filter-input" type="text" placeholder="Search by order ID, client name..." oninput="filterOrders(this.value)">
+            <select class="filter-select" onchange="filterByStatus(this.value)">
+              <option value="">ALL STATUS</option>
+              <option value="confirmed">CONFIRMED</option>
+              <option value="processing">PROCESSING</option>
+              <option value="dispatched">DISPATCHED</option>
+              <option value="delivered">DELIVERED</option>
+            </select>
+            <button class="topbar-action-btn" onclick="refreshOrders()">REFRESH</button>
+          </div>
+
+          <div class="admin-panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">All Orders</div>
+                <div class="panel-subtitle" id="orders-count">Loading...</div>
+              </div>
+              <button class="panel-action" onclick="exportOrders()">EXPORT CSV</button>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="orders-table">
+                <thead>
+                  <tr>
+                    <th>ORDER ID</th>
+                    <th>CLIENT</th>
+                    <th>DATE</th>
+                    <th>ITEMS</th>
+                    <th>AMOUNT</th>
+                    <th>PAYMENT</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody id="all-orders-body">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PRODUCTS SECTION ── -->
+        <div class="admin-section" id="section-products">
+          <div class="filter-row">
+            <input class="filter-input" type="text" placeholder="Search products...">
+            <select class="filter-select">
+              <option>ALL CATEGORIES</option>
+              <option>SHIRTS</option>
+              <option>TROUSERS</option>
+              <option>OVERSHIRTS</option>
+              <option>HOODIES</option>
+            </select>
+            <button class="topbar-action-btn" onclick="showToast('PRODUCT EDITOR COMING SOON')">+ ADD PRODUCT</button>
+          </div>
+
+          <div class="admin-panel">
+            <div class="panel-header">
+              <div class="panel-title">Product Catalog</div>
+              <div class="panel-subtitle" id="products-count">Loading...</div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="orders-table">
+                <thead>
+                  <tr>
+                    <th>IMAGE</th>
+                    <th>NAME</th>
+                    <th>CODE</th>
+                    <th>CATEGORY</th>
+                    <th>PRICE</th>
+                    <th>STOCK</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody id="products-body">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CLIENTS SECTION ── -->
+        <div class="admin-section" id="section-clients">
+          <div class="admin-panel">
+            <div class="panel-header">
+              <div class="panel-title">Client Biometric Vault</div>
+              <div class="panel-subtitle">All registered clients with AI fit profiles</div>
+            </div>
+            <div class="panel-body" id="clients-panel">
+              <!-- Demo clients -->
+              <table class="orders-table">
+                <thead>
+                  <tr>
+                    <th>CLIENT ID</th>
+                    <th>NAME</th>
+                    <th>TIER</th>
+                    <th>ORDERS</th>
+                    <th>LAST ORDER</th>
+                    <th>AI FIT SCORE</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody id="clients-body">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PRODUCTION SECTION ── -->
+        <div class="admin-section" id="section-production">
+          <div class="admin-grid-2">
+            <div class="admin-panel">
+              <div class="panel-header">
+                <div class="panel-title">Active Production Queue</div>
+                <div class="panel-subtitle">Live atelier floor status</div>
+              </div>
+              <div class="panel-body" id="production-queue">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <div class="admin-panel">
+              <div class="panel-header">
+                <div class="panel-title">Machine Status</div>
+              </div>
+              <div class="panel-body">
+                <div class="stat-row">
+                  <div class="stat-row-label">CNC Laser Cutter #01</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:60%"></div></div></div>
+                  <div class="stat-row-val" style="color:#22c55e">ACTIVE</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">CNC Laser Cutter #02</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:40%"></div></div></div>
+                  <div class="stat-row-val" style="color:#22c55e">ACTIVE</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Industrial Sewing #01</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:85%;background:#22c55e"></div></div></div>
+                  <div class="stat-row-val" style="color:#22c55e">ACTIVE</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Pattern Generator AI</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:100%;background:#22c55e"></div></div></div>
+                  <div class="stat-row-val" style="color:#22c55e">ONLINE</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">QC Scanner</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:20%"></div></div></div>
+                  <div class="stat-row-val">IDLE</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Packaging Station</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:70%"></div></div></div>
+                  <div class="stat-row-val" style="color:#22c55e">ACTIVE</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ALTERATIONS SECTION ── -->
+        <div class="admin-section" id="section-alterations">
+          <div class="admin-panel">
+            <div class="panel-header">
+              <div class="panel-title">Alteration Requests</div>
+              <div class="panel-subtitle">Free valet alteration queue</div>
+            </div>
+            <div class="panel-body">
+              <table class="orders-table">
+                <thead>
+                  <tr>
+                    <th>REQUEST ID</th>
+                    <th>CLIENT</th>
+                    <th>GARMENT</th>
+                    <th>ISSUE</th>
+                    <th>CITY</th>
+                    <th>VALET DATE</th>
+                    <th>STATUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="order-id">#ALT-091</span></td>
+                    <td><span class="order-client">Arjun S.</span></td>
+                    <td>Merino Overshirt</td>
+                    <td>Sleeve +1.5cm</td>
+                    <td>Delhi NCR</td>
+                    <td>Oct 20, 2026</td>
+                    <td><span class="status-badge pending">SCHEDULED</span></td>
+                  </tr>
+                  <tr>
+                    <td><span class="order-id">#ALT-090</span></td>
+                    <td><span class="order-client">Prateek M.</span></td>
+                    <td>Cuban Shirt</td>
+                    <td>Chest narrow -1cm</td>
+                    <td>Bengaluru</td>
+                    <td>Oct 19, 2026</td>
+                    <td><span class="status-badge confirmed">COMPLETED</span></td>
+                  </tr>
+                  <tr>
+                    <td><span class="order-id">#ALT-089</span></td>
+                    <td><span class="order-client">Rohan K.</span></td>
+                    <td>Balloon Trouser</td>
+                    <td>Hem -2cm</td>
+                    <td>Mumbai</td>
+                    <td>Oct 18, 2026</td>
+                    <td><span class="status-badge dispatched">IN TRANSIT</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── DISPATCH SECTION ── -->
+        <div class="admin-section" id="section-dispatch">
+          <div class="admin-panel">
+            <div class="panel-header">
+              <div class="panel-title">Dispatch Queue</div>
+              <div class="panel-subtitle">Active shipments and tracking</div>
+            </div>
+            <div class="panel-body">
+              <table class="orders-table">
+                <thead>
+                  <tr>
+                    <th>ORDER ID</th>
+                    <th>CLIENT</th>
+                    <th>AWB #</th>
+                    <th>COURIER</th>
+                    <th>CITY</th>
+                    <th>ETA</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="order-id">#CF-2026-8921</span></td>
+                    <td><span class="order-client">Dhyey M.</span></td>
+                    <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">88219042</td>
+                    <td>BlueDart Surface Air</td>
+                    <td>BLR</td>
+                    <td>Oct 20, 2026</td>
+                    <td><span class="status-badge dispatched">IN TRANSIT</span></td>
+                    <td><button class="table-action-btn" onclick="showToast('TRACKING: BD88219042 ACTIVE')">TRACK</button></td>
+                  </tr>
+                  <tr>
+                    <td><span class="order-id">#CF-2026-8899</span></td>
+                    <td><span class="order-client">Arjun S.</span></td>
+                    <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">DELHP9021</td>
+                    <td>Delhivery Express</td>
+                    <td>DEL</td>
+                    <td>Oct 22, 2026</td>
+                    <td><span class="status-badge processing">PACKING</span></td>
+                    <td><button class="table-action-btn" onclick="showToast('TRACKING UPDATE SENT')">NOTIFY</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ANALYTICS SECTION ── -->
+        <div class="admin-section" id="section-analytics">
+          <div class="kpi-grid">
+            <div class="kpi-card orders">
+              <div class="kpi-label">CONVERSION RATE</div>
+              <div class="kpi-value">24.8%</div>
+              <div class="kpi-delta">+3.2% vs LAST MONTH</div>
+            </div>
+            <div class="kpi-card revenue">
+              <div class="kpi-label">AVG ORDER VALUE</div>
+              <div class="kpi-value">&#8377;3,840</div>
+              <div class="kpi-delta">+&#8377;420 vs LAST MONTH</div>
+            </div>
+            <div class="kpi-card clients">
+              <div class="kpi-label">REPEAT CLIENTS</div>
+              <div class="kpi-value">68.4%</div>
+              <div class="kpi-delta">+5.1% vs LAST QTR</div>
+            </div>
+            <div class="kpi-card defect">
+              <div class="kpi-label">FIT SATISFACTION</div>
+              <div class="kpi-value">99.4%</div>
+              <div class="kpi-delta">AI FIT CALIBRATION</div>
+            </div>
+          </div>
+
+          <div class="admin-grid-2">
+            <div class="admin-panel">
+              <div class="panel-header"><div class="panel-title">Revenue by Category</div></div>
+              <div class="panel-body">
+                <div class="stat-row">
+                  <div class="stat-row-label">Overshirts &amp; Shirts</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:72%"></div></div></div>
+                  <div class="stat-row-val">&#8377;52K</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Trousers</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:48%"></div></div></div>
+                  <div class="stat-row-val">&#8377;34K</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Bespoke Custom</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:90%"></div></div></div>
+                  <div class="stat-row-val">&#8377;64K</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Hoodies</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:32%"></div></div></div>
+                  <div class="stat-row-val">&#8377;22K</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Accessories</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:18%"></div></div></div>
+                  <div class="stat-row-val">&#8377;12K</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="admin-panel">
+              <div class="panel-header"><div class="panel-title">Traffic Sources</div></div>
+              <div class="panel-body">
+                <div class="stat-row">
+                  <div class="stat-row-label">Direct</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:45%"></div></div></div>
+                  <div class="stat-row-val">45%</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Instagram</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:30%"></div></div></div>
+                  <div class="stat-row-val">30%</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Google Search</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:15%"></div></div></div>
+                  <div class="stat-row-val">15%</div>
+                </div>
+                <div class="stat-row">
+                  <div class="stat-row-label">Referral</div>
+                  <div class="stat-row-bar-wrap"><div class="stat-row-bar"><div class="stat-row-bar-fill" style="width:10%"></div></div></div>
+                  <div class="stat-row-val">10%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SETTINGS SECTION ── -->
+        <div class="admin-section" id="section-settings">
+          <div class="admin-grid-2">
+            <div class="admin-panel">
+              <div class="panel-header">
+                <div class="panel-title">Store Configuration</div>
+              </div>
+              <div class="panel-body" style="display:flex;flex-direction:column;gap:16px;">
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">STORE NAME</div>
+                  <input class="filter-input" type="text" value="CODED FIT [BLR-ATELIER]">
+                </div>
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">ATELIER CITY</div>
+                  <input class="filter-input" type="text" value="Bengaluru, Karnataka">
+                </div>
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">GST RATE</div>
+                  <input class="filter-input" type="text" value="12%">
+                </div>
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">ACTIVE PROMO CODES</div>
+                  <input class="filter-input" type="text" value="FITFIRST, CODED10, BLR20">
+                </div>
+                <button class="topbar-action-btn" onclick="showToast('SETTINGS SAVED SUCCESSFULLY')">SAVE SETTINGS</button>
+              </div>
+            </div>
+
+            <div class="admin-panel">
+              <div class="panel-header"><div class="panel-title">Quick Actions</div></div>
+              <div class="panel-body" style="display:flex;flex-direction:column;gap:10px;">
+                <button class="topbar-action-btn" style="width:100%;padding:12px;" onclick="showToast('SENDING BULK EMAIL...')">SEND BULK EMAIL TO CLIENTS</button>
+                <button class="topbar-action-btn" style="width:100%;padding:12px;background:#22c55e;" onclick="showToast('DROP ANNOUNCEMENT SENT')">ANNOUNCE NEW DROP</button>
+                <button class="topbar-action-btn" style="width:100%;padding:12px;background:#3b82f6;" onclick="showToast('BACKUP CREATED')">BACKUP ALL DATA</button>
+                <button class="topbar-action-btn" style="width:100%;padding:12px;background:#111;" onclick="clearDemoData()">CLEAR DEMO DATA</button>
+                <button class="topbar-action-btn" style="width:100%;padding:12px;" onclick="seedDemoData()">SEED DEMO DATA</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Load products from storage
+    let allProducts = [];
+    try {
+      // Attempt to load PRODUCTS if available
+      if (typeof PRODUCTS !== 'undefined') allProducts = PRODUCTS;
+    } catch(e) {}
+
+    let allOrders = [];
+
+    function loadOrders() {
+      try {
+        allOrders = JSON.parse(localStorage.getItem('CODED_ORDERS') || '[]');
+      } catch(e) { allOrders = []; }
+
+      // Add demo orders if none
+      if (allOrders.length === 0) {
+        seedDemoData();
+        return;
+      }
+
+      renderRecentOrders();
+      renderAllOrders();
+      updateKPIs();
+    }
+
+    function seedDemoData() {
+      const statuses = ['confirmed', 'processing', 'dispatched', 'delivered'];
+      const clients = [
+        { name: 'Dhyey M.', id: '#CF-8821' },
+        { name: 'Arjun S.', id: '#CF-7712' },
+        { name: 'Prateek M.', id: '#CF-6391' },
+        { name: 'Rohan K.', id: '#CF-5823' },
+        { name: 'Kiran P.', id: '#CF-4490' },
+      ];
+      const products = [
+        { name: 'Merino Field Overshirt', price: 3499 },
+        { name: 'Aero-Drape Cuban Shirt', price: 1799 },
+        { name: 'Structured Balloon Trouser', price: 3999 },
+        { name: 'Heavy Terry Boxy Tee', price: 1899 },
+      ];
+
+      const demoOrders = [];
+      for (let i = 0; i < 12; i++) {
+        const client = clients[i % clients.length];
+        const prod = products[i % products.length];
+        const status = statuses[Math.floor(Math.random() * statuses.length)];
+        const d = new Date();
+        d.setDate(d.getDate() - i * 2);
+        demoOrders.push({
+          id: `#CF-2026-${8900 + i}`,
+          date: d.toISOString(),
+          client: client,
+          items: [{ name: prod.name, price: prod.price, qty: 1 }],
+          subtotal: prod.price,
+          discount: Math.round(prod.price * 0.15),
+          total: Math.round(prod.price * 0.85),
+          payMethod: ['upi', 'card', 'netbanking'][i % 3],
+          status,
+        });
+      }
+      localStorage.setItem('CODED_ORDERS', JSON.stringify(demoOrders));
+      allOrders = demoOrders;
+      renderRecentOrders();
+      renderAllOrders();
+      updateKPIs();
+      renderProductsTable();
+      renderClientsTable();
+      renderActivityFeed();
+      renderProductionQueue();
+      showToast('DEMO DATA SEEDED');
+    }
+
+    function clearDemoData() {
+      localStorage.removeItem('CODED_ORDERS');
+      localStorage.removeItem('CODED_LATEST_ORDER');
+      localStorage.removeItem('NOVA_CART');
+      allOrders = [];
+      renderRecentOrders();
+      renderAllOrders();
+      updateKPIs();
+      showToast('ALL DATA CLEARED');
+    }
+
+    function updateKPIs() {
+      const active = allOrders.filter(o => ['confirmed','processing'].includes(o.status)).length;
+      const revenue = allOrders.reduce((s, o) => s + (o.total || 0), 0);
+      document.getElementById('kpi-active').textContent = active;
+      document.getElementById('kpi-active-delta').textContent = '+' + active + ' today';
+      document.getElementById('kpi-revenue').textContent = '\u20b9' + revenue.toLocaleString('en-IN');
+      document.getElementById('live-orders-badge').textContent = active;
+    }
+
+    function renderRecentOrders() {
+      const tbody = document.getElementById('recent-orders-body');
+      const recent = allOrders.slice(0, 6);
+      if (!recent.length) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(255,255,255,0.2);font-family:'JetBrains Mono',monospace;font-size:11px;">NO ORDERS YET</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = recent.map(o => {
+        const client = o.client || {};
+        const statusClass = o.status || 'pending';
+        const d = new Date(o.date || Date.now());
+        return `
+          <tr>
+            <td><span class="order-id">${o.id}</span></td>
+            <td><span class="order-client">${client.name || 'Unknown'}</span><br><span style="font-family:'JetBrains Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.3);">${client.id || ''}</span></td>
+            <td style="font-size:11px;">${(o.items || []).length} item(s)</td>
+            <td><span class="order-amount">&#8377;${(o.total || 0).toLocaleString('en-IN')}</span></td>
+            <td><span class="status-badge ${statusClass}">${statusClass.toUpperCase()}</span></td>
+            <td>
+              <button class="table-action-btn" onclick="showToast('ORDER ${o.id} DETAILS')">VIEW</button>
+              <button class="table-action-btn" onclick="updateOrderStatus('${o.id}')">UPDATE</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderAllOrders() {
+      const tbody = document.getElementById('all-orders-body');
+      const countEl = document.getElementById('orders-count');
+      if (countEl) countEl.textContent = allOrders.length + ' total orders';
+
+      if (!allOrders.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:rgba(255,255,255,0.2);font-family:'JetBrains Mono',monospace;font-size:11px;">NO ORDERS FOUND</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = allOrders.map(o => {
+        const client = o.client || {};
+        const statusClass = o.status || 'pending';
+        const d = new Date(o.date || Date.now());
+        return `
+          <tr>
+            <td><span class="order-id">${o.id}</span></td>
+            <td><span class="order-client">${client.name || 'Unknown'}</span></td>
+            <td style="font-size:11px;font-family:'JetBrains Mono',monospace;">${d.toLocaleDateString('en-IN')}</td>
+            <td>${(o.items || []).length} item(s)</td>
+            <td><span class="order-amount">&#8377;${(o.total || 0).toLocaleString('en-IN')}</span></td>
+            <td style="font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;">${o.payMethod || 'UPI'}</td>
+            <td><span class="status-badge ${statusClass}">${statusClass.toUpperCase()}</span></td>
+            <td>
+              <button class="table-action-btn" onclick="showToast('VIEWING ORDER ${o.id}')">VIEW</button>
+              <button class="table-action-btn" onclick="updateOrderStatus('${o.id}')">STATUS</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterOrders(query) {
+      const filtered = allOrders.filter(o =>
+        o.id.toLowerCase().includes(query.toLowerCase()) ||
+        (o.client?.name || '').toLowerCase().includes(query.toLowerCase())
+      );
+      const tbody = document.getElementById('all-orders-body');
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:30px;color:rgba(255,255,255,0.2);font-family:'JetBrains Mono',monospace;">NO RESULTS</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = filtered.map(o => {
+        const client = o.client || {};
+        const statusClass = o.status || 'pending';
+        const d = new Date(o.date || Date.now());
+        return `
+          <tr>
+            <td><span class="order-id">${o.id}</span></td>
+            <td><span class="order-client">${client.name || 'Unknown'}</span></td>
+            <td>${d.toLocaleDateString('en-IN')}</td>
+            <td>${(o.items || []).length}</td>
+            <td><span class="order-amount">&#8377;${(o.total || 0).toLocaleString('en-IN')}</span></td>
+            <td style="font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;">${o.payMethod || 'UPI'}</td>
+            <td><span class="status-badge ${statusClass}">${statusClass.toUpperCase()}</span></td>
+            <td><button class="table-action-btn" onclick="showToast('ORDER ${o.id}')">VIEW</button></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterByStatus(status) {
+      const filtered = status ? allOrders.filter(o => o.status === status) : allOrders;
+      const tbody = document.getElementById('all-orders-body');
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:30px;color:rgba(255,255,255,0.2);font-family:'JetBrains Mono',monospace;">NO ORDERS WITH STATUS: ${status.toUpperCase()}</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = filtered.map(o => {
+        const client = o.client || {};
+        const statusClass = o.status || 'pending';
+        return `
+          <tr>
+            <td><span class="order-id">${o.id}</span></td>
+            <td><span class="order-client">${client.name || ''}</span></td>
+            <td style="font-family:'JetBrains Mono',monospace;font-size:10px;">${new Date(o.date || Date.now()).toLocaleDateString('en-IN')}</td>
+            <td>${(o.items || []).length}</td>
+            <td><span class="order-amount">&#8377;${(o.total || 0).toLocaleString('en-IN')}</span></td>
+            <td style="font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;">${o.payMethod || 'UPI'}</td>
+            <td><span class="status-badge ${statusClass}">${statusClass.toUpperCase()}</span></td>
+            <td><button class="table-action-btn" onclick="showToast('ORDER ${o.id}')">VIEW</button></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function updateOrderStatus(orderId) {
+      const statuses = ['confirmed', 'processing', 'dispatched', 'delivered'];
+      const order = allOrders.find(o => o.id === orderId);
+      if (!order) return;
+      const currentIdx = statuses.indexOf(order.status);
+      const nextStatus = statuses[(currentIdx + 1) % statuses.length];
+      order.status = nextStatus;
+      localStorage.setItem('CODED_ORDERS', JSON.stringify(allOrders));
+      renderRecentOrders();
+      renderAllOrders();
+      showToast('ORDER ' + orderId + ' STATUS -> ' + nextStatus.toUpperCase());
+    }
+
+    function renderProductsTable() {
+      // Use static demo data since products.js may not be loaded
+      const demoProducts = [
+        { id:1, code:'CP-SH-09', name:'Drop-Shoulder Merino Field Overshirt', category:'Shirts', price:3499, images:['https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=100&q=80'] },
+        { id:2, code:'CP-SH-01', name:'Aero-Drape Cuban Shirt', category:'Cuban Shirts', price:1799, images:['https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=100&q=80'] },
+        { id:3, code:'CP-TR-07', name:'Structured Balloon Trouser', category:'Trousers', price:3999, images:['https://images.unsplash.com/photo-1542272604-787c3835535d?w=100&q=80'] },
+        { id:4, code:'CP-TS-03', name:'320 GSM Boxy Archetype Tee', category:'T-Shirts', price:1899, images:['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&q=80'] },
+        { id:5, code:'CP-HD-11', name:'Heavy Terry French Terry Hoodie', category:'Hoodies', price:3299, images:['https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=100&q=80'] },
+      ];
+
+      const tbody = document.getElementById('products-body');
+      const countEl = document.getElementById('products-count');
+      if (countEl) countEl.textContent = demoProducts.length + ' products in catalog';
+
+      tbody.innerHTML = demoProducts.map(p => {
+        const stock = Math.floor(Math.random() * 50 + 5);
+        const stockClass = stock > 20 ? 'high' : stock > 5 ? 'low' : 'out';
+        return `
+          <tr>
+            <td><img src="${p.images[0]}" style="width:36px;height:44px;object-fit:cover;background:#1a1c22;" onerror="this.style.background='#333'"></td>
+            <td><span class="order-client">${p.name}</span></td>
+            <td style="font-family:'JetBrains Mono',monospace;font-size:9.5px;">${p.code}</td>
+            <td>${p.category}</td>
+            <td><span class="order-amount">&#8377;${p.price.toLocaleString('en-IN')}</span></td>
+            <td><span class="product-stock ${stockClass}">${stock} units</span></td>
+            <td><span class="status-badge confirmed">ACTIVE</span></td>
+            <td>
+              <button class="table-action-btn" onclick="showToast('EDITING ${p.code}')">EDIT</button>
+              <button class="table-action-btn" onclick="showToast('${p.name} DUPLICATED')">DUPLICATE</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderClientsTable() {
+      const demoClients = [
+        { id:'#CF-8821', name:'Dhyey M.', tier:'ATELIER BLACK', orders:7, last:'Oct 8, 2026', fit:99.4 },
+        { id:'#CF-7712', name:'Arjun S.', tier:'ATELIER GOLD', orders:4, last:'Oct 6, 2026', fit:97.2 },
+        { id:'#CF-6391', name:'Prateek M.', tier:'ATELIER SILVER', orders:2, last:'Sep 28, 2026', fit:94.8 },
+        { id:'#CF-5823', name:'Rohan K.', tier:'ATELIER SILVER', orders:3, last:'Oct 1, 2026', fit:96.1 },
+        { id:'#CF-4490', name:'Kiran P.', tier:'ATELIER GOLD', orders:5, last:'Oct 5, 2026', fit:98.3 },
+      ];
+
+      const tbody = document.getElementById('clients-body');
+      tbody.innerHTML = demoClients.map(c => `
+        <tr>
+          <td><span class="order-id">${c.id}</span></td>
+          <td><span class="order-client">${c.name}</span></td>
+          <td><span style="font-family:'JetBrains Mono',monospace;font-size:8.5px;color:#f59e0b;">${c.tier}</span></td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">${c.orders}</td>
+          <td style="font-size:11px;">${c.last}</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#22c55e;">${c.fit}%</td>
+          <td>
+            <button class="table-action-btn" onclick="showToast('VIEWING ${c.name} PROFILE')">PROFILE</button>
+            <button class="table-action-btn" onclick="showToast('${c.name} ORDER HISTORY')">ORDERS</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderActivityFeed() {
+      const activities = [
+        { type: 'order', text: '<strong>New order</strong> #CF-2026-8921 — Dhyey M. // ₹4,504', time: '2m ago' },
+        { type: 'dispatch', text: '<strong>Dispatched</strong> #CF-2026-8899 via BlueDart AWB #88219042', time: '18m ago' },
+        { type: 'alteration', text: '<strong>Alteration valet</strong> Arjun S. — Merino sleeve +1.5cm scheduled', time: '1h ago' },
+        { type: 'order', text: '<strong>New order</strong> #CF-2026-8898 — Kiran P. // ₹3,299', time: '2h ago' },
+        { type: 'alert', text: '<strong>QC Alert</strong> Lot #BT-092 — 2 units flagged for re-stitching', time: '3h ago' },
+        { type: 'dispatch', text: '<strong>Delivered</strong> #CF-2026-8890 to Rohan K. // Fit: 10/10', time: '5h ago' },
+      ];
+
+      const container = document.getElementById('activity-feed');
+      container.innerHTML = activities.map(a => `
+        <div class="activity-item">
+          <div class="activity-dot ${a.type}"></div>
+          <div class="activity-text">${a.text}</div>
+          <div class="activity-time">${a.time}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderProductionQueue() {
+      const queue = [
+        { name: 'Merino Field Overshirt', img: 'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=100&q=80', stage: 'STAGE 04: LASER CUTTING', pct: 60 },
+        { name: 'Balloon Trouser', img: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=100&q=80', stage: 'STAGE 06: STITCHING', pct: 75 },
+        { name: 'Cuban Shirt', img: 'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=100&q=80', stage: 'STAGE 08: TRIAL PACK', pct: 88 },
+        { name: 'Heavy Terry Hoodie', img: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=100&q=80', stage: 'STAGE 02: PATTERN GEN', pct: 22 },
+      ];
+
+      const container = document.getElementById('production-queue');
+      container.innerHTML = queue.map(q => `
+        <div class="production-item">
+          <img class="production-img" src="${q.img}" alt="${q.name}" onerror="this.src='https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=100&q=80'">
+          <div>
+            <div class="production-name">${q.name}</div>
+            <div class="production-stage">${q.stage}</div>
+            <div class="production-progress-bar">
+              <div class="production-progress-fill" style="width:${q.pct}%"></div>
+            </div>
+            <div class="production-meta">${q.pct}% COMPLETE &bull; ETA: ${Math.ceil((100-q.pct)/10)}H</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderRevenueChart() {
+      const container = document.getElementById('revenue-chart');
+      const vals = [38, 52, 44, 68, 72, 58, 100];
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Today'];
+
+      container.innerHTML = vals.map((v, i) => `
+        <div class="chart-bar ${i === 6 ? 'today' : ''}" style="height:${v}%">
+          <span class="chart-bar-label">${days[i]}</span>
+        </div>
+      `).join('');
+    }
+
+    function showSection(name) {
+      document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+
+      const section = document.getElementById('section-' + name);
+      if (section) section.classList.add('active');
+      document.getElementById('page-title').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+    }
+
+    function refreshOrders() {
+      loadOrders();
+      showToast('ORDERS REFRESHED');
+    }
+
+    function exportOrders() {
+      const csv = ['ORDER ID,CLIENT,DATE,AMOUNT,STATUS,PAYMENT'].concat(
+        allOrders.map(o => `${o.id},${(o.client?.name)||''},${new Date(o.date||Date.now()).toLocaleDateString()},${o.total},${o.status},${o.payMethod}`)
+      ).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'coded-fit-orders-' + Date.now() + '.csv';
+      a.click();
+      showToast('ORDERS EXPORTED TO CSV');
+    }
+
+    function exportData() {
+      exportOrders();
+    }
+
+    function updateClock() {
+      const el = document.getElementById('admin-clock');
+      if (el) el.textContent = new Date().toLocaleTimeString('en-IN');
+    }
+
+    function showToast(msg) {
+      let t = document.getElementById('coded-toast');
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // INIT
+    document.addEventListener('DOMContentLoaded', () => {
+      loadOrders();
+      renderProductsTable();
+      renderClientsTable();
+      renderActivityFeed();
+      renderProductionQueue();
+      renderRevenueChart();
+      updateClock();
+      setInterval(updateClock, 1000);
+    });
+  </script>
+</body>
+</html>

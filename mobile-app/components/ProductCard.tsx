@@ -74,7 +74,7 @@ export function ProductCard({ product, onQuickAdd, cardWidth }: ProductCardProps
         {/* Top-Left Badges */}
         <View style={styles.badgeOverlay}>
           <Badge
-            label={product.funnel === 'rtw' ? '⚡ 24H' : '✂️ BESPOKE'}
+            label={product.funnel === 'rtw' ? '24H RTW' : 'BESPOKE'}
             variant={product.funnel === 'rtw' ? 'white' : 'dark'}
             size="sm"
           />
@@ -92,7 +92,7 @@ export function ProductCard({ product, onQuickAdd, cardWidth }: ProductCardProps
           style={[styles.wishlistBtn, isWishlisted && styles.wishlistBtnActive]}
         >
           <Text style={[styles.wishlistIcon, isWishlisted && styles.wishlistIconActive]}>
-            {isWishlisted ? '♥' : '♡'}
+            {isWishlisted ? '✦' : '✧'}
           </Text>
         </TouchableOpacity>
 

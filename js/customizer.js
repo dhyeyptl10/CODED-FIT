@@ -162,7 +162,7 @@ function runAIScanSimulation() {
     resultsBox.innerHTML = `
       <div class="ai-fit-card">
         <div style="font-size: 11px; font-weight: 800; color: #10B981; margin-bottom: 6px;">
-          ✓ DIGITAL TWIN CREATED (99.4% PRECISION MATCH)
+          DIGITAL TWIN CREATED (ANTHROPOMETRIC PATTERN)
         </div>
         <div class="ai-points-grid">
           <div><span>CHEST:</span> <strong>41.2"</strong></div>
@@ -173,7 +173,7 @@ function runAIScanSimulation() {
           <div><span>TORSO:</span> <strong>29.2"</strong></div>
         </div>
         <button class="c-btn filled-black block-btn" style="margin-top: 14px; font-size: 11px;" onclick="applyAIScanToOrder()">
-          APPLY DIGITAL TWIN FIT TO ORDER ⚡
+          APPLY DIGITAL TWIN FIT TO ORDER →
         </button>
       </div>`;
     
@@ -186,7 +186,7 @@ function applyAIScanToOrder() {
   const fitTag = document.getElementById("fit-profile-status");
   if (fitTag) fitTag.textContent = "VERIFIED AI 3D DIGITAL TWIN (80-POINT PATTERN)";
   updateVisualCanvas();
-  showToast("✓ AI DIGITAL TWIN FIT APPLIED TO BESPOKE PATTERN!");
+  showToast("AI digital twin fit applied to bespoke pattern.");
 }
 
 function addBespokeToCart() {
@@ -216,9 +216,10 @@ function addBespokeToCart() {
   cart.push({ id: customItem.id, size: customItem.size, qty: 1, customData: customItem });
   saveCart(cart);
 
-  showToast("⚡ BESPOKE CUSTOM PIECE ADDED TO BAG! (SHIPS IN 7-14 DAYS)");
+  showToast("Bespoke custom piece added to bag. (Ships in 7-14 days)");
   openCartDrawer();
 }
+
 
 if (typeof document !== 'undefined') {
   document.addEventListener("DOMContentLoaded", () => {

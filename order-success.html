@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed — CODED FIT [BLR-ATELIER]</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    html, body { background: #fff; color: #111; margin: 0; padding: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+    /* SUCCESS HEADER */
+    .success-header {
+      background: #0a0a0c;
+      padding: 24px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .success-header-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #22c55e;
+      text-transform: uppercase;
+      border: 1px solid #22c55e;
+      padding: 5px 12px;
+    }
+
+    .success-header-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 1px;
+    }
+
+    /* BANNER */
+    .success-banner {
+      background: #0a0a0c;
+      border-bottom: 3px solid #e10600;
+      padding: 40px 40px 36px;
+    }
+
+    .success-order-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #22c55e;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .success-headline {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .success-meta-row {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .success-meta-item {}
+
+    .success-meta-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .success-meta-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    .success-banner-actions {
+      margin-left: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .btn-outline-white {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 9px 16px;
+      background: transparent;
+      cursor: pointer;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,0.06); }
+
+    /* PIPELINE */
+    .pipeline-section {
+      background: #f5f5f7;
+      border-bottom: 1px solid #e5e5e5;
+      padding: 32px 40px;
+    }
+
+    .pipeline-section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #aaa;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pipeline-live-dot {
+      width: 6px; height: 6px;
+      background: #e10600;
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+    .pipeline-section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      color: #111;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pipeline-stages {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .pipeline-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .stage-circle {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .stage-circle.done {
+      background: #22c55e;
+      color: #fff;
+    }
+
+    .stage-circle.active {
+      background: #e10600;
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(225,6,0,0.2);
+      animation: pulseBorder 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseBorder {
+      0%, 100% { box-shadow: 0 0 0 4px rgba(225,6,0,0.2); }
+      50% { box-shadow: 0 0 0 8px rgba(225,6,0,0.1); }
+    }
+
+    .stage-circle.pending {
+      background: #e5e5e5;
+      color: #aaa;
+    }
+
+    .stage-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 700;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: center;
+      max-width: 64px;
+    }
+
+    .stage-label.active { color: #e10600; font-weight: 800; }
+    .stage-label.done { color: #22c55e; }
+
+    .stage-connector {
+      height: 2px;
+      width: 36px;
+      flex-shrink: 0;
+      margin-bottom: 24px;
+    }
+
+    .stage-connector.done { background: #22c55e; }
+    .stage-connector.pending { background: #e5e5e5; }
+
+    /* LIVE TELEMETRY */
+    .telemetry-strip {
+      background: #0a0a0c;
+      border: 1px solid #222;
+      padding: 14px 20px;
+      margin-top: 20px;
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .telemetry-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #e10600;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .telemetry-items {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .telemetry-item {}
+
+    .telemetry-item-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .telemetry-item-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+      margin-top: 2px;
+    }
+
+    /* MAIN CONTENT */
+    .success-main {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 0;
+      padding: 0;
+    }
+
+    .success-left {
+      padding: 32px 40px;
+      border-right: 1px solid #e5e5e5;
+    }
+
+    .success-right {
+      padding: 28px;
+      background: #fafafa;
+    }
+
+    /* COMMISSIONED GARMENTS */
+    .section-title-sm {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      color: #111;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .commissioned-item {
+      border: 1px solid #e5e5e5;
+      padding: 20px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 16px;
+    }
+
+    .commissioned-img {
+      width: 80px; height: 96px;
+      object-fit: cover;
+      background: #f0f0f0;
+    }
+
+    .commissioned-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #fff;
+      background: #e10600;
+      padding: 3px 7px;
+      display: inline-block;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .commissioned-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      color: #111;
+      margin-bottom: 4px;
+    }
+
+    .commissioned-spec {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: #aaa;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .commissioned-meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .commissioned-meta-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .commissioned-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #f5f5f7;
+      border: 1px solid #e5e5e5;
+      margin-top: 8px;
+    }
+
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .status-dot.red { background: #e10600; animation: pulse 1.5s ease-in-out infinite; }
+    .status-dot.green { background: #22c55e; }
+
+    .commissioned-status-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .commissioned-progress {
+      margin-top: 8px;
+    }
+
+    .progress-bar-track {
+      height: 4px;
+      background: #e5e5e5;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: #e10600;
+      border-radius: 2px;
+      transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .progress-bar-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: #aaa;
+      margin-top: 4px;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .commissioned-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn-sm-outline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: #333;
+      border: 1px solid #ccc;
+      padding: 7px 12px;
+      background: #fff;
+      cursor: pointer;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+
+    .btn-sm-outline:hover { border-color: #e10600; color: #e10600; }
+
+    .btn-sm-crimson {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: #fff;
+      background: #e10600;
+      border: 1px solid #e10600;
+      padding: 7px 12px;
+      cursor: pointer;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+
+    .btn-sm-crimson:hover { background: #c00500; }
+
+    /* COMMISSION SUMMARY (sidebar) */
+    .commission-summary-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #aaa;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .commission-summary-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: #111;
+      margin-bottom: 20px;
+    }
+
+    .commission-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 12px;
+      color: #444;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .commission-line:last-child { border-bottom: none; }
+    .commission-line-label { }
+    .commission-line-val { font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+    .commission-line-val.green { color: #22c55e; }
+    .commission-line-val.crimson { color: #e10600; }
+    .commission-line-val.strike { text-decoration: line-through; color: #aaa; }
+
+    .commission-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-top: 2px solid #111;
+      padding-top: 14px;
+      margin-top: 8px;
+    }
+
+    .commission-total-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .commission-total-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: #111;
+    }
+
+    /* DELIVERY CARD */
+    .delivery-card {
+      border: 1px solid #e5e5e5;
+      padding: 16px;
+      margin-top: 20px;
+    }
+
+    .delivery-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #aaa;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .delivery-card-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 4px;
+    }
+
+    .delivery-card-address {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* CODED FIT PROMISE */
+    .promise-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      color: #aaa;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .promise-text {
+      font-size: 11.5px;
+      color: #444;
+      line-height: 1.6;
+      margin-top: 4px;
+    }
+
+    /* GUARANTEE SECTION */
+    .guarantee-section {
+      background: #0a0a0c;
+      padding: 52px 40px;
+    }
+
+    .guarantee-headline {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(24px, 3.5vw, 40px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .guarantee-headline span { color: #e10600; }
+
+    .guarantee-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+      max-width: 640px;
+      margin-bottom: 32px;
+    }
+
+    .guarantee-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .guarantee-feature {
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 18px;
+    }
+
+    .guarantee-feature-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #e10600;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .guarantee-feature-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .guarantee-feature-desc {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.65;
+    }
+
+    /* CTA ROW */
+    .success-cta-row {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      margin-top: 28px;
+    }
+
+    .btn-large-crimson {
+      background: #e10600;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s;
+    }
+
+    .btn-large-crimson:hover { background: #c00500; }
+
+    .btn-large-ghost {
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 13px 27px;
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .btn-large-ghost:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div id="cf-navbar-mount"></div>
+
+  <!-- Toast -->
+  <div class="coded-toast" id="coded-toast"></div>
+
+  <!-- SUCCESS HEADER -->
+  <div class="success-header">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#22c55e;text-transform:uppercase;">ATELIER COMMENCEMENT PROTOCOL</span>
+      <span style="color:rgba(255,255,255,0.2);">//</span>
+      <span class="success-header-id" id="header-order-id">ORDER #CF-2026-XXXX</span>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <a href="customize.html" class="btn-outline-white">GO TO VIRTUAL TRY-ON STUDIO</a>
+      <a href="concierge.html" class="btn-outline-white">WHATSAPP CONCIERGE SUPPORT</a>
+    </div>
+  </div>
+
+  <!-- SUCCESS BANNER -->
+  <div class="success-banner">
+    <div class="success-order-id" id="order-id-display">ORDER CONFIRMED // #CF-2026-XXXX</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <div class="success-headline">ORDER CONFIRMED<br>&amp; COMMISSIONED</div>
+        <div class="success-meta-row">
+          <div class="success-meta-item">
+            <div class="success-meta-label">COMMISSION TIMESTAMP</div>
+            <div class="success-meta-value" id="order-timestamp">14 Oct 2026, 14:32 IST</div>
+          </div>
+          <div class="success-meta-item">
+            <div class="success-meta-label">PATTERNS GENERATED</div>
+            <div class="success-meta-value">02 (Bespoke)</div>
+          </div>
+          <div class="success-meta-item">
+            <div class="success-meta-label">EST. ARRIVAL</div>
+            <div class="success-meta-value" id="est-arrival">20 Oct 2026</div>
+          </div>
+        </div>
+      </div>
+      <div class="success-banner-actions">
+        <button class="btn-outline-white" onclick="downloadCAD()">DOWNLOAD CAD PATTERN &amp; SPECS</button>
+        <a href="dashboard.html" class="btn-outline-white">VIEW FULL COMMISSION DASHBOARD</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="pipeline-section">
+    <div class="pipeline-section-label">
+      <div class="pipeline-live-dot"></div>
+      REAL-TIME PRODUCTION MATRIX
+    </div>
+    <div class="pipeline-section-title">
+      ATELIER PIPELINE // 11 SYNCHRONIZED STAGES
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#e10600;letter-spacing:1px;">CURRENT: STAGE 04 (LASER CUTTING)</span>
+    </div>
+
+    <div class="pipeline-stages" id="pipeline-stages">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- LIVE TELEMETRY -->
+    <div class="telemetry-strip">
+      <div class="telemetry-label">LIVE FEED: STAGE 04 — CNC LASER CUTTING #02</div>
+      <div class="telemetry-items">
+        <div class="telemetry-item">
+          <div class="telemetry-item-label">ATELIER OPERATIVE</div>
+          <div class="telemetry-item-val">Farooq A.</div>
+        </div>
+        <div class="telemetry-item">
+          <div class="telemetry-item-label">LASER FOCAL POINT</div>
+          <div class="telemetry-item-val">0.10mm CO2</div>
+        </div>
+        <div class="telemetry-item">
+          <div class="telemetry-item-label">FABRIC BATCH</div>
+          <div class="telemetry-item-val">280 GSM Merino</div>
+        </div>
+        <div class="telemetry-item">
+          <div class="telemetry-item-label">STITCH FREQ</div>
+          <div class="telemetry-item-val">14 SPI</div>
+        </div>
+        <div class="telemetry-item">
+          <div class="telemetry-item-label">PROGRESS</div>
+          <div class="telemetry-item-val" style="color:#e10600;" id="laser-progress">60%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="success-main">
+    <!-- LEFT -->
+    <div class="success-left">
+      <div class="section-title-sm">
+        COMMISSIONED GARMENTS // 2 PIECES
+        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:#aaa;border:1px solid #e5e5e5;padding:4px 8px;">SPLIT FULFILLMENT ACTIVE</span>
+      </div>
+
+      <div id="commissioned-items">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- GUARANTEE -->
+      <div class="guarantee-section" style="border-radius:2px;margin-top:24px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#e10600;text-transform:uppercase;margin-bottom:14px;">REVOLUTIONARY SERVICE STANDARD // ATELIER PROTOCOL // VAULT 9.4</div>
+        <div class="guarantee-headline">
+          100% DOORSTEP FIRST GARMENT FIT<br><span>GUARANTEE</span>
+        </div>
+        <p class="guarantee-desc">When your delivery valet arrives, you have 10 minutes to test the drape, armscye posture, and mid-spread. If attention is required, our valet logs it directly into your Fit Profile via our calibration app, and our master tailor remakes it with zero friction.</p>
+
+        <div class="guarantee-features">
+          <div class="guarantee-feature">
+            <div class="guarantee-feature-label">01 // 10-MIN VALET WAIT</div>
+            <div class="guarantee-feature-title">On-site fit shoulder &amp; sleeve</div>
+            <div class="guarantee-feature-desc">Valet carries calibration app and measurement tools. Spot issues resolved instantly.</div>
+          </div>
+          <div class="guarantee-feature">
+            <div class="guarantee-feature-label">02 // INSTANT PROFILE SYNC</div>
+            <div class="guarantee-feature-title">Automatic fit adjustments in real-time</div>
+            <div class="guarantee-feature-desc">Any garment deviation updates your biometric profile for future orders automatically.</div>
+          </div>
+          <div class="guarantee-feature">
+            <div class="guarantee-feature-label">03 // ZERO-COST REMAKE</div>
+            <div class="guarantee-feature-title">Complete re-if precision isn't met</div>
+            <div class="guarantee-feature-desc">Free remake dispatched within 48 hours. No paperwork, no shipping charges, no questions.</div>
+          </div>
+        </div>
+
+        <div class="success-cta-row">
+          <a href="customize.html" class="btn-large-crimson">GO TO VIRTUAL TRY-ON STUDIO &rarr;</a>
+          <a href="dashboard.html" class="btn-large-ghost">VIEW MY ACCOUNT &amp; FIT VAULT</a>
+          <a href="shop.html" class="btn-large-ghost">CONTINUE SHOPPING CURATED DROPS</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <div class="success-right">
+      <div class="commission-summary-label">FINANCIAL LEDGER</div>
+      <div class="commission-summary-title">COMMISSION SUMMARY</div>
+
+      <div id="commission-summary-lines">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="commission-total-row">
+        <div class="commission-total-label">TOTAL AMOUNT PAID</div>
+        <div class="commission-total-amount" id="commission-total">&#8377;0</div>
+      </div>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;color:#aaa;text-align:right;margin-top:4px;letter-spacing:0.5px;">INCLUSIVE OF ALL ATELIER TAXES</div>
+
+      <!-- Delivery Card -->
+      <div class="delivery-card">
+        <div class="delivery-card-label">SHIPPING DESTINATION // COORDINATES</div>
+        <div class="delivery-card-name">Dhyey M.</div>
+        <div class="delivery-card-address" id="delivery-address">
+          #402 Indiranagar 100ft Rd, Defense Colony<br>
+          Bengaluru, Karnataka 560038<br>
+          +91 98765 43210
+        </div>
+      </div>
+
+      <!-- Coded Fit Promise -->
+      <div style="border:1px solid #e5e5e5;padding:16px;margin-top:16px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:1px;color:#666;text-transform:uppercase;margin-bottom:12px;">CODED FIT PROMISE</div>
+        <div style="font-size:11.5px;color:#444;line-height:1.65;">
+          Every millimeter-calibrated order includes complimentary master-tailor alterations and complimentary doorstep trial pickups across India.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+
+  <script>
+    const PIPELINE_STAGES = [
+      { label: 'ORDER PLACED', icon: '01' },
+      { label: 'BIOMETRIC SYNC', icon: '02' },
+      { label: 'CAD PATTERN', icon: '03' },
+      { label: 'LASER CUT', icon: '04', active: true },
+      { label: 'ADDITIONAL STITCH', icon: '05' },
+      { label: 'COBRA SNAPS', icon: '06' },
+      { label: 'DRAPE BE', icon: '07' },
+      { label: 'TRIAL PACK', icon: '08' },
+      { label: 'DISPATCHED', icon: '09' },
+      { label: 'VALET CHECK', icon: '10' },
+      { label: 'CALIBRATED', icon: '11' },
+    ];
+
+    function renderPipeline() {
+      const container = document.getElementById('pipeline-stages');
+      container.innerHTML = PIPELINE_STAGES.map((s, i) => {
+        const isDone = i < 3;
+        const isActive = i === 3;
+        const isPending = i > 3;
+        const circleClass = isDone ? 'done' : isActive ? 'active' : 'pending';
+        const labelClass = isDone ? 'done' : isActive ? 'active' : '';
+        const connClass = isDone ? 'done' : 'pending';
+
+        return `
+          <div class="pipeline-stage">
+            <div class="stage-circle ${circleClass}">${isDone ? '&#10003;' : s.icon}</div>
+            <div class="stage-label ${labelClass}">${s.label}</div>
+          </div>
+          ${i < PIPELINE_STAGES.length - 1 ? `<div class="stage-connector ${connClass}"></div>` : ''}
+        `;
+      }).join('');
+    }
+
+    function loadOrder() {
+      let order = null;
+      try {
+        order = JSON.parse(localStorage.getItem('CODED_LATEST_ORDER'));
+      } catch(e) {}
+
+      // Demo fallback
+      if (!order) {
+        order = {
+          id: '#CF-2026-8921',
+          date: new Date().toISOString(),
+          items: [
+            { id: 1, name: 'Custom Drop-Shoulder Merino Overshirt', price: 3499, mrp: 4999, qty: 1, size: 'L', badge: 'MADE-TO-MEASURE', images: ['https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=400&q=80'] },
+            { id: 2, name: 'Aero-Drape Cuban Shirt', price: 1799, mrp: 2999, qty: 1, size: 'L', badge: 'READY-TO-WEAR', images: ['https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=400&q=80'] }
+          ],
+          subtotal: 5298,
+          discount: 794,
+          total: 4504,
+          deliveryCharge: 0
+        };
+      }
+
+      // Populate header
+      document.getElementById('header-order-id').textContent = 'ORDER ' + (order.id || '#CF-2026-XXXX');
+      document.getElementById('order-id-display').textContent = 'ORDER CONFIRMED // ' + (order.id || '#CF-2026-XXXX');
+
+      const d = new Date(order.date || Date.now());
+      document.getElementById('order-timestamp').textContent = d.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) + ', ' + d.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' }) + ' IST';
+
+      const arrival = new Date(d);
+      arrival.setDate(arrival.getDate() + 6);
+      document.getElementById('est-arrival').textContent = arrival.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+
+      // Render commissioned items
+      const items = order.items || [];
+      const container = document.getElementById('commissioned-items');
+      container.innerHTML = items.map((item, i) => {
+        const p = getProductById(item.id) || item;
+        const img = (p.images || item.images || [])[0] || 'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=400&q=80';
+        const isBespoke = (item.badge || '').toLowerCase().includes('measure');
+        const price = item.price || p.price || 0;
+
+        return `
+          <div class="commissioned-item">
+            <img class="commissioned-img" src="${img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=400&q=80'">
+            <div>
+              <div class="commissioned-badge">${item.badge || 'MADE-TO-MEASURE'}</div>
+              <div class="commissioned-name">${item.name}</div>
+              <div class="commissioned-spec">COLOURWAY: ${p.colorway || 'Concrete Charcoal'} &bull; FABRIC: ${p.fabricDensity || '280 GSM Merino'}</div>
+              <div class="commissioned-meta">
+                <span class="commissioned-meta-item">MONOGRAM: [CF] TACTICAL CHEST</span>
+                <span class="commissioned-meta-item">BIOMETRIC FIT: AVATAR #CF-8821</span>
+              </div>
+              ${isBespoke ? `
+                <div class="commissioned-status">
+                  <div class="status-dot red"></div>
+                  <span class="commissioned-status-text">STAGE 04 OF 11: LASER ONE FABRIC CUTTING</span>
+                  <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;color:#e10600;">60% COMPLETE</span>
+                </div>
+                <div class="commissioned-progress">
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill" style="width:60%"></div>
+                  </div>
+                  <div class="progress-bar-label">
+                    <span>CNC LASER CUTTING IN PROGRESS</span>
+                    <span>&#8377;${price.toLocaleString('en-IN')}</span>
+                  </div>
+                </div>
+              ` : `
+                <div class="commissioned-status">
+                  <div class="status-dot green"></div>
+                  <span class="commissioned-status-text">READY-TO-WEAR — EXPRESS AIR PREPARED</span>
+                  <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:#22c55e;">DISPATCHED</span>
+                </div>
+              `}
+              <div class="commissioned-actions">
+                <a href="dashboard.html" class="btn-sm-outline">VIEW 3D CAD REPLICA</a>
+                <a href="dashboard.html" class="btn-sm-outline">TRACK SHIPMENT</a>
+                <a href="concierge.html" class="btn-sm-crimson">WHATSAPP CONCIERGE</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Commission summary
+      const summaryContainer = document.getElementById('commission-summary-lines');
+      summaryContainer.innerHTML = `
+        <div class="commission-line">
+          <span>Handcrafted in Bengaluru:</span>
+          <span class="commission-line-val">&#8377;${(order.subtotal || 0).toLocaleString('en-IN')}</span>
+        </div>
+        <div class="commission-line">
+          <span>280 GSM Merino Upgrade</span>
+          <span class="commission-line-val strike">+&#8377;450</span>
+          <span class="commission-line-val green" style="margin-left:6px;">&#8377;0 [INCLUDED]</span>
+        </div>
+        <div class="commission-line">
+          <span>Laser Monogramming</span>
+          <span class="commission-line-val strike">+&#8377;0</span>
+          <span class="commission-line-val green" style="margin-left:6px;">&#8377;0 [INCLUDED]</span>
+        </div>
+        <div class="commission-line">
+          <span>Application GST (12% Integrated)</span>
+          <span class="commission-line-val">INCLUSIVE</span>
+        </div>
+        <div class="commission-line">
+          <span style="color:#e10600;">Via Atelier Code Applied</span>
+          <span class="commission-line-val crimson">-&#8377;${(order.discount || 0).toLocaleString('en-IN')}</span>
+        </div>
+        <div class="commission-line">
+          <span>Express Doorstep Logistics</span>
+          <span class="commission-line-val green">FREE</span>
+        </div>
+      `;
+
+      document.getElementById('commission-total').textContent = '\u20b9' + (order.total || 0).toLocaleString('en-IN');
+    }
+
+    function downloadCAD() {
+      const order = JSON.parse(localStorage.getItem('CODED_LATEST_ORDER') || '{}');
+      const cad = {
+        orderRef: order.id || '#CF-2026-8921',
+        client: '#CF-8821',
+        generated: new Date().toISOString(),
+        patterns: [
+          { garment: 'Merino Field Overshirt', pieces: 14, tolerance: '0.05mm', laser_speed: '180mm/s', GSM: 280, warp: 45, weft: 45 },
+          { garment: 'Cuban Shirt', pieces: 8, tolerance: '0.08mm', laser_speed: '220mm/s', GSM: 160, warp: 90, weft: 90 }
+        ],
+        biometric_profile: { shoulders: '18.2in', chest: '41.2in', inseam: '30.5in', drop_ratio: '28.5in' }
+      };
+      const blob = new Blob([JSON.stringify(cad, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `coded-fit-cad-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('CAD PATTERN DOWNLOADED');
+    }
+
+    // Simulate laser progress
+    let laserPct = 60;
+    setInterval(() => {
+      if (laserPct < 100) {
+        laserPct += Math.random() * 0.3;
+        const el = document.getElementById('laser-progress');
+        if (el) el.textContent = Math.min(100, laserPct).toFixed(1) + '%';
+      }
+    }, 2000);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPipeline();
+      loadOrder();
+    });
+  </script>
+</body>
+</html>

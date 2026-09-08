@@ -229,7 +229,7 @@ export default function HomeScreen() {
         <View style={styles.countdownCard}>
           <View style={styles.countdownHeader}>
             <View style={styles.countdownTitleRow}>
-              <Text style={styles.countdownBolt}>⚡</Text>
+              <Text style={styles.countdownBolt}>✦</Text>
               <Text style={styles.countdownTitle}>LIMITED BESPOKE DROP CLOSES IN</Text>
             </View>
             <Text style={styles.countdownCode}>CODE: NOVA10</Text>
@@ -333,7 +333,7 @@ export default function HomeScreen() {
               Preview garments in live 360° motion on customizable 3D models tailored to your millimeter proportions.
             </Text>
             <GoldButton
-              title="LAUNCH 3D STUDIO ✂️"
+              title="LAUNCH 3D STUDIO ✦"
               onPress={() => router.push('/tryon')}
               size="md"
               style={{ alignSelf: 'flex-start', marginTop: 14 }}
@@ -344,7 +344,7 @@ export default function HomeScreen() {
         {/* ── BRAND PILLARS ── */}
         <View style={styles.pillarsSection}>
           <View style={styles.pillarCard}>
-            <Text style={styles.pillarIcon}>⚡</Text>
+            <Text style={styles.pillarIcon}>✦</Text>
             <Text style={styles.pillarTitle}>24H EXPRESS DISPATCH</Text>
             <Text style={styles.pillarSub}>
               Curated ready-to-wear ships within 24 hours from Ahmedabad ateliers.
@@ -352,7 +352,7 @@ export default function HomeScreen() {
           </View>
 
           <View style={styles.pillarCard}>
-            <Text style={styles.pillarIcon}>🌿</Text>
+            <Text style={styles.pillarIcon}>✦</Text>
             <Text style={styles.pillarTitle}>GOTS ORGANIC COTTON</Text>
             <Text style={styles.pillarSub}>
               Heavyweight 320–450 GSM pure combed natural textiles.
@@ -360,7 +360,7 @@ export default function HomeScreen() {
           </View>
 
           <View style={styles.pillarCard}>
-            <Text style={styles.pillarIcon}>✂️</Text>
+            <Text style={styles.pillarIcon}>✦</Text>
             <Text style={styles.pillarTitle}>UNIT-OF-ONE BESPOKE</Text>
             <Text style={styles.pillarSub}>
               Precision laser cut to your exact AI-calculated measurements.
@@ -375,7 +375,7 @@ export default function HomeScreen() {
             Share Nova Street with fellow tastemakers to unlock bespoke tailoring credits.
           </Text>
           <GoldButton
-            title="SHARE ATELIER PASS 📤"
+            title="SHARE ATELIER PASS ✦"
             variant="outline"
             onPress={shareWithFriend}
             size="md"

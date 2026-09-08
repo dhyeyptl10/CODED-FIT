@@ -61,7 +61,7 @@ export default function ProductDetailScreen() {
             onPress={() => shareProduct(product.name, product.price)}
             style={styles.shareBtn}
           >
-            <Text style={{ fontSize: 16, color: '#FFFFFF' }}>📤</Text>
+            <Text style={{ fontSize: 16, color: '#FFFFFF' }}>SHARE</Text>
           </TouchableOpacity>
         </View>
 
@@ -72,7 +72,7 @@ export default function ProductDetailScreen() {
               label={product.funnel === 'rtw' ? '24H EXPRESS DISPATCH' : 'UNIT-OF-ONE BESPOKE'}
               variant={product.funnel === 'rtw' ? 'white' : 'dark'}
             />
-            <Text style={styles.hypeRating}>🔥 {product.hypeRating}% Demand</Text>
+            <Text style={styles.hypeRating}> {product.hypeRating}% Demand</Text>
           </View>
 
           <Text style={styles.productName}>{product.name}</Text>
@@ -93,7 +93,7 @@ export default function ProductDetailScreen() {
             onPress={() => router.push('/tryon')}
             style={styles.tryOnShortcut}
           >
-            <Text style={{ fontSize: 24 }}>📸</Text>
+            <Text style={{ fontSize: 24 }}>CAMERA</Text>
             <View style={{ flex: 1 }}>
               <Text style={styles.tryOnShortcutTitle}>Try On in AI 3D Studio</Text>
               <Text style={styles.tryOnShortcutSub}>

@@ -1,375 +1,1828 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Bag | NOVA STREET</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-      .shipping-bar-wrap {
-        background: var(--dark-1);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        padding: 16px 20px;
-        margin-bottom: 28px;
-      }
-      .shipping-bar-title {
-        display: flex; justify-content: space-between; align-items: center;
-        font-size: 11px; font-weight: 700; color: var(--text);
-        letter-spacing: 1px; margin-bottom: 8px;
-      }
-      .shipping-progress {
-        width: 100%; height: 4px; background: var(--surface);
-        border-radius: 2px; overflow: hidden;
-      }
-      .shipping-progress-fill {
-        height: 100%; background: linear-gradient(to right, var(--gold), var(--gold-light));
-        border-radius: 2px; transition: width 0.6s ease;
-      }
-      .cart-grid {
-        display: grid; grid-template-columns: 1.5fr 1fr; gap: 48px;
-        margin-top: 32px; align-items: start;
-      }
-      .cart-item-card {
-        display: flex; gap: 20px; padding: 24px 0;
-        border-bottom: 1px solid var(--border);
-        position: relative;
-      }
-      .cart-item-card:first-child { padding-top: 0; }
-      .cart-item-thumb {
-        width: 110px; height: 138px; object-fit: cover;
-        border-radius: var(--radius-sm); background: #111;
-        border: 1px solid var(--border);
-      }
-      .qty-control {
-        display: inline-flex; align-items: center;
-        background: var(--dark-2); border: 1px solid var(--border);
-        border-radius: 30px; padding: 4px 12px; gap: 12px;
-      }
-      .qty-btn {
-        background: none; border: none; color: var(--text);
-        font-size: 16px; cursor: pointer; padding: 0 4px;
-      }
-      .qty-btn:hover { color: var(--gold); }
-      .qty-val { font-size: 13px; font-weight: 800; min-width: 18px; text-align: center; }
-      .summary-card {
-        background: var(--dark-1); border: 1px solid var(--border-gold);
-        border-radius: var(--radius-xl); padding: 32px;
-        position: sticky; top: 100px;
-      }
-      .promo-row {
-        display: flex; gap: 8px; margin-bottom: 24px;
-      }
-      .promo-input {
-        flex: 1; background: var(--dark-2); border: 1px solid var(--border);
-        border-radius: var(--radius-sm); padding: 12px 16px;
-        color: var(--text); font-family: inherit; font-size: 12px;
-        font-weight: 700; letter-spacing: 1px; outline: none; text-transform: uppercase;
-      }
-      .promo-input:focus { border-color: var(--gold); }
-      .promo-btn {
-        background: var(--dark-3); color: var(--gold);
-        border: 1px solid var(--border-gold); border-radius: var(--radius-sm);
-        padding: 0 20px; font-weight: 800; font-size: 11px;
-        letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
-      }
-      .promo-btn:hover { background: var(--gold); color: #000; }
-      .summary-line {
-        display: flex; justify-content: space-between; font-size: 13.5px;
-        margin-bottom: 14px; color: var(--text-dim);
-      }
-      .summary-total {
-        display: flex; justify-content: space-between; font-family: 'Cinzel', serif;
-        font-size: 24px; font-weight: 800; color: var(--gold);
-        padding-top: 20px; margin-top: 20px; border-top: 1px solid var(--border);
-      }
-      .trust-grid {
-        display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 24px;
-      }
-      .trust-col {
-        background: var(--dark-2); border: 1px solid var(--border);
-        border-radius: var(--radius-sm); padding: 10px; text-align: center;
-        font-size: 10.5px; color: var(--text-muted); font-weight: 600;
-      }
-      @media (max-width: 860px) {
-        .cart-grid { grid-template-columns: 1fr; gap: 36px; }
-      }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bag &amp; Direct Dispatch | CODED FIT [BLR-ATELIER]</title>
+  <meta name="description" content="Atelier Bag & Direct Dispatch Pipeline. Step 04 of 05 - Gateway Calibration, Doorstep Trial Protocol, 256-Bit Encrypted Checkout.">
+
+  <!-- Typography & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    body.checkout-body {
+      background: #f7f7f9;
+      color: #121316;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* ── ATELIER TOP HEADER BANNER ── */
+    .cart-hero-header {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e2e6;
+      padding: 24px 40px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .cart-hero-title-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+    }
+
+    .cart-hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #0a0a0c;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .cart-queue-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      color: #e10600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .cart-client-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #555;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .cart-client-tag strong {
+      color: #000;
+    }
+
+    /* ── PIPELINE TRACKER BAR ── */
+    .pipeline-wrapper {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e2e6;
+      padding: 16px 40px;
+    }
+
+    .pipeline-status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .pipeline-title-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #666;
+      text-transform: uppercase;
+    }
+
+    .pipeline-pct-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #e10600;
+    }
+
+    .pipeline-stepper {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      position: relative;
+    }
+
+    .pipeline-step-node {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 8px 10px;
+      background: #f2f2f5;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #777;
+    }
+
+    .pipeline-step-node.completed {
+      background: #0a0a0c;
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .pipeline-step-node.completed .check-mark {
+      color: #22c55e;
+      font-weight: 900;
+    }
+
+    .pipeline-step-node.active {
+      background: #e10600;
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    /* ── MAIN CHECKOUT CONTAINER ── */
+    .checkout-grid-container {
+      max-width: 1720px;
+      margin: 0 auto;
+      padding: 32px 40px 60px;
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* LEFT SIDE: DETAILS & PAYMENT */
+    .checkout-main-col {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* 1. Verified Destination Card */
+    .dest-card {
+      background: #ffffff;
+      border: 1px solid #e2e2e6;
+      padding: 22px 26px;
+      border-radius: 3px;
+      position: relative;
+    }
+
+    .dest-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .dest-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #666;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dest-tag-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #e10600;
+    }
+
+    .dest-change-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: #e10600;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    .dest-change-btn:hover {
+      text-decoration: underline;
+    }
+
+    .dest-name-row {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: #000;
+      margin-bottom: 6px;
+    }
+
+    .dest-address-text {
+      font-size: 12.5px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .dest-dispatch-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: #888;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    /* 2. Queued Fabrications */
+    .fabrications-box {
+      background: #ffffff;
+      border: 1px solid #e2e2e6;
+      padding: 24px;
+      border-radius: 3px;
+    }
+
+    .fab-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ededf2;
+      padding-bottom: 12px;
+    }
+
+    .fab-header-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+      color: #000;
+      text-transform: uppercase;
+    }
+
+    .fab-stock-verified {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      color: #22c55e;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .fab-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .fab-item-card {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #f0f0f4;
+    }
+
+    .fab-item-card:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .fab-item-thumb {
+      width: 100px;
+      height: 124px;
+      object-fit: cover;
+      background: #111;
+      border-radius: 2px;
+    }
+
+    .fab-item-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .fab-badge-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .fab-pill-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 2px;
+    }
+
+    .fab-pill-badge.red {
+      background: rgba(225, 6, 0, 0.08);
+      color: #e10600;
+      border: 1px solid rgba(225, 6, 0, 0.25);
+    }
+
+    .fab-pill-badge.dark {
+      background: #0a0a0c;
+      color: #fff;
+    }
+
+    .fab-item-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 900;
+      color: #000;
+      margin-bottom: 4px;
+    }
+
+    .fab-item-spec {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      color: #777;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .fab-item-tags {
+      display: flex;
+      gap: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    .fab-item-tags span strong {
+      color: #000;
+    }
+
+    .fab-action-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .fab-link-crimson {
+      color: #e10600;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .fab-link-crimson:hover {
+      text-decoration: underline;
+    }
+
+    .fab-link-remove {
+      color: #888;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .fab-link-remove:hover {
+      color: #e10600;
+    }
+
+    .fab-item-pricing {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .fab-item-price {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: #000;
+    }
+
+    .fab-item-mrp {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #999;
+      text-decoration: line-through;
+    }
+
+    /* 3. Zero-Risk Covenant Banner */
+    .zero-risk-banner {
+      background: #0d0e12;
+      border: 1px solid #1f2128;
+      border-radius: 3px;
+      padding: 20px 24px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      color: #ffffff;
+    }
+
+    .covenant-shield-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(225, 6, 0, 0.15);
+      border: 1px solid rgba(225, 6, 0, 0.4);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e10600;
+      flex-shrink: 0;
+    }
+
+    .covenant-text-body {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+    }
+
+    .covenant-text-body strong {
+      color: #ffffff;
+    }
+
+    /* 4. Payment Method Calibration */
+    .payment-module {
+      background: #ffffff;
+      border: 1px solid #e2e2e6;
+      border-radius: 3px;
+      padding: 28px;
+    }
+
+    .payment-head-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .payment-sec-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      color: #000;
+      text-transform: uppercase;
+      letter-spacing: -0.3px;
+    }
+
+    .payment-sec-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #888;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .payment-methods-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .pay-tab-btn {
+      background: #f7f7f9;
+      border: 1.5px solid #e2e2e6;
+      padding: 14px 12px;
+      border-radius: 3px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .pay-tab-btn:hover {
+      border-color: #000;
+    }
+
+    .pay-tab-btn.active {
+      background: #0a0a0c;
+      border-color: #0a0a0c;
+      color: #ffffff;
+    }
+
+    .pay-tab-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      color: #888;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .pay-tab-btn.active .pay-tab-num {
+      color: #e10600;
+    }
+
+    .pay-tab-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+      color: #111;
+    }
+
+    .pay-tab-btn.active .pay-tab-title {
+      color: #ffffff;
+    }
+
+    .pay-tab-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #777;
+      margin-top: 3px;
+    }
+
+    .pay-tab-btn.active .pay-tab-sub {
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* UPI Content Panel */
+    .pay-panel-content {
+      background: #fafafc;
+      border: 1px solid #e8e8ec;
+      border-radius: 3px;
+      padding: 24px;
+    }
+
+    .upi-clients-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .upi-app-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e2e6;
+      padding: 14px 16px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .upi-app-card:hover {
+      border-color: #000;
+    }
+
+    .upi-app-card.selected {
+      border-color: #e10600;
+      background: rgba(225,6,0,0.02);
+    }
+
+    .upi-app-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+      color: #000;
+    }
+
+    .upi-app-desc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #888;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .vpa-input-group {
+      margin-bottom: 20px;
+    }
+
+    .vpa-label-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .vpa-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #555;
+      text-transform: uppercase;
+    }
+
+    .vpa-hint {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #999;
+      letter-spacing: 0.5px;
+    }
+
+    .vpa-input-box {
+      display: flex;
+      border: 1px solid #dcdce0;
+      border-radius: 2px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .vpa-input-box input {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      outline: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .vpa-verify-btn {
+      background: #0a0a0c;
+      color: #ffffff;
+      border: none;
+      padding: 0 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    }
+
+    .vpa-verify-btn:hover {
+      background: #e10600;
+    }
+
+    .qr-banner-box {
+      border: 1px dashed #d8d8de;
+      background: #ffffff;
+      padding: 16px 20px;
+      border-radius: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .qr-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .qr-icon-square {
+      width: 32px;
+      height: 32px;
+      background: #0a0a0c;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      border-radius: 2px;
+    }
+
+    .qr-banner-text strong {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #000;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .qr-banner-text div {
+      font-size: 11px;
+      color: #666;
+    }
+
+    .btn-gen-qr {
+      background: #f0f0f4;
+      border: 1px solid #d0d0d6;
+      color: #111;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      padding: 8px 14px;
+      border-radius: 2px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    .btn-gen-qr:hover {
+      background: #000;
+      color: #fff;
+      border-color: #000;
+    }
+
+    /* RIGHT SIDE: ORDER SUMMARY */
+    .checkout-sidebar-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .summary-card {
+      background: #ffffff;
+      border: 1px solid #e2e2e6;
+      padding: 28px;
+      border-radius: 3px;
+    }
+
+    .summary-head-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #777;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .summary-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #f0f0f4;
+      padding-bottom: 14px;
+    }
+
+    .summary-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+      color: #000;
+      text-transform: uppercase;
+    }
+
+    .summary-items-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      color: #555;
+      background: #f2f2f5;
+      padding: 3px 8px;
+      border-radius: 2px;
+    }
+
+    .summary-lines-table {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sum-line-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 12.5px;
+      color: #444;
+    }
+
+    .sum-line-row.red-highlight {
+      color: #e10600;
+      font-weight: 700;
+    }
+
+    .sum-line-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: #111;
+    }
+
+    .sum-line-row.red-highlight .sum-line-val {
+      color: #e10600;
+    }
+
+    .sum-line-val.strike {
+      text-decoration: line-through;
+      color: #999;
+      margin-right: 6px;
+    }
+
+    .sum-line-val.free {
+      color: #22c55e;
+      font-weight: 800;
+    }
+
+    /* Coupon Box */
+    .coupon-box {
+      border: 1px solid #e0e0e6;
+      background: #f9f9fb;
+      padding: 12px 14px;
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+
+    .coupon-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #666;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .coupon-input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .coupon-input-row input {
+      flex: 1;
+      background: #fff;
+      border: 1px solid #d4d4dc;
+      padding: 8px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      outline: none;
+      border-radius: 2px;
+    }
+
+    .coupon-input-row button {
+      background: #0a0a0c;
+      color: #fff;
+      border: none;
+      padding: 0 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .coupon-success-msg {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #22c55e;
+      letter-spacing: 0.5px;
+      margin-top: 6px;
+    }
+
+    /* Total Row */
+    .summary-total-divider {
+      border-top: 2px solid #000;
+      padding-top: 16px;
+      margin-bottom: 20px;
+    }
+
+    .summary-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .total-title-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #666;
+      text-transform: uppercase;
+    }
+
+    .total-numeric-price {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 900;
+      color: #000;
+      line-height: 1;
+    }
+
+    .gst-inclusive-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: #888;
+      text-align: right;
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Main Action Button */
+    .btn-confirm-pay {
+      display: block;
+      width: 100%;
+      background: #e10600;
+      color: #ffffff;
+      border: none;
+      padding: 18px 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-align: center;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 4px 16px rgba(225, 6, 0, 0.25);
+    }
+
+    .btn-confirm-pay:hover {
+      background: #c00500;
+    }
+
+    .btn-confirm-pay:active {
+      transform: scale(0.99);
+    }
+
+    .btn-confirm-pay:disabled {
+      background: #888;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .disclaimer-subtext {
+      font-size: 11px;
+      color: #777;
+      text-align: center;
+      line-height: 1.5;
+      margin-top: 12px;
+    }
+
+    /* Covenant Perks */
+    .covenant-perks-box {
+      background: #f7f7fa;
+      border: 1px solid #e5e5e9;
+      padding: 20px;
+      border-radius: 3px;
+    }
+
+    .covenant-perks-head {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      color: #555;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .perk-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+    }
+
+    .perk-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .perk-bullet {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #e10600;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .perk-text strong {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #000;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .perk-text p {
+      font-size: 11px;
+      color: #666;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Occupancy Bar */
+    .occupancy-ticker {
+      background: #0a0a0c;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+    }
+
+    .occ-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #e10600;
+      margin-right: 4px;
+    }
+
+    /* MODAL: QR Code & Payment Processing */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(5px);
+      z-index: 100000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #ffffff;
+      width: 420px;
+      max-width: 90vw;
+      padding: 32px;
+      border-radius: 4px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: #000;
+      margin-bottom: 6px;
+    }
+
+    .modal-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #777;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .qr-canvas-wrap {
+      width: 200px;
+      height: 200px;
+      background: #0a0a0c;
+      margin: 0 auto 20px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .qr-sim-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(12, 1fr);
+      gap: 2px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .qr-sim-pixel {
+      background: #ffffff;
+      border-radius: 1px;
+    }
+
+    .qr-sim-pixel.dark {
+      background: transparent;
+    }
+
+    .modal-price-tag {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      color: #000;
+      margin-bottom: 4px;
+    }
+
+    .modal-vpa-note {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    .modal-btn-confirm {
+      width: 100%;
+      background: #22c55e;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      cursor: pointer;
+      border-radius: 2px;
+      margin-bottom: 8px;
+    }
+
+    .modal-btn-cancel {
+      width: 100%;
+      background: #f0f0f4;
+      border: 1px solid #d8d8de;
+      padding: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: #555;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+
+    /* PROCESSING OVERLAY */
+    .processing-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 10, 13, 0.95);
+      z-index: 100002;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #fff;
+    }
+
+    .processing-overlay.active {
+      display: flex;
+    }
+
+    .spinner-ring {
+      width: 54px;
+      height: 54px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: #e10600;
+      border-radius: 50%;
+      animation: spinRing 0.8s linear infinite;
+      margin-bottom: 24px;
+    }
+
+    @keyframes spinRing {
+      to { transform: rotate(360deg); }
+    }
+
+    .proc-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+
+    .proc-step-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+  </style>
 </head>
-<body>
+<body class="checkout-body">
 
-<div class="cursor-follower" id="cursor-badge">BAG</div>
+  <!-- MASTER NAVBAR MOUNT -->
+  <div id="cf-navbar-mount"></div>
 
-<!-- Announcement Bar -->
-<div class="c-announcement">
-  <div class="c-announcement-marquee">
-    <div class="c-announcement-track">
-      ✦ DUAL-FUNNEL HYBRID FASHION &nbsp;&nbsp; ✦ READY-TO-SHIP 24H DISPATCH &amp; BESPOKE MADE-TO-MEASURE 7-14 DAYS &nbsp;&nbsp; ✦ CODE <strong>NOVA10</strong> FOR 10% OFF &nbsp;&nbsp; ✦ AHMEDABAD GOTS ORGANIC COTTON &nbsp;&nbsp; ✦ FREE SHIPPING ABOVE ₹2999 &nbsp;&nbsp; ✦ DUAL-FUNNEL HYBRID FASHION &nbsp;&nbsp;
+  <!-- QR MODAL -->
+  <div class="modal-backdrop" id="qr-modal">
+    <div class="modal-box">
+      <div class="modal-title">SCAN WITH ANY UPI APP</div>
+      <div class="modal-sub">CODED FIT ATELIER DIRECT GATEWAY</div>
+      
+      <div class="qr-canvas-wrap">
+        <div class="qr-sim-grid" id="qr-pixels-container"></div>
+      </div>
+
+      <div class="modal-price-tag" id="modal-qr-price">&#8377;4,504</div>
+      <div class="modal-vpa-note">UPI VPA: codedfit.atelier@okicici &bull; REF: #CF-8821-BLR</div>
+
+      <button class="modal-btn-confirm" onclick="simulatePaymentApproval()">APPROVE TRANSACTION IN APP &rarr;</button>
+      <button class="modal-btn-cancel" onclick="closeQRModal()">CANCEL</button>
     </div>
   </div>
-</div>
 
-<!-- Header -->
-<header>
-  <div class="nav-wrap">
-    <a href="index.html" class="logo-cinch">
-      <div class="logo-text">NOVA <span>STREET</span></div>
-      <div class="logo-tagline">Hybrid Custom-Curated Label · Est. 2026</div>
-    </a>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="shop.html">Collection</a>
-      <a href="customize.html">Studio</a>
-      <a href="dashboard.html">UR Picks</a>
-    </nav>
-    <div class="nav-right-actions">
-      <a href="customize.html" class="dash-pill-link">✂️ Try-On Studio</a>
-    </div>
-    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+  <!-- ORDER PROCESSING OVERLAY -->
+  <div class="processing-overlay" id="order-proc-overlay">
+    <div class="spinner-ring"></div>
+    <div class="proc-title">COMMISSIONING ATELIER ORDER</div>
+    <div class="proc-step-text" id="proc-step-message">ENCRYPTING TRANSACTION TOKEN...</div>
   </div>
-  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileMenu()"></div>
-  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
-    <div class="mobile-nav-header">
-      <div class="logo-text" style="font-size:20px;">NOVA <span>STREET</span></div>
-      <button onclick="closeMobileMenu()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);">✕</button>
+
+  <!-- 1. HERO HEADER -->
+  <div class="cart-hero-header">
+    <div class="cart-hero-title-wrap">
+      <h1 class="cart-hero-title">BAG &amp; DIRECT DISPATCH</h1>
+      <span class="cart-queue-badge" id="cart-queue-status">[ 02 PIECES QUEUED ]</span>
     </div>
-    <nav class="mobile-nav-links">
-      <a href="index.html" onclick="closeMobileMenu()">Home</a>
-      <a href="shop.html" onclick="closeMobileMenu()">Collection</a>
-      <a href="customize.html" onclick="closeMobileMenu()">Try-On Studio</a>
-      <a href="dashboard.html" onclick="closeMobileMenu()">UR Picks</a>
-      <a href="cart.html" onclick="closeMobileMenu()" class="active">Shopping Bag</a>
-    </nav>
+    <div class="cart-client-tag">
+      CLIENT PROFILE: <strong>DHYEY M. (#CF-8821)</strong>
+    </div>
   </div>
-</header>
 
-<main>
-  <section class="c-section" style="padding-top:40px;">
-    <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--border); padding-bottom:20px;">
-      <div>
-        <div class="section-header">01 + ATELIER BAG</div>
-        <h1 style="font-family:'Cinzel',serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:800; text-transform:uppercase; margin:0;">
-          Your Shopping Bag
-        </h1>
+  <!-- 2. PIPELINE TRACKER -->
+  <div class="pipeline-wrapper">
+    <div class="pipeline-status-row">
+      <span class="pipeline-title-label">TRANSACTION PIPELINE: STEP 04 OF 05</span>
+      <span class="pipeline-pct-label">80% CALIBRATED</span>
+    </div>
+    <div class="pipeline-stepper">
+      <div class="pipeline-step-node completed">
+        <span class="check-mark">&#10003;</span> 01 CONTACT
       </div>
-      <a href="shop.html" style="font-size:11px; font-weight:800; color:var(--gold); letter-spacing:1.5px; text-transform:uppercase;">
-        ← Continue Browsing
-      </a>
+      <div class="pipeline-step-node completed">
+        <span class="check-mark">&#10003;</span> 02 ADDRESS
+      </div>
+      <div class="pipeline-step-node completed">
+        <span class="check-mark">&#10003;</span> 03 DELIVERY
+      </div>
+      <div class="pipeline-step-node active">
+        <span>&bull;</span> 04 PAYMENT
+      </div>
+      <div class="pipeline-step-node">
+        <span>&bull;</span> 05 REVIEW
+      </div>
     </div>
-
-    <!-- Free Shipping Progress Tracker -->
-    <div id="shipping-tracker-wrap"></div>
-
-    <div id="cart-container">
-      <!-- Injected by JS -->
-    </div>
-  </section>
-</main>
-
-<!-- Footer -->
-<footer>
-  <div class="footer-bottom">
-    <span>© 2026 NOVA STREET HYBRID D2C LABEL. ALL RIGHTS RESERVED.</span>
-    <span>PRIVACY POLICY · TERMS OF SERVICE · AHMEDABAD GOTS TEXTILE HUB</span>
   </div>
-</footer>
 
-<script src="js/products.js"></script>
-<script src="js/cart.js"></script>
-<script>
-const cursorBadge = document.getElementById('cursor-badge');
-if (cursorBadge) {
-  document.addEventListener('mousemove', (e) => {
-    cursorBadge.style.left = e.clientX + 'px';
-    cursorBadge.style.top  = e.clientY + 'px';
-  });
-}
-function toggleMobileMenu() {
-  document.getElementById('mobile-nav-drawer').classList.toggle('open');
-  document.getElementById('mobile-nav-overlay').classList.toggle('active');
-  document.getElementById('hamburger-btn').classList.toggle('open');
-}
-function closeMobileMenu() {
-  document.getElementById('mobile-nav-drawer').classList.remove('open');
-  document.getElementById('mobile-nav-overlay').classList.remove('active');
-  document.getElementById('hamburger-btn').classList.remove('open');
-}
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.className = 'toast-notification';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.classList.add('show'), 50);
-  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3500);
-}
+  <!-- 3. MAIN CONTENT GRID -->
+  <main class="checkout-grid-container">
 
-let myCart = JSON.parse(localStorage.getItem('NOVA_CART') || '[]');
-let discountApplied = false;
+    <!-- LEFT COLUMN -->
+    <div class="checkout-main-col">
 
-if (myCart.length === 0 && !localStorage.getItem('NOVA_DEMO_CART_SET')) {
-  myCart = [
-    { id: 1, name: "Onyx Silk Blend Shirt", price: 3499, mrp: 4999, image: "https://images.unsplash.com/photo-1596755094514-f87e32f6b717?w=500&q=80", qty: 1, size: "M", funnel: "ready" },
-    { id: 4, name: "Midnight Cargo Trouser", price: 4299, mrp: 5999, image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&q=80", qty: 1, size: "Bespoke", funnel: "bespoke" }
-  ];
-  localStorage.setItem('NOVA_CART', JSON.stringify(myCart));
-  localStorage.setItem('NOVA_DEMO_CART_SET', 'true');
-}
-
-function renderCartPage() {
-  const container = document.getElementById('cart-container');
-  const trackerWrap = document.getElementById('shipping-tracker-wrap');
-
-  if (myCart.length === 0) {
-    trackerWrap.innerHTML = '';
-    container.innerHTML = `
-      <div style="text-align:center; padding:100px 20px;">
-        <div style="font-size:56px; margin-bottom:16px; opacity:0.3;">👜</div>
-        <h2 style="font-family:'Cinzel',serif; font-size:24px; text-transform:uppercase; margin-bottom:12px;">Your Bag Is Empty</h2>
-        <p style="color:var(--text-muted); margin-bottom:28px;">Discover our dual-funnel collection and start your custom journey.</p>
-        <a href="shop.html" class="c-btn filled-gold is-large">EXPLORE COLLECTION →</a>
+      <!-- A. Verified Destination Card -->
+      <div class="dest-card">
+        <div class="dest-header-row">
+          <div class="dest-tag">
+            <span class="dest-tag-dot"></span>
+            VERIFIED ATELIER DESTINATION
+          </div>
+          <button class="dest-change-btn" onclick="window.CF_showToast('ADDRESS EDITED &amp; SAVED')">[ CHANGE ADDRESS ]</button>
+        </div>
+        <div class="dest-name-row">Dhyey M. &bull; +91 98765 43210</div>
+        <div class="dest-address-text">
+          #402 Indiranagar 100ft Rd, Defense Colony, Bengaluru, Karnataka 560038
+        </div>
+        <div class="dest-dispatch-meta">
+          DISPATCH: BLUEDART SURFACE AIR &bull; BENGALURU ATELIER HUB
+        </div>
       </div>
-    `;
-    return;
-  }
 
-  let subtotal = 0;
-  myCart.forEach(item => {
-    subtotal += item.price * item.qty;
-  });
+      <!-- B. Queued Fabrications -->
+      <div class="fabrications-box">
+        <div class="fab-header-row">
+          <div class="fab-header-title">QUEUED FABRICATIONS (<span id="fab-header-count">2</span>)</div>
+          <div class="fab-stock-verified">&#10003; ALL FABRICS CONFIRMED IN STOCK</div>
+        </div>
 
-  // Shipping progress (Free shipping at ₹2999)
-  const freeShipThreshold = 2999;
-  const progressPct = Math.min(100, Math.round((subtotal / freeShipThreshold) * 100));
-  const amountNeeded = freeShipThreshold - subtotal;
-
-  trackerWrap.innerHTML = `
-    <div class="shipping-bar-wrap" style="margin-top:20px;">
-      <div class="shipping-bar-title">
-        <span>${amountNeeded <= 0 ? '🎉 COMPLIMENTARY EXPRESS DISPATCH UNLOCKED' : `Add ₹${amountNeeded.toLocaleString('en-IN')} more to unlock FREE Express Dispatch`}</span>
-        <span style="color:var(--gold);">${progressPct}%</span>
+        <div class="fab-items-list" id="fab-items-render">
+          <!-- Populated by JS -->
+        </div>
       </div>
-      <div class="shipping-progress">
-        <div class="shipping-progress-fill" style="width:${progressPct}%;"></div>
-      </div>
-    </div>
-  `;
 
-  let itemsHtml = '<div>';
-  myCart.forEach((item, idx) => {
-    const isB = item.funnel === 'custom-made' || item.funnel === 'bespoke';
-    itemsHtml += `
-      <div class="cart-item-card">
-        <img src="${item.image || (item.images ? item.images[0] : '')}" class="cart-item-thumb" alt="${item.name}">
-        <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
-          <div>
-            <div style="font-size:9px; font-weight:800; letter-spacing:1.5px; color:${isB ? 'var(--rust)' : 'var(--gold)'}; text-transform:uppercase; margin-bottom:4px;">
-              ${isB ? '✂️ BESPOKE MADE-TO-MEASURE' : '⚡ 24H EXPRESS READY-TO-SHIP'} · SIZE: ${item.size}
+      <!-- C. Zero-Risk Onboarding Covenant -->
+      <div class="zero-risk-banner">
+        <div class="covenant-shield-icon">&#9673;</div>
+        <div class="covenant-text-body">
+          <strong>ZERO-RISK ONBOARDING COVENANT &bull; ACTIVE</strong><br>
+          Your custom merino overshirt qualifies for <strong>100% complimentary doorstep fit verification</strong>. If the calibrated drape isn't a 10/10 fit, our master patternmaker will remake it free of charge.
+        </div>
+      </div>
+
+      <!-- D. Payment Calibration -->
+      <div class="payment-module">
+        <div class="payment-head-row">
+          <div class="payment-sec-title">04 // SELECT PAYMENT METHOD</div>
+          <div class="payment-sec-code">RBI REGULATED &bull; ISO 27001</div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="payment-methods-tabs">
+          <div class="pay-tab-btn active" onclick="switchPayTab(this, 'upi')">
+            <div class="pay-tab-num">METHOD // 01</div>
+            <div class="pay-tab-title">INSTANT UPI</div>
+            <div class="pay-tab-sub">RECOMMENDED</div>
+          </div>
+          <div class="pay-tab-btn" onclick="switchPayTab(this, 'cards')">
+            <div class="pay-tab-num">METHOD // 02</div>
+            <div class="pay-tab-title">CARDS</div>
+            <div class="pay-tab-sub">CREDIT / DEBIT</div>
+          </div>
+          <div class="pay-tab-btn" onclick="switchPayTab(this, 'netbanking')">
+            <div class="pay-tab-num">METHOD // 03</div>
+            <div class="pay-tab-title">NETBANKING</div>
+            <div class="pay-tab-sub">ALL INDIAN BANKS</div>
+          </div>
+          <div class="pay-tab-btn" onclick="switchPayTab(this, 'cod')">
+            <div class="pay-tab-num">METHOD // 04</div>
+            <div class="pay-tab-title">COD</div>
+            <div class="pay-tab-sub">RTW ITEM ONLY</div>
+          </div>
+        </div>
+
+        <!-- Panel: UPI -->
+        <div class="pay-panel-content" id="panel-upi">
+          <div class="vpa-label-row">
+            <span class="vpa-label">SELECT POPULAR UPI CLIENT</span>
+            <span class="vpa-hint">0% CONVENIENCE FEE</span>
+          </div>
+
+          <div class="upi-clients-row">
+            <div class="upi-app-card selected" onclick="selectUPIClient(this, 'Google Pay')">
+              <div class="upi-app-name">GPAY</div>
+              <div class="upi-app-desc">GOOGLE PAY</div>
             </div>
-            <h3 style="font-family:'Cinzel',serif; font-size:16px; font-weight:700; color:var(--text); margin-bottom:6px;">
-              ${item.name}
-            </h3>
-            <div style="font-size:16px; font-weight:800; color:var(--gold);">
-              ₹${(item.price * item.qty).toLocaleString('en-IN')}
-              ${item.qty > 1 ? `<span style="font-size:12px; color:var(--text-muted); font-weight:400;">(₹${item.price.toLocaleString('en-IN')} each)</span>` : ''}
+            <div class="upi-app-card" onclick="selectUPIClient(this, 'PhonePe')">
+              <div class="upi-app-name">PHONEPE</div>
+              <div class="upi-app-desc">INSTANT REFUND</div>
+            </div>
+            <div class="upi-app-card" onclick="selectUPIClient(this, 'Paytm')">
+              <div class="upi-app-name">PAYTM UPI</div>
+              <div class="upi-app-desc">WALLET &amp; UPI</div>
             </div>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
-            <div class="qty-control">
-              <button class="qty-btn" onclick="updateQty(${idx}, -1)">−</button>
-              <span class="qty-val">${item.qty}</span>
-              <button class="qty-btn" onclick="updateQty(${idx}, 1)">+</button>
+
+          <div class="vpa-input-group">
+            <div class="vpa-label-row">
+              <span class="vpa-label">OR ENTER VIRTUAL PAYMENT ADDRESS (UPI ID)</span>
+              <span class="vpa-hint">E.G. YOURNAME@OKAXIS</span>
             </div>
-            <button onclick="removeItem(${idx})" style="background:none; border:none; color:var(--text-muted); font-size:11px; letter-spacing:1px; cursor:pointer; text-transform:uppercase; text-decoration:underline;">
-              Remove
-            </button>
+            <div class="vpa-input-box">
+              <input type="text" id="vpa-input-field" value="dhyey@okhdfcbank" placeholder="name@bank">
+              <button class="vpa-verify-btn" onclick="verifyAndExecuteUPI()">VERIFY &amp; PAY</button>
+            </div>
+          </div>
+
+          <div class="qr-banner-box">
+            <div class="qr-banner-left">
+              <div class="qr-icon-square">&#9632;</div>
+              <div class="qr-banner-text">
+                <strong>SCAN CODED FIT DESKTOP QR</strong>
+                <div>Open any UPI app on your mobile device to scan and authorize</div>
+              </div>
+            </div>
+            <button class="btn-gen-qr" onclick="openQRModal()">GENERATE QR</button>
+          </div>
+        </div>
+
+        <!-- Panel: Cards -->
+        <div class="pay-panel-content" id="panel-cards" style="display:none;">
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div>
+              <span class="vpa-label">CARD NUMBER</span>
+              <div class="vpa-input-box" style="margin-top:4px;">
+                <input type="text" placeholder="4532 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 8921" value="4532 8821 9012 4580">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div>
+                <span class="vpa-label">EXPIRY DATE</span>
+                <div class="vpa-input-box" style="margin-top:4px;">
+                  <input type="text" placeholder="MM / YY" value="09/28">
+                </div>
+              </div>
+              <div>
+                <span class="vpa-label">CVV</span>
+                <div class="vpa-input-box" style="margin-top:4px;">
+                  <input type="password" placeholder="&bull;&bull;&bull;" value="892">
+                </div>
+              </div>
+            </div>
+            <div>
+              <span class="vpa-label">CARDHOLDER NAME</span>
+              <div class="vpa-input-box" style="margin-top:4px;">
+                <input type="text" value="DHYEY M">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel: Netbanking -->
+        <div class="pay-panel-content" id="panel-netbanking" style="display:none;">
+          <span class="vpa-label">SELECT PRIMARY BANK</span>
+          <select style="width:100%;padding:12px;margin-top:6px;border:1px solid #ccc;font-family:'JetBrains Mono',monospace;font-size:12px;background:#fff;">
+            <option>HDFC Bank &bull; NetBanking</option>
+            <option>ICICI Bank &bull; Corporate / Retail</option>
+            <option>State Bank of India</option>
+            <option>Axis Bank</option>
+            <option>Kotak Mahindra Bank</option>
+          </select>
+        </div>
+
+        <!-- Panel: COD -->
+        <div class="pay-panel-content" id="panel-cod" style="display:none;">
+          <div style="font-size:12px;color:#444;line-height:1.6;">
+            <strong>CASH ON DELIVERY (DOORSTEP VERIFICATION)</strong><br>
+            Available for Ready-To-Wear pieces. Bespoke pieces require advance raw material allocation. Cash or UPI to Valet on arrival.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: ORDER SUMMARY -->
+    <aside class="checkout-sidebar-col">
+      <div class="summary-card">
+        <div class="summary-head-meta">ATELIER COMPUTATION</div>
+        <div class="summary-title-row">
+          <div class="summary-title">ORDER SUMMARY</div>
+          <span class="summary-items-count" id="summary-badge-count">2 ITEMS</span>
+        </div>
+
+        <div class="summary-lines-table">
+          <div class="sum-line-row">
+            <span>Garment Subtotal</span>
+            <span class="sum-line-val" id="sum-subtotal">&#8377;5,298</span>
+          </div>
+          <div class="sum-line-row red-highlight">
+            <span>Atelier First Drop Discount (-15%)</span>
+            <span class="sum-line-val" id="sum-discount">-&#8377;794</span>
+          </div>
+          <div class="sum-line-row">
+            <span>Biometric Laser Pattern Calibration</span>
+            <span>
+              <span class="sum-line-val strike">&#8377;800</span>
+              <span class="sum-line-val free">&#8377;0 (FREE BETA)</span>
+            </span>
+          </div>
+          <div class="sum-line-row">
+            <span>Express Doorstep Trial Logistics</span>
+            <span class="sum-line-val free">FREE</span>
+          </div>
+        </div>
+
+        <!-- Applied Code -->
+        <div class="coupon-box">
+          <div class="coupon-label">APPLIED ATELIER CODE</div>
+          <div class="coupon-input-row">
+            <input type="text" id="coupon-code-input" value="FITFIRST">
+            <button onclick="applyAtelierCode()">[ EDIT ]</button>
+          </div>
+          <div class="coupon-success-msg" id="coupon-status-text">&#10003; 15% FIRST DROP INCENTIVE SUCCESSFULLY APPLIED</div>
+        </div>
+
+        <!-- Total Box -->
+        <div class="summary-total-divider">
+          <div class="summary-total-row">
+            <span class="total-title-text">TOTAL AMOUNT PAYABLE</span>
+            <span class="total-numeric-price" id="sum-total">&#8377;4,504</span>
+          </div>
+          <div class="gst-inclusive-tag">INCLUSIVE OF 12% CLOTHING GST (&#8377;482.50)</div>
+        </div>
+
+        <!-- Confirm CTA -->
+        <button class="btn-confirm-pay" id="btn-main-confirm" onclick="executeFullCheckout()">
+          CONFIRM &amp; PAY <span id="btn-pay-amount">&#8377;4,504</span> &rarr;
+        </button>
+        <div class="disclaimer-subtext">
+          Clicking confirms your bespoke drape profile and executes encrypted checkout.
+        </div>
+      </div>
+
+      <!-- Covenant Perks Card -->
+      <div class="covenant-perks-box">
+        <div class="covenant-perks-head">CODED FIT ATELIER COVENANT</div>
+        
+        <div class="perk-row">
+          <span class="perk-bullet">&#9679;</span>
+          <div class="perk-text">
+            <strong>1-CLICK REPEAT PATTERN GUARANTEE</strong>
+            <p>Your calibrated avatar coordinates are securely saved. Next orders bypass sizing instantly.</p>
+          </div>
+        </div>
+
+        <div class="perk-row">
+          <span class="perk-bullet">&#9679;</span>
+          <div class="perk-text">
+            <strong>INSTANT ALTERATIONS VALET</strong>
+            <p>Zero-friction reverse pickup in 30 Indian cities if collar, sleeve, or hem tapers require micro-adjustment.</p>
+          </div>
+        </div>
+
+        <div class="perk-row">
+          <span class="perk-bullet">&#9679;</span>
+          <div class="perk-text">
+            <strong>CONCIERGE ON CALL (HINGLISH/ENG)</strong>
+            <p>Direct WhatsApp link with senior tailor enabled post transaction confirmation.</p>
           </div>
         </div>
       </div>
-    `;
-  });
-  itemsHtml += '</div>';
 
-  const shipping = subtotal >= freeShipThreshold ? 0 : 250;
-  const discount = discountApplied ? Math.round(subtotal * 0.10) : 0;
-  const total = subtotal + shipping - discount;
-
-  container.innerHTML = `
-    <div class="cart-grid">
-      ${itemsHtml}
-      <div>
-        <div class="summary-card">
-          <div class="section-header" style="margin-bottom:12px;">ORDER BREAKDOWN</div>
-          <h3 style="font-family:'Cinzel',serif; font-size:20px; font-weight:700; margin-bottom:20px;">ATELIER SUMMARY</h3>
-
-          <div class="promo-row">
-            <input type="text" id="promo-code" class="promo-input" placeholder="PROMO: NOVA10" ${discountApplied ? 'disabled value="NOVA10"' : ''}>
-            <button class="promo-btn" onclick="applyPromo()">${discountApplied ? 'APPLIED' : 'APPLY'}</button>
-          </div>
-
-          <div class="summary-line">
-            <span>Subtotal</span>
-            <span style="color:var(--text);">₹${subtotal.toLocaleString('en-IN')}</span>
-          </div>
-          ${discountApplied ? `
-          <div class="summary-line" style="color:var(--gold);">
-            <span>VIP Code (NOVA10)</span>
-            <span>−₹${discount.toLocaleString('en-IN')}</span>
-          </div>` : ''}
-          <div class="summary-line">
-            <span>Express Dispatch</span>
-            <span style="color:var(--text);">${shipping === 0 ? '<span style="color:var(--success);font-weight:800;">FREE</span>' : '₹'+shipping}</span>
-          </div>
-
-          <div class="summary-total">
-            <span>TOTAL</span>
-            <span>₹${total.toLocaleString('en-IN')}</span>
-          </div>
-
-          <button class="c-btn filled-gold block-btn is-large" onclick="showToast('Proceeding to encrypted payment gateway...')" style="margin-top:24px; border-radius:40px;">
-            SECURE CHECKOUT 🔒
-          </button>
-
-          <div class="trust-grid">
-            <div class="trust-col">🌱<br>GOTS Pure</div>
-            <div class="trust-col">✂️<br>Fit Proof</div>
-            <div class="trust-col">🛡️<br>Encrypted</div>
-          </div>
-        </div>
+      <!-- Live Occupancy Bar -->
+      <div class="occupancy-ticker">
+        <span><span class="occ-dot"></span> ATELIER OCCUPANCY: 18/25 TODAY</span>
+        <span style="color:#e10600;" id="slot-countdown-val">SLOT RESERVED (09:42 MIN)</span>
       </div>
-    </div>
-  `;
-}
+    </aside>
 
-function updateQty(idx, change) {
-  myCart[idx].qty += change;
-  if (myCart[idx].qty < 1) myCart[idx].qty = 1;
-  localStorage.setItem('NOVA_CART', JSON.stringify(myCart));
-  renderCartPage();
-}
+  </main>
 
-function removeItem(idx) {
-  myCart.splice(idx, 1);
-  localStorage.setItem('NOVA_CART', JSON.stringify(myCart));
-  renderCartPage();
-}
+  <!-- Project Scripts -->
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
 
-function applyPromo() {
-  const code = document.getElementById('promo-code').value.toUpperCase().trim();
-  if (code === 'NOVA10') {
-    discountApplied = true;
-    showToast('🎉 10% VIP Discount Applied!');
-    renderCartPage();
-  } else if (code) {
-    showToast('❌ Invalid VIP Code');
-  }
-}
+  <script>
+    let activeCart = [];
+    let discountRate = 0.15;
+    let selectedPayMethod = 'upi';
+    let currentTotal = 4504;
 
-document.addEventListener('DOMContentLoaded', renderCartPage);
-</script>
+    function initCartPage() {
+      activeCart = getCart();
+
+      // Ensure demo items are populated if cart was empty
+      if (!activeCart || activeCart.length === 0) {
+        activeCart = [
+          {
+            id: 1,
+            code: "CF-MOD-09",
+            name: "Custom Drop-Shoulder Merino Overshirt",
+            price: 3499,
+            mrp: 4999,
+            qty: 1,
+            size: "BESPOKE",
+            badge: "MADE-TO-MEASURE (4-7 DAYS)",
+            color: "Matte Charcoal",
+            spec: "280 GSM Merino Twill",
+            images: ["https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=400&q=80"]
+          },
+          {
+            id: 2,
+            code: "CF-RTW-02",
+            name: "Aero-Drape Cuban Collar Shirt",
+            price: 1799,
+            mrp: 2899,
+            qty: 1,
+            size: "L (RELAXED)",
+            badge: "READY-TO-WEAR (EXPRESS 24H)",
+            color: "Obsidian Ice",
+            spec: "160 GSM Resort Tech",
+            images: ["https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=400&q=80"]
+          }
+        ];
+        localStorage.setItem("NOVA_CART", JSON.stringify(activeCart));
+      }
+
+      renderCartPieces();
+      recalculateFinance();
+      initQRGrid();
+      startSlotCountdown();
+    }
+
+    function renderCartPieces() {
+      const container = document.getElementById('fab-items-render');
+      const countHeader = document.getElementById('fab-header-count');
+      const queueStatus = document.getElementById('cart-queue-status');
+      const badgeCount = document.getElementById('summary-badge-count');
+
+      const totalItems = activeCart.reduce((s, i) => s + (i.qty || 1), 0);
+      if (countHeader) countHeader.textContent = totalItems;
+      if (badgeCount) badgeCount.textContent = totalItems + ' ITEMS';
+      if (queueStatus) queueStatus.textContent = `[ ${String(totalItems).padStart(2,'0')} PIECES QUEUED ]`;
+
+      if (!activeCart || activeCart.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:40px;font-family:'JetBrains Mono',monospace;color:#999;">
+            NO PIECES IN ATELIER QUEUE &bull; <a href="shop.html" style="color:#e10600;">EXPLORE ARCHIVES</a>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = activeCart.map((item, idx) => {
+        const isBespoke = (item.badge || '').includes('MEASURE') || item.size === 'BESPOKE';
+        const img = (item.images && item.images[0]) || item.img || 'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=400&q=80';
+        const price = item.price || 0;
+        const mrp = item.mrp || (price * 1.3);
+
+        return `
+          <div class="fab-item-card">
+            <img class="fab-item-thumb" src="${img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=400&q=80'">
+            
+            <div class="fab-item-details">
+              <div class="fab-badge-row">
+                <span class="fab-pill-badge ${isBespoke ? 'red' : 'dark'}">${item.badge || (isBespoke ? 'MADE-TO-MEASURE' : 'READY-TO-WEAR')}</span>
+              </div>
+              <div class="fab-item-name">${item.name}</div>
+              <div class="fab-item-spec">SPEC // ${item.code || 'CF-MOD'} &bull; ${item.spec || '280 GSM MERINO TWILL'} &bull; ${item.color || 'OBSIDIAN'}</div>
+              
+              <div class="fab-item-tags">
+                ${isBespoke ? '<span>MONOGRAM: <strong>[CF]</strong></span>' : ''}
+                <span>SIZE: <strong>${item.size || 'L'}</strong></span>
+                <span>QTY: <strong>${item.qty || 1}</strong></span>
+              </div>
+
+              <div class="fab-action-links">
+                ${isBespoke ? '<a href="customize.html" class="fab-link-crimson">INSPECT BIOMETRIC DRAFT &rarr;</a>' : ''}
+                <span class="fab-link-remove" onclick="removeCheckoutItem(${idx})">REMOVE</span>
+              </div>
+            </div>
+
+            <div class="fab-item-pricing">
+              <div class="fab-item-price">&#8377;${(price * (item.qty || 1)).toLocaleString('en-IN')}</div>
+              <div class="fab-item-mrp">&#8377;${(mrp * (item.qty || 1)).toLocaleString('en-IN')}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function removeCheckoutItem(index) {
+      activeCart.splice(index, 1);
+      localStorage.setItem("NOVA_CART", JSON.stringify(activeCart));
+      renderCartPieces();
+      recalculateFinance();
+      window.CF_showToast('PIECE REMOVED FROM ATELIER QUEUE');
+    }
+
+    function recalculateFinance() {
+      const subtotal = activeCart.reduce((s, i) => s + ((i.price || 0) * (i.qty || 1)), 0);
+      const discount = Math.round(subtotal * discountRate);
+      const total = Math.max(0, subtotal - discount);
+      currentTotal = total;
+
+      document.getElementById('sum-subtotal').textContent = '₹' + subtotal.toLocaleString('en-IN');
+      document.getElementById('sum-discount').textContent = '-₹' + discount.toLocaleString('en-IN');
+      document.getElementById('sum-total').textContent = '₹' + total.toLocaleString('en-IN');
+      document.getElementById('btn-pay-amount').textContent = '₹' + total.toLocaleString('en-IN');
+      document.getElementById('modal-qr-price').textContent = '₹' + total.toLocaleString('en-IN');
+    }
+
+    function applyAtelierCode() {
+      const input = document.getElementById('coupon-code-input');
+      const val = (input.value || '').trim().toUpperCase();
+      const status = document.getElementById('coupon-status-text');
+
+      if (val === 'FITFIRST') {
+        discountRate = 0.15;
+        status.textContent = '✓ 15% FIRST DROP INCENTIVE SUCCESSFULLY APPLIED';
+        status.style.color = '#22c55e';
+        window.CF_showToast('CODE FITFIRST APPLIED: 15% OFF');
+      } else if (val === 'BLR20') {
+        discountRate = 0.20;
+        status.textContent = '✓ 20% BENGALURU VIP INCENTIVE APPLIED';
+        status.style.color = '#22c55e';
+        window.CF_showToast('CODE BLR20 APPLIED: 20% OFF');
+      } else {
+        discountRate = 0;
+        status.textContent = '✕ INVALID ATELIER CODE';
+        status.style.color = '#e10600';
+        window.CF_showToast('INVALID CODE');
+      }
+      recalculateFinance();
+    }
+
+    function switchPayTab(btn, method) {
+      document.querySelectorAll('.pay-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedPayMethod = method;
+
+      document.getElementById('panel-upi').style.display = method === 'upi' ? 'block' : 'none';
+      document.getElementById('panel-cards').style.display = method === 'cards' ? 'block' : 'none';
+      document.getElementById('panel-netbanking').style.display = method === 'netbanking' ? 'block' : 'none';
+      document.getElementById('panel-cod').style.display = method === 'cod' ? 'block' : 'none';
+    }
+
+    function selectUPIClient(card, name) {
+      document.querySelectorAll('.upi-app-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      window.CF_showToast(`SELECTED ${name.toUpperCase()} GATEWAY`);
+    }
+
+    function initQRGrid() {
+      const container = document.getElementById('qr-pixels-container');
+      if (!container) return;
+      container.innerHTML = '';
+      for (let i = 0; i < 144; i++) {
+        const px = document.createElement('div');
+        px.className = 'qr-sim-pixel' + (Math.random() > 0.45 ? ' dark' : '');
+        container.appendChild(px);
+      }
+    }
+
+    function openQRModal() {
+      initQRGrid();
+      document.getElementById('qr-modal').classList.add('active');
+    }
+
+    function closeQRModal() {
+      document.getElementById('qr-modal').classList.remove('active');
+    }
+
+    function simulatePaymentApproval() {
+      closeQRModal();
+      executeFullCheckout();
+    }
+
+    function verifyAndExecuteUPI() {
+      const input = document.getElementById('vpa-input-field');
+      const val = (input.value || '').trim();
+      if (!val || !val.includes('@')) {
+        window.CF_showToast('PLEASE ENTER A VALID UPI VPA (e.g. name@bank)');
+        return;
+      }
+      window.CF_showToast(`VPA VERIFIED: ${val}`);
+      setTimeout(executeFullCheckout, 600);
+    }
+
+    /* FULL REAL WORKFLOW EXECUTION */
+    function executeFullCheckout() {
+      if (!activeCart || activeCart.length === 0) {
+        window.CF_showToast('ATELIER BAG IS EMPTY &bull; ADD PIECES FIRST');
+        return;
+      }
+
+      const overlay = document.getElementById('order-proc-overlay');
+      const stepText = document.getElementById('proc-step-message');
+      overlay.classList.add('active');
+
+      const steps = [
+        'INITIALIZING ENCRYPTED TRANSACTION TOKEN...',
+        'SYNCING BIOMETRIC PROFILE #CF-8821...',
+        'CALIBRATING CNC LASER CUTTING TIME-SLOT...',
+        'RESERVING TEXTILE YIELD IN BENGALURU ATELIER...',
+        'ORDER COMMISSIONED &bull; REDIRECTING TO LIVE FEED...'
+      ];
+
+      let stepIndex = 0;
+      const interval = setInterval(() => {
+        if (stepIndex < steps.length) {
+          stepText.textContent = steps[stepIndex];
+          stepIndex++;
+        } else {
+          clearInterval(interval);
+
+          // Generate finalized order
+          const newOrder = {
+            id: '#CF-2026-' + Math.floor(1000 + Math.random() * 9000),
+            date: new Date().toISOString(),
+            status: 'confirmed',
+            stage: 'STAGE 04: LASER CUTTING',
+            client: {
+              name: 'Dhyey M.',
+              id: '#CF-8821',
+              address: '#402 Indiranagar 100ft Rd, Defense Colony, Bengaluru, Karnataka 560038'
+            },
+            items: [...activeCart],
+            subtotal: activeCart.reduce((s, i) => s + ((i.price || 0) * (i.qty || 1)), 0),
+            discount: Math.round(activeCart.reduce((s, i) => s + ((i.price || 0) * (i.qty || 1)), 0) * discountRate),
+            total: currentTotal,
+            paymentMethod: selectedPayMethod.toUpperCase(),
+            laserTelemetry: {
+              operative: 'Farooq A. (Master)',
+              laserBeam: 'CO2 0.10mm Precision',
+              fabricBatch: '280 GSM Merino Twill',
+              stitchFreq: '14 SPI High-Tenacity'
+            }
+          };
+
+          // Save to local storage
+          localStorage.setItem('CODED_LATEST_ORDER', JSON.stringify(newOrder));
+          const existingOrders = JSON.parse(localStorage.getItem('CODED_ORDERS') || '[]');
+          existingOrders.unshift(newOrder);
+          localStorage.setItem('CODED_ORDERS', JSON.stringify(existingOrders));
+
+          // Clear cart
+          localStorage.removeItem('NOVA_CART');
+
+          // Redirect to live order success page
+          window.location.href = 'order-success.html';
+        }
+      }, 500);
+    }
+
+    function startSlotCountdown() {
+      let seconds = 582; // 09:42
+      const el = document.getElementById('slot-countdown-val');
+      setInterval(() => {
+        if (seconds > 0) {
+          seconds--;
+          const m = Math.floor(seconds / 60);
+          const s = seconds % 60;
+          if (el) el.textContent = `SLOT RESERVED (${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} MIN)`;
+        }
+      }, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', initCartPage);
+  </script>
 </body>
 </html>

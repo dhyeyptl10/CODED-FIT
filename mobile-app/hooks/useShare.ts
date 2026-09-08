@@ -34,7 +34,7 @@ export function useShare() {
       } else {
         await Share.share({
           title: `✦ ${lookTitle} · NOVA STREET`,
-          message: `Check out my custom AI Supermodel Look from CODED-FIT! Biometric tailored with 99.4% fit score. ✨ #NovaStreet #CodedFit #AIFashion`,
+          message: `Check out my custom AI Supermodel Look from CODED-FIT! Biometric tailored with 99.4% fit score.  #NovaStreet #CodedFit #AIFashion`,
         });
       }
     } catch (e: any) {
@@ -46,7 +46,7 @@ export function useShare() {
     try {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       await Share.share({
-        message: `Hey ${friendName}! I found this insane AI 3D Fashion app CODED-FIT. Use my VIP Code: ${promoCode} for 10% off bespoke clothes! 👕✨`,
+        message: `Hey ${friendName}! I found this insane AI 3D Fashion app CODED-FIT. Use my VIP Code: ${promoCode} for 10% off bespoke clothes! `,
       });
     } catch (e) {
       console.error('[useShare] Error:', e);

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atelier Client Authentication | CODED FIT [BLR-ATELIER]</title>
+  <meta name="description" content="Access your CODED FIT biometric fit vault, active atelier commissions, and saved 3D tailoring architectures.">
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/studio3d.css">
+
+  <style>
+    body.auth-page-body {
+      background: #08090b;
+      color: #f5f5f7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .auth-main-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      position: relative;
+    }
+
+    .auth-card {
+      background: #0f1115;
+      border: 1px solid var(--border-dark);
+      border-top: 3px solid var(--crimson);
+      border-radius: var(--radius-xs);
+      max-width: 480px;
+      width: 100%;
+      padding: 40px 36px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+    }
+
+    .demo-login-box {
+      background: #14171d;
+      border: 1px solid rgba(225, 6, 0, 0.35);
+      border-radius: 2px;
+      padding: 16px;
+      margin-bottom: 28px;
+    }
+
+    .auth-tabs-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .auth-tab-btn {
+      background: #181b22;
+      border: 1px solid var(--border-dark);
+      color: #888;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 12px 0;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+    }
+
+    .auth-tab-btn.active {
+      background: #fff;
+      color: #000;
+      border-color: #fff;
+    }
+
+    .auth-input-group {
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .auth-input-group label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .auth-input-group input {
+      background: #15181f;
+      border: 1px solid var(--border-dark);
+      border-radius: 2px;
+      padding: 14px;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .auth-input-group input:focus {
+      border-color: var(--crimson);
+    }
+  </style>
+</head>
+<body class="auth-page-body">
+  <!-- MASTER UNIFIED NAVBAR MOUNT -->
+  <div id="cf-navbar-mount"></div>
+
+  <!-- Main Auth Card -->
+  <main class="auth-main-wrap">
+    <div class="auth-card">
+      <div style="margin-bottom:24px;">
+        <span class="section-tag-prefix">// ATELIER CLIENT TERMINAL</span>
+        <h1 style="font-family:var(--font-heading);font-size:26px;font-weight:900;text-transform:uppercase;color:#fff;margin-top:4px;">
+          AUTHENTICATE PROTOCOL
+        </h1>
+        <p style="font-size:12.5px;color:#888;margin-top:4px;">
+          Access your biometric fit vault, active CNC laser cutting orders, and saved 3D architectures.
+        </p>
+      </div>
+
+      <!-- Quick 1-Click Demo Login for Dhyey M. -->
+      <div class="demo-login-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-family:var(--font-mono);font-size:10px;font-weight:800;color:var(--crimson);">
+            ● QUICK STARTUP DEMO ACCOUNT
+          </span>
+          <span style="font-family:var(--font-mono);font-size:9px;background:var(--crimson);color:#fff;padding:2px 6px;border-radius:2px;">
+            VERIFIED
+          </span>
+        </div>
+        <div style="font-family:var(--font-heading);font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;">
+          DHYEY M. [ATELIER BLACK MEMBER #CF-8821]
+        </div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:#888;margin-bottom:12px;">
+          Pre-loaded with 18 Biometric Nodes, Active Laser Cutting Commission, and Saved 3D Jacket Drafts.
+        </div>
+        <button class="btn-coded btn-crimson" style="width:100%;text-align:center;padding:12px;" onclick="loginAsDemoUser()">
+          CONTINUE AS DHYEY M. (#CF-8821) →
+        </button>
+      </div>
+
+      <!-- Auth Tabs: Login / Sign Up -->
+      <div class="auth-tabs-row">
+        <button class="auth-tab-btn active" id="tab-login" onclick="switchAuthTab('login')">LOGIN</button>
+        <button class="auth-tab-btn" id="tab-signup" onclick="switchAuthTab('signup')">CREATE ACCOUNT</button>
+      </div>
+
+      <!-- Standard Form -->
+      <form onsubmit="handleStandardAuth(event)">
+        <div class="auth-input-group" id="name-group" style="display:none;">
+          <label>Full Name</label>
+          <input type="text" id="auth-name" placeholder="Dhyey Patel">
+        </div>
+
+        <div class="auth-input-group">
+          <label>Atelier Email / Neural ID</label>
+          <input type="email" id="auth-email" required placeholder="dhyey@codedfit.com">
+        </div>
+
+        <div class="auth-input-group">
+          <label>Security Key / Password</label>
+          <input type="password" id="auth-password" required placeholder="••••••••••••">
+        </div>
+
+        <button type="submit" class="btn-coded btn-dark-outline" style="width:100%;text-align:center;margin-top:12px;" id="auth-submit-btn">
+          LOGIN TO TERMINAL →
+        </button>
+
+        <div style="text-align:center;margin-top:18px;border-top:1px solid #222;padding-top:16px;">
+          <a href="onboarding.html" style="font-family:var(--font-mono);font-size:11px;color:var(--crimson);font-weight:700;letter-spacing:1px;text-transform:uppercase;text-decoration:none;">
+            ✦ FIRST TIME CLIENT? LAUNCH 60-SEC ONBOARDING →
+          </a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" style="margin-top:auto;">
+    <div class="footer-bottom-bar">
+      <div>ISO 9001:2015 CERTIFIED PRECISION ATELIER // BENGALURU, INDIA</div>
+      <div>© 2025 CODED FIT PRIVATE LIMITED. ALL RIGHTS RESERVED.</div>
+    </div>
+  </footer>
+
+  <script>
+    let authMode = 'login';
+
+    function switchAuthTab(mode) {
+      authMode = mode;
+      document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+      document.getElementById('tab-signup').classList.toggle('active', mode === 'signup');
+      document.getElementById('name-group').style.display = (mode === 'signup') ? 'flex' : 'none';
+      document.getElementById('auth-submit-btn').innerText = (mode === 'signup') ? 'CREATE ATELIER ACCOUNT →' : 'LOGIN TO TERMINAL →';
+    }
+
+    function loginAsDemoUser() {
+      const user = {
+        name: "Dhyey M.",
+        phone: "+91 98765 43210",
+        address: "Apartment 804, Sovereign Towers, 100 Feet Road, Indiranagar, Bengaluru, KA 560038",
+        profileId: "#CF-8821-BLR",
+        tier: "Atelier Black Member",
+        biometrics: {
+          shoulder: 18.2,
+          chest: 41.2,
+          waist: 32.5,
+          torsoDrop: 28.5,
+          inseam: 30.5,
+          height: 185
+        }
+      };
+      localStorage.setItem('CODED_USER', JSON.stringify(user));
+      alert("Authenticated as Dhyey M. (#CF-8821-BLR). Redirecting to Dashboard...");
+      window.location.href = "dashboard.html";
+    }
+
+    function handleStandardAuth(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-email').value;
+      const user = {
+        name: document.getElementById('auth-name').value || email.split('@')[0],
+        email: email,
+        profileId: "#CF-" + Math.floor(1000 + Math.random() * 9000),
+        tier: "Atelier Member",
+        biometrics: { shoulder: 18.2, chest: 41.2, waist: 32.5, inseam: 30.5, height: 185 }
+      };
+      localStorage.setItem('CODED_USER', JSON.stringify(user));
+      
+      if (authMode === 'signup') {
+        window.location.href = "onboarding.html";
+      } else {
+        window.location.href = "dashboard.html";
+      }
+    }
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+</body>
+</html>

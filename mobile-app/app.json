@@ -69,7 +69,11 @@
         {
           "photosPermission": "The app accesses your photos to let you try on clothes on your own image."
         }
-      ]
+      ],
+      "expo-asset",
+      "expo-font",
+      "expo-sharing",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true

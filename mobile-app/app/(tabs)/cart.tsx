@@ -87,7 +87,7 @@ export default function CartScreen() {
 
       {cart.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text style={{ fontSize: 44, marginBottom: 12 }}>👜</Text>
+          <Text style={{ fontSize: 44, marginBottom: 12 }}>BAG</Text>
           <Text style={styles.emptyTitle}>Your Bag is Empty</Text>
           <Text style={styles.emptySub}>
             Explore our curated releases or design a bespoke tailored garment in the AI Try-On studio.
@@ -104,7 +104,7 @@ export default function CartScreen() {
           {/* Delivery ETA Pill */}
           {location && (
             <View style={styles.etaCard}>
-              <Text style={{ fontSize: 16 }}>🚚</Text>
+              <Text style={{ fontSize: 16 }}>EXPRESS</Text>
               <View style={{ flex: 1 }}>
                 <Text style={styles.etaTitle}>Delivering to {location.city}</Text>
                 <Text style={styles.etaSub}>{location.deliveryEstimate.dispatchBadge}</Text>

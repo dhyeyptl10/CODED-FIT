@@ -77,7 +77,7 @@ export default function ShopScreen() {
             style={[styles.funnelPill, funnelFilter === 'rtw' && styles.funnelPillActive]}
           >
             <Text style={[styles.funnelPillText, funnelFilter === 'rtw' && styles.funnelPillTextActive]}>
-              ⚡ 24H RTW
+              24H RTW
             </Text>
           </TouchableOpacity>
 
@@ -86,7 +86,7 @@ export default function ShopScreen() {
             style={[styles.funnelPill, funnelFilter === 'custom-made' && styles.funnelPillActive]}
           >
             <Text style={[styles.funnelPillText, funnelFilter === 'custom-made' && styles.funnelPillTextActive]}>
-              ✂️ BESPOKE
+              BESPOKE
             </Text>
           </TouchableOpacity>
         </View>
@@ -134,7 +134,7 @@ export default function ShopScreen() {
 
         {filteredProducts.length === 0 && (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyEmoji}>🧵</Text>
+            <Text style={styles.emptyEmoji}>✦</Text>
             <Text style={styles.emptyTitle}>NO PIECES FOUND</Text>
             <Text style={styles.emptySub}>Try adjusting your filters.</Text>
           </View>

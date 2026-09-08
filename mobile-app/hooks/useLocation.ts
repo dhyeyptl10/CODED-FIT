@@ -36,7 +36,7 @@ export function useLocation() {
       return {
         etaText: 'Same-Day Dispatch · Delivery in 24 Hours (Ahmedabad Mill Hub)',
         isHyperlocal: true,
-        dispatchBadge: '⚡ 24H DELIVERY',
+        dispatchBadge: '24H DELIVERY',
       };
     } else if (
       c.includes('mumbai') ||
@@ -51,13 +51,13 @@ export function useLocation() {
       return {
         etaText: 'Express Air Dispatch · Delivery in 1-2 Days',
         isHyperlocal: false,
-        dispatchBadge: '✈️ 48H EXPRESS',
+        dispatchBadge: '48H EXPRESS',
       };
     } else {
       return {
         etaText: 'Priority Surface Dispatch · Delivery in 3-4 Days',
         isHyperlocal: false,
-        dispatchBadge: '📦 STANDARD FAST',
+        dispatchBadge: 'STANDARD FAST',
       };
     }
   };

@@ -75,7 +75,7 @@ export function useNotifications() {
   const scheduleBespokeMilestoneAlert = async (productName: string) => {
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: '✂️ BESPOKE CRAFT UPDATE',
+        title: 'BESPOKE CRAFT UPDATE',
         body: `Your custom ${productName} pattern has been cut using your biometric nodes. Moving to master stitching!`,
         sound: 'default',
       },
@@ -93,7 +93,7 @@ export function useNotifications() {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: '🔥 LIMITED DROP RADAR ACTIVE',
+        title: 'LIMITED DROP RADAR ACTIVE',
         body: `The limited release of ${productName} drops in ${minutesFromNow} minute! Stock is unit-of-one limited.`,
         sound: 'default',
       },

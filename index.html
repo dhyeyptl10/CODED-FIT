@@ -1,735 +1,1514 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova Street — Hybrid Custom-Curated Label</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/studio3d.css">
-    <style>
-      /* ── Page-specific enhancements ── */
-      .hero-card { position: relative; border-radius: 12px; overflow: hidden; cursor: pointer; }
-      .hero-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.7s; }
-      .hero-card:hover img { transform: scale(1.05); }
-      .hero-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,6,6,0.9), transparent); display: flex; align-items: flex-end; padding: 36px; justify-content: space-between; }
-      .hero-card-title { font-size: 2.5rem; font-family: 'Cinzel', serif; font-weight: 900; letter-spacing: 2px; }
-      .cta-arrow { background: var(--gold); color: #000; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; transition: 0.3s; }
-      .cta-arrow:hover { background: var(--gold-light); transform: scale(1.1); }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CODED FIT [BLR-ATELIER] — Generative-Pattern Bespoke Luxury Streetwear</title>
+  <meta name="description" content="India's pioneer generative-pattern streetwear laboratory. Zero standard sizing.">
 
-      /* Brand story section */
-      .brand-story-grid {
-        display: grid; grid-template-columns: 1fr 1fr;
-        min-height: 80vh; overflow: hidden;
-      }
-      .brand-story-text-side {
-        background: var(--black);
-        display: flex; flex-direction: column; justify-content: center;
-        padding: 80px 64px;
-      }
-      .brand-story-img-side {
-        position: relative; overflow: hidden;
-      }
-      .brand-story-img-side img {
-        width: 100%; height: 100%;
-        object-fit: cover;
-        transition: transform 0.8s ease;
-      }
-      .brand-story-img-side:hover img { transform: scale(1.03); }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 
-      /* Brand pillars */
-      .brand-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
-      .pillar-item {
-        padding: 48px 40px;
-        border-right: 1px solid var(--border);
-        border-top: 1px solid var(--border);
-      }
-      .pillar-item:last-child { border-right: none; }
-      .pillar-number { font-family: 'Cinzel', serif; font-size: 48px; color: var(--gold); opacity: 0.2; font-weight: 900; line-height: 1; margin-bottom: 16px; }
-      .pillar-title { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; color: var(--text); }
-      .pillar-desc { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
+  <style>
+    html, body {
+      background: #fff;
+      color: #111;
+      margin: 0; padding: 0;
+      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+    }
 
-      @media (max-width: 768px) {
-        .brand-story-grid { grid-template-columns: 1fr; }
-        .brand-story-text-side { padding: 48px 24px; }
-        .brand-story-img-side { min-height: 50vh; }
-        .brand-pillars { grid-template-columns: 1fr; }
-        .pillar-item { border-right: none; }
-      }
-    </style>
+    /* ── DROP BAR (Red Countdown Announcement) ── */
+    .drop-bar {
+      background: #e10600;
+      padding: 10px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .drop-bar-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+    }
+    .drop-bar-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .drop-bar-countdown {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 2px;
+    }
+    .drop-bar-cta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #fff;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.5);
+      padding: 5px 12px;
+      transition: all 0.2s;
+    }
+    .drop-bar-cta:hover { background: rgba(255,255,255,0.15); }
+
+    /* ── HERO SECTION ── */
+    .hero-section {
+      background: #0a0a0c;
+      min-height: 90vh;
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1800&q=80');
+      background-size: cover;
+      background-position: center top;
+      opacity: 0.45;
+      transition: transform 8s ease;
+    }
+
+    .hero-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 48px 64px;
+      max-width: 900px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #e10600;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 28px; height: 1px;
+      background: #e10600;
+    }
+
+    .hero-headline {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(42px, 6vw, 72px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+
+    .hero-headline .crimson { color: #e10600; }
+
+    .hero-sub {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+      max-width: 560px;
+      margin-bottom: 36px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hero-btn-primary {
+      background: #e10600;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s;
+    }
+    .hero-btn-primary:hover { background: #c00500; }
+
+    .hero-btn-secondary {
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 13px 27px;
+      border: 1px solid rgba(255,255,255,0.25);
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    .hero-btn-secondary:hover { border-color: #fff; color: #fff; }
+
+    .hero-metrics {
+      position: absolute;
+      bottom: 64px;
+      right: 48px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .hero-metric {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+    }
+
+    .hero-metric span {
+      color: #fff;
+      font-weight: 800;
+      margin-left: 6px;
+    }
+
+    /* ── TRUST BAR ── */
+    .trust-bar {
+      background: #f7f7f8;
+      border-bottom: 1px solid #e5e5e5;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .trust-icon {
+      font-size: 16px;
+      opacity: 0.7;
+    }
+
+    .trust-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #444;
+    }
+
+    .trust-sub {
+      font-size: 9px;
+      color: #888;
+      letter-spacing: 0;
+      display: block;
+      margin-top: 1px;
+      font-weight: 400;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #e10600;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: #0a0a0c;
+      letter-spacing: -0.5px;
+      margin-bottom: 32px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 28px;
+    }
+
+    .section-view-all {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #666;
+      text-decoration: none;
+      text-transform: uppercase;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 1px;
+      transition: color 0.2s;
+    }
+    .section-view-all:hover { color: #e10600; }
+
+    /* ── ARCHETYPE GRID ── */
+    .archetype-section {
+      background: #fff;
+      padding: 60px 40px;
+    }
+
+    .archetype-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .archetype-card {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      background: #0a0a0c;
+      cursor: pointer;
+      display: block;
+      text-decoration: none;
+    }
+
+    .archetype-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 0.75;
+    }
+
+    .archetype-card:hover img {
+      transform: scale(1.06);
+      opacity: 0.9;
+    }
+
+    .archetype-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%);
+    }
+
+    .archetype-card-label {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #e10600;
+      background: rgba(0,0,0,0.6);
+      padding: 4px 8px;
+      text-transform: uppercase;
+    }
+
+    .archetype-card-content {
+      position: absolute;
+      bottom: 18px;
+      left: 18px;
+      right: 18px;
+    }
+
+    .archetype-card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 4px;
+      letter-spacing: -0.3px;
+    }
+
+    .archetype-card-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .archetype-card-arrow {
+      position: absolute;
+      bottom: 18px;
+      right: 18px;
+      color: #fff;
+      font-size: 18px;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .archetype-card:hover .archetype-card-arrow {
+      opacity: 1;
+      transform: translateX(4px);
+    }
+
+    /* ── CURATED DROPS ── */
+    .drops-section {
+      background: #f7f7f8;
+      padding: 60px 40px;
+    }
+
+    .drops-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .drop-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      overflow: hidden;
+      transition: box-shadow 0.3s, transform 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .drop-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      transform: translateY(-3px);
+    }
+
+    .drop-card-img {
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      background: #eee;
+      position: relative;
+    }
+
+    .drop-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s;
+    }
+
+    .drop-card:hover .drop-card-img img { transform: scale(1.05); }
+
+    .drop-card-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #fff;
+      background: #e10600;
+      padding: 3px 7px;
+      text-transform: uppercase;
+    }
+
+    .drop-card-wishlist {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 30px; height: 30px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s;
+    }
+
+    .drop-card-body {
+      padding: 14px;
+    }
+
+    .drop-card-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #999;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .drop-card-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .drop-card-fabric {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #aaa;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .drop-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .drop-card-price {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      color: #111;
+    }
+
+    .drop-card-mrp {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: #bbb;
+      text-decoration: line-through;
+      margin-left: 5px;
+    }
+
+    .drop-card-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: #111;
+      background: #f0f0f0;
+      border: none;
+      padding: 7px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .drop-card-btn:hover { background: #e10600; color: #fff; }
+
+    /* ── ENGINE CARDS ── */
+    .engine-section {
+      background: #fff;
+      padding: 60px 40px;
+    }
+
+    .engine-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .engine-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .engine-card {
+      background: #f5f5f7;
+      border: 1px solid #e5e5e5;
+      padding: 28px;
+      transition: all 0.25s;
+    }
+
+    .engine-card:hover {
+      border-color: #e10600;
+      box-shadow: 0 4px 20px rgba(225,6,0,0.06);
+    }
+
+    .engine-card-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #e10600;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .engine-card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      color: #111;
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+
+    .engine-card-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: #666;
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+
+    .engine-card-stats {
+      display: flex;
+      gap: 20px;
+    }
+
+    .engine-stat {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #aaa;
+      letter-spacing: 0.5px;
+    }
+
+    .engine-stat strong {
+      color: #111;
+      font-weight: 800;
+    }
+
+    .engine-card-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #e10600;
+      text-decoration: none;
+      text-transform: uppercase;
+      border-bottom: 1px solid #e10600;
+      padding-bottom: 1px;
+    }
+
+    /* ── ENGINE HIGHLIGHT CARD (Red CTA) ── */
+    .engine-card.engine-highlight {
+      background: #0a0a0c;
+      border-color: #0a0a0c;
+    }
+
+    .engine-card.engine-highlight .engine-card-number { color: #e10600; }
+    .engine-card.engine-highlight .engine-card-title { color: #fff; }
+    .engine-card.engine-highlight .engine-card-desc { color: rgba(255,255,255,0.5); }
+    .engine-card.engine-highlight .engine-stat { color: rgba(255,255,255,0.4); }
+    .engine-card.engine-highlight .engine-stat strong { color: #fff; }
+    .engine-card.engine-highlight .engine-card-link { color: #fff; border-color: #fff; }
+
+    /* ── VOICE CONSOLE ── */
+    .voice-section {
+      background: #0a0a0c;
+      padding: 60px 40px;
+    }
+
+    .voice-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .voice-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 30px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 14px;
+      line-height: 1.15;
+    }
+
+    .voice-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .voice-console {
+      background: #111315;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 20px;
+    }
+
+    .voice-console-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .voice-console-dot {
+      width: 8px; height: 8px;
+      background: #e10600;
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .voice-console-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #e10600;
+      text-transform: uppercase;
+    }
+
+    .voice-waveform {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 40px;
+      margin-bottom: 16px;
+    }
+
+    .voice-bar {
+      width: 3px;
+      border-radius: 2px;
+      background: #e10600;
+      animation: waveAnim 1.2s ease-in-out infinite;
+    }
+
+    @keyframes waveAnim {
+      0%, 100% { height: 8px; opacity: 0.4; }
+      50% { height: 32px; opacity: 1; }
+    }
+
+    .voice-input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .voice-input {
+      flex: 1;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      padding: 10px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      outline: none;
+      border-radius: 2px;
+    }
+
+    .voice-input::placeholder { color: rgba(255,255,255,0.3); }
+
+    .voice-send-btn {
+      background: #e10600;
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+
+    .voice-send-btn:hover { background: #c00500; }
+
+    .voice-langs {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .voice-lang-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 4px 8px;
+      border-radius: 1px;
+    }
+
+    /* ── PROTOCOL STEPS ── */
+    .protocol-section {
+      background: #fff;
+      padding: 60px 40px;
+    }
+
+    .protocol-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .protocol-card {
+      border: 1px solid #e5e5e5;
+      padding: 28px;
+    }
+
+    .protocol-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 42px;
+      font-weight: 800;
+      color: #f0f0f0;
+      line-height: 1;
+      margin-bottom: 16px;
+      letter-spacing: -2px;
+    }
+
+    .protocol-step-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #e10600;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .protocol-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      color: #111;
+      margin-bottom: 10px;
+    }
+
+    .protocol-desc {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.65;
+    }
+
+    /* ── STREET REVIEWS ── */
+    .reviews-section {
+      background: #f5f5f7;
+      padding: 60px 40px;
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .review-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      overflow: hidden;
+    }
+
+    .review-img {
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .review-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s;
+    }
+
+    .review-card:hover .review-img img { transform: scale(1.04); }
+
+    .review-body {
+      padding: 20px;
+    }
+
+    .review-stars {
+      color: #e10600;
+      font-size: 12px;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+
+    .review-text {
+      font-size: 12px;
+      color: #444;
+      line-height: 1.7;
+      margin-bottom: 14px;
+      font-style: italic;
+    }
+
+    .review-author {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #111;
+      text-transform: uppercase;
+    }
+
+    .review-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #aaa;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+      text-transform: uppercase;
+    }
+
+    /* ── UPGRADE BANNER ── */
+    .upgrade-banner {
+      background: #0a0a0c;
+      padding: 72px 40px;
+      text-align: center;
+    }
+
+    .upgrade-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #e10600;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .upgrade-headline {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+
+    .upgrade-headline .crimson { color: #e10600; }
+
+    .upgrade-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+      max-width: 560px;
+      margin: 0 auto 36px;
+    }
+
+    .upgrade-ctas {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .btn-crimson {
+      background: #e10600;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      text-decoration: none;
+      display: inline-block;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-crimson:hover { background: #c00500; }
+
+    .btn-ghost-white {
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 13px 27px;
+      border: 1px solid rgba(255,255,255,0.2);
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    .btn-ghost-white:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+
+    /* Cart drawer item styles */
+    .drawer-item {
+      display: flex;
+      gap: 14px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .drawer-item img {
+      width: 64px; height: 78px;
+      object-fit: cover;
+      border-radius: 2px;
+      background: #1a1c22;
+      flex-shrink: 0;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-in {
+      opacity: 0;
+      animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
 </head>
 <body>
+  <!-- Navbar Mount Point -->
+  <div id="cf-navbar-mount"></div>
 
-<!-- ══════════════════════════════════════
-     PAGE LOADER
-══════════════════════════════════════ -->
-<div class="page-loader" id="page-loader">
-  <div class="loader-logo shimmer-text">NOVA STREET</div>
-  <div class="loader-line"></div>
-  <div class="loader-sub">Hybrid Custom-Curated Label · Est. 2026</div>
-</div>
-
-<!-- ══════════════════════════════════════
-     CUSTOM CURSOR
-══════════════════════════════════════ -->
-<div class="cursor-follower" id="cursor-badge">EXPLORE</div>
-
-<!-- ══════════════════════════════════════
-     ANNOUNCEMENT BAR
-══════════════════════════════════════ -->
-<div class="c-announcement">
-  <div class="c-announcement-marquee">
-    <div class="c-announcement-track">
-      ✦ DUAL-FUNNEL HYBRID FASHION &nbsp;&nbsp; ✦ READY-TO-SHIP 24H DISPATCH &amp; BESPOKE MADE-TO-MEASURE 7-14 DAYS &nbsp;&nbsp; ✦ CODE <strong>NOVA10</strong> FOR 10% OFF &nbsp;&nbsp; ✦ AHMEDABAD GOTS ORGANIC COTTON &nbsp;&nbsp; ✦ FREE SHIPPING ABOVE ₹2999 &nbsp;&nbsp; ✦ AI-POWERED 3D TRY-ON STUDIO &nbsp;&nbsp; ✦ INDIA'S FIRST HYBRID D2C LABEL &nbsp;&nbsp; ✦ DUAL-FUNNEL HYBRID FASHION &nbsp;&nbsp; ✦ READY-TO-SHIP 24H DISPATCH &amp; BESPOKE MADE-TO-MEASURE 7-14 DAYS &nbsp;&nbsp; ✦ CODE <strong>NOVA10</strong> FOR 10% OFF &nbsp;&nbsp; ✦ AHMEDABAD GOTS ORGANIC COTTON &nbsp;&nbsp; ✦ FREE SHIPPING ABOVE ₹2999 &nbsp;&nbsp; ✦ AI-POWERED 3D TRY-ON STUDIO &nbsp;&nbsp; ✦ INDIA'S FIRST HYBRID D2C LABEL &nbsp;&nbsp;
+  <!-- DROP BAR -->
+  <div class="drop-bar">
+    <div>
+      <div class="drop-bar-label">DROP 09 // MONSOON NOMAD</div>
+      <div class="drop-bar-text">NEW COLLECTION LIVE — BIOMETRIC CALIBRATION REQUIRED</div>
     </div>
+    <div>
+      <div class="drop-bar-label">CLOSES IN</div>
+      <div class="drop-bar-countdown" id="countdown-timer">47:23:11</div>
+    </div>
+    <a href="shop.html" class="drop-bar-cta">SHOP NOW &rarr;</a>
   </div>
-</div>
 
-<!-- ══════════════════════════════════════
-     HEADER / NAV
-══════════════════════════════════════ -->
-<header>
-  <div class="nav-wrap">
-    <a href="index.html" class="logo-cinch">
-      <div class="logo-text">NOVA <span>STREET</span></div>
-      <div class="logo-tagline">Hybrid Custom-Curated Label · Est. 2026</div>
-    </a>
-    <nav class="nav-links">
-      <a href="index.html" class="active">Home</a>
-      <a href="shop.html">Collection</a>
-      <a href="customize.html">Studio</a>
-      <a href="dashboard.html">UR Picks</a>
-    </nav>
-    <div class="nav-right-actions">
-      <a href="customize.html" class="dash-pill-link">✂️ Try-On Studio</a>
-      <div class="cart-trigger" onclick="openCartDrawer()">
-        <span>BAG</span>
-        <span class="cart-count" id="nav-cart-count">0</span>
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div class="hero-gradient"></div>
+
+    <div class="hero-content animate-in" style="animation-delay:0.2s">
+      <div class="hero-eyebrow">DROP 09: MONSOON NOMAD // BLR ATELIER</div>
+      <h1 class="hero-headline">
+        FASHION WAS BUILT<br>FOR SIZES.<br>
+        <span class="crimson">PEOPLE AREN'T.</span>
+      </h1>
+      <p class="hero-sub">Zero standard sizing. Real-time 3D drape physics. Biometric photogrammetry. Every garment engineered down to 0.05mm — India's first precision streetwear laboratory.</p>
+      <div class="hero-ctas">
+        <a href="shop.html" class="hero-btn-primary">SHOP THE DROP &rarr;</a>
+        <a href="customize.html" class="hero-btn-secondary">3D CUSTOM STUDIO</a>
       </div>
     </div>
-    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileMenu()"></div>
-  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
-    <div class="mobile-nav-header">
-      <div class="logo-text" style="font-size:20px;">NOVA <span>STREET</span></div>
-      <button onclick="closeMobileMenu()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);">✕</button>
-    </div>
-    <nav class="mobile-nav-links">
-      <a href="index.html" onclick="closeMobileMenu()">Home</a>
-      <a href="shop.html" onclick="closeMobileMenu()">Collection</a>
-      <a href="customize.html" onclick="closeMobileMenu()">Try-On Studio</a>
-      <a href="dashboard.html" onclick="closeMobileMenu()">UR Picks</a>
-      <a href="cart.html" onclick="closeMobileMenu()">Shopping Bag</a>
-    </nav>
-  </div>
-</header>
 
-<!-- ══════════════════════════════════════
-     HERO — PARALLAX SLIDESHOW
-══════════════════════════════════════ -->
-<section class="hero-parallax" id="hero">
-  <div class="hero-slides">
-    <div class="hero-slide active">
-      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=90" alt="Nova Street Editorial">
+    <div class="hero-metrics">
+      <div class="hero-metric">AI FIT SYNC<span>99.4%</span></div>
+      <div class="hero-metric">FABRICS ACTIVE<span>18,400+ PCS</span></div>
+      <div class="hero-metric">TOLERANCE<span>0.05MM</span></div>
     </div>
-    <div class="hero-slide">
-      <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1920&q=90" alt="Nova Street Women">
-    </div>
-    <div class="hero-slide">
-      <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&q=90" alt="Nova Street Men">
-    </div>
-    <div class="hero-slide">
-      <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1920&q=90" alt="Nova Street New Season">
-    </div>
-    <div class="hero-slide">
-      <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=1920&q=90" alt="Nova Street Bespoke">
-    </div>
-  </div>
-  <div class="hero-gradient"></div>
+  </section>
 
-  <div class="hero-content">
-    <div class="hero-label">Hybrid Custom-Curated Label</div>
-    <h1>NOVA<br><span>STREET</span></h1>
-    <p class="hero-subtitle">Expert Design Meets Your Exact Measurements</p>
-    <div class="hero-cta-row">
-      <a href="shop.html" class="c-btn filled-gold is-large">Explore Collection →</a>
-      <a href="customize.html" class="c-btn outline-white is-large">Bespoke Studio ✂️</a>
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-item">
+      <div class="trust-icon">&#9654;</div>
+      <div>
+        <div class="trust-text">AI FIT STANDARD</div>
+        <span class="trust-sub">Biometric neural calibration</span>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">&#10003;</div>
+      <div>
+        <div class="trust-text">THE CODED FIT STANDARD</div>
+        <span class="trust-sub">100% doorstep fit guaranteed</span>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">&#9873;</div>
+      <div>
+        <div class="trust-text">DOORSTEP TRIAL GUARANTEE</div>
+        <span class="trust-sub">Fit in 10 mins or free remake</span>
+      </div>
     </div>
   </div>
 
-  <!-- Slide dots -->
-  <div class="hero-dots" id="hero-dots">
-    <div class="hero-dot active" onclick="goToSlide(0)"></div>
-    <div class="hero-dot" onclick="goToSlide(1)"></div>
-    <div class="hero-dot" onclick="goToSlide(2)"></div>
-    <div class="hero-dot" onclick="goToSlide(3)"></div>
-    <div class="hero-dot" onclick="goToSlide(4)"></div>
-  </div>
-
-  <!-- Scrolling text strip -->
-  <div class="hero-scroll-strip">
-    <div class="hero-scroll-text">
-      <span>LUXURY</span><span class="dot">✦</span>
-      <span>CRAFTED IN AHMEDABAD</span><span class="dot">✦</span>
-      <span>GOTS ORGANIC COTTON</span><span class="dot">✦</span>
-      <span>BESPOKE TAILORING</span><span class="dot">✦</span>
-      <span>READY TO SHIP 24H</span><span class="dot">✦</span>
-      <span>AI TRY-ON STUDIO</span><span class="dot">✦</span>
-      <span>INDIA'S FINEST</span><span class="dot">✦</span>
-      <span>LUXURY</span><span class="dot">✦</span>
-      <span>CRAFTED IN AHMEDABAD</span><span class="dot">✦</span>
-      <span>GOTS ORGANIC COTTON</span><span class="dot">✦</span>
-      <span>BESPOKE TAILORING</span><span class="dot">✦</span>
-      <span>READY TO SHIP 24H</span><span class="dot">✦</span>
-      <span>AI TRY-ON STUDIO</span><span class="dot">✦</span>
-      <span>INDIA'S FINEST</span><span class="dot">✦</span>
+  <!-- ARCHETYPE GRID -->
+  <section class="archetype-section">
+    <div class="section-label">DROP 09 // MEN, WOMEN, KIDS &amp; BESPOKE</div>
+    <div class="section-header">
+      <div class="section-title">SHOP BY ARCHETYPE</div>
+      <a href="shop.html" class="section-view-all">VIEW FULL CATALOG &rarr;</a>
     </div>
-  </div>
-</section>
 
-<!-- ══════════════════════════════════════
-     STORIES / CATEGORY BUBBLES
-══════════════════════════════════════ -->
-<section class="stories-section reveal-fade">
-  <div class="stories-row">
-    <a href="shop.html" class="story-bubble-wrap">
-      <div class="story-bubble">
-        <img src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=200&q=80" alt="New In">
-      </div>
-      <span class="story-label">New In</span>
-    </a>
-    <a href="shop.html?gender=men" class="story-bubble-wrap">
-      <div class="story-bubble">
-        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="Men">
-      </div>
-      <span class="story-label">Men</span>
-    </a>
-    <a href="shop.html?gender=women" class="story-bubble-wrap">
-      <div class="story-bubble">
-        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80" alt="Women">
-      </div>
-      <span class="story-label">Women</span>
-    </a>
-    <a href="customize.html" class="story-bubble-wrap">
-      <div class="story-bubble">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&q=80" alt="Bespoke">
-      </div>
-      <span class="story-label">Bespoke</span>
-    </a>
-    <a href="shop.html?cat=Hoodies" class="story-bubble-wrap">
-      <div class="story-bubble">
-        <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=200&q=80" alt="Hoodies">
-      </div>
-      <span class="story-label">Hoodies</span>
-    </a>
-    <a href="shop.html?cat=Jackets" class="story-bubble-wrap">
-      <div class="story-bubble">
-        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=200&q=80" alt="Jackets">
-      </div>
-      <span class="story-label">Jackets</span>
-    </a>
-    <a href="shop.html?cat=Dresses" class="story-bubble-wrap">
-      <div class="story-bubble">
-        <img src="https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=200&q=80" alt="Dresses">
-      </div>
-      <span class="story-label">Dresses</span>
-    </a>
-    <a href="shop.html?cat=Bottoms" class="story-bubble-wrap">
-      <div class="story-bubble">
-        <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=200&q=80" alt="Bottoms">
-      </div>
-      <span class="story-label">Bottoms</span>
-    </a>
-  </div>
-</section>
+    <div class="archetype-grid">
+      <a href="shop.html?cat=men" class="archetype-card">
+        <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=800&q=80" alt="Men's Archive">
+        <div class="archetype-card-overlay"></div>
+        <div class="archetype-card-label">MEN'S ARCHIVE</div>
+        <div class="archetype-card-content">
+          <div class="archetype-card-title">MEN'S ATELIER</div>
+          <div class="archetype-card-sub">DROP 09 // 48 SILHOUETTES</div>
+        </div>
+        <div class="archetype-card-arrow">&rarr;</div>
+      </a>
 
-<!-- ══════════════════════════════════════
-     BRAND STORY — EDITORIAL
-══════════════════════════════════════ -->
-<section class="brand-story-grid">
-  <div class="brand-story-text-side reveal-left">
-    <div class="section-header">01 + Our Philosophy</div>
-    <h2 style="font-family:'Cinzel',serif; font-size: clamp(2rem,4vw,4rem); font-weight:700; text-transform:uppercase; line-height:1.05; margin-bottom:28px;">
-      Where Expert<br>Design Meets<br>Your Exact<br>Measurements.
+      <a href="shop.html?cat=women" class="archetype-card">
+        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&q=80" alt="Women's Archive">
+        <div class="archetype-card-overlay"></div>
+        <div class="archetype-card-label">WOMEN'S ARCHIVE</div>
+        <div class="archetype-card-content">
+          <div class="archetype-card-title">WOMEN'S ATELIER</div>
+          <div class="archetype-card-sub">DROP 09 // 36 SILHOUETTES</div>
+        </div>
+        <div class="archetype-card-arrow">&rarr;</div>
+      </a>
+
+      <a href="shop.html?cat=new" class="archetype-card">
+        <img src="https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=800&q=80" alt="Kids">
+        <div class="archetype-card-overlay"></div>
+        <div class="archetype-card-label">NEW DROPS</div>
+        <div class="archetype-card-content">
+          <div class="archetype-card-title">NEW DROPS</div>
+          <div class="archetype-card-sub">MONSOON NOMAD 2026</div>
+        </div>
+        <div class="archetype-card-arrow">&rarr;</div>
+      </a>
+
+      <a href="customize.html" class="archetype-card">
+        <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&q=80" alt="Bespoke Studio">
+        <div class="archetype-card-overlay"></div>
+        <div class="archetype-card-label">3D CUSTOM STUDIO</div>
+        <div class="archetype-card-content">
+          <div class="archetype-card-title">BESPOKE STUDIO</div>
+          <div class="archetype-card-sub">CONFIGURE YOUR SILHOUETTE</div>
+        </div>
+        <div class="archetype-card-arrow">&rarr;</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- CURATED DROPS -->
+  <section class="drops-section">
+    <div class="section-label">CURATED SHOPS // READY-TO-WEAR &amp; BESPOKE</div>
+    <div class="section-header">
+      <div class="section-title">CURATED DROPS</div>
+      <a href="shop.html" class="section-view-all">VIEW ALL DROPS &rarr;</a>
+    </div>
+
+    <div class="drops-grid" id="drops-grid">
+      <!-- Populated by JS -->
+    </div>
+  </section>
+
+  <!-- ATELIER ENGINE SECTION -->
+  <section class="engine-section">
+    <div class="section-label">CODED FIT ATELIER ENGINE</div>
+    <div class="section-header">
+      <div class="section-title">THE CODED FIT ATELIER ENGINE</div>
+    </div>
+
+    <div class="engine-grid">
+      <div class="engine-card">
+        <div class="engine-card-number">01 // AI FIT ENGINE</div>
+        <div class="engine-card-title">NEURAL BIOMETRIC<br>PHOTOGRAMMETRY</div>
+        <div class="engine-card-desc">Upload front + side photos. Our AI maps 47 biometric nodes and generates a precision fit profile accurate to 0.1mm.</div>
+        <div class="engine-card-stats">
+          <div class="engine-stat">NODES <strong>47</strong></div>
+          <div class="engine-stat">ACCURACY <strong>99.4%</strong></div>
+        </div>
+      </div>
+
+      <div class="engine-card">
+        <div class="engine-card-number">02 // 3D DRAPE ENGINE</div>
+        <div class="engine-card-title">THE DRAPE STUDIO<br>VIRTUAL PRODUCER</div>
+        <div class="engine-card-desc">WebGL real-time physics renders authentic fabric drape behavior — GSM, tensile strength, thermal index all calculated live.</div>
+        <div class="engine-card-stats">
+          <div class="engine-stat">FABRICS <strong>18,400+</strong></div>
+          <div class="engine-stat">FPS <strong>60</strong></div>
+        </div>
+      </div>
+
+      <div class="engine-card">
+        <div class="engine-card-number">03 // GENERATIVE PATTERN</div>
+        <div class="engine-card-title">VIRTUAL PATTERN<br>GENERATOR</div>
+        <div class="engine-card-desc">Every order triggers an automated CNC laser-cut pattern generation sent directly to Bengaluru atelier. Zero defect record.</div>
+        <div class="engine-card-stats">
+          <div class="engine-stat">TOLERANCE <strong>0.05MM</strong></div>
+          <div class="engine-stat">DEFECT RATE <strong>0.00%</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="engine-grid-2">
+      <div class="engine-card engine-highlight">
+        <div class="engine-card-number">04 // FIRST DROP COMPACT</div>
+        <div class="engine-card-title">CODED FIT<br>FIRST CLIENT GUARANTEE</div>
+        <div class="engine-card-desc">Every first garment includes a complimentary doorstep trial. If it isn't a 10/10 fit, our master patternmaker remakes it free of charge. No questions.</div>
+        <div class="engine-card-stats">
+          <div class="engine-stat">GUARANTEE <strong>100%</strong></div>
+          <div class="engine-stat">REMAKES <strong>FREE</strong></div>
+        </div>
+        <br>
+        <a href="fit-profile.html" class="engine-card-link">START FIT CALIBRATION &rarr;</a>
+      </div>
+
+      <div class="engine-card">
+        <div class="engine-card-number">05 // CONCIERGE</div>
+        <div class="engine-card-title">SPEAK TO SHOP<br>HINGLISH AI CONCIERGE</div>
+        <div class="engine-card-desc">Chat in Hindi, English, or Hinglish. Our concierge understands fit language, fabric preferences, and budget — and shops for you.</div>
+        <div class="engine-card-stats">
+          <div class="engine-stat">LANGUAGES <strong>HINDI + ENG + HINGLISH</strong></div>
+        </div>
+        <br>
+        <a href="concierge.html" class="engine-card-link">OPEN CONCIERGE &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VOICE CONSOLE SECTION -->
+  <section class="voice-section">
+    <div class="voice-inner">
+      <div>
+        <div class="section-label" style="color:#e10600">SPEAK TO SHOP // HINDI, ENGLISH &amp; HINGLISH</div>
+        <div class="voice-title">YOUR PERSONAL<br>ATELIER CONCIERGE</div>
+        <p class="voice-sub">Talk to our AI in the language that's comfortable for you. Say "mujhe ek oversized shirt chahiye" or "show me indigo linen for a relaxed summer look" — it understands.</p>
+        <a href="concierge.html" class="btn-crimson">OPEN CONCIERGE &rarr;</a>
+      </div>
+
+      <div>
+        <div class="voice-console">
+          <div class="voice-console-header">
+            <div class="voice-console-dot"></div>
+            <span class="voice-console-label">CODED FIT CONCIERGE // ACTIVE</span>
+          </div>
+
+          <div class="voice-waveform" id="voice-waveform">
+            <!-- Wave bars generated by JS -->
+          </div>
+
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:10px;letter-spacing:0.5px;">
+            &gt; Listening... say anything in Hindi, English or Hinglish
+          </div>
+
+          <div class="voice-input-row">
+            <input class="voice-input" type="text" id="concierge-input" placeholder="e.g. mujhe ek oversized hoodie dikhao..." onkeydown="if(event.key==='Enter')handleConciergeInput()">
+            <button class="voice-send-btn" onclick="handleConciergeInput()">SEND</button>
+          </div>
+
+          <div class="voice-langs">
+            <span class="voice-lang-tag">HINDI</span>
+            <span class="voice-lang-tag">ENGLISH</span>
+            <span class="voice-lang-tag">HINGLISH</span>
+            <span class="voice-lang-tag">GUJARATI</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROTOCOL STEPS -->
+  <section class="protocol-section">
+    <div class="section-label">INDIA'S FIRST THREE PROTOCOL NODES</div>
+    <div class="section-header">
+      <div class="section-title">HOW CODED FIT WORKS</div>
+    </div>
+
+    <div class="protocol-grid">
+      <div class="protocol-card">
+        <div class="protocol-num">01</div>
+        <div class="protocol-step-label">BIOMETRIC SCAN</div>
+        <div class="protocol-title">UPLOAD & CALIBRATE YOUR NEURAL AVATAR</div>
+        <p class="protocol-desc">Take 2 photos: front-facing and side profile. Our AI extracts 47 biometric nodes and builds your permanent fit profile. No tape measure needed.</p>
+      </div>
+
+      <div class="protocol-card">
+        <div class="protocol-num">02</div>
+        <div class="protocol-step-label">VIRTUAL DRAPE</div>
+        <div class="protocol-title">3D DRAPE & VIRTUAL TRY-ON IN REAL TIME</div>
+        <p class="protocol-desc">Browse our catalog with your biometric avatar wearing each garment — real physics, real GSM behavior, actual shoulder pitch rendered live.</p>
+      </div>
+
+      <div class="protocol-card">
+        <div class="protocol-num">03</div>
+        <div class="protocol-step-label">LASER CUT & DISPATCH</div>
+        <div class="protocol-title">CNC LASER CUT PATTERN & ATELIER PRODUCTION</div>
+        <p class="protocol-desc">Order triggers automated pattern generation and CNC laser cutting at our Bengaluru atelier. Doorstep delivery within 5-7 business days with trial guarantee.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STREET REVIEWS -->
+  <section class="reviews-section">
+    <div class="section-label">STREET ARCHIVES &amp; FIT VERIFIED</div>
+    <div class="section-header">
+      <div class="section-title">CLIENT TESTIMONY ARCHIVES</div>
+      <a href="shop.html" class="section-view-all">VIEW ALL REVIEWS &rarr;</a>
+    </div>
+
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-img">
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&q=80" alt="Review">
+        </div>
+        <div class="review-body">
+          <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="review-text">"The merino overshirt fit exactly how the 3D preview showed — shoulder pitch was perfect, no alterations needed. First time I've ordered online without worrying about fit."</p>
+          <div class="review-author">ARJUN S. // DELHI NCR</div>
+          <div class="review-tag">VERIFIED // MERINO FIELD OVERSHIRT // DROP 08</div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-img">
+          <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=600&q=80" alt="Review">
+        </div>
+        <div class="review-body">
+          <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="review-text">"Tried the doorstep trial — measured me against my biometric profile on the spot. Minor sleeve adjustment done within 2 days. These guys are actually serious about fit."</p>
+          <div class="review-author">PRATEEK M. // BENGALURU</div>
+          <div class="review-tag">VERIFIED // STRUCTURED BALLOON TROUSER</div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-img">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&q=80" alt="Review">
+        </div>
+        <div class="review-body">
+          <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="review-text">"Spoke in Hinglish with their concierge. It actually understood 'yaar mujhe kuch oversized chahiye but structured bhi ho.' Ordered the Cuban shirt, absolute perfection."</p>
+          <div class="review-author">ROHAN K. // MUMBAI</div>
+          <div class="review-tag">VERIFIED // AERO-DRAPE CUBAN SHIRT</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UPGRADE BANNER -->
+  <section class="upgrade-banner">
+    <div class="upgrade-label">CODED FIT PRECISION PROTOCOL</div>
+    <h2 class="upgrade-headline">
+      UPGRADE YOUR CLOSET WITH<br>
+      <span class="crimson">MILLIMETER ACCURACY</span>
     </h2>
-    <p style="font-family:'Cormorant Garamond',serif; font-size:20px; font-style:italic; color:rgba(245,240,232,0.7); line-height:1.8; margin-bottom:32px; max-width:500px;">
-      India's first AI-powered hybrid fashion label. We fuse hyper-local GOTS organic manufacturing from Ahmedabad with cutting-edge 3D body configuration and bespoke tailoring.
-    </p>
-    <p style="font-size:14px; color:var(--text-muted); line-height:1.8; margin-bottom:40px; max-width:480px;">
-      Choose ready-to-wear for 24h dispatch, or enter our studio for millimeter-perfect bespoke tailoring. Every garment is a unit-of-one, crafted with obsessive precision.
-    </p>
-    <div style="display:flex; gap:16px; flex-wrap:wrap;">
-      <a href="shop.html" class="c-btn filled-gold">Shop Ready-To-Ship →</a>
-      <a href="customize.html" class="c-btn outline-gold">Bespoke Studio ✂️</a>
+    <p class="upgrade-sub">Every garment is a biometric commission. Zero off-the-rack compromises. Start with your fit profile — it takes 60 seconds.</p>
+    <div class="upgrade-ctas">
+      <a href="fit-profile.html" class="btn-crimson">START AI FIT CALIBRATION &rarr;</a>
+      <a href="shop.html" class="btn-ghost-white">BROWSE COLLECTION</a>
     </div>
-  </div>
-  <div class="brand-story-img-side reveal-right">
-    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=900&q=90" alt="Nova Street Brand Story">
-  </div>
-</section>
+  </section>
 
-<!-- ══════════════════════════════════════
-     BRAND PILLARS
-══════════════════════════════════════ -->
-<div class="brand-pillars reveal-up">
-  <div class="pillar-item">
-    <div class="pillar-number">01</div>
-    <div class="pillar-title">AI Body Scanning</div>
-    <p class="pillar-desc">Take 2 photos. Our proprietary AI calculates 80+ measurements in 45 seconds with 99% accuracy.</p>
-  </div>
-  <div class="pillar-item">
-    <div class="pillar-number">02</div>
-    <div class="pillar-title">3D Visualizer</div>
-    <p class="pillar-desc">Simulate your exact body shape using BMI, height, weight sliders. Try on real-world outfits with live 360° drape.</p>
-  </div>
-  <div class="pillar-item">
-    <div class="pillar-number">03</div>
-    <div class="pillar-title">First Garment Trial</div>
-    <p class="pillar-desc">We ship your prototype first. Perfect fit guaranteed before we craft your final bespoke piece.</p>
-  </div>
-</div>
+  <!-- FOOTER -->
+  <footer class="cf-footer" id="cf-footer-mount">
+    <div class="cf-footer-grid">
+      <div class="cf-footer-brand">
+        <a href="index.html" class="cf-logo" style="color:#fff;margin-bottom:12px;display:inline-flex;">
+          CODED FIT<span class="cf-logo-dot">.</span>
+          <span class="cf-logo-badge">[BLR-ATELIER]</span>
+        </a>
+        <p style="font-size:11px;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:20px;">High-performance bespoke luxury streetwear engineered with real-time biometric neural calibrations and precision Indian master-tailor craft.</p>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:0.5px;margin-bottom:10px;">JOIN THE FIT CLUB PROTOCOL</div>
+        <div style="display:flex;">
+          <input type="email" id="footer-email" placeholder="ENTER OPERATIVE EMAIL" style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-right:none;color:#fff;padding:10px 14px;font-family:'Inter',sans-serif;font-size:12px;outline:none;">
+          <button onclick="handleNewsletterSubmit()" style="background:#e10600;border:none;color:#fff;padding:10px 16px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;letter-spacing:1px;cursor:pointer;">SUBSCRIBE</button>
+        </div>
+      </div>
 
-<!-- ══════════════════════════════════════
-     FEATURED COLLECTION — HORIZONTAL CAROUSEL
-══════════════════════════════════════ -->
-<section class="h-scroll-section">
-  <div class="h-scroll-header">
-    <div>
-      <div class="section-header">05 + Featured Collection</div>
-      <h2 style="font-family:'Cinzel',serif; font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; text-transform:uppercase;">Featured Releases</h2>
-    </div>
-    <div style="display:flex; align-items:center; gap:16px;">
-      <a href="shop.html" style="font-size:11px; font-weight:800; letter-spacing:2px; color:var(--gold); text-transform:uppercase;">View All →</a>
-      <div class="h-scroll-nav">
-        <button class="h-scroll-btn" onclick="scrollCarousel(-1)" aria-label="Previous">‹</button>
-        <button class="h-scroll-btn" onclick="scrollCarousel(1)" aria-label="Next">›</button>
+      <div class="cf-footer-col">
+        <h5 style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:14px;">SHOP CATALOG</h5>
+        <a href="shop.html?cat=men" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Men's Archive</a>
+        <a href="shop.html?cat=women" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Women's Archive</a>
+        <a href="shop.html?cat=new" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Drop 09 // Heavy Terry</a>
+        <a href="shop.html?cat=oversized" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Structured Oversized</a>
+        <a href="shop.html?cat=shirts" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Poplin Tailored Shirts</a>
+        <a href="shop.html?cat=trousers" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Bespoke Trousers</a>
+      </div>
+
+      <div class="cf-footer-col">
+        <h5 style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:14px;">ATELIER TECH</h5>
+        <a href="customize.html" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Biometric Engine</a>
+        <a href="customize.html" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">WebGL Drape Physics</a>
+        <a href="fit-profile.html" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">AI Sizing Matrix</a>
+        <a href="fit-profile.html" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Avatar Scanning</a>
+        <a href="#" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Custom GSM Mil Spec</a>
+        <a href="#" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Fit Guarantee Terms</a>
+      </div>
+
+      <div class="cf-footer-col">
+        <h5 style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:14px;">SUPPORT</h5>
+        <a href="concierge.html" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Doorstep Alterations</a>
+        <a href="dashboard.html" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Order Tracking // Telemetry</a>
+        <a href="concierge.html" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Fit Concierge (Hinglish)</a>
+        <a href="#" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Care Guide (400 GSM)</a>
+        <a href="#" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Contact Master Tailor</a>
+      </div>
+
+      <div class="cf-footer-col">
+        <h5 style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:14px;">BRAND &amp; LAB</h5>
+        <a href="#" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Bengaluru Atelier Tour</a>
+        <a href="#" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Master Craftsmen</a>
+        <a href="#" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Sustainability Protocol</a>
+        <a href="#" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Press Editorial</a>
+        <a href="#" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Terms // Operative Code</a>
+        <a href="#" style="display:block;font-size:11.5px;color:rgba(255,255,255,0.65);margin-bottom:8px;text-decoration:none;">Privacy Architecture</a>
       </div>
     </div>
-  </div>
-  <div class="h-scroll-track" id="featured-carousel">
-    <!-- Rendered by JS -->
-  </div>
-</section>
 
-<!-- ══════════════════════════════════════
-     EDITORIAL FULL-BLEED (Zara/Gucci style)
-══════════════════════════════════════ -->
-<section class="full-bleed-editorial reveal-fade">
-  <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&q=90" alt="Nova Street New Season Editorial">
-  <div class="full-bleed-overlay">
-    <div class="full-bleed-tag">New Season · AW26</div>
-    <h2 class="full-bleed-title">New<br>Season</h2>
-    <p class="full-bleed-sub">The AW26 Collection has arrived. Limited bespoke slots available.</p>
-    <a href="shop.html" class="c-btn filled-gold">Shop The Collection →</a>
-  </div>
-</section>
+    <div class="cf-footer-bottom">
+      <div class="cf-footer-bottom-left">
+        <span class="cf-footer-trust"><span class="cf-footer-trust-dot" style="color:#22c55e;">&#9679;</span> 100% DOORSTEP FIT GUARANTEE</span>
+        <span class="cf-footer-trust"><span class="cf-footer-trust-dot" style="color:#22c55e;">&#9679;</span> MILLIMETER PRECISION AI FIT</span>
+        <span class="cf-footer-trust"><span class="cf-footer-trust-dot" style="color:#22c55e;">&#9679;</span> 1-CLICK REPEAT SPEC</span>
+        <span class="cf-footer-trust"><span class="cf-footer-trust-dot" style="color:#22c55e;">&#9679;</span> FREE ATELIER ALTERATIONS</span>
+      </div>
+      <div class="cf-footer-copy">
+        &copy; CODED FIT // ATELIER AUTOMATION SYSTEM [V.4.2] &nbsp;|&nbsp; SERVER STATUS: NOMINAL &nbsp;|&nbsp; ENCRYPTION: 256-BIT SHA &nbsp;|&nbsp; BANGALORE HQ
+      </div>
+    </div>
+  </footer>
 
-<!-- ══════════════════════════════════════
-     TECHNOLOGY CARDS
-══════════════════════════════════════ -->
-<section class="c-section">
-  <div class="section-header reveal-up">02 + Our Technology</div>
-  <div style="display:grid; grid-template-columns:1fr 1.2fr; gap:48px; align-items:center; margin-bottom:60px;" class="reveal-up">
-    <div>
-      <h2 style="font-family:'Cinzel',serif; font-size:clamp(1.8rem,3.5vw,3.5rem); font-weight:700; text-transform:uppercase; line-height:1.05; margin-bottom:20px;">
-        India's First AI-Powered Fashion Platform
-      </h2>
-      <p style="font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; color:rgba(245,240,232,0.7); line-height:1.8;">
-        Where cutting-edge technology meets artisanal craftsmanship.
-      </p>
+  <!-- CART DRAWER -->
+  <div class="cart-drawer-overlay" id="cart-drawer-backdrop" onclick="closeCartDrawer()"></div>
+  <div class="cart-drawer-panel" id="cart-drawer-panel">
+    <div class="cart-drawer-header">
+      <div>
+        <div class="cart-drawer-title">YOUR BAG</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.4);letter-spacing:1px;margin-top:2px;">ATELIER FABRICATION QUEUE</div>
+      </div>
+      <button class="cart-drawer-close" onclick="closeCartDrawer()">&#x2715;</button>
     </div>
-    <div></div>
-  </div>
-  <div class="feature-cards-grid stagger-children reveal-up">
-    <div class="feature-card">
-      <div class="feature-card-icon">🤖</div>
-      <div class="feature-card-title">AI Body Scanning</div>
-      <p class="feature-card-desc">Take 2 photos. Our proprietary AI calculates 80+ measurements in 45 seconds with 99% accuracy. No tape measures. No guesswork.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-card-icon">🧍</div>
-      <div class="feature-card-title">3D Body Visualizer</div>
-      <p class="feature-card-desc">Simulate your exact body shape using BMI, height, weight &amp; exercise sliders. Try on real-world outfits with live 360° drape simulation.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-card-icon">👕</div>
-      <div class="feature-card-title">First Garment Trial</div>
-      <p class="feature-card-desc">We ship your prototype first. Perfect fit guaranteed before we craft your final bespoke piece. Zero risk. Pure precision.</p>
+    <div id="cart-drawer-items"></div>
+    <div class="cart-drawer-footer">
+      <div class="cart-drawer-subtotal-row">
+        <span>SUBTOTAL</span>
+        <span id="drawer-subtotal">&#8377;0</span>
+      </div>
+      <a href="cart.html" class="cart-drawer-cta">PROCEED TO CHECKOUT &rarr;</a>
     </div>
   </div>
-</section>
 
-<!-- ══════════════════════════════════════
-     COMMUNITY VOTING
-══════════════════════════════════════ -->
-<section class="c-section">
-  <div class="section-header reveal-up">04 + Community Co-Creation</div>
-  <div style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:48px;" class="reveal-up">
-    <h2 style="font-family:'Cinzel',serif; font-size:clamp(1.5rem,3vw,2.8rem); font-weight:700; text-transform:uppercase; max-width:500px; line-height:1.1;">
-      Vote On Upcoming Limited Fabrics
-    </h2>
-    <p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px; color:var(--text-muted); max-width:300px; text-align:right;">
-      Your vote shapes the next collection.
-    </p>
-  </div>
-  <div class="voting-grid stagger-children reveal-up">
-    <div class="voting-card">
-      <img class="voting-card-img" src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=600&q=80" alt="Japanese Indigo Selvedge">
-      <div class="voting-content">
-        <div style="font-size:9px; font-weight:800; letter-spacing:2px; color:var(--gold); text-transform:uppercase; margin-bottom:8px;">Fabric Drop #1</div>
-        <h4 style="font-family:'Cinzel',serif; font-size:18px; margin:0 0 8px; font-weight:700;">Japanese Indigo Selvedge</h4>
-        <div class="vote-progress"><div class="vote-progress-bar" style="width:58%;"></div></div>
-        <p style="font-size:11px; color:var(--gold); margin:8px 0 16px; font-weight:700;">1,240 Votes · 58%</p>
-        <button class="vote-btn" onclick="castVote(this, 'Japanese Indigo')">VOTE NOW</button>
-      </div>
-    </div>
-    <div class="voting-card">
-      <img class="voting-card-img" src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80" alt="Terracotta French Terry">
-      <div class="voting-content">
-        <div style="font-size:9px; font-weight:800; letter-spacing:2px; color:var(--gold); text-transform:uppercase; margin-bottom:8px;">Fabric Drop #2</div>
-        <h4 style="font-family:'Cinzel',serif; font-size:18px; margin:0 0 8px; font-weight:700;">Terracotta French Terry</h4>
-        <div class="vote-progress"><div class="vote-progress-bar" style="width:78%;"></div></div>
-        <p style="font-size:11px; color:var(--gold); margin:8px 0 16px; font-weight:700;">2,180 Votes · 78%</p>
-        <button class="vote-btn" onclick="castVote(this, 'Terracotta Terry')">VOTE NOW</button>
-      </div>
-    </div>
-    <div class="voting-card">
-      <img class="voting-card-img" src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600&q=80" alt="Organic Biella Linen">
-      <div class="voting-content">
-        <div style="font-size:9px; font-weight:800; letter-spacing:2px; color:var(--gold); text-transform:uppercase; margin-bottom:8px;">Fabric Drop #3</div>
-        <h4 style="font-family:'Cinzel',serif; font-size:18px; margin:0 0 8px; font-weight:700;">Organic Biella Linen</h4>
-        <div class="vote-progress"><div class="vote-progress-bar" style="width:40%;"></div></div>
-        <p style="font-size:11px; color:var(--gold); margin:8px 0 16px; font-weight:700;">940 Votes · 40%</p>
-        <button class="vote-btn" onclick="castVote(this, 'Biella Linen')">VOTE NOW</button>
-      </div>
-    </div>
-  </div>
-</section>
+  <!-- Toast -->
+  <div class="coded-toast" id="coded-toast"></div>
 
-<!-- ══════════════════════════════════════
-     PRESS STRIP
-══════════════════════════════════════ -->
-<div class="press-strip reveal-fade">
-  <p class="press-label">As Seen In</p>
-  <div class="press-logos">
-    <span class="press-name">Vogue India</span>
-    <span class="press-dot">✦</span>
-    <span class="press-name">Harper's Bazaar</span>
-    <span class="press-dot">✦</span>
-    <span class="press-name">GQ India</span>
-    <span class="press-dot">✦</span>
-    <span class="press-name">Elle</span>
-    <span class="press-dot">✦</span>
-    <span class="press-name">Architectural Digest</span>
-    <span class="press-dot">✦</span>
-    <span class="press-name">Condé Nast</span>
-  </div>
-</div>
+  <!-- Scripts -->
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
 
-<!-- ══════════════════════════════════════
-     STUDIO CTA
-══════════════════════════════════════ -->
-<section class="c-section" style="padding-top:80px; padding-bottom:80px;">
-  <div class="studio-cta-banner reveal-up">
-    <div class="section-header" style="justify-content:center;">03 + Bespoke Studio</div>
-    <h2 style="font-family:'Cinzel',serif; font-size:clamp(2rem,5vw,5rem); font-weight:900; text-transform:uppercase; margin-bottom:16px;">
-      Build Your Perfect Garment
-    </h2>
-    <p style="font-family:'Cormorant Garamond',serif; font-size:22px; font-style:italic; color:rgba(245,240,232,0.6); margin-bottom:44px;">
-      Choose every detail. Fabric, fit, colour, collar — all yours.
-    </p>
-    <a href="customize.html" class="c-btn filled-gold is-large">Launch Try-On Studio ✂️</a>
-  </div>
-</section>
+  <script>
+    // Countdown Timer
+    function updateCountdown() {
+      const now = new Date();
+      const end = new Date(now);
+      end.setHours(end.getHours() + 47 - now.getHours() % 48);
+      const diff = Math.max(0, end - now);
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      const el = document.getElementById('countdown-timer');
+      if (el) el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
 
-<!-- ══════════════════════════════════════
-     UGC INSTAGRAM GRID
-══════════════════════════════════════ -->
-<section class="ugc-section reveal-fade">
-  <div class="ugc-header">
-    <div class="section-header" style="justify-content:center;">06 + Community</div>
-    <h2 style="font-family:'Cinzel',serif;">Follow Our Story</h2>
-    <p>@novastreet · Tag us to be featured</p>
-  </div>
-  <div class="ugc-grid">
-    <div class="ugc-item">
-      <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80" alt="Nova Street Community">
-      <div class="ugc-item-overlay">
-        <div class="ugc-icon">📷</div>
-        <div class="ugc-handle">@novastreet</div>
-      </div>
-    </div>
-    <div class="ugc-item">
-      <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80" alt="Nova Street Community">
-      <div class="ugc-item-overlay">
-        <div class="ugc-icon">📷</div>
-        <div class="ugc-handle">@novastreet</div>
-      </div>
-    </div>
-    <div class="ugc-item">
-      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Nova Street Community">
-      <div class="ugc-item-overlay">
-        <div class="ugc-icon">📷</div>
-        <div class="ugc-handle">@novastreet</div>
-      </div>
-    </div>
-    <div class="ugc-item">
-      <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&q=80" alt="Nova Street Community">
-      <div class="ugc-item-overlay">
-        <div class="ugc-icon">📷</div>
-        <div class="ugc-handle">@novastreet</div>
-      </div>
-    </div>
-    <div class="ugc-item">
-      <img src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=600&q=80" alt="Nova Street Community">
-      <div class="ugc-item-overlay">
-        <div class="ugc-icon">📷</div>
-        <div class="ugc-handle">@novastreet</div>
-      </div>
-    </div>
-    <div class="ugc-item">
-      <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&q=80" alt="Nova Street Community">
-      <div class="ugc-item-overlay">
-        <div class="ugc-icon">📷</div>
-        <div class="ugc-handle">@novastreet</div>
-      </div>
-    </div>
-  </div>
-</section>
+    // Voice waveform
+    function initWaveform() {
+      const wf = document.getElementById('voice-waveform');
+      if (!wf) return;
+      for (let i = 0; i < 32; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'voice-bar';
+        bar.style.animationDelay = (i * 0.07) + 's';
+        bar.style.height = (Math.random() * 24 + 8) + 'px';
+        wf.appendChild(bar);
+      }
+    }
+    initWaveform();
 
-<!-- ══════════════════════════════════════
-     FOOTER
-══════════════════════════════════════ -->
-<footer>
-  <div class="footer-grid">
-    <div>
-      <div style="font-family:'Cinzel',serif; font-size:22px; font-weight:900; letter-spacing:5px; margin-bottom:14px;">
-        NOVA <span style="color:var(--gold);">STREET</span>
-      </div>
-      <p style="font-size:13px; color:var(--text-muted); max-width:280px; line-height:1.8; margin-bottom:24px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px;">
-        Hybrid D2C custom-curated apparel label. GOTS organic mills in Ahmedabad, crafted with unit-of-one precision.
-      </p>
-      <div class="footer-social">
-        <a href="#" title="Instagram">📷</a>
-        <a href="#" title="Twitter">🐦</a>
-        <a href="#" title="YouTube">▶️</a>
-        <a href="#" title="TikTok">🎵</a>
-      </div>
-    </div>
-    <div>
-      <h4 style="font-size:10px; font-weight:800; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:20px;">Collection</h4>
-      <ul style="display:flex; flex-direction:column; gap:12px; padding:0; margin:0;">
-        <li><a href="shop.html">Shop Men</a></li>
-        <li><a href="shop.html?gender=women">Shop Women</a></li>
-        <li><a href="customize.html">Bespoke Studio</a></li>
-        <li><a href="dashboard.html">UR PICKS &amp; Deals</a></li>
-        <li><a href="shop.html">New Arrivals</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4 style="font-size:10px; font-weight:800; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:20px;">Technology</h4>
-      <ul style="display:flex; flex-direction:column; gap:12px; padding:0; margin:0;">
-        <li><a href="customize.html">AI Try-On Studio</a></li>
-        <li><a href="customize.html">CPQ Configurator</a></li>
-        <li><a href="cart.html">First Garment Trial</a></li>
-        <li><a href="customize.html">3D Body Visualizer</a></li>
-        <li><a href="qr.html">Download App</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4 style="font-size:10px; font-weight:800; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:14px;">VIP Newsletter</h4>
-      <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px; line-height:1.7;">VIP access to bespoke fabric drops &amp; exclusive launches. Join 50,000+ members.</p>
-      <div class="footer-newsletter-input-row">
-        <input type="email" placeholder="Your email address" class="footer-newsletter-input">
-        <button onclick="showToast('🎉 Welcome to Nova Street VIP!')" class="footer-newsletter-btn">JOIN</button>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 Nova Street Hybrid D2C Label. All Rights Reserved.</span>
-    <span>Privacy Policy · Terms of Service · Ahmedabad GOTS Textile Hub</span>
-  </div>
-</footer>
+    // Concierge input
+    function handleConciergeInput() {
+      const inp = document.getElementById('concierge-input');
+      if (!inp || !inp.value.trim()) return;
+      const msg = inp.value.trim();
+      inp.value = '';
+      showToast('CONCIERGE: Redirecting to full consultation...');
+      setTimeout(() => { window.location.href = 'concierge.html?q=' + encodeURIComponent(msg); }, 1200);
+    }
 
-<!-- ══════════════════════════════════════
-     CART DRAWER
-══════════════════════════════════════ -->
-<div class="cart-drawer-overlay" id="cart-drawer-overlay" onclick="closeCartDrawer()"></div>
-<div class="cart-drawer" id="cart-drawer">
-  <div class="cart-drawer-header">
-    <div>
-      <div class="t-micro-1" style="color:var(--text);">YOUR SHOPPING BAG</div>
-      <div class="t-micro-2" style="margin-top:4px;">NOVA STREET STORE</div>
-    </div>
-    <div class="cart-drawer-close" onclick="closeCartDrawer()">✕</div>
-  </div>
-  <div class="cart-drawer-body" id="drawer-cart-items"></div>
-  <div class="cart-drawer-footer" id="drawer-cart-summary"></div>
-</div>
+    // Newsletter
+    function handleNewsletterSubmit() {
+      const email = document.getElementById('footer-email');
+      if (email && email.value) {
+        showToast('SUBSCRIBED TO FIT CLUB PROTOCOL');
+        email.value = '';
+      }
+    }
 
-<!-- ══════════════════════════════════════
-     SCRIPTS
-══════════════════════════════════════ -->
-<script src="js/products.js"></script>
-<script src="js/cart.js"></script>
-<script>
-// ── Fallback Mock Products ──
-const MOCK_PRODUCTS = [
-  { id: 1,  name: "Onyx Silk Blend Shirt",    price: 3499, mrp: 4999, image: "https://images.unsplash.com/photo-1596755094514-f87e32f6b717?w=500&q=80", gender: "men",   category: "Shirts",   funnel: "ready",   badge: "NEW" },
-  { id: 4,  name: "Midnight Cargo Trouser",   price: 4299, mrp: 5999, image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&q=80", gender: "men",   category: "Bottoms",  funnel: "bespoke"  },
-  { id: 6,  name: "Graphite Oversized Hoodie",price: 2999, mrp: 3999, image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80", gender: "men",   category: "Hoodies",  funnel: "ready",   badge: "BESTSELLER" },
-  { id: 7,  name: "Crimson Velvet Jacket",    price: 7999, mrp: 10999,image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500&q=80", gender: "men",   category: "Jackets",  funnel: "bespoke"  },
-  { id: 9,  name: "Ember Draped Dress",       price: 5499, mrp: 7499, image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=500&q=80", gender: "women", category: "Dresses",  funnel: "bespoke", badge: "LIMITED" },
-  { id: 10, name: "Pearl Ribbed Top",         price: 1899, mrp: 2499, image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=500&q=80", gender: "women", category: "T-Shirts", funnel: "ready",   badge: "NEW" },
-  { id: 13, name: "Sapphire Silk Slip",       price: 4699, mrp: 5999, image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&q=80", gender: "women", category: "Dresses",  funnel: "bespoke"  },
-  { id: 14, name: "Obsidian Leather Jacket",  price: 8999, mrp: 11999,image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&q=80", gender: "women", category: "Jackets",  funnel: "ready",   badge: "EXCLUSIVE" },
-];
+    // Render product drops
+    function renderDrops() {
+      const grid = document.getElementById('drops-grid');
+      if (!grid || typeof PRODUCTS === 'undefined') return;
 
-// ── PAGE LOADER ──
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('page-loader').classList.add('hidden');
-  }, 1600);
-});
+      const featured = PRODUCTS.slice(0, 4);
+      grid.innerHTML = featured.map(p => `
+        <a href="product.html?id=${p.id}" class="drop-card">
+          <div class="drop-card-img">
+            <img src="${p.images[0]}&w=600" alt="${p.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=600&q=80'">
+            <div class="drop-card-badge">${p.badge || 'DROP'}</div>
+            <button class="drop-card-wishlist" onclick="event.preventDefault();showToast('Added to wishlist')">&#9825;</button>
+          </div>
+          <div class="drop-card-body">
+            <div class="drop-card-code">${p.code}</div>
+            <div class="drop-card-name">${p.name}</div>
+            <div class="drop-card-fabric">${p.fabric ? p.fabric.substring(0, 40) + '...' : ''}</div>
+            <div class="drop-card-footer">
+              <div>
+                <span class="drop-card-price">&#8377;${p.price.toLocaleString('en-IN')}</span>
+                <span class="drop-card-mrp">&#8377;${p.mrp.toLocaleString('en-IN')}</span>
+              </div>
+              <button class="drop-card-btn" onclick="event.preventDefault();addToCart(${p.id})">ADD TO BAG</button>
+            </div>
+          </div>
+        </a>
+      `).join('');
+    }
 
-// ── CUSTOM CURSOR ──
-const cursorBadge = document.getElementById('cursor-badge');
-if (cursorBadge) {
-  document.addEventListener('mousemove', (e) => {
-    cursorBadge.style.left = e.clientX + 'px';
-    cursorBadge.style.top  = e.clientY + 'px';
-  });
-  document.querySelectorAll('a, button, .c-product-card').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursorBadge.classList.add('active');
-      cursorBadge.textContent = el.dataset.cursor || 'VIEW';
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDrops();
+
+      // Intersection Observer for animations
+      const animEls = document.querySelectorAll('.animate-in, .archetype-card, .drop-card, .engine-card, .protocol-card, .review-card');
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.archetype-card, .drop-card, .engine-card, .protocol-card, .review-card').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(24px)';
+        el.style.transition = 'opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1)';
+        obs.observe(el);
+      });
     });
-    el.addEventListener('mouseleave', () => cursorBadge.classList.remove('active'));
-  });
-}
-
-// ── HERO SLIDESHOW ──
-let currentSlide = 0;
-const slides = document.querySelectorAll('.hero-slide');
-const dots   = document.querySelectorAll('.hero-dot');
-
-function goToSlide(n) {
-  slides[currentSlide].classList.remove('active');
-  dots[currentSlide].classList.remove('active');
-  currentSlide = (n + slides.length) % slides.length;
-  slides[currentSlide].classList.add('active');
-  dots[currentSlide].classList.add('active');
-}
-
-setInterval(() => goToSlide(currentSlide + 1), 4000);
-
-// ── SCROLL REVEAL ──
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('visible'); }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
-
-document.querySelectorAll('.reveal-up, .reveal-fade, .reveal-left, .reveal-right').forEach(el => {
-  revealObserver.observe(el);
-});
-
-// ── NAV MOBILE ──
-function toggleMobileMenu() {
-  document.getElementById('mobile-nav-drawer').classList.toggle('open');
-  document.getElementById('mobile-nav-overlay').classList.toggle('active');
-  document.getElementById('hamburger-btn').classList.toggle('open');
-}
-function closeMobileMenu() {
-  document.getElementById('mobile-nav-drawer').classList.remove('open');
-  document.getElementById('mobile-nav-overlay').classList.remove('active');
-  document.getElementById('hamburger-btn').classList.remove('open');
-}
-
-// ── CART DRAWER ──
-function openCartDrawer() {
-  document.getElementById('cart-drawer').classList.add('open');
-  document.getElementById('cart-drawer-overlay').classList.add('open');
-}
-function closeCartDrawer() {
-  document.getElementById('cart-drawer').classList.remove('open');
-  document.getElementById('cart-drawer-overlay').classList.remove('open');
-}
-
-// ── TOAST ──
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.className = 'toast-notification';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.classList.add('show'), 50);
-  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 500); }, 3500);
-}
-
-// ── WISHLIST ──
-function toggleWishlist(btn) {
-  btn.classList.toggle('active');
-  btn.textContent = btn.classList.contains('active') ? '♥' : '♡';
-  if (btn.classList.contains('active')) showToast('❤️ Added to wishlist!');
-}
-
-// ── VOTE ──
-function castVote(btn, fabric) {
-  btn.textContent = '✓ VOTED';
-  btn.style.background = 'var(--success)';
-  btn.disabled = true;
-  showToast('✅ Vote recorded for ' + fabric + '!');
-}
-
-// ── PRODUCT CARD RENDERER ──
-function renderProductCard(p) {
-  const img = p.images ? p.images[0] : (p.image || '');
-  const off = p.mrp ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0;
-  const isBespoke = p.funnel === 'custom-made' || p.funnel === 'bespoke';
-  return `
-  <div class="c-product-card h-scroll-item" onclick="location.href='product.html?id=${p.id}'" style="width:280px;"
-    onmouseenter="if(cursorBadge){cursorBadge.classList.add('active');cursorBadge.textContent='VIEW';}"
-    onmouseleave="if(cursorBadge){cursorBadge.classList.remove('active');}">
-    <div class="c-product-img-wrap">
-      ${p.badge ? `<span class="c-badge">${p.badge}</span>` : ''}
-      <button class="wishlist-btn" onclick="event.stopPropagation();toggleWishlist(this)" title="Wishlist">♡</button>
-      <img src="${img}" alt="${p.name}" loading="lazy">
-      <div class="c-product-quick-overlay">
-        <div class="quick-view-pill">QUICK VIEW</div>
-      </div>
-    </div>
-    <div class="c-product-info">
-      <div class="c-product-funnel" style="color:${isBespoke ? 'var(--rust)' : 'var(--gold)'};">
-        ${isBespoke ? '✂️ BESPOKE · 7-14 DAYS' : '⚡ READY TO SHIP · 24H'}
-      </div>
-      <h3 class="c-product-name">${p.name}</h3>
-      <div class="c-product-price">
-        ₹${p.price.toLocaleString('en-IN')}
-        ${p.mrp ? `<span class="price-strike">₹${p.mrp.toLocaleString('en-IN')}</span>` : ''}
-        ${off > 0 ? `<span class="price-off">${off}% OFF</span>` : ''}
-      </div>
-    </div>
-  </div>`;
-}
-
-// ── CAROUSEL SCROLL ──
-function scrollCarousel(dir) {
-  const carousel = document.getElementById('featured-carousel');
-  carousel.scrollBy({ left: dir * 300, behavior: 'smooth' });
-}
-
-// ── RENDER FEATURED PRODUCTS ──
-document.addEventListener('DOMContentLoaded', () => {
-  const carousel = document.getElementById('featured-carousel');
-  if (!carousel) return;
-  const source = window.PRODUCTS || MOCK_PRODUCTS;
-  carousel.innerHTML = source.map(p => renderProductCard(p)).join('');
-});
-</script>
+  </script>
 </body>
 </html>

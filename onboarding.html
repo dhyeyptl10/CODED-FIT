@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onboarding &amp; Neural Biometric Sync | CODED FIT [BLR-ATELIER]</title>
+  <meta name="description" content="Calibrate your millimeter avatar and lock in your bespoke client profile. Zero-waste hybrid fashion.">
+
+  <!-- Typography & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/studio3d.css">
+
+  <style>
+    body.onboard-page-body {
+      background: #090a0d;
+      color: #f5f5f7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .onboard-container {
+      max-width: 1100px;
+      margin: 40px auto 80px;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    .onboard-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .onboard-step-tracker {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 24px 0 32px;
+    }
+
+    .step-node {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .step-node.active {
+      color: #fff;
+    }
+
+    .step-node.completed {
+      color: var(--crimson);
+    }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border: 1px solid #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 2px;
+      font-size: 10px;
+    }
+
+    .step-node.active .step-num {
+      border-color: #fff;
+      background: #fff;
+      color: #000;
+    }
+
+    .step-node.completed .step-num {
+      border-color: var(--crimson);
+      background: var(--crimson);
+      color: #fff;
+    }
+
+    .step-divider {
+      width: 40px;
+      height: 1px;
+      background: #333;
+      align-self: center;
+    }
+
+    .onboard-card {
+      background: #0f1013;
+      border: 1px solid var(--border-dark);
+      padding: 40px;
+      border-radius: var(--radius-xs);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    }
+
+    .archetype-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .archetype-select-card {
+      background: #14161a;
+      border: 1px solid #282a30;
+      padding: 20px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .archetype-select-card:hover {
+      border-color: #555;
+    }
+
+    .archetype-select-card.selected {
+      border-color: var(--crimson);
+      background: rgba(225, 6, 0, 0.05);
+    }
+
+    .arch-code {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--crimson);
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .arch-title {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .arch-desc {
+      font-size: 12px;
+      color: #888;
+      line-height: 1.4;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .input-field-block label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .input-field-block input, .input-field-block select {
+      width: 100%;
+      background: #14161a;
+      border: 1px solid #282a30;
+      color: #fff;
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      border-radius: 2px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-field-block input:focus, .input-field-block select:focus {
+      border-color: var(--crimson);
+    }
+
+    .avatar-generation-preview {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 32px;
+      align-items: center;
+      margin: 24px 0;
+      background: #14161a;
+      border: 1px solid #282a30;
+      padding: 24px;
+    }
+
+    .avatar-svg-box {
+      background: #090a0d;
+      border: 1px solid #333;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+    }
+
+    .biometric-readout-table {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      width: 100%;
+    }
+
+    .biometric-readout-table tr {
+      border-bottom: 1px solid #222;
+    }
+
+    .biometric-readout-table td {
+      padding: 8px 0;
+    }
+
+    .biometric-readout-table td:last-child {
+      text-align: right;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .onboard-actions-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-dark);
+    }
+  </style>
+</head>
+<body class="onboard-page-body">
+  <!-- MASTER UNIFIED NAVBAR MOUNT -->
+  <div id="cf-navbar-mount"></div>
+
+  <!-- Main Container -->
+  <main class="onboard-container">
+    <div class="onboard-header">
+      <div class="page-eyebrow" style="margin-bottom:8px;">RAPID CLIENT CALIBRATION PROTOCOL</div>
+      <h1 class="page-title" style="font-size:32px;text-transform:uppercase;">SYNCHRONIZE YOUR ATELIER PROFILE</h1>
+      <p style="color:#888;font-size:14px;max-width:580px;margin:8px auto 0;">
+        Calibrate your bespoke neural avatar in under 60 seconds. Our algorithm converts your physical parameters into 18 millimeter-accurate CNC laser cutting nodes.
+      </p>
+
+      <!-- Step Progress -->
+      <div class="onboard-step-tracker">
+        <div class="step-node active" id="step-node-1">
+          <span class="step-num">01</span>
+          <span>Aesthetic Archetype</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-node" id="step-node-2">
+          <span class="step-num">02</span>
+          <span>Biometric Calibrations</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-node" id="step-node-3">
+          <span class="step-num">03</span>
+          <span>Neural Avatar Lock</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wizard Card -->
+    <div class="onboard-card">
+      
+      <!-- STEP 1: Archetype -->
+      <div id="step-content-1">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--crimson);font-weight:800;letter-spacing:1px;text-transform:uppercase;">
+          // STEP 01: SELECT YOUR ARCHITECTURAL SILHOUETTE BIAS
+        </div>
+        <div style="font-size:13px;color:#888;margin-top:4px;">
+          Choose how you prefer garments to fall across your shoulders, chest drape, and torso length.
+        </div>
+
+        <div class="archetype-grid">
+          <div class="archetype-select-card selected" onclick="selectArchetype(this, 'ARCHITECTURAL_OVERSIZED')">
+            <div>
+              <div class="arch-code">ARCHETYPE // 01</div>
+              <div class="arch-title">Architectural Oversized</div>
+              <div class="arch-desc">Extended 2.5" drop-shoulder pitch, boxy torso cut, zero hip bunching. Engineered for structured heavy textiles.</div>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:10px;color:#444;margin-top:16px;">DRAPE COEFF: 0.38 Cd</div>
+          </div>
+
+          <div class="archetype-select-card" onclick="selectArchetype(this, 'RELAXED_BESPOKE')">
+            <div>
+              <div class="arch-code">ARCHETYPE // 02</div>
+              <div class="arch-title">Relaxed Resort Bespoke</div>
+              <div class="arch-desc">Natural camp collar hang, 1.5" chest expansion, relaxed flowing hemline. Optimized for resort viscose &amp; linen twill.</div>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:10px;color:#444;margin-top:16px;">DRAPE COEFF: 0.28 Cd</div>
+          </div>
+
+          <div class="archetype-select-card" onclick="selectArchetype(this, 'TACTICAL_UTILITARIAN')">
+            <div>
+              <div class="arch-code">ARCHETYPE // 03</div>
+              <div class="arch-title">Tactical Utilitarian</div>
+              <div class="arch-desc">High armhole mobility, modular chest pockets, articulated sleeve darts. Built for ripstop, duck canvas &amp; Cordura.</div>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:10px;color:#444;margin-top:16px;">DRAPE COEFF: 0.44 Cd</div>
+          </div>
+
+          <div class="archetype-select-card" onclick="selectArchetype(this, 'MINIMALIST_TAILORED')">
+            <div>
+              <div class="arch-code">ARCHETYPE // 04</div>
+              <div class="arch-title">Atelier Minimalist Tailored</div>
+              <div class="arch-desc">Semi-fitted shoulder slope, darted back pleats, clean formal proportions with streetwear ease.</div>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:10px;color:#444;margin-top:16px;">DRAPE COEFF: 0.22 Cd</div>
+          </div>
+        </div>
+
+        <div class="onboard-actions-bar">
+          <a href="index.html" class="btn-coded btn-dark-outline" style="font-size:11px;">← RETURN TO ARCHIVE</a>
+          <button class="btn-coded btn-crimson" onclick="goToStep(2)">
+            CONTINUE TO BIOMETRIC ESTIMATION →
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Biometrics -->
+      <div id="step-content-2" style="display:none;">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--crimson);font-weight:800;letter-spacing:1px;text-transform:uppercase;">
+          // STEP 02: NEURAL BIOMETRIC MEASUREMENT CALIBRATION
+        </div>
+        <div style="font-size:13px;color:#888;margin-top:4px;margin-bottom:24px;">
+          Input your basic measurements or calibrate via standard Indian sizing metrics. Our AI calculates your 18 skeletal node coordinates with 0.5mm precision.
+        </div>
+
+        <div class="form-grid-2">
+          <div class="input-field-block">
+            <label>Full Name / Client Handle</label>
+            <input type="text" id="ob-name" value="Dhyey M." placeholder="Dhyey Patel">
+          </div>
+          <div class="input-field-block">
+            <label>Delivery City (Doorstep Valet Area)</label>
+            <select id="ob-city">
+              <option value="Bengaluru" selected>Bengaluru (Indiranagar / Koramangala / Whitefield)</option>
+              <option value="Mumbai">Mumbai (Bandra / Juhu / Colaba)</option>
+              <option value="Delhi">Delhi NCR (South Ex / Gurgaon / Noida)</option>
+              <option value="Hyderabad">Hyderabad (Jubilee Hills / Hitec City)</option>
+              <option value="Chennai">Chennai (Adyar / Nungambakkam)</option>
+              <option value="Pune">Pune (Koregaon Park / Kalyani Nagar)</option>
+              <option value="Ahmedabad">Ahmedabad (Sindhu Bhavan / Bodakdev)</option>
+            </select>
+          </div>
+          <div class="input-field-block">
+            <label>Height (cm)</label>
+            <input type="number" id="ob-height" value="185" min="140" max="220" oninput="recalcBiometrics()">
+          </div>
+          <div class="input-field-block">
+            <label>Weight (kg)</label>
+            <input type="number" id="ob-weight" value="76" min="40" max="150" oninput="recalcBiometrics()">
+          </div>
+          <div class="input-field-block">
+            <label>Body Silhouette Build</label>
+            <select id="ob-build" onchange="recalcBiometrics()">
+              <option value="athletic" selected>Athletic V-Taper (Broad Shoulders, Lean Waist)</option>
+              <option value="lean">Lean Architectural (Straight Drop, Long Torso)</option>
+              <option value="broad">Broad Heavyweight (Sturdy Chest &amp; Back)</option>
+              <option value="relaxed">Relaxed Slouch (Natural Comfort Hang)</option>
+            </select>
+          </div>
+          <div class="input-field-block">
+            <label>Preferred Trouser Break</label>
+            <select id="ob-break">
+              <option value="korean" selected>Korean Relaxed Pleat (Zero-Bunching Crop)</option>
+              <option value="slouch">Architectural Puddle Stack (+1.5" Inseam)</option>
+              <option value="tailored">Classic Tailored Half-Break</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="background:#14161a;border:1px solid #282a30;padding:16px;margin-bottom:24px;border-radius:2px;display:flex;align-items:center;gap:12px;">
+          <span style="color:var(--crimson);font-size:18px;">🛡️</span>
+          <div style="font-size:12px;color:#aaa;line-height:1.4;">
+            <strong style="color:#fff;">100% Doorstep Fit Covenant:</strong> Your profile is locked to Client ID <span style="color:var(--crimson);font-family:var(--font-mono);font-weight:700;">#CF-8821</span>. If your first bespoke order doesn't drape identically to your avatar, our Bengaluru master darzi remakes it free of cost.
+          </div>
+        </div>
+
+        <div class="onboard-actions-bar">
+          <button class="btn-coded btn-dark-outline" onclick="goToStep(1)">← BACK</button>
+          <button class="btn-coded btn-crimson" onclick="lockProfileAndGenerate()">
+            GENERATE 3D NEURAL PROFILE →
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Neural Avatar Lock & Confirmation -->
+      <div id="step-content-3" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div>
+            <div style="font-family:var(--font-mono);font-size:11px;color:var(--crimson);font-weight:800;letter-spacing:1px;text-transform:uppercase;">
+              // STEP 03: 3D SKELETAL AVATAR SYNCHRONIZED
+            </div>
+            <h2 style="font-family:var(--font-heading);font-size:22px;color:#fff;margin-top:4px;text-transform:uppercase;">
+              CLIENT PROFILE #CF-8821 ACTIVE &amp; VERIFIED
+            </h2>
+          </div>
+          <div style="background:rgba(225,6,0,0.1);border:1px solid var(--crimson);padding:6px 12px;font-family:var(--font-mono);font-size:10px;color:var(--crimson);font-weight:700;">
+            100% ZERO-DEFECT COVENANT LOCKED
+          </div>
+        </div>
+
+        <div class="avatar-generation-preview">
+          <div class="avatar-svg-box">
+            <svg viewBox="0 0 200 360" width="100%" height="260" style="filter:drop-shadow(0 0 12px rgba(225,6,0,0.2));">
+              <!-- Grid Background Lines -->
+              <line x1="0" y1="60" x2="200" y2="60" stroke="#222" stroke-dasharray="2,2"/>
+              <line x1="0" y1="120" x2="200" y2="120" stroke="#222" stroke-dasharray="2,2"/>
+              <line x1="0" y1="180" x2="200" y2="180" stroke="#222" stroke-dasharray="2,2"/>
+              <line x1="0" y1="260" x2="200" y2="260" stroke="#222" stroke-dasharray="2,2"/>
+              <line x1="100" y1="0" x2="100" y2="360" stroke="#333" stroke-width="1"/>
+              
+              <!-- Stylized 3D Wireframe Mannequin -->
+              <ellipse cx="100" cy="35" rx="14" ry="18" fill="none" stroke="#fff" stroke-width="1.5"/>
+              <line x1="100" y1="53" x2="100" y2="68" stroke="#fff" stroke-width="1.5"/>
+              
+              <!-- Shoulders (18.2") -->
+              <line x1="42" y1="72" x2="158" y2="72" stroke="var(--crimson)" stroke-width="2"/>
+              <circle cx="42" cy="72" r="3" fill="var(--crimson)"/>
+              <circle cx="158" cy="72" r="3" fill="var(--crimson)"/>
+              
+              <!-- Chest & Torso -->
+              <path d="M 42 72 L 55 125 L 62 170 L 100 185 L 138 170 L 145 125 L 158 72 Z" fill="rgba(255,255,255,0.03)" stroke="#fff" stroke-width="1.5"/>
+              
+              <!-- Arms -->
+              <path d="M 42 72 L 32 140 L 25 210" fill="none" stroke="#666" stroke-width="1.5"/>
+              <path d="M 158 72 L 168 140 L 175 210" fill="none" stroke="#666" stroke-width="1.5"/>
+              
+              <!-- Pelvis & Legs -->
+              <path d="M 62 170 L 100 185 L 138 170 L 130 200 L 100 205 L 70 200 Z" fill="rgba(255,255,255,0.05)" stroke="#fff" stroke-width="1.2"/>
+              <path d="M 78 205 L 68 280 L 64 345" fill="none" stroke="#888" stroke-width="1.8"/>
+              <path d="M 122 205 L 132 280 L 136 345" fill="none" stroke="#888" stroke-width="1.8"/>
+              
+              <!-- Biometric Node Callouts -->
+              <text x="165" y="74" fill="var(--crimson)" font-family="monospace" font-size="8">18.2"</text>
+              <text x="150" y="128" fill="#fff" font-family="monospace" font-size="8">41.2"</text>
+              <text x="142" y="172" fill="#aaa" font-family="monospace" font-size="8">33.0"</text>
+              <text x="140" y="315" fill="#888" font-family="monospace" font-size="8">30.5"</text>
+            </svg>
+          </div>
+
+          <div>
+            <div style="font-family:var(--font-mono);font-size:11px;color:#aaa;margin-bottom:12px;">
+              DERIVED CAD SPECIFICATIONS:
+            </div>
+            <table class="biometric-readout-table">
+              <tr>
+                <td style="color:#888;">CLIENT NAME</td>
+                <td id="res-name">Dhyey M.</td>
+              </tr>
+              <tr>
+                <td style="color:#888;">ATELIER PROFILE ID</td>
+                <td style="color:var(--crimson);">#CF-8821-BLR</td>
+              </tr>
+              <tr>
+                <td style="color:#888;">SHOULDER PITCH</td>
+                <td id="res-shoulder">18.2 IN (Active Slouch)</td>
+              </tr>
+              <tr>
+                <td style="color:#888;">CHEST CIRCUMFERENCE</td>
+                <td id="res-chest">41.2 IN (User Confirmed)</td>
+              </tr>
+              <tr>
+                <td style="color:#888;">NATURAL WAISTLINE</td>
+                <td id="res-waist">33.0 IN (Drape Calibrated)</td>
+              </tr>
+              <tr>
+                <td style="color:#888;">TORSO DROP RATIO</td>
+                <td id="res-torso">28.5 IN (Boxy Architectural)</td>
+              </tr>
+              <tr>
+                <td style="color:#888;">CALIBRATED INSEAM</td>
+                <td id="res-inseam">30.5 IN (Korean Pleat Break)</td>
+              </tr>
+              <tr>
+                <td style="color:#888;">TOLERANCE THRESHOLD</td>
+                <td style="color:#4caf50;">0.50 MM // CNC LASER READY</td>
+              </tr>
+            </table>
+
+            <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+              <span class="badge-tag">1-CLICK REORDER READY</span>
+              <span class="badge-tag">DOORSTEP TRIAL ELIGIBLE</span>
+              <span class="badge-tag">AIR PRIORITY DISPATCH</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="onboard-actions-bar">
+          <a href="fit-profile.html" class="btn-coded btn-dark-outline">
+            FINE-TUNE IN FIT PROFILE →
+          </a>
+          <div style="display:flex;gap:12px;">
+            <a href="shop.html" class="btn-coded btn-dark-outline">
+              SHOP READY-TO-WEAR
+            </a>
+            <a href="customize.html" class="btn-coded btn-crimson">
+              LAUNCH 3D BESPOKE STUDIO →
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" style="margin-top:auto;">
+    <div class="footer-bottom-bar">
+      <div>ISO 9001:2015 CERTIFIED PRECISION ATELIER // BENGALURU, INDIA</div>
+      <div>© 2025 CODED FIT PRIVATE LIMITED. ALL RIGHTS RESERVED.</div>
+    </div>
+  </footer>
+
+  <script>
+    let currentArchetype = 'ARCHITECTURAL_OVERSIZED';
+
+    function selectArchetype(el, type) {
+      document.querySelectorAll('.archetype-select-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      currentArchetype = type;
+    }
+
+    function goToStep(step) {
+      document.getElementById('step-content-1').style.display = (step === 1) ? 'block' : 'none';
+      document.getElementById('step-content-2').style.display = (step === 2) ? 'block' : 'none';
+      document.getElementById('step-content-3').style.display = (step === 3) ? 'block' : 'none';
+
+      for (let i = 1; i <= 3; i++) {
+        const node = document.getElementById('step-node-' + i);
+        node.classList.remove('active', 'completed');
+        if (i < step) node.classList.add('completed');
+        else if (i === step) node.classList.add('active');
+      }
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function recalcBiometrics() {
+      const height = parseFloat(document.getElementById('ob-height').value) || 185;
+      const weight = parseFloat(document.getElementById('ob-weight').value) || 76;
+      const build = document.getElementById('ob-build').value;
+
+      let chest = Math.round((weight * 0.54) * 10) / 10;
+      let shoulder = Math.round((height * 0.098) * 10) / 10;
+      let waist = Math.round((weight * 0.43) * 10) / 10;
+      let inseam = Math.round((height * 0.41) * 10) / 10;
+      let torso = Math.round((height * 0.154) * 10) / 10;
+
+      if (build === 'athletic') {
+        shoulder += 0.4;
+        waist -= 0.5;
+      } else if (build === 'broad') {
+        chest += 1.2;
+        shoulder += 0.6;
+      }
+
+      document.getElementById('res-shoulder').innerText = shoulder.toFixed(1) + ' IN (Active Slouch)';
+      document.getElementById('res-chest').innerText = chest.toFixed(1) + ' IN (User Confirmed)';
+      document.getElementById('res-waist').innerText = waist.toFixed(1) + ' IN (Drape Calibrated)';
+      document.getElementById('res-inseam').innerText = inseam.toFixed(1) + ' IN (Korean Pleat Break)';
+      document.getElementById('res-torso').innerText = torso.toFixed(1) + ' IN (Boxy Architectural)';
+    }
+
+    function lockProfileAndGenerate() {
+      const name = document.getElementById('ob-name').value || "Dhyey M.";
+      const city = document.getElementById('ob-city').value;
+      const height = parseFloat(document.getElementById('ob-height').value) || 185;
+      const weight = parseFloat(document.getElementById('ob-weight').value) || 76;
+
+      const user = {
+        name: name,
+        city: city,
+        phone: "+91 98765 43210",
+        address: "Apartment 804, Sovereign Towers, 100 Feet Road, Indiranagar, " + city + ", KA 560038",
+        profileId: "#CF-8821-BLR",
+        tier: "Atelier Black Member",
+        archetype: currentArchetype,
+        biometrics: {
+          shoulder: 18.2,
+          chest: 41.2,
+          waist: 33.0,
+          torsoDrop: 28.5,
+          inseam: 30.5,
+          height: height,
+          weight: weight
+        }
+      };
+
+      localStorage.setItem('CODED_USER', JSON.stringify(user));
+      document.getElementById('res-name').innerText = name;
+      recalcBiometrics();
+      goToStep(3);
+    }
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+</body>
+</html>

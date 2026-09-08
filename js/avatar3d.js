@@ -7,12 +7,8 @@
 
 const NOVA3D = (function () {
   'use strict';
-  // Official Perfect Corp YouCam Generative AI Credentials
-  const YOUCAM_CONFIG = {
-    apiKey: 'sk-HQ2O-M5GjyRTR4mEP4rGrcEngyhikuFF1qJFygrzQiCdrVvTIPjlOFVDqsri1twe',
-    secretKey: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCGIIuhl7WW8j3qbCOblYYJo+cFddVOaYKUgDwG6h76mwFD1xP9qNtZrznz8yzVoU1IRAJcT9DJrpTtWYP5SXKH9XlttEhVvgiJlrAZTOrsv7lRQTZeDyGZ9t2LKpHK1pJg5eCx/mh9nae63wE2lPy9E5gmfQzGBL3DcifBl4emjQIDAQAB',
-    apiBase: 'https://yce-api-01.makeupar.com/wow/api/v1'
-  };
+  // CODED FIT Backend Virtual Try-On API Endpoint
+  const TRYON_API_ENDPOINT = '/api/try-on';
 
 
   /* ── AI Supermodels Catalog (Male & Female) ── */
@@ -171,7 +167,7 @@ const NOVA3D = (function () {
     updateLiveView();
     updatePriceSummary();
 
-    console.log('✨ [NOVA3D] AI Clothes Changer & Supermodel Studio Online');
+    console.log(' [NOVA3D] AI Clothes Changer & Supermodel Studio Online');
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -238,10 +234,15 @@ const NOVA3D = (function () {
     grid.innerHTML = `
       <!-- Upload Custom Garment Option -->
       <div class="garment-thumb-card upload-card" onclick="document.getElementById('garment-file-input').click()">
-        <div style="font-size:24px;margin-bottom:4px;">📤</div>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--gold);margin-bottom:4px;">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
         <div style="font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;">Upload</div>
         <div style="font-size:9px;color:#8A8580;">Your Clothes</div>
       </div>
+
     ` + filtered.map((g, idx) => {
       const realIdx = list.findIndex(item => item.id === g.id);
       return `
@@ -319,7 +320,7 @@ const NOVA3D = (function () {
     renderSupermodelTray();
     updateLiveView();
     if (typeof showToast === 'function') {
-      showToast(`👤 Model Switched: ${model.name}`);
+      showToast(`Model switched: ${model.name}`);
     }
   }
 
@@ -331,9 +332,10 @@ const NOVA3D = (function () {
     updateLiveView();
 
     if (typeof showToast === 'function') {
-      showToast(`👗 Wearing: ${garment.name}`);
+      showToast(`Wearing: ${garment.name}`);
     }
   }
+
 
   function setGender(gender) {
     currentGender = gender;
@@ -383,7 +385,7 @@ const NOVA3D = (function () {
       // Animate AI transformation effect
       triggerAITransformEffect();
       if (typeof showToast === 'function') {
-        showToast('✨ Your Photo Uploaded! AI Clothes Changer Activated.');
+        showToast('Your photo uploaded. AI clothes preview activated.');
       }
     };
     reader.readAsDataURL(file);
@@ -399,9 +401,10 @@ const NOVA3D = (function () {
 
       triggerAITransformEffect();
       if (typeof showToast === 'function') {
-        showToast('👚 Custom Garment Uploaded & Fitted on Model!');
+        showToast('Custom garment uploaded and fitted on model.');
       }
     };
+
     reader.readAsDataURL(file);
   }
 
@@ -565,8 +568,9 @@ const NOVA3D = (function () {
     document.body.removeChild(a);
 
     if (typeof showToast === 'function') {
-      showToast('📥 Supermodel Lookbook Image Saved in HD!');
+      showToast('Supermodel lookbook image saved in HD.');
     }
+
   }
 
   /* ─────────────────────────────────────────────────────────────
