@@ -101,7 +101,7 @@ const initialProducts = [
     description: 'Multi-pocket technical cargo trousers engineered with dual anodized hardware buckles, adjustable ankle cinches, and ergonomic tapered fit.',
     images: [
       'https://images.unsplash.com/photo-1542272604-787c3835535d?w=1000&q=80',
-      'https://images.unsplash.com/photo-1593030941791-ef63b2dbb821?w=1000&q=80'
+      'https://images.unsplash.com/photo-1542272604-787c3835535d?w=1000&q=80'
     ],
     colors: [{ name: 'Charcoal Slate', hex: '#27272A' }, { name: 'Raw Olive', hex: '#3E4A3D' }],
     sizes: ['28', '30', '32', '34', '36'],
@@ -141,7 +141,7 @@ const initialProducts = [
     description: 'Pure organic Italian linen shirt woven from premium flax fibers. Naturally breathable with relaxed structure, Mother-of-Pearl buttons, and hand-rolled hems.',
     images: [
       'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=1000&q=80',
-      'https://images.unsplash.com/photo-1596755094514-f87e32f6b717?w=1000&q=80'
+      'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=1000&q=80'
     ],
     colors: [{ name: 'Sky Chambray', hex: '#93C5FD' }, { name: 'Alabaster White', hex: '#FAF8F5' }],
     sizes: ['Custom Fit', 'S', 'M', 'L', 'XL'],
@@ -168,23 +168,183 @@ const initialProducts = [
     inventory: { stock: 20, reserved: 2, available: 18 }
   },
   {
-    name: 'Gold Fluid Silk Midi Gown',
-    slug: 'gold-fluid-silk-midi-gown',
+    name: 'Scarlet Wrap Midi Dress',
+    slug: 'scarlet-wrap-midi-dress',
     category: 'Dresses',
-    price: 4299,
-    compareAtPrice: 5999,
-    badge: 'MADE TO MEASURE',
-    fabric: 'Pure Organic Italian Linen & Silk',
+    price: 3799,
+    compareAtPrice: 5299,
+    badge: 'NEW ARRIVAL',
+    fabric: 'TENCEL Lyocell Satin Blend',
     gender: 'women',
-    type: 'made-to-measure',
-    dispatchTime: 'Bespoke Made-to-Measure (7-14 Days)',
-    description: 'Lustrous bias-cut midi dress designed to glide effortlessly over natural curves. Includes bespoke contour adjustments to bust and waist.',
+    type: 'ready-to-wear',
+    dispatchTime: 'Ships in 24 Hours',
+    description: 'Editorial wrap midi dress in fluid TENCEL satin with true-wrap waist tie and side slit. Cut for hourglass and pear proportions.',
     images: [
-      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1000&q=80'
+      'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1000&q=80',
+      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1000&q=80'
     ],
-    colors: [{ name: 'Ahmedabad Gold', hex: '#C9A84C' }],
-    sizes: ['Custom Fit', 'XS', 'S', 'M', 'L'],
-    inventory: { stock: 12, reserved: 1, available: 11 }
+    colors: [{ name: 'Scarlet Noir', hex: '#7F1D1D' }],
+    sizes: ['XS', 'S', 'M', 'L'],
+    inventory: { stock: 22, reserved: 2, available: 20 }
+  },
+  {
+    name: 'Ivory Sculpted Knit Top',
+    slug: 'ivory-sculpted-knit-top',
+    category: 'Tops',
+    price: 1899,
+    compareAtPrice: 2799,
+    badge: 'NEW ARRIVAL',
+    fabric: '220 GSM GOTS Organic Cotton Knit',
+    gender: 'women',
+    type: 'ready-to-wear',
+    dispatchTime: 'Ships in 24 Hours',
+    description: 'Second-skin sculpted knit top in breathable GOTS cotton with square neckline and long sleeves. Pairs with high-rise tailoring.',
+    images: [
+      'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=1000&q=80',
+      'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1000&q=80'
+    ],
+    colors: [{ name: 'Ivory', hex: '#F5F2E7' }],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    inventory: { stock: 34, reserved: 3, available: 31 }
+  },
+  {
+    name: 'Noir High-Waist Wide-Leg Trouser',
+    slug: 'noir-high-waist-wide-leg-trouser',
+    category: 'Bottoms',
+    price: 2799,
+    compareAtPrice: 3999,
+    badge: 'BESTSELLER',
+    fabric: 'Japanese Selvedge Denim Stretch',
+    gender: 'women',
+    type: 'ready-to-wear',
+    dispatchTime: 'Ships in 24 Hours',
+    description: 'High-rise wide-leg trouser in comfort-stretch selvedge denim with clean front and ankle-grazing hem. Zero-gap waistband engineering.',
+    images: [
+      'https://images.unsplash.com/photo-1588117260148-b47818741c74?w=1000&q=80'
+    ],
+    colors: [{ name: 'Washed Indigo', hex: '#1C2536' }],
+    sizes: ['26', '28', '30', '32', '34'],
+    inventory: { stock: 28, reserved: 3, available: 25 }
+  },
+  {
+    name: 'Junior Explorer Graphic Tee (Kids)',
+    slug: 'junior-explorer-graphic-tee-kids',
+    category: 'Kids',
+    price: 899,
+    compareAtPrice: 1299,
+    badge: 'NEW ARRIVAL',
+    fabric: '180 GSM Soft Combed Cotton',
+    gender: 'kids',
+    type: 'ready-to-wear',
+    dispatchTime: 'Ships in 24 Hours',
+    description: 'Everyday kids tee in soft combed cotton with reinforced shoulder seams and tag-free neckline. Playground-tested durability.',
+    images: [
+      'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=1000&q=80',
+      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1000&q=80'
+    ],
+    colors: [{ name: 'Cloud White', hex: '#F5F2E7' }, { name: 'Onyx', hex: '#18181B' }],
+    sizes: ['2-4Y', '6-8Y', '10-12Y', 'Custom Fit'],
+    inventory: { stock: 50, reserved: 4, available: 46 }
+  },
+  {
+    name: 'Junior Field Cargo Pants (Kids)',
+    slug: 'junior-field-cargo-pants-kids',
+    category: 'Kids',
+    price: 1499,
+    compareAtPrice: 2199,
+    badge: 'BESTSELLER',
+    fabric: '240 GSM Cotton Twill with Stretch',
+    gender: 'kids',
+    type: 'ready-to-wear',
+    dispatchTime: 'Ships in 24 Hours',
+    description: 'Kids cargo pants with adjustable waist, knee reinforcement, and roomy pockets. Grows-with-them adjustable hems.',
+    images: [
+      'https://images.unsplash.com/photo-1542272604-787c3835535d?w=1000&q=80',
+      'https://images.unsplash.com/photo-1540479859555-17af45c78602?w=1000&q=80'
+    ],
+    colors: [{ name: 'Field Olive', hex: '#3E4A3D' }],
+    sizes: ['2-4Y', '6-8Y', '10-12Y', 'Custom Fit'],
+    inventory: { stock: 40, reserved: 3, available: 37 }
+  },
+  {
+    name: 'Junior Cloud Hoodie (Kids)',
+    slug: 'junior-cloud-hoodie-kids',
+    category: 'Kids',
+    price: 1699,
+    compareAtPrice: 2499,
+    badge: 'NEW ARRIVAL',
+    fabric: '320 GSM Brushed Fleece Cotton',
+    gender: 'kids',
+    type: 'ready-to-wear',
+    dispatchTime: 'Ships in 24 Hours',
+    description: 'Cloud-soft kids hoodie in brushed-back fleece with double-lined hood and kangaroo pocket. No-drawcord safe design.',
+    images: [
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=1000&q=80',
+      'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=1000&q=80'
+    ],
+    colors: [{ name: 'Oat Milk', hex: '#EECDAF' }],
+    sizes: ['2-4Y', '6-8Y', '10-12Y', 'Custom Fit'],
+    inventory: { stock: 36, reserved: 3, available: 33 }
+  },
+  {
+    name: 'Junior Raw Denim Jacket (Kids)',
+    slug: 'junior-raw-denim-jacket-kids',
+    category: 'Kids',
+    price: 2199,
+    compareAtPrice: 3199,
+    badge: 'LIMITED',
+    fabric: '10oz Soft Selvedge Denim',
+    gender: 'kids',
+    type: 'ready-to-wear',
+    dispatchTime: 'Ships in 24 Hours',
+    description: 'Miniaturised raw denim trucker jacket in soft-washed selvedge with snap buttons and room-to-grow sleeves.',
+    images: [
+      'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=1000&q=80',
+      'https://images.unsplash.com/photo-1476234251651-f353703a034d?w=1000&q=80'
+    ],
+    colors: [{ name: 'Vintage Wash', hex: '#1C2536' }],
+    sizes: ['2-4Y', '6-8Y', '10-12Y', 'Custom Fit'],
+    inventory: { stock: 24, reserved: 2, available: 22 }
+  },
+  {
+    name: 'Atlas Boxy Oversized Hoodie (Unisex)',
+    slug: 'atlas-boxy-oversized-hoodie-unisex',
+    category: 'Hoodies',
+    price: 2999,
+    compareAtPrice: 4499,
+    badge: 'BESTSELLER',
+    fabric: '450 GSM Heavy French Terry',
+    gender: 'unisex',
+    type: 'ready-to-wear',
+    dispatchTime: 'Ships in 24 Hours',
+    description: 'Monumental boxy-oversized hoodie in heavyweight French terry with dropped shoulders and hidden phone pocket. One cut, all bodies.',
+    images: [
+      'https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?w=1000&q=80',
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=1000&q=80'
+    ],
+    colors: [{ name: 'Sage', hex: '#4A7C6F' }, { name: 'Onyx', hex: '#18181B' }],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    inventory: { stock: 42, reserved: 5, available: 37 }
+  },
+  {
+    name: 'Dune Oversized Camp Shirt (Unisex)',
+    slug: 'dune-oversized-camp-shirt-unisex',
+    category: 'Shirts',
+    price: 2299,
+    compareAtPrice: 3499,
+    badge: 'NEW ARRIVAL',
+    fabric: '200 GSM Washed Linen-Cotton',
+    gender: 'unisex',
+    type: 'hybrid',
+    dispatchTime: 'Ships in 48 Hours',
+    description: 'Breezy oversized camp-collar shirt in washed linen-cotton with coconut buttons. Gender-free block graded XS to XXL.',
+    images: [
+      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=1000&q=80',
+      'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=1000&q=80'
+    ],
+    colors: [{ name: 'Dune Sand', hex: '#D4C5B5' }],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Custom Fit'],
+    inventory: { stock: 30, reserved: 3, available: 27 }
   }
 ];
 
