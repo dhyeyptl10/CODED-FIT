@@ -21,13 +21,13 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ['T-Shirts', 'Shirts', 'Bottoms', 'Jackets', 'Dresses', 'Outerwear', 'Accessories'],
+      enum: ['T-Shirts', 'Shirts', 'Bottoms', 'Jackets', 'Hoodies', 'Tops', 'Dresses', 'Kids', 'Outerwear', 'Accessories'],
       default: 'Shirts'
     },
     gender: {
       type: String,
       required: true,
-      enum: ['men', 'women', 'unisex'],
+      enum: ['men', 'women', 'kids', 'unisex'],
       default: 'unisex'
     },
     price: {
