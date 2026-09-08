@@ -266,15 +266,9 @@
   <!-- MASTER UNIFIED NAVBAR MOUNT -->
   <div id="cf-navbar-mount"></div>
 
-  <!-- ── 3. TOP CATEGORY PILLS ROW (IMAGE 5) ── -->
-  <div class="catalog-pills-bar">
-    <button class="cat-pill-btn active" onclick="filterCatalog('all', this)">ALL DROPS (48)</button>
-    <button class="cat-pill-btn" onclick="filterCatalog('oversized', this)">OVERSIZED TEES (14)</button>
-    <button class="cat-pill-btn" onclick="filterCatalog('cuban', this)">CUBAN SHIRTS (8)</button>
-    <button class="cat-pill-btn" onclick="filterCatalog('trousers', this)">BESPOKE TROUSERS (12)</button>
-    <button class="cat-pill-btn" onclick="filterCatalog('jackets', this)">TACTICAL JACKETS (6)</button>
-    <button class="cat-pill-btn" onclick="filterCatalog('coords', this)">CO-ORDS (4)</button>
-    <a href="customize.html" class="cat-pill-btn red-highlight">* 3D ATELIER PIECES (4)</a>
+  <!-- ── 3. TOP CATEGORY PILLS ROW (rendered by JS with live counts) ── -->
+  <div class="catalog-pills-bar" id="catalog-pills">
+    <button class="cat-pill-btn active" onclick="filterCatalog('all', this)">ALL DROPS</button>
   </div>
 
   <!-- ── 4. MAIN SHOP CATALOG CONTENT (IMAGE 5) ── -->
@@ -283,7 +277,7 @@
     <!-- ── LEFT SIDEBAR FILTER MATRIX ── -->
     <aside class="filter-sidebar">
       <div class="filter-head-title">
-        <span>FILTER MATRIX // 48 PIECES</span>
+        <span>FILTER MATRIX // <span id="filter-count">…</span> PIECES</span>
         <a href="#" style="color:var(--crimson);font-size:10px;" onclick="resetFilters()">RESET ALL</a>
       </div>
 
@@ -711,10 +705,85 @@
   <script src="js/navbar.js"></script>
 
   <script>
-    function filterCatalog(category, btn) {
-      document.querySelectorAll('.cat-pill-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
+    /* ── Live catalog: renders PRODUCTS with real filters + ?cat= deep links ── */
+    const CF_CATS = [
+      ['all', 'ALL DROPS'], ['men', 'MEN'], ['women', 'WOMEN'], ['kids', 'KIDS'],
+      ['oversized', 'OVERSIZED'], ['shirts', 'SHIRTS'], ['trousers', 'TROUSERS'], ['new', 'NEW DROPS']
+    ];
+    let cfActiveCat = 'all';
+
+    function cfEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+    function cfCard(p) {
+      const off = (typeof discountPercent === 'function' && p.mrp > p.price) ? discountPercent(p.mrp, p.price) : 0;
+      const badgeCls = /new|limited/i.test(p.badge || '') ? 'red' : 'dark';
+      return `
+        <div class="product-item-card" style="background:#fff;border-color:#ddd;" data-id="${p.id}">
+          <div class="product-thumb-box">
+            ${p.badge ? `<span class="product-badge-flag ${badgeCls}">${cfEsc(p.badge)}</span>` : ''}
+            <button class="product-wishlist-btn" onclick="cfWishlist(${p.id})">♥</button>
+            <a href="product.html?id=${p.id}">
+              <img src="${cfEsc((p.images || [])[0] || '')}" alt="${cfEsc(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1000&q=80'">
+            </a>
+          </div>
+          <div class="product-body-info">
+            <span class="product-fabric-meta" style="color:#666;">${cfEsc(p.tagline || p.fabric || '')}</span>
+            <h3 class="product-item-title" style="color:#000;"><a href="product.html?id=${p.id}">${cfEsc(String(p.name || '').toUpperCase())}</a></h3>
+            <div class="product-price-row">
+              <span class="price-current" style="color:#000;">₹${Number(p.price || 0).toLocaleString('en-IN')}</span>
+              ${p.mrp > p.price ? `<span class="price-mrp">₹${Number(p.mrp).toLocaleString('en-IN')}</span><span class="price-discount">-${off}%</span>` : ''}
+            </div>
+            ${p.recoTag ? `<span class="product-reco-tag">${cfEsc(p.recoTag)}</span>` : ''}
+            <div class="product-card-actions">
+              <button class="btn-card-action" style="background:#000;color:#fff;" onclick="quickAddToCart(${p.id})">QUICK ADD</button>
+              <a href="customize.html?product=${p.id}" class="btn-card-action" style="background:#fff;border-color:#000;color:#000;">3D CUSTOM</a>
+            </div>
+          </div>
+        </div>`;
     }
+
+    function renderPills() {
+      const counts = (typeof catalogCounts === 'function') ? catalogCounts() : { all: PRODUCTS.length };
+      const bar = document.getElementById('catalog-pills');
+      if (!bar) return;
+      bar.innerHTML = CF_CATS.map(([k, label]) =>
+        `<button class="cat-pill-btn${k === cfActiveCat ? ' active' : ''}" onclick="filterCatalog('${k}', this)">${label} (${counts[k] == null ? 0 : counts[k]})</button>`
+      ).join('') + `<a href="customize.html" class="cat-pill-btn red-highlight">★ 3D ATELIER</a>`;
+    }
+
+    function filterCatalog(category, btn) {
+      cfActiveCat = CF_CATS.some(([k]) => k === category) ? category : 'all';
+      document.querySelectorAll('#catalog-pills .cat-pill-btn').forEach(b => b.classList.remove('active'));
+      if (btn && btn.classList) btn.classList.add('active');
+      const grid = document.getElementById('catalog-products-grid');
+      const list = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).filter(p => catalogMatches(p, cfActiveCat));
+      if (grid) {
+        grid.innerHTML = list.length ? list.map(cfCard).join('')
+          : `<div style="grid-column:1/-1;padding:48px;text-align:center;font-family:var(--font-mono);color:#888;">No pieces in this view yet — try ALL DROPS.</div>`;
+      }
+      const fc = document.getElementById('filter-count');
+      if (fc) fc.textContent = list.length;
+      try {
+        const u = new URL(window.location.href);
+        if (cfActiveCat === 'all') u.searchParams.delete('cat'); else u.searchParams.set('cat', cfActiveCat);
+        window.history.replaceState({}, '', u.toString());
+      } catch (e) {}
+    }
+
+    function cfWishlist(id) {
+      const p = (typeof getProductById === 'function') ? getProductById(id) : null;
+      const msg = p ? ('Saved to wishlist: ' + p.name) : 'Saved to wishlist';
+      if (window.CF_showToast) window.CF_showToast(msg); else alert(msg);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPills();
+      let start = 'all';
+      try { start = new URLSearchParams(window.location.search).get('cat') || 'all'; } catch (e) {}
+      filterCatalog(start, null);
+      const activeBtn = document.querySelector(`#catalog-pills .cat-pill-btn[onclick*="'${CSS.escape(start)}'"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+    });
 
     function quickAddToCart(id) {
       const p = getProductById(id);
@@ -743,5 +812,5 @@
       document.getElementById('cart-drawer-panel').classList.remove('open');
     }
   </script>
-</body>
+<script src="js/trust.js"></script><script src="js/aiAssistant.js"></script></body>
 </html>
