@@ -6,10 +6,10 @@
 export interface Product {
   id: string;
   name: string;
-  category: 'T-Shirts' | 'Bottoms' | 'Jackets' | 'Hoodies' | 'Dresses' | 'Tops';
+  category: 'T-Shirts' | 'Tops' | 'Bottoms' | 'Jackets' | 'Hoodies' | 'Dresses' | 'Kids';
   price: number;
   mrp: number;
-  badge: 'BESTSELLER' | 'UR PICK' | 'EXCLUSIVE' | 'LIMITED DEAL' | 'BESPOKE OPTION' | 'SALE' | 'NEW ARRIVAL';
+  badge: 'BESTSELLER' | 'UR PICK' | 'EXCLUSIVE' | 'LIMITED DEAL' | 'BESPOKE OPTION' | 'SALE' | 'NEW ARRIVAL' | 'LIMITED';
   fabric: string;
   dispatch: string;
   stockLeft: number;
@@ -17,7 +17,7 @@ export interface Product {
   sizes: string[];
   outOfStock: string[];
   funnel: 'ready-to-wear' | 'custom-made';
-  gender: 'men' | 'women';
+  gender: 'men' | 'women' | 'kids' | 'unisex';
   images: string[];
   description: string;
   colors?: { name: string; hex: string }[];
@@ -63,7 +63,7 @@ export const PRODUCTS: Product[] = [
     gender: 'men',
     images: [
       'https://images.unsplash.com/photo-1542272604-787c3835535d?w=900&q=85',
-      'https://images.unsplash.com/photo-1594938298603-b8ff3ddb5777?w=900&q=85'
+      'https://images.unsplash.com/photo-1588117260148-b47818741c74?w=900&q=85'
     ],
     description: '6-pocket tactical utility cargos with expandable bellows pockets, custom gunmetal D-rings, and adjustable ankle cinch cords.'
   },
@@ -254,7 +254,7 @@ export const PRODUCTS: Product[] = [
     gender: 'women',
     images: [
       'https://images.unsplash.com/photo-1588117260148-b47818741c74?w=900&q=85',
-      'https://images.unsplash.com/photo-1594938298603-b8ff3ddb5777?w=900&q=85'
+      'https://images.unsplash.com/photo-1588117260148-b47818741c74?w=900&q=85'
     ],
     description: 'High-rise relaxed wide-leg trousers woven in Biella from European flax linen. Elasticated rear waist with tailored front pleats.'
   },
@@ -362,6 +362,178 @@ export const PRODUCTS: Product[] = [
       'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900&q=85'
     ],
     description: 'Relaxed oversized hoodie in botanical sage green. Brushed loopback interior and embroidered tone-on-tone sleeve branding.'
+  },
+
+  // ── KIDS' COLLECTION ──
+  {
+    id: 'k1',
+    name: 'Junior Explorer Graphic Tee',
+    category: 'Kids',
+    price: 899,
+    mrp: 1299,
+    badge: 'NEW ARRIVAL',
+    fabric: '180 GSM Soft Combed Cotton',
+    dispatch: 'Ships in 24 Hours',
+    stockLeft: 50,
+    hypeRating: 93,
+    sizes: ['2-4Y', '6-8Y', '10-12Y'],
+    outOfStock: [],
+    funnel: 'ready-to-wear',
+    gender: 'kids',
+    images: [
+      'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900&q=85',
+      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900&q=85'
+    ],
+    description: 'Everyday kids tee in soft combed cotton with reinforced shoulder seams and tag-free neckline. Playground-tested durability.'
+  },
+  {
+    id: 'k2',
+    name: 'Junior Field Cargo Pants',
+    category: 'Kids',
+    price: 1499,
+    mrp: 2199,
+    badge: 'BESTSELLER',
+    fabric: '240 GSM Cotton Twill with Stretch',
+    dispatch: 'Ships in 24 Hours',
+    stockLeft: 40,
+    hypeRating: 91,
+    sizes: ['2-4Y', '6-8Y', '10-12Y'],
+    outOfStock: [],
+    funnel: 'ready-to-wear',
+    gender: 'kids',
+    images: [
+      'https://images.unsplash.com/photo-1542272604-787c3835535d?w=900&q=85',
+      'https://images.unsplash.com/photo-1540479859555-17af45c78602?w=900&q=85'
+    ],
+    description: 'Kids cargo pants with adjustable waist, knee reinforcement, and roomy pockets. Grows-with-them adjustable hems.'
+  },
+  {
+    id: 'k3',
+    name: 'Junior Cloud Hoodie',
+    category: 'Kids',
+    price: 1699,
+    mrp: 2499,
+    badge: 'NEW ARRIVAL',
+    fabric: '320 GSM Brushed Fleece Cotton',
+    dispatch: 'Ships in 24 Hours',
+    stockLeft: 36,
+    hypeRating: 94,
+    sizes: ['2-4Y', '6-8Y', '10-12Y'],
+    outOfStock: [],
+    funnel: 'ready-to-wear',
+    gender: 'kids',
+    images: [
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=900&q=85',
+      'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900&q=85'
+    ],
+    description: 'Cloud-soft kids hoodie in brushed-back fleece with double-lined hood and kangaroo pocket. No-drawcord safe design.'
+  },
+  {
+    id: 'k4',
+    name: 'Junior Raw Denim Jacket',
+    category: 'Kids',
+    price: 2199,
+    mrp: 3199,
+    badge: 'LIMITED',
+    fabric: '10oz Soft Selvedge Denim',
+    dispatch: 'Ships in 24 Hours',
+    stockLeft: 24,
+    hypeRating: 90,
+    sizes: ['2-4Y', '6-8Y', '10-12Y'],
+    outOfStock: [],
+    funnel: 'ready-to-wear',
+    gender: 'kids',
+    images: [
+      'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=900&q=85',
+      'https://images.unsplash.com/photo-1476234251651-f353703a034d?w=900&q=85'
+    ],
+    description: 'Miniaturised raw denim trucker jacket in soft-washed selvedge with snap buttons and room-to-grow sleeves.'
+  },
+
+  // ── UNISEX OVERSIZED ──
+  {
+    id: 'u1',
+    name: 'Atlas Boxy Oversized Hoodie',
+    category: 'Hoodies',
+    price: 2999,
+    mrp: 4499,
+    badge: 'BESTSELLER',
+    fabric: '450 GSM Heavy French Terry',
+    dispatch: 'Ships in 24 Hours',
+    stockLeft: 42,
+    hypeRating: 96,
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    outOfStock: [],
+    funnel: 'ready-to-wear',
+    gender: 'unisex',
+    images: [
+      'https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?w=900&q=85',
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=900&q=85'
+    ],
+    description: 'Monumental boxy-oversized hoodie in heavyweight French terry with dropped shoulders. One cut, all bodies.'
+  },
+  {
+    id: 'u2',
+    name: 'Dune Oversized Camp Shirt',
+    category: 'Tops',
+    price: 2299,
+    mrp: 3499,
+    badge: 'NEW ARRIVAL',
+    fabric: '200 GSM Washed Linen-Cotton',
+    dispatch: 'Ships in 48 Hours',
+    stockLeft: 30,
+    hypeRating: 92,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    outOfStock: [],
+    funnel: 'ready-to-wear',
+    gender: 'unisex',
+    images: [
+      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900&q=85',
+      'https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=900&q=85'
+    ],
+    description: 'Breezy oversized camp-collar shirt in washed linen-cotton with coconut buttons. Gender-free block graded XS to XXL.'
+  },
+  {
+    id: 'w9',
+    name: 'Scarlet Wrap Midi Dress',
+    category: 'Dresses',
+    price: 3799,
+    mrp: 5299,
+    badge: 'NEW ARRIVAL',
+    fabric: 'TENCEL Lyocell Satin Blend',
+    dispatch: 'Ships in 24 Hours',
+    stockLeft: 22,
+    hypeRating: 95,
+    sizes: ['XS', 'S', 'M', 'L'],
+    outOfStock: [],
+    funnel: 'ready-to-wear',
+    gender: 'women',
+    images: [
+      'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=900&q=85',
+      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=85'
+    ],
+    description: 'Editorial wrap midi dress in fluid TENCEL satin with true-wrap waist tie and side slit. Cut for hourglass and pear proportions.'
+  },
+  {
+    id: 'm9',
+    name: 'Onyx Tailored Cigarette Pant',
+    category: 'Bottoms',
+    price: 2999,
+    mrp: 4299,
+    badge: 'BESTSELLER',
+    fabric: '310 GSM Dense Japanese Twill',
+    dispatch: 'Ships in 24 Hours',
+    stockLeft: 28,
+    hypeRating: 93,
+    sizes: ['28', '30', '32', '34', '36'],
+    outOfStock: [],
+    funnel: 'ready-to-wear',
+    gender: 'men',
+    images: [
+      'https://images.unsplash.com/photo-1542272604-787c3835535d?w=900&q=85',
+      'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=900&q=85'
+    ],
+    description: 'Precision tapered pant in dense Japanese twill with clean crop and slanted side zip detailing. Sharp all-day tailoring.'
   }
 ];
 
@@ -371,14 +543,16 @@ export function getProductById(id: string): Product | undefined {
   return PRODUCTS.find(p => p.id === id);
 }
 
-export function getProductsByGender(gender: 'men' | 'women' | 'all'): Product[] {
+export function getProductsByGender(gender: 'men' | 'women' | 'kids' | 'unisex' | 'all'): Product[] {
   if (gender === 'all') return PRODUCTS;
+  if (gender === 'men' || gender === 'women') return PRODUCTS.filter(p => p.gender === gender || p.gender === 'unisex');
   return PRODUCTS.filter(p => p.gender === gender);
 }
 
-export function getProductsByCategory(category: string, gender: 'men' | 'women' | 'all' = 'all'): Product[] {
+export function getProductsByCategory(category: string, gender: 'men' | 'women' | 'kids' | 'unisex' | 'all' = 'all'): Product[] {
   let list = getProductsByGender(gender);
   if (category === 'All') return list;
+  if (category === 'Outerwear') return list.filter(p => p.category === 'Jackets' || p.category === 'Hoodies');
   return list.filter(p => p.category === category);
 }
 
