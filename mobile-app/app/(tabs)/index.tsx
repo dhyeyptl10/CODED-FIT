@@ -18,6 +18,7 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { WebView } from 'react-native-webview';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FEATURED_PRODUCTS, Product } from '../../services/products';
 import { CartService } from '../../services/cart';
@@ -67,13 +68,17 @@ const HERO_SLIDES = [
 ];
 
 const STORY_BUBBLES = [
-  { id: '1', name: 'New In', image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=240&q=80', filter: 'all' },
-  { id: '2', name: 'Men', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=240&q=80', filter: 'men' },
-  { id: '3', name: 'Women', image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=240&q=80', filter: 'women' },
-  { id: '4', name: 'Bespoke', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=240&q=80', filter: 'bespoke' },
-  { id: '5', name: 'Hoodies', image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=240&q=80', filter: 'Hoodies' },
-  { id: '6', name: 'Jackets', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=240&q=80', filter: 'Jackets' },
+  { id: '1', name: 'New In', image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=240&q=80', filter: 'all', link: '/(tabs)/shop' },
+  { id: '2', name: 'Men', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=240&q=80', filter: 'men', link: '/(tabs)/shop' },
+  { id: '3', name: 'Women', image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=240&q=80', filter: 'women', link: '/(tabs)/shop' },
+  { id: '4', name: 'Kids', image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=240&q=80', filter: 'kids', link: '/(tabs)/shop' },
+  { id: '5', name: 'Body Scan', image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=240&q=80', filter: 'scan', link: '/(tabs)/tryon' },
+  { id: '6', name: 'Bespoke', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=240&q=80', filter: 'bespoke', link: '/(tabs)/tryon' },
+  { id: '7', name: 'Hoodies', image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=240&q=80', filter: 'Hoodies', link: '/(tabs)/shop' },
+  { id: '8', name: 'Jarvis', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=240&q=80', filter: 'jarvis', link: '/jarvis' },
 ];
+
+const FILM_HTML = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><style>html,body{margin:0;padding:0;background:#0B0B0D;height:100%;overflow:hidden}video{width:100%;height:100%;object-fit:cover}</style></head><body><video autoplay muted loop playsinline preload="metadata" poster="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1000&q=80"><source src="https://cdn.pixabay.com/video/2024/05/19/212632_large.mp4" type="video/mp4"></video></body></html>`;
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -168,7 +173,7 @@ export default function HomeScreen() {
                 key={item.id}
                 style={styles.storyItem}
                 activeOpacity={0.8}
-                onPress={() => router.push('/shop')}
+                onPress={() => router.push((item as any).link as any)}
               >
                 <View style={styles.storyRing}>
                   <Image source={{ uri: item.image }} style={styles.storyImage} />
@@ -177,6 +182,30 @@ export default function HomeScreen() {
               </TouchableOpacity>
             ))}
           </ScrollView>
+        </View>
+
+        {/* ── FASHION FILM BANNER (autoplay runway video, poster fallback) ── */}
+        <View style={styles.filmWrap}>
+          <WebView
+            source={{ html: FILM_HTML }}
+            style={styles.film}
+            scrollEnabled={false}
+            mediaPlaybackRequiresUserAction={false}
+            allowsInlineMediaPlayback
+            javaScriptEnabled={false}
+          />
+          <View style={styles.filmOverlay} pointerEvents="box-none">
+            <Text style={styles.filmTag}>AW26 · RUNWAY FILM</Text>
+            <Text style={styles.filmTitle}>WORN BY BODIES,{'\n'}NOT SIZES.</Text>
+            <View style={styles.filmRow}>
+              <TouchableOpacity style={styles.filmBtn} onPress={() => router.push('/(tabs)/tryon')}>
+                <Text style={styles.filmBtnText}>BODY SCAN →</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.filmBtn, styles.filmBtnGhost]} onPress={() => router.push('/jarvis' as any)}>
+                <Text style={[styles.filmBtnText, styles.filmBtnGhostText]}>◉ ASK JARVIS</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
 
         {/* ── HERO BANNER: AUTO-SCROLLING EDITORIAL CAROUSEL ── */}
@@ -377,7 +406,7 @@ export default function HomeScreen() {
           <GoldButton
             title="SHARE ATELIER PASS ✦"
             variant="outline"
-            onPress={shareWithFriend}
+            onPress={() => shareWithFriend('a friend')}
             size="md"
             style={{ marginTop: 12, alignSelf: 'stretch' }}
           />
@@ -493,6 +522,18 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
   },
+
+  /* Fashion film banner */
+  filmWrap: { position: 'relative', height: 250, backgroundColor: '#0B0B0D', marginBottom: 14 },
+  film: { width: '100%', height: 250, backgroundColor: '#0B0B0D', opacity: 0.85 },
+  filmOverlay: { position: 'absolute', left: 0, right: 0, bottom: 0, padding: 16, backgroundColor: 'rgba(0,0,0,0.25)' },
+  filmTag: { color: '#C9002D', fontSize: 10, fontWeight: '800', letterSpacing: 2 },
+  filmTitle: { color: '#FFFFFF', fontSize: 24, fontWeight: '900', marginTop: 4, lineHeight: 28 },
+  filmRow: { flexDirection: 'row', gap: 8, marginTop: 10 },
+  filmBtn: { backgroundColor: '#C9002D', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 4 },
+  filmBtnText: { color: '#fff', fontSize: 11, fontWeight: '900' },
+  filmBtnGhost: { backgroundColor: 'transparent', borderWidth: 1, borderColor: '#fff' },
+  filmBtnGhostText: { color: '#fff' },
 
   /* Carousel */
   carouselContainer: {
