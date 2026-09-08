@@ -998,7 +998,11 @@
 
   <!-- HERO SECTION -->
   <section class="hero-section">
-    <div class="hero-bg" id="hero-bg"></div>
+    <video class="cf-hero-video" autoplay muted loop playsinline preload="metadata"
+      poster="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1800&q=80">
+      <source src="https://cdn.pixabay.com/video/2024/05/19/212632_large.mp4" type="video/mp4">
+    </video>
+    <div class="hero-bg cf-hero-video-fallback" id="hero-bg" style="opacity:0.25;"></div>
     <div class="hero-gradient"></div>
 
     <div class="hero-content animate-in" style="animation-delay:0.2s">
@@ -1011,11 +1015,12 @@
       <div class="hero-ctas">
         <a href="shop.html" class="hero-btn-primary">SHOP THE DROP &rarr;</a>
         <a href="customize.html" class="hero-btn-secondary">3D CUSTOM STUDIO</a>
+        <a href="body-visualizer.html" class="hero-btn-secondary">AI BODY VISUALIZER</a>
       </div>
     </div>
 
     <div class="hero-metrics">
-      <div class="hero-metric">AI FIT SYNC<span>99.4%</span></div>
+      <div class="hero-metric">3D TRY-ON<span>LIVE</span></div>
       <div class="hero-metric">FABRICS ACTIVE<span>18,400+ PCS</span></div>
       <div class="hero-metric">TOLERANCE<span>0.05MM</span></div>
     </div>
@@ -1510,5 +1515,5 @@
       });
     });
   </script>
-</body>
+<script src="js/trust.js"></script><script src="js/aiAssistant.js"></script></body>
 </html>
