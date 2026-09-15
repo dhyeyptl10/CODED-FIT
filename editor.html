@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Studio — Custom Clothing Designer | CODED FIT</title>
+  <meta name="description" content="Design an actual CODED FIT garment. Add text and graphics to real T-shirts, hoodies, shirts and pants with front and back views.">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Base & Editor Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/editor.css">
+
+  <!-- Fabric.js 2D Canvas Engine -->
+  <script src="js/lib/fabric.min.js"></script>
+
+  <style>
+    /* ══ PHASE 2 · DESIGN STUDIO upgrades (ed2- namespace, everything else reused) ══ */
+    .ed2-section-label { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; color:#888; text-transform:uppercase; margin:14px 0 8px; }
+    .ed2-section-label:first-child { margin-top:0; }
+
+    /* Visual garment cards — real silhouettes, not a dropdown */
+    .ed-garment-cards { display:flex; flex-direction:column; gap:8px; margin-bottom:10px; }
+    .ed-garment-card { display:grid; grid-template-columns:52px 1fr auto; gap:10px; align-items:center; border:1px solid var(--ed-border); background:#fbfbfc; border-radius:var(--ed-radius); padding:8px; cursor:pointer; width:100%; font:inherit; color:inherit; text-align:left; }
+    .ed-garment-card:hover { border-color:#888; }
+    .ed-garment-card.sel { border-color:var(--ed-crimson); background:#fff; box-shadow:inset 3px 0 0 var(--ed-crimson); }
+    .ed-garment-thumb { width:52px; height:64px; background:#f1f2f4; border:1px solid #e2e2e6; border-radius:2px; overflow:hidden; }
+    .ed-garment-thumb svg { width:100%; height:100%; display:block; }
+    .ed-garment-name { font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:700; }
+    .ed-garment-meta { font-family:'JetBrains Mono',monospace; font-size:9px; color:#888; margin-top:2px; }
+    .ed-garment-tick { width:20px; height:20px; border-radius:50%; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; font-size:11px; color:transparent; }
+    .ed-garment-card.sel .ed-garment-tick { background:var(--ed-crimson); border-color:var(--ed-crimson); color:#fff; }
+
+    /* Graphics preset grid */
+    .ed-preset-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+    .ed-my-designs { display:flex; flex-direction:column; gap:6px; margin-top:8px; }
+    .ed-my-design { display:flex; align-items:center; gap:8px; border:1px solid var(--ed-border); background:#fbfbfc; border-radius:3px; padding:7px 9px; font-family:'JetBrains Mono',monospace; font-size:10px; }
+    .ed-my-design span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .ed-my-design button { border:1px solid var(--ed-border); background:#fff; border-radius:2px; font-size:9px; font-weight:800; padding:4px 8px; cursor:pointer; font-family:'JetBrains Mono',monospace; }
+    .ed-my-design button:hover { border-color:#111; }
+    .ed-my-empty { font-size:11px; color:#999; }
+
+    /* Text / image studios */
+    .ed2-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .ed2-field label { display:block; font-family:'JetBrains Mono',monospace; font-size:8.5px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:#666; margin-bottom:4px; }
+    .ed2-field select, .ed2-field input[type="range"], .ed2-field input[type="color"] { width:100%; }
+    .ed2-field select { border:1px solid var(--ed-border); background:#fff; padding:8px; font-size:11px; border-radius:3px; }
+    .ed2-field input[type="range"] { accent-color:var(--ed-crimson); }
+    .ed2-field input[type="color"] { height:34px; border:1px solid var(--ed-border); background:#fff; padding:2px; border-radius:3px; }
+    .ed2-seg { display:flex; gap:6px; }
+    .ed2-seg button { flex:1; border:1px solid var(--ed-border); background:#fff; border-radius:3px; padding:7px 4px; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:800; cursor:pointer; }
+    .ed2-seg button.on { background:#111113; color:#fff; border-color:#111113; }
+    .ed2-panel-off { opacity:.45; pointer-events:none; }
+    .ed2-panel-note { font-size:10.5px; color:#999; margin-top:6px; }
+
+    /* Print zone: always faintly visible in the Design Studio (not hover-only) */
+    .garment-product-stage .garment-print-zone { opacity:1 !important; border-color:rgba(215,25,32,.4) !important; background:rgba(215,25,32,.03) !important; }
+
+    /* Try-on CTA */
+    .ed-btn-tryon { background:var(--ed-crimson); color:#fff; border-color:var(--ed-crimson); }
+    .ed-btn-tryon:hover:not(:disabled) { background:#c00500; border-color:#c00500; }
+    .ed-tryon-note { font-size:10.5px; color:#777; line-height:1.55; margin-top:8px; }
+
+    /* Mobile bottom toolbar */
+    .ed-mobilebar { display:none; position:fixed; left:0; right:0; bottom:0; z-index:200; background:#fff; border-top:1px solid var(--ed-border); padding:8px 10px calc(8px + env(safe-area-inset-bottom)); gap:8px; overflow-x:auto; }
+    .ed-mobilebar button { flex:1 0 auto; border:1px solid var(--ed-border); background:#fbfbfc; border-radius:20px; padding:10px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:800; white-space:nowrap; cursor:pointer; }
+    .ed-mobilebar button.primary { background:var(--ed-crimson); border-color:var(--ed-crimson); color:#fff; }
+
+    @media (max-width: 900px) {
+      .ed-mobilebar { display:flex; }
+      body.editor-body { padding-bottom:70px; }
+      .ed-garment-cards { flex-direction:row; overflow-x:auto; padding-bottom:6px; }
+      .ed-garment-card { min-width:230px; }
+    }
+  </style>
+</head>
+<body class="editor-body">
+
+  <!-- Master Unified Navbar Mount -->
+  <div id="cf-navbar-mount"></div>
+
+  <!-- ── Top Action Bar ── -->
+  <div class="editor-top-bar">
+    <div class="editor-title-group">
+      <h1 class="editor-title">GARMENT CUSTOM STUDIO</h1>
+      <span class="editor-tag">DESIGN STUDIO</span>
+    </div>
+
+    <div class="editor-top-actions">
+      <button class="ed-btn" id="btn-undo" onclick="editor.undo()" title="Ctrl+Z" disabled>
+        <span>↩</span> UNDO
+      </button>
+      <button class="ed-btn" id="btn-redo" onclick="editor.redo()" title="Ctrl+Y" disabled>
+        <span>↪</span> REDO
+      </button>
+      <button class="ed-btn" id="btn-reset" onclick="confirmReset()" title="Clear active face">
+        <span>⟲</span> RESET
+      </button>
+      <button class="ed-btn ed-btn-dark" onclick="toggleStateInspector()" title="View saved state">
+        <span>{ }</span> STATE JSON
+      </button>
+      <button class="ed-btn ed-btn-primary" onclick="editor.exportCompositePNG()" title="Export high-res mockup as PNG">
+        <span>⬇</span> EXPORT PNG
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Main 3-Column Studio Layout ── -->
+  <main class="editor-layout">
+
+    <!-- ── Left Column: Tools & Customization Controls ── -->
+    <aside class="editor-tools-panel">
+
+      <!-- Garment / Product : visual selector (same GARMENTS source, no new database) -->
+      <div class="ed-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">01 // CHOOSE GARMENT</h2>
+          <span class="ed-card-sub" id="garment-count-label">LIVE PRODUCT</span>
+        </div>
+        <div class="ed-garment-cards" id="garment-cards"></div>
+        <div class="ed2-section-label">Filter</div>
+        <div class="garment-category-grid" id="garment-category-grid"></div>
+        <select id="garment-product-select" class="garment-product-select" onchange="selectGarmentProduct(this.value)" aria-label="Garment product"></select>
+      </div>
+
+      <!-- Upload Graphic + presets + My Designs -->
+      <div class="ed-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">02 // GRAPHIC DESIGN</h2>
+          <span class="ed-card-sub">PNG, JPG, SVG</span>
+        </div>
+
+        <div class="ed-upload-zone" onclick="document.getElementById('image-upload-input').click()">
+          <span class="ed-upload-icon">📁</span>
+          <div class="ed-upload-title">UPLOAD ARTWORK</div>
+          <div class="ed-upload-hint">Click or drop design here</div>
+          <input type="file" id="image-upload-input" class="ed-file-input" accept="image/*" onchange="handleFileUpload(event)">
+        </div>
+
+        <div class="ed2-section-label">Atelier graphics</div>
+        <div class="ed-preset-grid">
+          <button class="ed-btn" style="padding:6px; font-size:9.5px; justify-content:center;" onclick="addPresetLogo('cf')">CF LOGO</button>
+          <button class="ed-btn" style="padding:6px; font-size:9.5px; justify-content:center;" onclick="addPresetLogo('barcode')">BARCODE</button>
+          <button class="ed-btn" style="padding:6px; font-size:9.5px; justify-content:center;" onclick="addPresetLogo('geometry')">ATELIER 09</button>
+          <button class="ed-btn" style="padding:6px; font-size:9.5px; justify-content:center;" onclick="addPresetGraphic('heart')">HEART</button>
+          <button class="ed-btn" style="padding:6px; font-size:9.5px; justify-content:center;" onclick="addPresetGraphic('star')">STAR</button>
+          <button class="ed-btn" style="padding:6px; font-size:9.5px; justify-content:center;" onclick="addPresetGraphic('bolt')">BOLT</button>
+        </div>
+
+        <div class="ed2-section-label">My designs <span style="text-transform:none; font-weight:400;">(saved on this device)</span></div>
+        <button class="ed-btn" style="width:100%; justify-content:center;" onclick="saveMyDesign()">💾 SAVE CURRENT DESIGN</button>
+        <div class="ed-my-designs" id="my-designs-list"></div>
+      </div>
+
+      <!-- Text studio -->
+      <div class="ed-card" id="text-controls-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">03 // TEXT STUDIO</h2>
+          <span class="ed-card-sub" id="text-status">NO TEXT SELECTED</span>
+        </div>
+        <button class="ed-btn" id="btn-add-text" style="width:100%; justify-content:center;" title="Add text">
+          <span>T</span> ADD CUSTOM TEXT
+        </button>
+        <div id="text-controls" class="ed2-panel-off" style="margin-top:12px;">
+          <div class="ed2-grid2">
+            <div class="ed2-field"><label>Font</label>
+              <select id="txt-font" onchange="applyTextProp('fontFamily', this.value)">
+                <option value="Inter">Inter</option>
+                <option value="Space Grotesk">Space Grotesk</option>
+                <option value="Syne">Syne</option>
+                <option value="'JetBrains Mono'">JetBrains Mono</option>
+                <option value="Arial">Arial</option>
+                <option value="Georgia">Georgia</option>
+              </select>
+            </div>
+            <div class="ed2-field"><label>Color</label><input type="color" id="txt-color" value="#ffffff" oninput="applyTextProp('fill', this.value)"></div>
+          </div>
+          <div class="ed2-field" style="margin-top:8px;"><label>Size — <span id="txt-size-val">32</span>px</label>
+            <input type="range" id="txt-size" min="12" max="120" value="32" oninput="document.getElementById('txt-size-val').textContent=this.value; applyTextProp('fontSize', parseInt(this.value,10))">
+          </div>
+          <div class="ed2-field" style="margin-top:8px;"><label>Alignment</label>
+            <div class="ed2-seg" id="txt-align-seg">
+              <button data-align="left" onclick="setTextAlign('left')">LEFT</button>
+              <button data-align="center" onclick="setTextAlign('center')">CENTER</button>
+              <button data-align="right" onclick="setTextAlign('right')">RIGHT</button>
+            </div>
+          </div>
+          <div class="ed2-grid2" style="margin-top:8px;">
+            <div class="ed2-field"><label>Style</label>
+              <div class="ed2-seg">
+                <button id="txt-bold" onclick="toggleTextBold()">B</button>
+                <button id="txt-italic" onclick="toggleTextItalic()">I</button>
+              </div>
+            </div>
+            <div class="ed2-field"><label>Rotation — <span id="txt-rot-val">0</span>°</label>
+              <input type="range" id="txt-rot" min="-180" max="180" value="0" oninput="document.getElementById('txt-rot-val').textContent=this.value; applyTextProp('angle', parseInt(this.value,10))">
+            </div>
+          </div>
+          <div class="ed2-field" style="margin-top:8px;"><label>Letter spacing — <span id="txt-sp-val">0</span></label>
+            <input type="range" id="txt-spacing" min="0" max="200" step="10" value="0" oninput="document.getElementById('txt-sp-val').textContent=this.value; applyTextProp('charSpacing', parseInt(this.value,10))">
+          </div>
+          <div class="ed2-panel-note">Select a text object on the garment to enable these controls.</div>
+        </div>
+      </div>
+
+      <!-- Image studio -->
+      <div class="ed-card" id="image-controls-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">04 // IMAGE STUDIO</h2>
+          <span class="ed-card-sub" id="image-status">NO IMAGE SELECTED</span>
+        </div>
+        <div id="image-controls" class="ed2-panel-off">
+          <div class="ed2-seg">
+            <button onclick="flipActive('flipX')">⇋ FLIP H</button>
+            <button onclick="flipActive('flipY')">⇅ FLIP V</button>
+          </div>
+          <div class="ed2-field" style="margin-top:8px;"><label>Opacity — <span id="img-op-val">100</span>%</label>
+            <input type="range" id="img-opacity" min="10" max="100" value="100" oninput="document.getElementById('img-op-val').textContent=this.value; applyImageProp('opacity', parseInt(this.value,10)/100)">
+          </div>
+          <div class="ed2-panel-note">Resize, rotate and move directly on the garment with the red handles.</div>
+        </div>
+      </div>
+
+      <!-- Garment Color -->
+      <div class="ed-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">05 // GARMENT COLOR</h2>
+          <span class="ed-card-sub" id="active-color-label">BLACK</span>
+        </div>
+
+        <div class="color-swatches-grid" id="color-swatches-container">
+          <!-- Populated dynamically from editor-products.js -->
+        </div>
+      </div>
+
+      <!-- Garment Size -->
+      <div class="ed-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">06 // SIZE SELECTION</h2>
+          <span class="ed-card-sub">TRUE BLOCK</span>
+        </div>
+
+        <div class="size-pills-row" id="size-pills-container">
+          <!-- Populated dynamically from editor-products.js -->
+        </div>
+      </div>
+
+      <!-- Fabric -->
+      <div class="ed-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">07 // FABRIC</h2>
+          <span class="ed-card-sub">MATERIAL</span>
+        </div>
+        <select id="fabric-select" class="garment-product-select" onchange="selectFabricOption(this.value)"></select>
+      </div>
+
+      <!-- Layer & Object Controls -->
+      <div class="ed-card" id="layer-controls-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">08 // LAYER ACTIONS</h2>
+          <span class="ed-card-sub" id="selection-status">NO SELECTION</span>
+        </div>
+
+        <div class="layer-controls-row">
+          <button class="ed-btn" id="btn-bring-forward" onclick="editor.bringForward()" disabled>
+            <span>⬆</span> FORWARD
+          </button>
+          <button class="ed-btn" id="btn-send-backward" onclick="editor.sendBackward()" disabled>
+            <span>⬇</span> BACKWARD
+          </button>
+          <button class="ed-btn" id="btn-duplicate" onclick="editor.duplicateActiveObject()" disabled>
+            <span>⧉</span> DUPLICATE
+          </button>
+          <button class="ed-btn" id="btn-delete" onclick="editor.deleteActiveObject()" style="color:#ef4444;" disabled>
+            <span>🗑</span> DELETE
+          </button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── Center Stage: Realistic Garment & Interactive Canvas ── -->
+    <section class="editor-stage-viewport">
+
+      <!-- View Switcher (Front / Back) -->
+      <div class="view-switcher-bar">
+        <button class="view-pill active" id="view-pill-front" onclick="switchView('front')">
+          FRONT VIEW
+        </button>
+        <button class="view-pill" id="view-pill-back" onclick="switchView('back')">
+          BACK VIEW
+        </button>
+      </div>
+
+      <!-- Garment Stage Container -->
+      <div class="garment-stage-wrap" id="stage-wrap"></div>
+
+      <!-- Real-Time Boundary Validation Banner -->
+      <div class="boundary-warning-banner valid" id="boundary-banner">
+        <span id="boundary-icon">✓</span>
+        <span id="boundary-text">All artwork is inside printable zone</span>
+      </div>
+
+      <!-- Touch / Drag helper note -->
+      <p class="stage-helper-note">
+        💡 Tap or click artwork to scale, rotate, and reposition. Drag handles or use Delete key. Dashed line = printable area for this garment.
+      </p>
+
+    </section>
+
+    <!-- ── Right Column: Specs & Cart / DB Summary ── -->
+    <aside class="editor-summary-panel">
+
+      <!-- Configuration Specs -->
+      <div class="ed-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">GARMENT CODEX</h2>
+          <span class="ed-card-sub">ONE-OF-ONE</span>
+        </div>
+
+        <table class="spec-summary-table">
+          <tr>
+            <td>PRODUCT:</td>
+            <td id="spec-garment-name">CLASSIC T-SHIRT</td>
+          </tr>
+          <tr>
+            <td>FABRIC:</td>
+            <td id="spec-fabric">280 GSM GOTS COTTON</td>
+          </tr>
+          <tr>
+            <td>COLOR:</td>
+            <td id="spec-color">BLACK (#1A1A1A)</td>
+          </tr>
+          <tr>
+            <td>SIZE:</td>
+            <td id="spec-size">M</td>
+          </tr>
+          <tr>
+            <td>FRONT ARTWORK:</td>
+            <td id="spec-front-count">0 OBJECTS</td>
+          </tr>
+          <tr>
+            <td>BACK ARTWORK:</td>
+            <td id="spec-back-count">0 OBJECTS</td>
+          </tr>
+        </table>
+
+        <!-- Investment Breakdown: base + printing per face + customization -->
+        <div class="price-summary-box">
+          <div class="price-line">
+            <span id="price-base-label">Base garment</span>
+            <span id="price-base">₹999</span>
+          </div>
+          <div class="price-line">
+            <span>Front print</span>
+            <span id="price-print-front">₹0</span>
+          </div>
+          <div class="price-line">
+            <span>Back print</span>
+            <span id="price-print-back">₹0</span>
+          </div>
+          <div class="price-line">
+            <span>Custom finishing</span>
+            <span style="color:#15803d;font-weight:800;">Included</span>
+          </div>
+          <div class="price-total-line">
+            <span>TOTAL INVESTMENT</span>
+            <span class="price-total-num" id="price-total">₹999</span>
+          </div>
+        </div>
+
+        <button class="ed-btn ed-btn-tryon" style="width:100%; justify-content:center; padding:13px;" onclick="tryOnMe()">
+          <span>👕</span> TRY THIS DESIGN ON ME
+        </button>
+        <div class="ed-tryon-note">Saves front + back, exports a clean garment reference, and hands it to the AI try-on. No fake result is ever generated.</div>
+
+        <button class="ed-btn ed-btn-primary" style="width:100%; justify-content:center; padding:13px; margin-top:10px;" onclick="addDesignToBag()">
+          <span>🛍</span> ADD TO BAG →
+        </button>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
+          <button class="ed-btn" style="justify-content:center; padding:11px;" onclick="saveMyDesign()">
+            <span>💾</span> SAVE
+          </button>
+          <button class="ed-btn" style="justify-content:center; padding:11px;" onclick="editor.exportCompositePNG()">
+            <span>⬇</span> MOCKUP
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Customization State (MongoDB Ready) -->
+      <div class="ed-card" id="state-inspector-card" style="display:none;">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">STATE PAYLOAD</h2>
+          <button class="ed-btn" style="padding:2px 6px; font-size:8px;" onclick="copyStateJSON()">COPY</button>
+        </div>
+        <p style="font-size:10px; color:#777; margin:0 0 6px;">
+          Compatible with the <code>/api/customization</code> + try-on handoff payload:
+        </p>
+        <pre class="json-preview-box" id="json-preview"></pre>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- Mobile bottom toolbar -->
+  <nav class="ed-mobilebar" aria-label="Design tools">
+    <button onclick="editor && editor.addText('CODED FIT')">✎ TEXT</button>
+    <button onclick="document.getElementById('image-upload-input').click()">⤒ UPLOAD</button>
+    <button id="mb-view" onclick="switchView(editor && editor.state.face === 'front' ? 'back' : 'front')">⇄ FRONT/BACK</button>
+    <button onclick="editor && editor.undo()">↩ UNDO</button>
+    <button onclick="editor && editor.redo()">↪ REDO</button>
+    <button class="primary" onclick="tryOnMe()">👕 TRY ON</button>
+  </nav>
+
+  <!-- Scripts: Products, State, Controller, and App Initializer -->
+  <script src="js/editor-products.js"></script>
+  <script src="js/editor-state.js"></script>
+  <script src="js/garment-renderer.js"></script>
+  <script src="js/fabric-editor.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/product-flow.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+
+  <script>
+    let editor = null;
+
+    // Initialize editor on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      initCustomizer();
+    });
+
+    function initCustomizer() {
+      // Deep links: ?garment=<studio id> or ?product=<catalogue id> (central map),
+      // ?edit=1 restores the exact cart configuration (applied below after init).
+      let initialId = 'tee-classic';
+      try {
+        const q = new URLSearchParams(window.location.search);
+        if (q.get('garment')) initialId = q.get('garment');
+        else if (q.get('product') && window.CF_FLOW && typeof getProductById === 'function') {
+          initialId = CF_FLOW.productToGarmentId(getProductById(parseInt(q.get('product'), 10))) || 'tee-classic';
+        }
+      } catch (e) {}
+      const garment = getGarmentById(initialId);
+      renderGarmentStage(garment, 'front');
+      editor = new FabricEditor('design-canvas', {
+        onSelectionChange: (activeObj) => updateSelectionUI(activeObj),
+        onBoundaryCheck: (isExceeded) => updateBoundaryUI(isExceeded),
+        onHistoryChange: (historyState) => updateHistoryUI(historyState),
+      });
+      renderGarmentCategories();
+      renderGarmentCards();
+      renderProductSelect(garment);
+      renderColorSwatches(garment);
+      renderSizePills(garment);
+      renderFabricOptions(garment);
+      renderMyDesigns();
+      document.getElementById('btn-add-text')?.addEventListener('click', () => editor.addText('CODED FIT'));
+      updateSummaryUI();
+      // EDIT from cart (?edit=1 + CF_DESIGN_EDIT): restore the exact configuration.
+      try {
+        if (window.location.search.indexOf('edit=1') > -1) {
+          const ed = JSON.parse(sessionStorage.getItem('CF_DESIGN_EDIT') || 'null');
+          sessionStorage.removeItem('CF_DESIGN_EDIT');
+          if (ed && (ed.flow === 'design' || ed.garmentId)) setTimeout(() => applyRestoredDesign(ed), 80);
+        }
+      } catch (e) {}
+    }
+
+    /* ── Visual garment cards (same GARMENTS source as the renderer) ── */
+    function escHtml(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    function garmentThumbSVG(g, hex) {
+      const sil = (g.silhouette && g.silhouette.front) || '';
+      return '<svg viewBox="0 0 ' + g.svgViewBox.w + ' ' + g.svgViewBox.h + '" xmlns="http://www.w3.org/2000/svg">' +
+        sil.replace(/class="garment-body-fill"/g, 'fill="' + hex + '"').replace(/class="garment-detail"/g, 'fill="none" stroke="rgba(0,0,0,.25)" stroke-width="3"') + '</svg>';
+    }
+    function renderGarmentCards() {
+      const box = document.getElementById('garment-cards');
+      if (!box || typeof GARMENTS === 'undefined') return;
+      const activeId = editor ? editor.garment.id : 'tee-classic';
+      box.innerHTML = GARMENTS.map(g => {
+        const hex = (g.colors[0] || {}).hex || '#17181b';
+        return '<button type="button" class="ed-garment-card' + (g.id === activeId ? ' sel' : '') + '" data-g="' + g.id + '">' +
+          '<span class="ed-garment-thumb">' + garmentThumbSVG(g, hex) + '</span>' +
+          '<span><span class="ed-garment-name">' + escHtml(g.name) + '</span>' +
+          '<span class="ed-garment-meta" style="display:block;">₹' + g.basePrice.toLocaleString('en-IN') + ' BASE · ' + escHtml(g.category.toUpperCase()) + '</span></span>' +
+          '<span class="ed-garment-tick">✓</span></button>';
+      }).join('');
+      box.querySelectorAll('.ed-garment-card').forEach(b => {
+        b.addEventListener('click', () => selectGarmentProduct(b.getAttribute('data-g')));
+      });
+      const lbl = document.getElementById('garment-count-label');
+      if (lbl) lbl.textContent = GARMENTS.length + ' SILHOUETTES';
+    }
+
+    function renderGarmentCategories() {
+      const c = document.getElementById('garment-category-grid');
+      if (!c) return;
+      const cats = [...new Set(GARMENTS.map(g=>g.category))];
+      c.innerHTML = cats.map(cat=>`<button class="garment-cat-btn" onclick="filterGarments('${cat}')">${cat}</button>`).join('');
+    }
+    function renderProductSelect(active) {
+      const s=document.getElementById('garment-product-select');
+      if(!s)return;
+      s.innerHTML=GARMENTS.map(g=>`<option value="${g.id}" ${g.id===active.id?'selected':''}>${g.name} — ₹${g.basePrice.toLocaleString('en-IN')}</option>`).join('');
+    }
+    function filterGarments(cat) {
+      const s=document.getElementById('garment-product-select');
+      if(!s)return;
+      const first=GARMENTS.find(g=>g.category===cat);
+      if(first){s.value=first.id;selectGarmentProduct(first.id);}
+    }
+    function selectGarmentProduct(id) {
+      const garment=getGarmentById(id);
+      if (!garment) return;
+      // Preserve current page; replace only the editor instance.
+      if (editor?.canvas) { try { editor.canvas.dispose(); } catch(e){} }
+      renderGarmentStage(garment, 'front');
+      editor = new FabricEditor('design-canvas', {
+        onSelectionChange: (activeObj) => updateSelectionUI(activeObj),
+        onBoundaryCheck: (isExceeded) => updateBoundaryUI(isExceeded),
+        onHistoryChange: (historyState) => updateHistoryUI(historyState),
+      });
+      renderGarmentCards();
+      renderProductSelect(garment);
+      renderColorSwatches(garment);
+      renderSizePills(garment);
+      renderFabricOptions(garment);
+      document.querySelector('.editor-title').textContent = `${garment.name.toUpperCase()} CUSTOM STUDIO`;
+      // New garment → text/image panels reset to unselected state
+      updateSelectionUI(null);
+      updateSummaryUI();
+    }
+    function renderFabricOptions(garment) {
+      const s=document.getElementById('fabric-select');
+      if(!s)return;
+      s.innerHTML=(garment.fabrics||[]).map((f,i)=>`<option value="${i}">${f}</option>`).join('');
+      const spec = document.getElementById('spec-fabric');
+      if (spec) spec.textContent = ((garment.fabrics||[])[0] || '').toUpperCase();
+    }
+    function selectFabricOption(index) {
+      const g=editor.garment;
+      const fabric=(g.fabrics||[])[Number(index)];
+      if(fabric) {
+        editor.fabric=fabric;
+        const spec = document.getElementById('spec-fabric');
+        if (spec) spec.textContent = fabric.toUpperCase();
+        const el=document.getElementById('active-color-label');
+        if(el) el.title=fabric;
+      }
+    }
+
+    /** Render color buttons dynamically from product catalog */
+    function renderColorSwatches(garment) {
+      const container = document.getElementById('color-swatches-container');
+      container.innerHTML = garment.colors.map((c, i) => `
+        <div class="color-swatch-item ${i === 0 ? 'active' : ''}" data-color-id="${c.id}" onclick="selectGarmentColor('${c.id}')">
+          <div class="color-circle ${c.id === 'white' ? 'white-circle' : ''}" style="background-color: ${c.hex};"></div>
+          <span class="color-name">${c.label}</span>
+        </div>
+      `).join('');
+    }
+
+    /** Render size selection buttons */
+    function renderSizePills(garment) {
+      const container = document.getElementById('size-pills-container');
+      container.innerHTML = garment.sizes.map(s => `
+        <button class="size-pill ${s === 'M' ? 'active' : ''}" onclick="selectGarmentSize('${s}')">
+          ${s}
+        </button>
+      `).join('');
+    }
+
+    /** Color picker handler */
+    function selectGarmentColor(colorId) {
+      const color = editor.garment.colors.find(c => c.id === colorId);
+      if (!color) return;
+
+      // Update state without touching designs
+      editor.setColor(color);
+
+      // Update SVG fills for both front and back
+      document.querySelectorAll('.garment-body-fill').forEach(el => {
+        el.setAttribute('fill', color.hex);
+      });
+
+      // Update active swatch class
+      document.querySelectorAll('.color-swatch-item').forEach(el => {
+        el.classList.toggle('active', el.getAttribute('data-color-id') === colorId);
+      });
+
+      document.getElementById('active-color-label').textContent = color.label.toUpperCase();
+      updateSummaryUI();
+    }
+
+    /** Size picker handler */
+    function selectGarmentSize(size) {
+      editor.state.setSize(size);
+      document.querySelectorAll('.size-pill').forEach(el => {
+        el.classList.toggle('active', el.textContent.trim() === size);
+      });
+      updateSummaryUI();
+    }
+
+    /** Switch Front <-> Back (each side keeps its own design state) */
+    function switchView(targetFace) {
+      if (editor.state.face === targetFace) return;
+
+      // Switch Fabric.js canvas
+      editor.switchFace(targetFace);
+
+      // Toggle SVG visibility
+      const svgFront = document.getElementById('garment-svg-front');
+      const svgBack = document.getElementById('garment-svg-back');
+      if (targetFace === 'front') {
+        svgFront.style.display = 'block';
+        svgBack.style.display = 'none';
+      } else {
+        svgFront.style.display = 'none';
+        svgBack.style.display = 'block';
+      }
+
+      // Update view pills
+      document.getElementById('view-pill-front').classList.toggle('active', targetFace === 'front');
+      document.getElementById('view-pill-back').classList.toggle('active', targetFace === 'back');
+
+      updateSummaryUI();
+    }
+
+    /** Handle file upload */
+    function handleFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      editor.addImage(file);
+      e.target.value = ''; // Reset input to allow re-uploading same file if desired
+      setTimeout(updateSummaryUI, 200);
+    }
+
+    /** Add preset branding graphics */
+    function addPresetLogo(type) {
+      // Generate clean vector data URLs for built-in Atelier presets
+      let svgContent = '';
+      if (type === 'cf') {
+        svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="80" viewBox="0 0 200 80">
+          <text x="50%" y="55%" text-anchor="middle" dominant-baseline="middle" font-family="'Syne',sans-serif" font-weight="900" font-size="34" fill="#ffffff" stroke="#000000" stroke-width="1.5">CODED FIT.</text>
+          <text x="50%" y="82%" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-weight="800" font-size="9" fill="#e10600" letter-spacing="3">[BLR-ATELIER]</text>
+        </svg>`;
+      } else if (type === 'barcode') {
+        svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="90" viewBox="0 0 180 90">
+          <rect x="10" y="10" width="6" height="50" fill="#ffffff"/>
+          <rect x="20" y="10" width="3" height="50" fill="#ffffff"/>
+          <rect x="26" y="10" width="8" height="50" fill="#ffffff"/>
+          <rect x="38" y="10" width="4" height="50" fill="#ffffff"/>
+          <rect x="46" y="10" width="12" height="50" fill="#ffffff"/>
+          <rect x="62" y="10" width="5" height="50" fill="#ffffff"/>
+          <rect x="71" y="10" width="9" height="50" fill="#ffffff"/>
+          <rect x="84" y="10" width="3" height="50" fill="#ffffff"/>
+          <rect x="91" y="10" width="14" height="50" fill="#ffffff"/>
+          <rect x="110" y="10" width="4" height="50" fill="#ffffff"/>
+          <rect x="118" y="10" width="8" height="50" fill="#ffffff"/>
+          <rect x="130" y="10" width="5" height="50" fill="#ffffff"/>
+          <rect x="139" y="10" width="10" height="50" fill="#ffffff"/>
+          <rect x="153" y="10" width="4" height="50" fill="#ffffff"/>
+          <rect x="161" y="10" width="8" height="50" fill="#ffffff"/>
+          <text x="50%" y="78%" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" font-weight="800" fill="#ffffff" letter-spacing="4">CF-8821-BLR</text>
+        </svg>`;
+      } else {
+        svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="70" fill="none" stroke="#e10600" stroke-width="3"/>
+          <polygon points="80,25 130,110 30,110" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+          <circle cx="80" cy="80" r="6" fill="#e10600"/>
+          <text x="80" y="138" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8.5" font-weight="800" fill="#ffffff" letter-spacing="2">ATELIER 09</text>
+        </svg>`;
+      }
+
+      const dataUrl = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgContent);
+      editor.addImage(dataUrl);
+      setTimeout(updateSummaryUI, 200);
+    }
+
+    /** Extra atelier graphics (same vector-preset technique, no new assets) */
+    function addPresetGraphic(type) {
+      let svgContent = '';
+      if (type === 'heart') {
+        svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><path d="M80 132 C40 100 22 74 22 52 C22 32 38 20 54 20 C66 20 76 28 80 38 C84 28 94 20 106 20 C122 20 138 32 138 52 C138 74 120 100 80 132 Z" fill="none" stroke="#e10600" stroke-width="6"/><text x="80" y="148" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="800" fill="#ffffff" letter-spacing="3">ATELIER</text></svg>`;
+      } else if (type === 'star') {
+        svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><polygon points="80,14 98,58 144,58 107,86 120,130 80,104 40,130 53,86 16,58 62,58" fill="none" stroke="#ffffff" stroke-width="5"/><circle cx="80" cy="80" r="8" fill="#e10600"/></svg>`;
+      } else {
+        svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><polygon points="88,10 40,86 74,86 66,150 118,66 82,66" fill="none" stroke="#e10600" stroke-width="6"/><text x="80" y="148" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="800" fill="#ffffff" letter-spacing="3">DROP 09</text></svg>`;
+      }
+      editor.addImage('data:image/svg+xml;utf8,' + encodeURIComponent(svgContent));
+      setTimeout(updateSummaryUI, 200);
+    }
+
+    /* ── Text studio: drives the selected Fabric IText object ── */
+    function activeTextObj() {
+      if (!editor || !editor.canvas) return null;
+      const o = editor.canvas.getActiveObject();
+      if (!o) return null;
+      if (o.type === 'i-text' || o.type === 'text' || o.type === 'textbox') return o;
+      return null;
+    }
+    function activeImageObj() {
+      if (!editor || !editor.canvas) return null;
+      const o = editor.canvas.getActiveObject();
+      if (!o) return null;
+      if (o.type === 'image') return o;
+      return null;
+    }
+    function refreshObj() {
+      if (!editor || !editor.canvas) return;
+      editor.canvas.renderAll();
+      editor.checkBoundaryExceeded();
+      editor.recordHistory();
+      updateSummaryUI();
+    }
+    function applyTextProp(prop, val) {
+      const o = activeTextObj();
+      if (!o) return;
+      o.set(prop, val);
+      o.setCoords();
+      refreshObj();
+    }
+    function setTextAlign(align) {
+      document.querySelectorAll('#txt-align-seg button').forEach(b => b.classList.toggle('on', b.getAttribute('data-align') === align));
+      applyTextProp('textAlign', align);
+    }
+    function toggleTextBold() {
+      const o = activeTextObj();
+      if (!o) return;
+      const on = o.fontWeight !== 'bold';
+      o.set('fontWeight', on ? 'bold' : 'normal');
+      document.getElementById('txt-bold').classList.toggle('on', on);
+      o.setCoords(); refreshObj();
+    }
+    function toggleTextItalic() {
+      const o = activeTextObj();
+      if (!o) return;
+      const on = o.fontStyle !== 'italic';
+      o.set('fontStyle', on ? 'italic' : 'normal');
+      document.getElementById('txt-italic').classList.toggle('on', on);
+      o.setCoords(); refreshObj();
+    }
+    function syncTextPanel(o) {
+      const panel = document.getElementById('text-controls');
+      const status = document.getElementById('text-status');
+      const isText = !!(o && (o.type === 'i-text' || o.type === 'text' || o.type === 'textbox'));
+      panel.classList.toggle('ed2-panel-off', !isText);
+      status.textContent = isText ? 'TEXT SELECTED' : 'NO TEXT SELECTED';
+      if (!isText) return;
+      document.getElementById('txt-font').value = o.fontFamily || 'Inter';
+      document.getElementById('txt-color').value = toHexColor(o.fill) || '#ffffff';
+      document.getElementById('txt-size').value = Math.round(o.fontSize || 32);
+      document.getElementById('txt-size-val').textContent = Math.round(o.fontSize || 32);
+      document.getElementById('txt-rot').value = Math.round(o.angle || 0);
+      document.getElementById('txt-rot-val').textContent = Math.round(o.angle || 0);
+      document.getElementById('txt-spacing').value = o.charSpacing || 0;
+      document.getElementById('txt-sp-val').textContent = o.charSpacing || 0;
+      document.querySelectorAll('#txt-align-seg button').forEach(b => b.classList.toggle('on', b.getAttribute('data-align') === (o.textAlign || 'left')));
+      document.getElementById('txt-bold').classList.toggle('on', o.fontWeight === 'bold');
+      document.getElementById('txt-italic').classList.toggle('on', o.fontStyle === 'italic');
+    }
+    function toHexColor(fill) {
+      if (!fill || typeof fill !== 'string') return null;
+      if (/^#[0-9a-f]{6}$/i.test(fill)) return fill;
+      const m = fill.match(/rgb\(\s*(\d+),\s*(\d+),\s*(\d+)/i);
+      if (m) {
+        const h = n => ('0' + Math.max(0, Math.min(255, parseInt(n, 10))).toString(16)).slice(-2);
+        return ('#' + h(m[1]) + h(m[2]) + h(m[3])).toLowerCase();
+      }
+      return null;
+    }
+
+    /* ── Image studio ── */
+    function flipActive(prop) {
+      const o = activeImageObj();
+      if (!o) return;
+      o.set(prop, !o[prop]);
+      o.setCoords(); refreshObj();
+    }
+    function applyImageProp(prop, val) {
+      const o = activeImageObj();
+      if (!o) return;
+      o.set(prop, val);
+      o.setCoords(); refreshObj();
+    }
+    function syncImagePanel(o) {
+      const panel = document.getElementById('image-controls');
+      const status = document.getElementById('image-status');
+      const isImg = !!(o && o.type === 'image');
+      panel.classList.toggle('ed2-panel-off', !isImg);
+      status.textContent = isImg ? 'IMAGE SELECTED' : 'NO IMAGE SELECTED';
+      if (isImg) {
+        document.getElementById('img-opacity').value = Math.round((o.opacity == null ? 1 : o.opacity) * 100);
+        document.getElementById('img-op-val').textContent = Math.round((o.opacity == null ? 1 : o.opacity) * 100);
+      }
+    }
+
+    /* ── My Designs (device-local library, same canvas JSON as the editor state) ── */
+    const MY_KEY = 'CF_MY_DESIGNS_V1';
+    function getMyDesigns() {
+      try { return JSON.parse(localStorage.getItem(MY_KEY) || '[]'); } catch (e) { return []; }
+    }
+    function setMyDesigns(list) {
+      try { localStorage.setItem(MY_KEY, JSON.stringify(list)); } catch (e) { /* quota: drop thumbnails */ }
+    }
+    function snapshotFaces() {
+      if (!editor) return { frontJSON: null, backJSON: null };
+      editor.state.saveCurrentCanvas(JSON.stringify(editor.canvas.toJSON()));
+      return { frontJSON: editor.state.front.canvasJSON, backJSON: editor.state.back.canvasJSON };
+    }
+    function saveMyDesign() {
+      if (!editor) return;
+      const faces = snapshotFaces();
+      let thumb = null;
+      try { thumb = editor.canvas.toDataURL({ format: 'png', multiplier: 0.35 }); } catch (e) {}
+      const list = getMyDesigns();
+      const item = {
+        id: 'D' + Date.now().toString(36).toUpperCase(),
+        name: editor.garment.name + ' · ' + editor.state.color.label + ' · ' + editor.state.face.toUpperCase(),
+        garmentId: editor.garment.id,
+        colorId: editor.state.color.id,
+        size: editor.state.size,
+        fabric: editor.fabric || '',
+        face: editor.state.face,
+        frontJSON: faces.frontJSON, backJSON: faces.backJSON,
+        thumb, updatedAt: new Date().toISOString()
+      };
+      list.unshift(item);
+      while (list.length > 12) list.pop();
+      try {
+        setMyDesigns(list);
+      } catch (e) {
+        // Quota: retry without thumbnails
+        list.forEach(d => { d.thumb = null; });
+        try { setMyDesigns(list); } catch (e2) {}
+      }
+      renderMyDesigns();
+      if (window.CF_showToast) window.CF_showToast('Design saved to My Designs');
+      else alert('Design saved to My Designs.');
+    }
+    function renderMyDesigns() {
+      const box = document.getElementById('my-designs-list');
+      if (!box) return;
+      const list = getMyDesigns();
+      if (!list.length) {
+        box.innerHTML = '<div class="ed-my-empty">No saved designs yet — build one on the garment, then press Save.</div>';
+        return;
+      }
+      box.innerHTML = list.map(d =>
+        '<div class="ed-my-design"><span>' + escHtml(d.name) + '</span>' +
+        '<button onclick="loadMyDesign(\'' + d.id + '\')">LOAD</button>' +
+        '<button onclick="deleteMyDesign(\'' + d.id + '\')" style="color:#ef4444;">✕</button></div>'
+      ).join('');
+    }
+    function loadMyDesign(id) {
+      const d = getMyDesigns().find(x => x.id === id);
+      if (!d) return;
+      const applyState = () => {
+        editor.state.front.canvasJSON = d.frontJSON || null;
+        editor.state.back.canvasJSON = d.backJSON || null;
+        if (d.colorId && editor.garment.colors.some(c => c.id === d.colorId)) selectGarmentColor(d.colorId);
+        if (d.size) selectGarmentSize(d.size);
+        if (d.fabric && (editor.garment.fabrics || []).includes(d.fabric)) {
+          const idx = editor.garment.fabrics.indexOf(d.fabric);
+          document.getElementById('fabric-select').value = String(idx);
+          selectFabricOption(String(idx));
+        }
+        const target = d.face === 'back' ? 'back' : 'front';
+        if (editor.state.face !== target) {
+          // switchView() snapshots the (empty) current canvas into state first,
+          // so re-apply the restored JSON for the face we are leaving afterwards.
+          const leaving = editor.state.face;
+          switchView(target);
+          editor.state[leaving].canvasJSON = leaving === 'front' ? d.frontJSON : d.backJSON;
+        } else {
+          const js = target === 'front' ? d.frontJSON : d.backJSON;
+          if (js) {
+            editor.isHistoryProcessing = true;
+            editor.canvas.loadFromJSON(js, () => {
+              editor.canvas.renderAll();
+              editor.isHistoryProcessing = false;
+              editor.checkBoundaryExceeded();
+              editor.updateHistoryButtons();
+              updateSummaryUI();
+            });
+          }
+        }
+        updateSummaryUI();
+      };
+      if (!editor || editor.garment.id !== d.garmentId) {
+        selectGarmentProduct(d.garmentId);
+        setTimeout(applyState, 60);
+      } else {
+        applyState();
+      }
+      if (window.CF_showToast) window.CF_showToast('Design loaded: ' + d.name);
+    }
+    function deleteMyDesign(id) {
+      setMyDesigns(getMyDesigns().filter(x => x.id !== id));
+      renderMyDesigns();
+    }
+
+    /** EDIT from cart: restore the exact saved configuration (nothing is reset). */
+    function applyRestoredDesign(d) {
+      const applyState = () => {
+        editor.state.front.canvasJSON = d.frontJSON || null;
+        editor.state.back.canvasJSON = d.backJSON || null;
+        if (d.colorId && editor.garment.colors.some(c => c.id === d.colorId)) selectGarmentColor(d.colorId);
+        if (d.size) selectGarmentSize(d.size);
+        if (d.fabric && (editor.garment.fabrics || []).includes(d.fabric)) {
+          const idx = editor.garment.fabrics.indexOf(d.fabric);
+          document.getElementById('fabric-select').value = String(idx);
+          selectFabricOption(String(idx));
+        }
+        const target = d.face === 'back' ? 'back' : 'front';
+        if (editor.state.face !== target) {
+          // switchView() snapshots the (empty) current canvas first — re-apply afterwards.
+          const leaving = editor.state.face;
+          switchView(target);
+          editor.state[leaving].canvasJSON = leaving === 'front' ? d.frontJSON : d.backJSON;
+        } else {
+          const js = target === 'front' ? d.frontJSON : d.backJSON;
+          if (js) {
+            editor.isHistoryProcessing = true;
+            editor.canvas.loadFromJSON(js, () => {
+              editor.canvas.renderAll();
+              editor.isHistoryProcessing = false;
+              editor.checkBoundaryExceeded();
+              editor.updateHistoryButtons();
+              updateSummaryUI();
+            });
+          }
+        }
+        updateSummaryUI();
+      };
+      if (!editor || editor.garment.id !== d.garmentId) {
+        selectGarmentProduct(d.garmentId);
+        setTimeout(applyState, 60);
+      } else {
+        applyState();
+      }
+      if (window.CF_showToast) window.CF_showToast('Editing your saved design — nothing was reset.');
+      else alert('Editing your saved design — nothing was reset.');
+    }
+
+    /** ADD TO BAG with the complete design state (kind:'design' + restore object). */
+    async function addDesignToBag() {
+      if (!editor) return;
+      const faces = snapshotFaces();
+      let refImage = null;
+      try { refImage = await buildReferenceImage(); } catch (e) {}
+      const total = currentTotal();
+      const custom = {
+        flow: 'design',
+        garmentId: editor.garment.id,
+        garmentName: editor.garment.name,
+        color: { id: editor.state.color.id, label: editor.state.color.label, hex: editor.state.color.hex },
+        size: editor.state.size,
+        fabric: editor.fabric || ((editor.garment.fabrics || [])[0] || ''),
+        face: editor.state.face,
+        frontJSON: faces.frontJSON, backJSON: faces.backJSON,
+        price: total,
+        preview: refImage
+      };
+      const item = {
+        id: 'DESIGN-' + editor.garment.id + '-' + Date.now().toString(36).toUpperCase(),
+        code: 'CF-DESIGN',
+        name: 'Custom ' + editor.garment.name + ' · ' + editor.state.color.label,
+        price: total, mrp: total,
+        fabric: custom.fabric, color: editor.state.color.label,
+        badge: 'CUSTOM DESIGN',
+        size: editor.state.size, qty: 1,
+        img: refImage, images: refImage ? [refImage] : [],
+        kind: 'design',
+        custom
+      };
+      try {
+        if (typeof addToCart === 'function') addToCart(item, item.size, 1);
+        else if (window.CART && window.CART.addItem) window.CART.addItem(item);
+      } catch (e) {}
+      if (window.CF_openCartDrawer) window.CF_openCartDrawer();
+      else if (typeof openCartDrawer === 'function') { try { openCartDrawer(); } catch (e2) {} }
+    }
+
+    /* ── TRY THIS DESIGN ON ME — honest handoff to the try-on workflow ── */
+    function designPayload() {
+      const faces = snapshotFaces();
+      return {
+        kind: 'design-tryon',
+        garmentId: editor.garment.id,
+        garmentName: editor.garment.name,
+        color: { id: editor.state.color.id, label: editor.state.color.label, hex: editor.state.color.hex },
+        size: editor.state.size,
+        fabric: editor.fabric || ((editor.garment.fabrics || [])[0] || ''),
+        face: editor.state.face,
+        frontJSON: faces.frontJSON,
+        backJSON: faces.backJSON,
+        frontCount: faces.frontJSON ? safeObjCount(faces.frontJSON) : 0,
+        backCount: faces.backJSON ? safeObjCount(faces.backJSON) : 0,
+        price: currentTotal(),
+        updatedAt: new Date().toISOString()
+      };
+    }
+    function safeObjCount(json) {
+      try { return (JSON.parse(json).objects || []).length; } catch (e) { return 0; }
+    }
+    async function buildReferenceImage() {
+      // Clean garment reference: same composite technique as Export PNG (SVG + print overlay).
+      const exportWidth = 800, exportHeight = 960;
+      const printArea = editor.garment.printAreas[editor.state.face];
+      const viewBox = editor.garment.svgViewBox;
+      const off = document.createElement('canvas');
+      off.width = exportWidth; off.height = exportHeight;
+      const ctx = off.getContext('2d');
+      ctx.fillStyle = '#f8f8fa';
+      ctx.fillRect(0, 0, exportWidth, exportHeight);
+      const svgEl = document.getElementById(editor.state.face === 'front' ? 'garment-svg-front' : 'garment-svg-back');
+      if (svgEl) {
+        const clone = svgEl.cloneNode(true);
+        clone.querySelectorAll('.garment-body-fill').forEach(el => el.setAttribute('fill', editor.state.color.hex));
+        const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: 'image/svg+xml;charset=utf-8' }));
+        await new Promise(resolve => {
+          const img = new Image();
+          img.onload = () => { ctx.drawImage(img, 0, 0, exportWidth, exportHeight); URL.revokeObjectURL(url); resolve(); };
+          img.onerror = () => resolve();
+          img.src = url;
+        });
+      }
+      const sx = exportWidth / viewBox.w, sy = exportHeight / viewBox.h;
+      editor.canvas.discardActiveObject();
+      editor.canvas.renderAll();
+      const dataUrl = editor.canvas.toDataURL({ format: 'png', multiplier: 2 });
+      await new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => { ctx.drawImage(img, printArea.x * sx, printArea.y * sy, printArea.w * sx, printArea.h * sy); resolve(); };
+        img.onerror = () => resolve();
+        img.src = dataUrl;
+      });
+      return off.toDataURL('image/png');
+    }
+    async function tryOnMe() {
+      if (!editor) return;
+      const payload = designPayload();
+      if ((payload.frontCount + payload.backCount) === 0) {
+        if (!confirm('No artwork on the garment yet. Continue to try-on with the plain garment?')) return;
+      }
+      try {
+        payload.refImage = await buildReferenceImage();
+      } catch (e) { payload.refImage = null; }
+      try {
+        // sessionStorage first (refImage can exceed localStorage quota) + slim copy in localStorage
+        try { sessionStorage.setItem('CF_DESIGN_TRYON_V1', JSON.stringify(payload)); } catch (e) {}
+        const slim = Object.assign({}, payload); delete slim.refImage;
+        try { localStorage.setItem('CF_DESIGN_TRYON_SLIM_V1', JSON.stringify(slim)); } catch (e) {}
+      } catch (e) {}
+      if (window.CF_showToast) window.CF_showToast('Design saved — opening try-on…');
+      setTimeout(() => { window.location.href = 'tryon.html?from=design'; }, 450);
+    }
+
+    /** Update layer controls enabled/disabled state + studios */
+    function updateSelectionUI(activeObj) {
+      const hasSelection = !!activeObj;
+      document.getElementById('btn-bring-forward').disabled = !hasSelection;
+      document.getElementById('btn-send-backward').disabled = !hasSelection;
+      document.getElementById('btn-duplicate').disabled = !hasSelection;
+      document.getElementById('btn-delete').disabled = !hasSelection;
+
+      document.getElementById('selection-status').textContent = hasSelection
+        ? (activeObj.type.toUpperCase() + ' SELECTED')
+        : 'NO SELECTION';
+      syncTextPanel(activeObj);
+      syncImagePanel(activeObj);
+    }
+
+    /** Update boundary validation banner & guide outline */
+    function updateBoundaryUI(isExceeded) {
+      const banner = document.getElementById('boundary-banner');
+      const guide = document.getElementById('print-area-guide');
+      const icon = document.getElementById('boundary-icon');
+      const text = document.getElementById('boundary-text');
+
+      if (isExceeded) {
+        banner.className = 'boundary-warning-banner invalid';
+        if (guide) guide.classList.add('warning');
+        icon.textContent = '⚠️';
+        text.textContent = 'Artwork extends outside the printable boundary';
+      } else {
+        banner.className = 'boundary-warning-banner valid';
+        if (guide) guide.classList.remove('warning');
+        icon.textContent = '✓';
+        text.textContent = 'All artwork is inside printable zone';
+      }
+    }
+
+    /** Update undo / redo button states */
+    function updateHistoryUI({ canUndo, canRedo }) {
+      document.getElementById('btn-undo').disabled = !canUndo;
+      document.getElementById('btn-redo').disabled = !canRedo;
+      updateSummaryUI();
+    }
+
+    /** Reset confirmation */
+    function confirmReset() {
+      if (confirm('Clear all artwork on the active side?')) {
+        editor.resetDesign();
+        updateSummaryUI();
+      }
+    }
+
+    function faceCount(face) {
+      const js = face === editor.state.face
+        ? JSON.stringify(editor.canvas.toJSON())
+        : editor.state[face].canvasJSON;
+      return safeObjCount(js);
+    }
+    function currentTotal() {
+      const f = faceCount('front') > 0 ? editor.garment.printPrice : 0;
+      const b = faceCount('back') > 0 ? editor.garment.printPrice : 0;
+      return editor.garment.basePrice + f + b;
+    }
+
+    /** Update right column specifications and pricing (base + per-face printing) */
+    function updateSummaryUI() {
+      if (!editor) return;
+
+      const state = editor.state;
+      document.getElementById('spec-garment-name').textContent = editor.garment.name.toUpperCase();
+      document.getElementById('spec-color').textContent = `${state.color.label.toUpperCase()} (${state.color.hex.toUpperCase()})`;
+      document.getElementById('spec-size').textContent = state.size;
+      const fab = document.getElementById('spec-fabric');
+      if (fab) fab.textContent = (editor.fabric || ((editor.garment.fabrics || [])[0] || '')).toUpperCase();
+
+      const frontCount = faceCount('front');
+      const backCount = faceCount('back');
+
+      document.getElementById('spec-front-count').textContent = `${frontCount} OBJECT${frontCount === 1 ? '' : 'S'}`;
+      document.getElementById('spec-back-count').textContent = `${backCount} OBJECT${backCount === 1 ? '' : 'S'}`;
+
+      const frontFee = frontCount > 0 ? editor.garment.printPrice : 0;
+      const backFee = backCount > 0 ? editor.garment.printPrice : 0;
+      const total = editor.garment.basePrice + frontFee + backFee;
+
+      document.getElementById('price-base-label').textContent = 'Base ' + editor.garment.name;
+      document.getElementById('price-base').textContent = `₹${editor.garment.basePrice.toLocaleString('en-IN')}`;
+      document.getElementById('price-print-front').textContent = frontFee ? `+₹${frontFee.toLocaleString('en-IN')}` : '₹0';
+      document.getElementById('price-print-back').textContent = backFee ? `+₹${backFee.toLocaleString('en-IN')}` : '₹0';
+      const legacy = document.getElementById('price-print');
+      if (legacy) legacy.textContent = (frontFee + backFee) ? `+₹${(frontFee + backFee).toLocaleString('en-IN')}` : '₹0';
+      document.getElementById('price-total').textContent = `₹${total.toLocaleString('en-IN')}`;
+
+      // Update state JSON preview if open
+      const previewEl = document.getElementById('json-preview');
+      if (previewEl && document.getElementById('state-inspector-card').style.display !== 'none') {
+        // Save current canvas state to ensure latest objects appear
+        editor.state.saveCurrentCanvas(JSON.stringify(editor.canvas.toJSON()));
+        previewEl.textContent = JSON.stringify(editor.state.toJSON(), null, 2);
+      }
+    }
+
+    /** Toggle MongoDB state payload inspector */
+    function toggleStateInspector() {
+      const card = document.getElementById('state-inspector-card');
+      const isVisible = card.style.display !== 'none';
+      card.style.display = isVisible ? 'none' : 'block';
+      if (!isVisible) {
+        updateSummaryUI();
+      }
+    }
+
+    /** Copy MongoDB state JSON */
+    function copyStateJSON() {
+      editor.state.saveCurrentCanvas(JSON.stringify(editor.canvas.toJSON()));
+      const payload = JSON.stringify(editor.state.toJSON(), null, 2);
+      navigator.clipboard.writeText(payload).then(() => {
+        alert('Customization State JSON copied to clipboard! Ready to save to MongoDB.');
+      });
+    }
+  </script>
+</body>
+</html>
