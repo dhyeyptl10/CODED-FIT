@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CODED FIT — Expo QR</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0c;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      color: #f7f7f8;
+    }
+    .badge { font-size: 10px; letter-spacing: 4px; color: #e10600; font-weight: 800; margin-bottom: 8px; }
+    h1 { font-size: 28px; font-weight: 900; letter-spacing: 2px; margin-bottom: 4px; }
+    .sub { font-size: 11px; color: #777; letter-spacing: 2px; margin-bottom: 32px; }
+    .qr-card {
+      background: #ffffff;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .qr-card img { width: 240px; height: 240px; }
+    .url-box {
+      background: #0a0a0c;
+      border: 1px solid #333;
+      padding: 10px 20px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: #e10600;
+      font-weight: 700;
+      text-align: center;
+    }
+    .steps {
+      margin-top: 28px;
+      max-width: 320px;
+      text-align: center;
+    }
+    .steps h3 { font-size: 10px; letter-spacing: 3px; color: #e10600; margin-bottom: 12px; }
+    .step { font-size: 11px; color: #aaa; letter-spacing: 1px; margin-bottom: 6px; }
+    .step span { color: #fff; font-weight: 700; }
+    .note { margin-top: 20px; font-size: 10px; color: #555; letter-spacing: 1px; max-width: 320px; text-align: center; }
+    #manual-qr { margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="badge">CODED FIT [BLR-ATELIER]</div>
+  <h1>EXPO QR CODE</h1>
+  <p class="sub">SCAN WITH EXPO GO APP</p>
+
+  <div class="qr-card">
+    <!-- QR generated via Google Charts API -->
+    <img
+      id="qr-img"
+      src="https://chart.googleapis.com/chart?chs=240x240&cht=qr&chl=exp%3A%2F%2F10.249.184.77%3A8081&choe=UTF-8"
+      alt="Expo QR Code"
+      onerror="showFallback()"
+    />
+    <div class="url-box">exp://10.249.184.77:8081</div>
+  </div>
+
+  <div id="fallback-qr" style="display:none;">
+    <canvas id="manual-qr" width="240" height="240"></canvas>
+    <div class="url-box" style="margin-top:12px;">exp://10.249.184.77:8081</div>
+  </div>
+
+  <div class="steps">
+    <h3>HOW TO CONNECT</h3>
+    <p class="step">1. Install <span>Expo Go</span> from App Store / Play Store</p>
+    <p class="step">2. Connect your phone to the <span>same WiFi</span> as this computer</p>
+    <p class="step">3. Open Expo Go → tap <span>Scan QR Code</span></p>
+    <p class="step">4. Point camera at the QR above</p>
+  </div>
+
+  <p class="note">
+    Your PC IP: 10.249.184.77 · Port: 8081<br/>
+    Metro Bundler is running. App will load in 30–60 seconds on first open.
+  </p>
+
+  <script>
+    function showFallback() {
+      document.getElementById('qr-img').parentElement.style.display = 'none';
+      document.getElementById('fallback-qr').style.display = 'flex';
+      document.getElementById('fallback-qr').style.flexDirection = 'column';
+      document.getElementById('fallback-qr').style.alignItems = 'center';
+      // Draw basic QR text as fallback
+      const canvas = document.getElementById('manual-qr');
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, 240, 240);
+      ctx.fillStyle = '#000';
+      ctx.font = 'bold 11px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('exp://10.249.184.77:8081', 120, 120);
+      ctx.fillText('(Use above URL in Expo Go)', 120, 140);
+    }
+  </script>
+</body>
+</html>
