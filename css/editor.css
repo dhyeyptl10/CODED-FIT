@@ -1,0 +1,586 @@
+/**
+ * CODED FIT — Production Customization Studio Stylesheet
+ * Minimalist Luxury / Spreadshirt-inspired precision interface
+ */
+
+:root {
+  --ed-bg: #f5f5f7;
+  --ed-surface: #ffffff;
+  --ed-border: #e2e2e6;
+  --ed-border-strong: #c8c8cc;
+  --ed-text: #111113;
+  --ed-text-muted: #66666f;
+  --ed-crimson: #e10600;
+  --ed-crimson-light: rgba(225, 6, 0, 0.08);
+  --ed-radius: 4px;
+}
+
+body.editor-body {
+  background: var(--ed-bg);
+  color: var(--ed-text);
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── Top Editor Header ── */
+.editor-top-bar {
+  background: var(--ed-surface);
+  border-bottom: 1px solid var(--ed-border);
+  padding: 12px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.editor-title-group {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.editor-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+  color: var(--ed-text);
+  margin: 0;
+}
+
+.editor-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--ed-crimson);
+  background: var(--ed-crimson-light);
+  border: 1px solid rgba(225, 6, 0, 0.25);
+  padding: 3px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.editor-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Action Buttons */
+.ed-btn {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: var(--ed-radius);
+  border: 1px solid var(--ed-border);
+  background: var(--ed-surface);
+  color: var(--ed-text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.ed-btn:hover:not(:disabled) {
+  border-color: var(--ed-text);
+  background: #fcfcfd;
+}
+
+.ed-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ed-btn-primary {
+  background: var(--ed-crimson);
+  color: #ffffff;
+  border-color: var(--ed-crimson);
+}
+
+.ed-btn-primary:hover:not(:disabled) {
+  background: #c00500;
+  border-color: #c00500;
+}
+
+.ed-btn-dark {
+  background: #111113;
+  color: #ffffff;
+  border-color: #111113;
+}
+
+.ed-btn-dark:hover:not(:disabled) {
+  background: #252528;
+}
+
+/* ── Main Studio Layout ── */
+.editor-layout {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 32px 48px;
+  display: grid;
+  grid-template-columns: 320px 1fr 300px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── Left Tools Panel ── */
+.editor-tools-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ed-card {
+  background: var(--ed-surface);
+  border: 1px solid var(--ed-border);
+  border-radius: var(--ed-radius);
+  padding: 18px;
+}
+
+.ed-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f3;
+}
+
+.ed-card-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ed-text);
+  margin: 0;
+}
+
+.ed-card-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--ed-text-muted);
+}
+
+/* Upload Button / Dropzone */
+.ed-upload-zone {
+  border: 2px dashed #d2d2d8;
+  border-radius: var(--ed-radius);
+  padding: 24px 16px;
+  text-align: center;
+  background: #fafafc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.ed-upload-zone:hover {
+  border-color: var(--ed-crimson);
+  background: #fff8f8;
+}
+
+.ed-upload-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.ed-upload-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ed-text);
+  margin-bottom: 4px;
+}
+
+.ed-upload-hint {
+  font-size: 10px;
+  color: var(--ed-text-muted);
+}
+
+.ed-file-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+/* Color Swatches Grid */
+.color-swatches-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.color-swatch-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 6px 2px;
+  border-radius: var(--ed-radius);
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.color-swatch-item:hover {
+  background: #f7f7f9;
+}
+
+.color-swatch-item.active {
+  border-color: var(--ed-crimson);
+  background: #fff5f5;
+}
+
+.color-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #e0e0e4;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+.color-swatch-item.active .color-circle::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.color-circle.white-circle::after {
+  color: #111113 !important;
+  text-shadow: none !important;
+}
+
+.color-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--ed-text-muted);
+  text-transform: uppercase;
+}
+
+.color-swatch-item.active .color-name {
+  color: var(--ed-crimson);
+}
+
+/* Size Pills */
+.size-pills-row {
+  display: flex;
+  gap: 8px;
+}
+
+.size-pill {
+  flex: 1;
+  padding: 8px 0;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 800;
+  border: 1px solid var(--ed-border);
+  background: #fafafc;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.size-pill:hover {
+  border-color: #888;
+}
+
+.size-pill.active {
+  background: #111113;
+  color: #ffffff;
+  border-color: #111113;
+}
+
+/* Layer & Selection Inspector */
+.layer-controls-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+/* ── Center Stage Viewport ── */
+.editor-stage-viewport {
+  background: var(--ed-surface);
+  border: 1px solid var(--ed-border);
+  border-radius: var(--ed-radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  min-height: 600px;
+}
+
+/* View Switcher Pills (Front / Back) */
+.view-switcher-bar {
+  display: flex;
+  gap: 8px;
+  background: #f0f0f3;
+  padding: 4px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  z-index: 10;
+}
+
+.view-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 6px 18px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: var(--ed-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-pill.active {
+  background: #ffffff;
+  color: #111113;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* T-Shirt Canvas Container */
+.garment-stage-wrap {
+  position: relative;
+  width: 400px;
+  height: 480px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Realistic SVG Garment */
+.garment-svg-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Print Area Boundary Overlay */
+.print-area-overlay {
+  position: absolute;
+  top: 120px;
+  left: 105px;
+  width: 190px;
+  height: 218px;
+  border: 1.5px dashed #b5b5be;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 2;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.print-area-overlay.warning {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.35);
+  animation: printBoundaryPulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes printBoundaryPulse {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+.print-area-label {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #888894;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+/* Fabric.js Canvas Wrapper */
+.fabric-canvas-container {
+  position: absolute;
+  top: 120px;
+  left: 105px;
+  width: 190px;
+  height: 218px;
+  z-index: 3;
+}
+
+/* Boundary Validation Toast / Banner */
+.boundary-warning-banner {
+  margin-top: 18px;
+  padding: 8px 16px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.boundary-warning-banner.valid {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.boundary-warning-banner.invalid {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  animation: shakeWarning 0.4s ease;
+}
+
+@keyframes shakeWarning {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* Stage Helper Notes */
+.stage-helper-note {
+  font-size: 11px;
+  color: #8c8c98;
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* ── Right Summary Panel ── */
+.editor-summary-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.spec-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  margin-bottom: 16px;
+}
+
+.spec-summary-table td {
+  padding: 6px 0;
+  border-bottom: 1px solid #f2f2f5;
+}
+
+.spec-summary-table td:last-child {
+  text-align: right;
+  font-weight: 700;
+  color: var(--ed-text);
+}
+
+.price-summary-box {
+  background: #f9f9fb;
+  border: 1px solid #eaeaef;
+  border-radius: 3px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.price-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.price-total-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 8px;
+  margin-top: 8px;
+  border-top: 1px solid #e0e0e5;
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--ed-text);
+}
+
+.price-total-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  color: var(--ed-crimson);
+}
+
+/* JSON Output Modal / Drawer */
+.json-preview-box {
+  background: #0f1013;
+  color: #a3e635;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  padding: 12px;
+  border-radius: 3px;
+  max-height: 180px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  margin-top: 8px;
+}
+
+/* ── Responsive Adaptations ── */
+@media (max-width: 1100px) {
+  .editor-layout {
+    grid-template-columns: 280px 1fr;
+  }
+  .editor-summary-panel {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .editor-top-bar {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .editor-top-actions {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .editor-layout {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+  .garment-stage-wrap {
+    width: 320px;
+    height: 384px;
+  }
+  .print-area-overlay,
+  .fabric-canvas-container {
+    top: 96px;
+    left: 84px;
+    width: 152px;
+    height: 174px;
+  }
+}

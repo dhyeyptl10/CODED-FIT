@@ -146,52 +146,106 @@
       .cf-links-cluster {
         display: flex;
         align-items: center;
-        gap: 2px;
-        margin: 0 20px;
-        overflow-x: auto;
+        gap: 6px;
+        margin: 0 24px;
       }
-
-      .cf-links-cluster::-webkit-scrollbar { display: none; }
 
       .cf-nav-item {
         font-family: 'Space Grotesk', 'Inter', sans-serif;
-        font-size: 11px;
+        font-size: 11.5px;
         font-weight: 700;
-        letter-spacing: 1px;
+        letter-spacing: 1.2px;
         text-transform: uppercase;
-        color: #2b2c30;
+        color: #222326;
         text-decoration: none;
-        padding: 8px 11px;
+        padding: 8px 14px;
         border-radius: 3px;
         transition: color 0.15s ease, background 0.15s ease;
         white-space: nowrap;
         display: inline-flex;
         align-items: center;
+        gap: 5px;
       }
 
       .cf-nav-item:hover {
         color: #000;
-        background: #f2f2f4;
+        background: #f2f2f5;
       }
 
       .cf-nav-item.active {
         color: #000;
         font-weight: 800;
-        background: #ededf0;
+        background: #ededf2;
       }
 
       .cf-nav-item.crimson-cta {
         color: #e10600 !important;
         font-weight: 800;
-        border: 1px solid rgba(225,6,0,0.3);
-        background: rgba(225,6,0,0.05);
-        margin: 0 4px;
+        border: 1px solid rgba(225,6,0,0.25);
+        background: rgba(225,6,0,0.04);
       }
 
       .cf-nav-item.crimson-cta:hover {
         background: #e10600;
         color: #ffffff !important;
         border-color: #e10600;
+      }
+
+      /* ACCESSIBLE NAV DROPDOWN */
+      .cf-nav-dropdown {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .cf-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        min-width: 230px;
+        background: #ffffff;
+        border: 1px solid #e2e2e6;
+        border-radius: 4px;
+        box-shadow: 0 14px 36px rgba(0,0,0,0.12);
+        padding: 6px 0;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(6px);
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 99999;
+      }
+
+      .cf-nav-dropdown:hover .cf-dropdown-menu,
+      .cf-nav-dropdown:focus-within .cf-dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .cf-dropdown-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px 18px;
+        font-family: 'Space Grotesk', 'Inter', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: #333338;
+        text-decoration: none;
+        transition: background 0.15s ease, color 0.15s ease;
+      }
+
+      .cf-dropdown-item:hover {
+        background: #f7f7fa;
+        color: #e10600;
+      }
+
+      .cf-dropdown-divider {
+        height: 1px;
+        background: #ececef;
+        margin: 5px 0;
       }
 
       /* ACTIONS */
@@ -690,30 +744,65 @@
     const user = getUser();
     const cartCount = getCartCount();
 
-    const navLinks = [
-      { label: 'MEN',           href: 'shop.html?cat=men' },
-      { label: 'WOMEN',         href: 'shop.html?cat=women' },
-      { label: 'KIDS',          href: 'shop.html?cat=kids' },
-      { label: 'NEW DROPS',     href: 'shop.html?cat=new' },
-      { label: 'OVERSIZED',     href: 'shop.html?cat=oversized' },
-      { label: 'SHIRTS',        href: 'shop.html?cat=shirts' },
-      { label: 'TROUSERS',      href: 'shop.html?cat=trousers' },
-      { label: '3D CUSTOM STUDIO', href: 'customize.html', crimson: true },
-      { label: 'BODY VISUALIZER', href: 'body-visualizer.html', crimson: true },
-      { label: 'AI FIT PROFILE',   href: 'fit-profile.html' },
-      { label: 'CONCIERGE',        href: 'concierge.html' }
-    ];
+    const isShopActive = page === 'shop.html' || page === 'product.html';
+    const isStudioActive = page === 'customize.html';
+    const isVisualizerActive = page === 'body-visualizer.html';
+    const isFitProfileActive = page === 'fit-profile.html';
+    const isConciergeActive = page === 'concierge.html';
 
-    const linksHTML = navLinks.map(link => {
-      const isCurrent = page === link.href.split('?')[0];
-      const cls = [
-        'cf-nav-item',
-        isCurrent ? 'active' : '',
-        link.crimson ? 'crimson-cta' : ''
-      ].filter(Boolean).join(' ');
+    const linksHTML = `
+      <!-- COLLECTIONS DROPDOWN -->
+      <div class="cf-nav-dropdown">
+        <a href="shop.html" class="cf-nav-item ${isShopActive ? 'active' : ''}">
+          <span>COLLECTIONS</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </a>
+        <div class="cf-dropdown-menu">
+          <a href="shop.html" class="cf-dropdown-item">
+            <span>ALL PIECES</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:8.5px;color:#999;">VIEW ALL</span>
+          </a>
+          <div class="cf-dropdown-divider"></div>
+          <a href="shop.html?cat=men" class="cf-dropdown-item">MEN'S STREETWEAR</a>
+          <a href="shop.html?cat=women" class="cf-dropdown-item">WOMEN'S ATELIER</a>
+          <a href="shop.html?cat=kids" class="cf-dropdown-item">KIDS ARCHETYPES</a>
+          <div class="cf-dropdown-divider"></div>
+          <a href="shop.html?cat=new" class="cf-dropdown-item">NEW DROP 09</a>
+          <a href="shop.html?cat=oversized" class="cf-dropdown-item">OVERSIZED TEES</a>
+          <a href="shop.html?cat=shirts" class="cf-dropdown-item">TAILORED SHIRTS</a>
+          <a href="shop.html?cat=trousers" class="cf-dropdown-item">CARGOS &amp; TROUSERS</a>
+        </div>
+      </div>
 
-      return `<a href="${link.href}" class="${cls}">${link.label}</a>`;
-    }).join('');
+      <!-- 3D CUSTOM STUDIO -->
+      <a href="customize.html" class="cf-nav-item crimson-cta ${isStudioActive ? 'active' : ''}">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#e10600;"></span>
+        <span>3D BESPOKE</span>
+      </a>
+
+      <!-- 2D INTERACTIVE DESIGN STUDIO -->
+      <a href="editor.html" class="cf-nav-item ${page === 'editor.html' ? 'active' : ''}">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#111113;"></span>
+        <span>DESIGN STUDIO</span>
+      </a>
+
+      <!-- AI BODY VISUALIZER -->
+      <a href="body-visualizer.html" class="cf-nav-item ${isVisualizerActive ? 'active' : ''}">
+        <span>AI BODY TRY-ON</span>
+      </a>
+
+      <!-- FIT PROFILE -->
+      <a href="fit-profile.html" class="cf-nav-item ${isFitProfileActive ? 'active' : ''}">
+        <span>FIT PROFILE</span>
+      </a>
+
+      <!-- CONCIERGE -->
+      <a href="concierge.html" class="cf-nav-item ${isConciergeActive ? 'active' : ''}">
+        <span>CONCIERGE</span>
+      </a>
+    `;
 
     const wrapper = document.createElement('div');
     wrapper.id = 'cf-master-wrapper';

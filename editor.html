@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Clothing Studio | CODED FIT [BLR-ATELIER]</title>
+  <meta name="description" content="Interactive 2D Garment Customization Studio. Full control over graphics, placement, front/back views, and dynamic fabric colors.">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Base & Editor Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/editor.css">
+
+  <!-- Fabric.js 2D Canvas Engine -->
+  <script src="js/lib/fabric.min.js"></script>
+</head>
+<body class="editor-body">
+
+  <!-- Master Unified Navbar Mount -->
+  <div id="cf-navbar-mount"></div>
+
+  <!-- ── Top Action Bar ── -->
+  <div class="editor-top-bar">
+    <div class="editor-title-group">
+      <h1 class="editor-title">T-SHIRT CUSTOM STUDIO</h1>
+      <span class="editor-tag">PHASE 1 ENGINE</span>
+    </div>
+
+    <div class="editor-top-actions">
+      <button class="ed-btn" id="btn-undo" onclick="editor.undo()" title="Ctrl+Z" disabled>
+        <span>↩</span> UNDO
+      </button>
+      <button class="ed-btn" id="btn-redo" onclick="editor.redo()" title="Ctrl+Y" disabled>
+        <span>↪</span> REDO
+      </button>
+      <button class="ed-btn" id="btn-reset" onclick="confirmReset()" title="Clear active face">
+        <span>⟲</span> RESET
+      </button>
+      <button class="ed-btn ed-btn-dark" onclick="toggleStateInspector()" title="View MongoDB payload">
+        <span>{ }</span> STATE JSON
+      </button>
+      <button class="ed-btn ed-btn-primary" onclick="editor.exportCompositePNG()" title="Export high-res mockup as PNG">
+        <span>⬇</span> EXPORT PNG
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Main 3-Column Studio Layout ── -->
+  <main class="editor-layout">
+
+    <!-- ── Left Column: Tools & Customization Controls ── -->
+    <aside class="editor-tools-panel">
+
+      <!-- Upload Graphic -->
+      <div class="ed-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">01 // GRAPHIC DESIGN</h2>
+          <span class="ed-card-sub">PNG, JPG, SVG</span>
+        </div>
+
+        <div class="ed-upload-zone" onclick="document.getElementById('image-upload-input').click()">
+          <span class="ed-upload-icon">📁</span>
+          <div class="ed-upload-title">UPLOAD ARTWORK</div>
+          <div class="ed-upload-hint">Click or drop design here</div>
+          <input type="file" id="image-upload-input" class="ed-file-input" accept="image/*" onchange="handleFileUpload(event)">
+        </div>
+
+        <!-- Sample Graphics Quick-Add -->
+        <div style="margin-top: 14px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; color:#888; text-transform:uppercase; margin-bottom:8px;">
+            OR ADD ATELIER PRESETS:
+          </div>
+          <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px;">
+            <button class="ed-btn" style="padding:6px; font-size:9.5px; justify-content:center;" onclick="addPresetLogo('cf')">
+              CF LOGO
+            </button>
+            <button class="ed-btn" style="padding:6px; font-size:9.5px; justify-content:center;" onclick="addPresetLogo('barcode')">
+              BARCODE
+            </button>
+            <button class="ed-btn" style="padding:6px; font-size:9.5px; justify-content:center;" onclick="addPresetLogo('geometry')">
+              ATELIER 09
+            </button>
+          </div>
+        </div>
+
+        <!-- Phase 2 Text Placeholder -->
+        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed #e2e2e6;">
+          <button class="ed-btn" style="width:100%; justify-content:center; opacity:0.6; cursor:not-allowed;" title="Text tool arrives in Phase 2" disabled>
+            <span>T</span> ADD CUSTOM TEXT <span style="font-size:8px; color:var(--ed-crimson); margin-left:4px;">[PHASE 2]</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Garment Color -->
+      <div class="ed-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">02 // GARMENT COLOR</h2>
+          <span class="ed-card-sub" id="active-color-label">BLACK</span>
+        </div>
+
+        <div class="color-swatches-grid" id="color-swatches-container">
+          <!-- Populated dynamically from editor-products.js -->
+        </div>
+      </div>
+
+      <!-- Garment Size -->
+      <div class="ed-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">03 // SIZE SELECTION</h2>
+          <span class="ed-card-sub">REGULAR OVERSIZE</span>
+        </div>
+
+        <div class="size-pills-row" id="size-pills-container">
+          <!-- Populated dynamically from editor-products.js -->
+        </div>
+      </div>
+
+      <!-- Layer & Object Controls -->
+      <div class="ed-card" id="layer-controls-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">04 // LAYER ACTIONS</h2>
+          <span class="ed-card-sub" id="selection-status">NO SELECTION</span>
+        </div>
+
+        <div class="layer-controls-row">
+          <button class="ed-btn" id="btn-bring-forward" onclick="editor.bringForward()" disabled>
+            <span>⬆</span> FORWARD
+          </button>
+          <button class="ed-btn" id="btn-send-backward" onclick="editor.sendBackward()" disabled>
+            <span>⬇</span> BACKWARD
+          </button>
+          <button class="ed-btn" id="btn-duplicate" onclick="editor.duplicateActiveObject()" disabled>
+            <span>⧉</span> DUPLICATE
+          </button>
+          <button class="ed-btn" id="btn-delete" onclick="editor.deleteActiveObject()" style="color:#ef4444;" disabled>
+            <span>🗑</span> DELETE
+          </button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── Center Stage: Realistic Garment & Interactive Canvas ── -->
+    <section class="editor-stage-viewport">
+
+      <!-- View Switcher (Front / Back) -->
+      <div class="view-switcher-bar">
+        <button class="view-pill active" id="view-pill-front" onclick="switchView('front')">
+          FRONT VIEW
+        </button>
+        <button class="view-pill" id="view-pill-back" onclick="switchView('back')">
+          BACK VIEW
+        </button>
+      </div>
+
+      <!-- Garment Stage Container -->
+      <div class="garment-stage-wrap" id="stage-wrap">
+
+        <!-- ── FRONT T-SHIRT SVG ── -->
+        <svg id="tshirt-svg-front" class="garment-svg-view" viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Drop shadow for realistic depth -->
+            <filter id="garment-shadow" x="-10%" y="-10%" width="125%" height="125%">
+              <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.14" />
+            </filter>
+            <!-- Shading gradient for realistic fabric drape -->
+            <linearGradient id="body-shade-front" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#000000" stop-opacity="0.22" />
+              <stop offset="15%" stop-color="#000000" stop-opacity="0.05" />
+              <stop offset="50%" stop-color="#ffffff" stop-opacity="0.08" />
+              <stop offset="85%" stop-color="#000000" stop-opacity="0.05" />
+              <stop offset="100%" stop-color="#000000" stop-opacity="0.22" />
+            </linearGradient>
+            <!-- Collar depth gradient -->
+            <linearGradient id="collar-depth" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#000000" stop-opacity="0.4" />
+              <stop offset="100%" stop-color="#000000" stop-opacity="0.05" />
+            </linearGradient>
+          </defs>
+
+          <!-- Main T-shirt Silhouette -->
+          <g filter="url(#garment-shadow)">
+            <!-- Body & Sleeves Base Path -->
+            <path class="garment-body-fill" fill="#1a1a1a" d="
+              M 152 46
+              Q 200 78 248 46
+              L 336 84
+              L 304 172
+              L 266 156
+              L 266 430
+              Q 200 442 134 430
+              L 134 156
+              L 96 172
+              L 64 84
+              Z
+            " />
+
+            <!-- Fabric Drape Shading Overlay -->
+            <path fill="url(#body-shade-front)" d="
+              M 152 46
+              Q 200 78 248 46
+              L 336 84
+              L 304 172
+              L 266 156
+              L 266 430
+              Q 200 442 134 430
+              L 134 156
+              L 96 172
+              L 64 84
+              Z
+            " mix-blend-mode="multiply" />
+
+            <!-- Inner Neck Back Hole -->
+            <path fill="#0a0a0d" d="
+              M 152 46
+              Q 200 36 248 46
+              Q 200 68 152 46
+              Z
+            " opacity="0.6" />
+
+            <!-- Collar Ribbing Band -->
+            <path fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="4.5" d="
+              M 150 48
+              Q 200 80 250 48
+            " />
+            <path fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1.5" d="
+              M 150 51
+              Q 200 83 250 51
+            " />
+
+            <!-- Sleeve Seams (Drop Shoulder) -->
+            <path fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2" d="M 134 156 L 152 46" />
+            <path fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" d="M 135 156 L 153 46" />
+
+            <path fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2" d="M 266 156 L 248 46" />
+            <path fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" d="M 265 156 L 247 46" />
+
+            <!-- Sleeve Hem Stitches -->
+            <line x1="68" y1="88" x2="98" y2="166" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="3,2" />
+            <line x1="332" y1="88" x2="302" y2="166" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="3,2" />
+
+            <!-- Bottom Hem Stitch -->
+            <path fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1.5" stroke-dasharray="4,2" d="
+              M 136 422
+              Q 200 434 264 422
+            " />
+          </g>
+        </svg>
+
+        <!-- ── BACK T-SHIRT SVG (Hidden initially) ── -->
+        <svg id="tshirt-svg-back" class="garment-svg-view" viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+          <defs>
+            <linearGradient id="body-shade-back" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#000000" stop-opacity="0.22" />
+              <stop offset="15%" stop-color="#000000" stop-opacity="0.05" />
+              <stop offset="50%" stop-color="#ffffff" stop-opacity="0.06" />
+              <stop offset="85%" stop-color="#000000" stop-opacity="0.05" />
+              <stop offset="100%" stop-color="#000000" stop-opacity="0.22" />
+            </linearGradient>
+          </defs>
+
+          <g filter="url(#garment-shadow)">
+            <!-- Body Base Path -->
+            <path class="garment-body-fill" fill="#1a1a1a" d="
+              M 152 46
+              Q 200 40 248 46
+              L 336 84
+              L 304 172
+              L 266 156
+              L 266 430
+              Q 200 442 134 430
+              L 134 156
+              L 96 172
+              L 64 84
+              Z
+            " />
+
+            <!-- Drape Shading -->
+            <path fill="url(#body-shade-back)" d="
+              M 152 46
+              Q 200 40 248 46
+              L 336 84
+              L 304 172
+              L 266 156
+              L 266 430
+              Q 200 442 134 430
+              L 134 156
+              L 96 172
+              L 64 84
+              Z
+            " mix-blend-mode="multiply" />
+
+            <!-- Back Collar Rim -->
+            <path fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="4" d="
+              M 152 46
+              Q 200 40 248 46
+            " />
+            <path fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1.5" d="
+              M 152 48
+              Q 200 42 248 48
+            " />
+
+            <!-- Sleeve Seams -->
+            <path fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2" d="M 134 156 L 152 46" />
+            <path fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" d="M 135 156 L 153 46" />
+
+            <path fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2" d="M 266 156 L 248 46" />
+            <path fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" d="M 265 156 L 247 46" />
+
+            <!-- Bottom Hem -->
+            <path fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1.5" stroke-dasharray="4,2" d="
+              M 136 422
+              Q 200 434 264 422
+            " />
+          </g>
+        </svg>
+
+        <!-- ── Printable Region Guide Overlay ── -->
+        <div class="print-area-overlay" id="print-area-guide">
+          <span class="print-area-label">PRINT ZONE (12" × 16")</span>
+        </div>
+
+        <!-- ── Fabric.js Canvas Container ── -->
+        <div class="fabric-canvas-container">
+          <canvas id="design-canvas"></canvas>
+        </div>
+
+      </div>
+
+      <!-- Real-Time Boundary Validation Banner -->
+      <div class="boundary-warning-banner valid" id="boundary-banner">
+        <span id="boundary-icon">✓</span>
+        <span id="boundary-text">All artwork is inside printable zone</span>
+      </div>
+
+      <!-- Touch / Drag helper note -->
+      <p class="stage-helper-note">
+        💡 Tap or click artwork to scale, rotate, and reposition. Drag handles or use Delete key.
+      </p>
+
+    </section>
+
+    <!-- ── Right Column: Specs & Cart / DB Summary ── -->
+    <aside class="editor-summary-panel">
+
+      <!-- Configuration Specs -->
+      <div class="ed-card">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">GARMENT CODEX</h2>
+          <span class="ed-card-sub">ONE-OF-ONE</span>
+        </div>
+
+        <table class="spec-summary-table">
+          <tr>
+            <td>PRODUCT:</td>
+            <td id="spec-garment-name">CLASSIC T-SHIRT</td>
+          </tr>
+          <tr>
+            <td>FABRIC:</td>
+            <td>280 GSM GOTS COTTON</td>
+          </tr>
+          <tr>
+            <td>COLOR:</td>
+            <td id="spec-color">BLACK (#1A1A1A)</td>
+          </tr>
+          <tr>
+            <td>SIZE:</td>
+            <td id="spec-size">M</td>
+          </tr>
+          <tr>
+            <td>FRONT ARTWORK:</td>
+            <td id="spec-front-count">0 OBJECTS</td>
+          </tr>
+          <tr>
+            <td>BACK ARTWORK:</td>
+            <td id="spec-back-count">0 OBJECTS</td>
+          </tr>
+        </table>
+
+        <!-- Investment Breakdown -->
+        <div class="price-summary-box">
+          <div class="price-line">
+            <span>Base Heavyweight Tee</span>
+            <span id="price-base">₹999</span>
+          </div>
+          <div class="price-line">
+            <span>Precision Direct-to-Garment</span>
+            <span id="price-print">₹0</span>
+          </div>
+          <div class="price-total-line">
+            <span>TOTAL INVESTMENT</span>
+            <span class="price-total-num" id="price-total">₹999</span>
+          </div>
+        </div>
+
+        <button class="ed-btn ed-btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="editor.exportCompositePNG()">
+          <span>⬇</span> DOWNLOAD MOCKUP (PNG)
+        </button>
+      </div>
+
+      <!-- Live Customization State (MongoDB Ready) -->
+      <div class="ed-card" id="state-inspector-card" style="display:none;">
+        <div class="ed-card-header">
+          <h2 class="ed-card-title">MONGODB SCHEMA PAYLOAD</h2>
+          <button class="ed-btn" style="padding:2px 6px; font-size:8px;" onclick="copyStateJSON()">COPY</button>
+        </div>
+        <p style="font-size:10px; color:#777; margin:0 0 6px;">
+          Directly compatible with <code>/api/customization</code> endpoint:
+        </p>
+        <pre class="json-preview-box" id="json-preview"></pre>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- Scripts: Products, State, Controller, and App Initializer -->
+  <script src="js/editor-products.js"></script>
+  <script src="js/editor-state.js"></script>
+  <script src="js/fabric-editor.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+
+  <script>
+    let editor = null;
+
+    // Initialize editor on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      initCustomizer();
+    });
+
+    function initCustomizer() {
+      const garment = getGarmentById('tee-classic');
+
+      // 1. Initialize FabricEditor
+      editor = new FabricEditor('design-canvas', {
+        onSelectionChange: (activeObj) => updateSelectionUI(activeObj),
+        onBoundaryCheck: (isExceeded) => updateBoundaryUI(isExceeded),
+        onHistoryChange: (historyState) => updateHistoryUI(historyState),
+      });
+
+      // 2. Render Color Swatches
+      renderColorSwatches(garment);
+
+      // 3. Render Size Pills
+      renderSizePills(garment);
+
+      // 4. Initial Specs Update
+      updateSummaryUI();
+    }
+
+    /** Render color buttons dynamically from product catalog */
+    function renderColorSwatches(garment) {
+      const container = document.getElementById('color-swatches-container');
+      container.innerHTML = garment.colors.map((c, i) => `
+        <div class="color-swatch-item ${i === 0 ? 'active' : ''}" data-color-id="${c.id}" onclick="selectGarmentColor('${c.id}')">
+          <div class="color-circle ${c.id === 'white' ? 'white-circle' : ''}" style="background-color: ${c.hex};"></div>
+          <span class="color-name">${c.label}</span>
+        </div>
+      `).join('');
+    }
+
+    /** Render size selection buttons */
+    function renderSizePills(garment) {
+      const container = document.getElementById('size-pills-container');
+      container.innerHTML = garment.sizes.map(s => `
+        <button class="size-pill ${s === 'M' ? 'active' : ''}" onclick="selectGarmentSize('${s}')">
+          ${s}
+        </button>
+      `).join('');
+    }
+
+    /** Color picker handler */
+    function selectGarmentColor(colorId) {
+      const color = editor.garment.colors.find(c => c.id === colorId);
+      if (!color) return;
+
+      // Update state without touching designs
+      editor.setColor(color);
+
+      // Update SVG fills for both front and back
+      document.querySelectorAll('.garment-body-fill').forEach(el => {
+        el.setAttribute('fill', color.hex);
+      });
+
+      // Update active swatch class
+      document.querySelectorAll('.color-swatch-item').forEach(el => {
+        el.classList.toggle('active', el.getAttribute('data-color-id') === colorId);
+      });
+
+      document.getElementById('active-color-label').textContent = color.label.toUpperCase();
+      updateSummaryUI();
+    }
+
+    /** Size picker handler */
+    function selectGarmentSize(size) {
+      editor.state.setSize(size);
+      document.querySelectorAll('.size-pill').forEach(el => {
+        el.classList.toggle('active', el.textContent.trim() === size);
+      });
+      updateSummaryUI();
+    }
+
+    /** Switch Front <-> Back */
+    function switchView(targetFace) {
+      if (editor.state.face === targetFace) return;
+
+      // Switch Fabric.js canvas
+      editor.switchFace(targetFace);
+
+      // Toggle SVG visibility
+      const svgFront = document.getElementById('tshirt-svg-front');
+      const svgBack = document.getElementById('tshirt-svg-back');
+      if (targetFace === 'front') {
+        svgFront.style.display = 'block';
+        svgBack.style.display = 'none';
+      } else {
+        svgFront.style.display = 'none';
+        svgBack.style.display = 'block';
+      }
+
+      // Update view pills
+      document.getElementById('view-pill-front').classList.toggle('active', targetFace === 'front');
+      document.getElementById('view-pill-back').classList.toggle('active', targetFace === 'back');
+
+      updateSummaryUI();
+    }
+
+    /** Handle file upload */
+    function handleFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      editor.addImage(file);
+      e.target.value = ''; // Reset input to allow re-uploading same file if desired
+      setTimeout(updateSummaryUI, 200);
+    }
+
+    /** Add preset branding graphics */
+    function addPresetLogo(type) {
+      // Generate clean vector data URLs for built-in Atelier presets
+      let svgContent = '';
+      if (type === 'cf') {
+        svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="80" viewBox="0 0 200 80">
+          <text x="50%" y="55%" text-anchor="middle" dominant-baseline="middle" font-family="'Syne',sans-serif" font-weight="900" font-size="34" fill="#ffffff" stroke="#000000" stroke-width="1.5">CODED FIT.</text>
+          <text x="50%" y="82%" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-weight="800" font-size="9" fill="#e10600" letter-spacing="3">[BLR-ATELIER]</text>
+        </svg>`;
+      } else if (type === 'barcode') {
+        svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="90" viewBox="0 0 180 90">
+          <rect x="10" y="10" width="6" height="50" fill="#ffffff"/>
+          <rect x="20" y="10" width="3" height="50" fill="#ffffff"/>
+          <rect x="26" y="10" width="8" height="50" fill="#ffffff"/>
+          <rect x="38" y="10" width="4" height="50" fill="#ffffff"/>
+          <rect x="46" y="10" width="12" height="50" fill="#ffffff"/>
+          <rect x="62" y="10" width="5" height="50" fill="#ffffff"/>
+          <rect x="71" y="10" width="9" height="50" fill="#ffffff"/>
+          <rect x="84" y="10" width="3" height="50" fill="#ffffff"/>
+          <rect x="91" y="10" width="14" height="50" fill="#ffffff"/>
+          <rect x="110" y="10" width="4" height="50" fill="#ffffff"/>
+          <rect x="118" y="10" width="8" height="50" fill="#ffffff"/>
+          <rect x="130" y="10" width="5" height="50" fill="#ffffff"/>
+          <rect x="139" y="10" width="10" height="50" fill="#ffffff"/>
+          <rect x="153" y="10" width="4" height="50" fill="#ffffff"/>
+          <rect x="161" y="10" width="8" height="50" fill="#ffffff"/>
+          <text x="50%" y="78%" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" font-weight="800" fill="#ffffff" letter-spacing="4">CF-8821-BLR</text>
+        </svg>`;
+      } else {
+        svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="70" fill="none" stroke="#e10600" stroke-width="3"/>
+          <polygon points="80,25 130,110 30,110" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+          <circle cx="80" cy="80" r="6" fill="#e10600"/>
+          <text x="80" y="138" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8.5" font-weight="800" fill="#ffffff" letter-spacing="2">ATELIER 09</text>
+        </svg>`;
+      }
+
+      const dataUrl = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgContent);
+      editor.addImage(dataUrl);
+      setTimeout(updateSummaryUI, 200);
+    }
+
+    /** Update layer controls enabled/disabled state */
+    function updateSelectionUI(activeObj) {
+      const hasSelection = !!activeObj;
+      document.getElementById('btn-bring-forward').disabled = !hasSelection;
+      document.getElementById('btn-send-backward').disabled = !hasSelection;
+      document.getElementById('btn-duplicate').disabled = !hasSelection;
+      document.getElementById('btn-delete').disabled = !hasSelection;
+
+      document.getElementById('selection-status').textContent = hasSelection
+        ? (activeObj.type.toUpperCase() + ' SELECTED')
+        : 'NO SELECTION';
+    }
+
+    /** Update boundary validation banner & guide outline */
+    function updateBoundaryUI(isExceeded) {
+      const banner = document.getElementById('boundary-banner');
+      const guide = document.getElementById('print-area-guide');
+      const icon = document.getElementById('boundary-icon');
+      const text = document.getElementById('boundary-text');
+
+      if (isExceeded) {
+        banner.className = 'boundary-warning-banner invalid';
+        guide.classList.add('warning');
+        icon.textContent = '⚠️';
+        text.textContent = 'Artwork extends outside the 12" × 16" printable boundary';
+      } else {
+        banner.className = 'boundary-warning-banner valid';
+        guide.classList.remove('warning');
+        icon.textContent = '✓';
+        text.textContent = 'All artwork is inside printable zone';
+      }
+    }
+
+    /** Update undo / redo button states */
+    function updateHistoryUI({ canUndo, canRedo }) {
+      document.getElementById('btn-undo').disabled = !canUndo;
+      document.getElementById('btn-redo').disabled = !canRedo;
+      updateSummaryUI();
+    }
+
+    /** Reset confirmation */
+    function confirmReset() {
+      if (confirm('Clear all artwork on the active side?')) {
+        editor.resetDesign();
+        updateSummaryUI();
+      }
+    }
+
+    /** Update right column specifications and pricing */
+    function updateSummaryUI() {
+      if (!editor) return;
+
+      const state = editor.state;
+      document.getElementById('spec-garment-name').textContent = editor.garment.name.toUpperCase();
+      document.getElementById('spec-color').textContent = `${state.color.label.toUpperCase()} (${state.color.hex.toUpperCase()})`;
+      document.getElementById('spec-size').textContent = state.size;
+
+      // Count objects
+      const currentCanvasCount = editor.canvas ? editor.canvas.getObjects().length : 0;
+      let frontCount = 0;
+      let backCount = 0;
+
+      if (state.face === 'front') {
+        frontCount = currentCanvasCount;
+        backCount = (state.back.canvasJSON ? JSON.parse(state.back.canvasJSON).objects.length : 0);
+      } else {
+        frontCount = (state.front.canvasJSON ? JSON.parse(state.front.canvasJSON).objects.length : 0);
+        backCount = currentCanvasCount;
+      }
+
+      document.getElementById('spec-front-count').textContent = `${frontCount} OBJECT${frontCount === 1 ? '' : 'S'}`;
+      document.getElementById('spec-back-count').textContent = `${backCount} OBJECT${backCount === 1 ? '' : 'S'}`;
+
+      // Calculate total investment
+      const hasPrint = (frontCount + backCount) > 0;
+      const printFee = hasPrint ? editor.garment.printPrice : 0;
+      const total = editor.garment.basePrice + printFee;
+
+      document.getElementById('price-base').textContent = `₹${editor.garment.basePrice.toLocaleString('en-IN')}`;
+      document.getElementById('price-print').textContent = hasPrint ? `+₹${printFee.toLocaleString('en-IN')}` : '₹0';
+      document.getElementById('price-total').textContent = `₹${total.toLocaleString('en-IN')}`;
+
+      // Update state JSON preview if open
+      const previewEl = document.getElementById('json-preview');
+      if (previewEl && document.getElementById('state-inspector-card').style.display !== 'none') {
+        // Save current canvas state to ensure latest objects appear
+        editor.state.saveCurrentCanvas(JSON.stringify(editor.canvas.toJSON()));
+        previewEl.textContent = JSON.stringify(editor.state.toJSON(), null, 2);
+      }
+    }
+
+    /** Toggle MongoDB state payload inspector */
+    function toggleStateInspector() {
+      const card = document.getElementById('state-inspector-card');
+      const isVisible = card.style.display !== 'none';
+      card.style.display = isVisible ? 'none' : 'block';
+      if (!isVisible) {
+        updateSummaryUI();
+      }
+    }
+
+    /** Copy MongoDB state JSON */
+    function copyStateJSON() {
+      editor.state.saveCurrentCanvas(JSON.stringify(editor.canvas.toJSON()));
+      const payload = JSON.stringify(editor.state.toJSON(), null, 2);
+      navigator.clipboard.writeText(payload).then(() => {
+        alert('Customization State JSON copied to clipboard! Ready to save to MongoDB.');
+      });
+    }
+  </script>
+</body>
+</html>

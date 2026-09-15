@@ -1,70 +1,70 @@
 /**
- * CODED-FIT / NOVA STREET — Mobile Design System & Theme
- * Ultra-Luxury Haute-Couture Theme: Pitch Black, Regal Gold (#D4AF37), Pure White & Editorial Contrast
+ * CODED FIT — Clean Minimal Design System
+ * Inspired by: Souled Store, Spreadshirt — clean white, light grey, crisp red accent
  */
 
 export const COLORS = {
-  // Backgrounds & Canvas
-  bg: '#F7F7FC',
-  bgSecondary: '#FFFFFF',
-  bgWarm: '#F0F0F8',
-  
-  // Cards & Surfaces (Sharp & Sleek Monochromatic with Gold Subtle Accents)
+  // Backgrounds
+  bg: '#FFFFFF',
+  bgSecondary: '#F5F5F5',
+  bgWarm: '#FAFAFA',
+
+  // Cards & Surfaces
   card: '#FFFFFF',
   cardElevated: '#FFFFFF',
-  cardSecondary: '#F0F0F8',
+  cardSecondary: '#F5F5F5',
   surface: '#FFFFFF',
-  surfaceActive: '#E8E8F2',
+  surfaceActive: '#F0F0F0',
 
-  // Borders
-  border: '#E3E3EC',
-  borderLight: '#D7D7E2',
-  borderDark: '#C8C8D4',
-  borderAccent: '#0B0B0D',
-  borderMuted: '#ECECF4',
-  borderGold: 'rgba(201, 0, 45, 0.25)',
-  borderGoldSolid: '#C9002D',
-  
-  // High-Contrast Typography
-  textPrimary: '#0B0B0D',
-  textSecondary: '#35353C',
-  textMuted: '#6D6D76',
-  textLight: '#85858D',
-  textDim: '#A0A0AA',
+  // Borders — very light, clean
+  border: '#E8E8E8',
+  borderLight: '#F0F0F0',
+  borderDark: '#D0D0D0',
+  borderAccent: '#111111',
+  borderMuted: '#EEEEEE',
+  borderGold: 'rgba(220, 38, 38, 0.2)',
+  borderGoldSolid: '#DC2626',
 
-  // True Regal Gold Accents
-  gold: '#C9002D',
-  goldLight: '#FFDCE4',
-  goldDark: '#9E0024',
-  goldMuted: 'rgba(201, 0, 45, 0.10)',
-  goldGlow: 'rgba(201, 0, 45, 0.18)',
-  
-  // Primary Luxury Accents
-  accent: '#C9002D',
-  accentDark: '#0B0B0D',
-  accentMuted: '#70707A',
-  accentSoft: 'rgba(201, 0, 45, 0.08)',
-  accentGlow: 'rgba(201, 0, 45, 0.2)',
-  
-  // Status Colors
-  success: '#22C55E',
-  successLight: 'rgba(34, 197, 94, 0.12)',
-  successGlow: 'rgba(34, 197, 94, 0.25)',
-  warning: '#F59E0B',
-  warningLight: 'rgba(245, 158, 11, 0.12)',
-  error: '#EF4444',
-  errorLight: 'rgba(239, 68, 68, 0.12)',
-  
+  // Typography — high contrast, readable
+  textPrimary: '#111111',
+  textSecondary: '#444444',
+  textMuted: '#888888',
+  textLight: '#AAAAAA',
+  textDim: '#CCCCCC',
+
+  // Brand Red Accent (replaces gold)
+  gold: '#DC2626',
+  goldLight: '#FEE2E2',
+  goldDark: '#B91C1C',
+  goldMuted: 'rgba(220, 38, 38, 0.08)',
+  goldGlow: 'rgba(220, 38, 38, 0.12)',
+
+  // Primary Accent
+  accent: '#DC2626',
+  accentDark: '#111111',
+  accentMuted: '#888888',
+  accentSoft: 'rgba(220, 38, 38, 0.06)',
+  accentGlow: 'rgba(220, 38, 38, 0.12)',
+
+  // Status
+  success: '#16A34A',
+  successLight: 'rgba(22, 163, 74, 0.08)',
+  successGlow: 'rgba(22, 163, 74, 0.16)',
+  warning: '#D97706',
+  warningLight: 'rgba(217, 119, 6, 0.08)',
+  error: '#DC2626',
+  errorLight: 'rgba(220, 38, 38, 0.08)',
+
   // Pure Bases
   white: '#FFFFFF',
-  black: '#000000',
-  overlay: 'rgba(11, 11, 13, 0.82)',
+  black: '#111111',
+  overlay: 'rgba(0, 0, 0, 0.5)',
   glassDark: 'rgba(255, 255, 255, 0.96)',
 };
 
 export const FONTS = {
-  display: 'Cinzel',
-  body: 'Outfit',
+  display: 'System',
+  body: 'System',
   regular: '400',
   medium: '500',
   semiBold: '600',
@@ -93,31 +93,31 @@ export const RADIUS = {
 export const SHADOWS = {
   soft: {
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
     shadowRadius: 4,
-    elevation: 2,
+    elevation: 1,
   },
   card: {
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.7,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
     shadowRadius: 8,
-    elevation: 4,
+    elevation: 2,
   },
   elevated: {
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.85,
-    shadowRadius: 16,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 4,
   },
   glow: {
-    shadowColor: '#D4AF37',
+    shadowColor: '#DC2626',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
-    elevation: 6,
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 3,
   },
 };
 

@@ -74,20 +74,25 @@
       overflow: hidden;
     }
 
-    .hero-bg {
+    .cf-hero-video {
       position: absolute;
-      inset: 0;
-      background-image: url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1800&q=80');
-      background-size: cover;
-      background-position: center top;
-      opacity: 0.45;
-      transition: transform 8s ease;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      opacity: 0.85;
+      filter: brightness(0.85) contrast(1.08);
+      pointer-events: none;
     }
 
     .hero-gradient {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%);
+      background: linear-gradient(to top, rgba(10,10,12,0.95) 0%, rgba(10,10,12,0.45) 50%, rgba(10,10,12,0.15) 100%);
+      z-index: 2;
+      pointer-events: none;
     }
 
     .hero-content {
@@ -998,11 +1003,10 @@
 
   <!-- HERO SECTION -->
   <section class="hero-section">
-    <video class="cf-hero-video" autoplay muted loop playsinline preload="metadata"
-      poster="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1800&q=80">
+    <video class="cf-hero-video" autoplay muted loop playsinline preload="auto">
+      <source src="images/fashion-hero.mp4" type="video/mp4">
       <source src="https://cdn.pixabay.com/video/2024/05/19/212632_large.mp4" type="video/mp4">
     </video>
-    <div class="hero-bg cf-hero-video-fallback" id="hero-bg" style="opacity:0.25;"></div>
     <div class="hero-gradient"></div>
 
     <div class="hero-content animate-in" style="animation-delay:0.2s">
@@ -1514,6 +1518,10 @@
         obs.observe(el);
       });
     });
-  </script>
-<script src="js/trust.js"></script><script src="js/aiAssistant.js"></script></body>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/navbar.js"></script>
+<script src="js/trust.js"></script>
+<script src="js/aiAssistant.js"></script>
+</body>
 </html>

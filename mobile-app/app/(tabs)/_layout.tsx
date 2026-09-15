@@ -72,10 +72,18 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="studio"
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon icon="◈" label="Studio" focused={focused} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="tryon"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon icon="◎" label="Custom" focused={focused} />
+            <TabIcon icon="◎" label="Try On" focused={focused} />
           ),
         }}
       />
@@ -85,7 +93,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ focused }) => (
             <TabIcon
               icon="⊕"
-              label="AI"
+              label="Cart"
               focused={focused}
               badgeCount={cartCount}
             />
