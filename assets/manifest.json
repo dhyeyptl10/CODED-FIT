@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "notes": "Single contract for 'real photography exists'. Keys are site-root-relative paths. EMPTY until the photo shoot lands — js/coded-products.js mirrors this file and every resolver falls back to existing sources while it is empty. Add paths here (and in coded-products.js) when files land. Never point at hotlinked or unlicensed URLs.",
+  "files": {}
+}
