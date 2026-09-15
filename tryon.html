@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Try-On — See It On You | CODED FIT</title>
+  <meta name="description" content="Upload your photo, pick a CODED FIT garment, and generate a real AI virtual fitting. No fake results — unavailable providers say so honestly.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* ══ AI TRY-ON · 4-step SEE IT ON YOU (vto- namespace) ══ */
+    :root { --vto-red:#e10600; --vto-ink:#0d0e12; --vto-line:#e5e5e9; }
+    * { box-sizing:border-box; }
+    body.vto-body { background:#f7f7f8; color:#111; margin:0; font-family:'Inter',sans-serif; }
+    .vto-wrap { max-width:1200px; margin:0 auto; padding:0 32px 80px; }
+
+    .vto-hero { padding:40px 0 6px; }
+    .vto-eyebrow { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:800; letter-spacing:2px; color:var(--vto-red); text-transform:uppercase; margin-bottom:10px; }
+    .vto-title { font-family:'Syne',sans-serif; font-size:clamp(28px,4vw,44px); font-weight:900; letter-spacing:-1px; text-transform:uppercase; margin:0 0 10px; }
+    .vto-sub { font-size:13.5px; color:#555; max-width:640px; line-height:1.7; margin:0; }
+
+    .vto-steps { display:flex; gap:6px; margin:24px 0; overflow-x:auto; }
+    .vto-step { flex:1 0 auto; min-width:130px; font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:#888; background:#fff; border:1px solid var(--vto-line); border-radius:3px; padding:10px 12px; white-space:nowrap; }
+    .vto-step .n { color:var(--vto-red); margin-right:6px; }
+    .vto-step.done { color:#111; border-color:#111; }
+    .vto-step.done .n { color:#111; }
+    .vto-step.current { background:#111; color:#fff; border-color:#111; }
+    .vto-step.current .n { color:#fff; }
+
+    .vto-card { background:#fff; border:1px solid var(--vto-line); border-radius:4px; padding:24px; margin-bottom:20px; }
+    .vto-card-head { display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid #f0f0f3; padding-bottom:10px; margin-bottom:16px; }
+    .vto-card-title { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; margin:0; }
+    .vto-card-title .n { color:var(--vto-red); margin-right:6px; }
+    .vto-hint { font-size:12.5px; color:#666; line-height:1.65; margin:0 0 14px; }
+
+    /* Step 1 · photo */
+    .vto-drop { border:2px dashed #cfcfd6; border-radius:4px; background:#fafafc; padding:28px 20px; text-align:center; cursor:pointer; transition:border-color .15s, background .15s; }
+    .vto-drop:hover, .vto-drop.over { border-color:var(--vto-red); background:#fff8f8; }
+    .vto-drop-icon { font-size:28px; display:block; margin-bottom:8px; }
+    .vto-drop-title { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; }
+    .vto-drop-sub { font-size:11.5px; color:#777; margin-top:4px; }
+    .vto-photo-preview { display:none; gap:16px; align-items:start; }
+    .vto-photo-preview.has { display:flex; }
+    .vto-photo-preview img { width:180px; max-height:240px; object-fit:cover; border-radius:3px; border:1px solid var(--vto-line); background:#111; }
+    .vto-photo-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .vto-btn { font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:11px 16px; border-radius:3px; border:1px solid #111; background:#fff; color:#111; cursor:pointer; }
+    .vto-btn:hover { background:#111; color:#fff; }
+    .vto-btn.primary { background:var(--vto-red); border-color:var(--vto-red); color:#fff; }
+    .vto-btn.primary:hover { background:#b80500; }
+    .vto-btn:disabled { opacity:.45; cursor:not-allowed; }
+    .vto-btn.ghost { border-color:#ccc; color:#555; }
+    .vto-guide { background:#f7f7f9; border:1px solid #e8e8ec; border-radius:3px; padding:12px 14px; font-size:12px; color:#555; line-height:1.6; margin-top:14px; }
+
+    /* Step 2 · garments */
+    .vto-custom { border:1px solid var(--vto-red); background:#fff8f8; border-radius:3px; padding:14px; display:none; gap:14px; align-items:center; margin-bottom:16px; }
+    .vto-custom.has { display:flex; }
+    .vto-custom img { width:90px; height:110px; object-fit:cover; border-radius:2px; border:1px solid #e2b8b8; background:#eee; }
+    .vto-custom-info { flex:1; }
+    .vto-custom-tag { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:800; color:var(--vto-red); letter-spacing:1px; text-transform:uppercase; }
+    .vto-custom-name { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; margin:2px 0; }
+    .vto-custom-meta { font-size:11.5px; color:#666; }
+    .vto-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-height:520px; overflow-y:auto; padding-right:4px; }
+    .vto-g { border:1px solid var(--vto-line); border-radius:3px; background:#fbfbfc; overflow:hidden; cursor:pointer; font:inherit; color:inherit; text-align:left; padding:0; }
+    .vto-g:hover { border-color:#999; }
+    .vto-g.sel { border-color:var(--vto-red); background:#fff; box-shadow:inset 0 3px 0 var(--vto-red); }
+    .vto-g img { width:100%; aspect-ratio:3/4; object-fit:cover; display:block; background:#eee; }
+    .vto-g-body { padding:10px; }
+    .vto-g-name { font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:700; line-height:1.3; }
+    .vto-g-meta { font-family:'JetBrains Mono',monospace; font-size:9px; color:#888; margin-top:3px; text-transform:uppercase; }
+    .vto-g-price { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:800; margin-top:6px; }
+
+    /* Step 3 · generate */
+    .vto-gensummary { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:center; margin-bottom:16px; }
+    .vto-gensummary img { width:100%; max-height:220px; object-fit:cover; border-radius:3px; border:1px solid var(--vto-line); background:#111; }
+    .vto-plus { font-family:'Syne',sans-serif; font-size:28px; font-weight:900; color:var(--vto-red); }
+    .vto-genempty { border:1px dashed #ccc; border-radius:3px; min-height:120px; display:flex; align-items:center; justify-content:center; font-size:12px; color:#999; text-align:center; padding:12px; }
+    .vto-progress { display:none; background:#0d0e12; color:#fff; border-radius:3px; padding:18px 20px; margin-top:14px; }
+    .vto-progress.has { display:block; }
+    .vto-progress-title { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; }
+    .vto-progress-sub { font-size:12px; color:rgba(255,255,255,.55); margin-top:6px; }
+    .vto-bar { height:5px; background:#26272d; border-radius:3px; margin-top:12px; overflow:hidden; }
+    .vto-bar i { display:block; height:100%; width:35%; background:var(--vto-red); border-radius:3px; animation:vtoSlide 1.2s ease-in-out infinite alternate; }
+    @keyframes vtoSlide { from { margin-left:0; } to { margin-left:65%; } }
+
+    /* Step 4 · result */
+    .vto-result-grid { display:grid; grid-template-columns:1fr 1fr 1.2fr; gap:14px; align-items:start; }
+    .vto-result-grid figure { margin:0; }
+    .vto-result-grid img { width:100%; max-height:380px; object-fit:contain; border-radius:3px; border:1px solid var(--vto-line); background:#0d0e12; display:block; }
+    .vto-result-grid figcaption { font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:#666; margin-top:8px; text-align:center; }
+    .vto-score { margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:800; }
+    .vto-score.ok { color:#15803d; }
+    .vto-score.na { color:#888; }
+    .vto-result-btns { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+    #vto-result-empty { text-align:center; color:#999; font-size:12.5px; padding:24px 0; }
+
+    .vto-error { display:none; background:#fef2f2; border:1px solid #fecaca; color:#7a1010; border-radius:3px; padding:14px 16px; font-size:12.5px; line-height:1.6; margin-top:14px; }
+    .vto-error.has { display:block; }
+    .vto-error strong { display:block; margin-bottom:4px; }
+    .vto-privacy { background:#f7f7f9; border:1px solid #e8e8ec; border-radius:3px; padding:14px 16px; font-size:12px; color:#555; line-height:1.65; }
+
+    /* Camera modal */
+    .vto-cam { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,.75); align-items:center; justify-content:center; padding:20px; }
+    .vto-cam.has { display:flex; }
+    .vto-cam-box { background:#fff; border-radius:4px; padding:20px; width:440px; max-width:94vw; text-align:center; }
+    .vto-cam-box video { width:100%; border-radius:3px; background:#000; }
+    .vto-cam-btns { display:flex; gap:8px; margin-top:12px; }
+    .vto-cam-btns .vto-btn { flex:1; }
+
+    @media (max-width:900px) {
+      .vto-wrap { padding:0 16px 64px; }
+      .vto-grid { grid-template-columns:repeat(2,1fr); }
+      .vto-result-grid { grid-template-columns:1fr; }
+      .vto-gensummary { grid-template-columns:1fr; }
+      .vto-plus { text-align:center; }
+    }
+  </style>
+</head>
+<body class="vto-body">
+  <div id="cf-navbar-mount"></div>
+
+  <div class="vto-wrap">
+    <header class="vto-hero">
+      <div class="vto-eyebrow">CODED FIT · AI Try-On</div>
+      <h1 class="vto-title">See it on you</h1>
+      <p class="vto-sub">Upload your photo, choose a CODED FIT garment, generate a real AI fitting. If the fitting engine isn't configured, this page tells you — it never fakes a result.</p>
+    </header>
+
+    <div class="vto-steps" aria-label="Try-on progress">
+      <div class="vto-step current" id="vs-1"><span class="n">01</span>Your photo</div>
+      <div class="vto-step" id="vs-2"><span class="n">02</span>Garment</div>
+      <div class="vto-step" id="vs-3"><span class="n">03</span>Generate</div>
+      <div class="vto-step" id="vs-4"><span class="n">04</span>Result</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <section class="vto-card" id="vto-s1">
+      <div class="vto-card-head"><h2 class="vto-card-title"><span class="n">01</span>Upload your photo</h2></div>
+      <p class="vto-hint">Use a clear, front-facing photo in good lighting. Your photo stays in this browser tab — it is sent to the fitting engine only when you press Generate, and never saved to your device storage.</p>
+      <div class="vto-drop" id="vto-drop">
+        <span class="vto-drop-icon">📷</span>
+        <div class="vto-drop-title">Drop a photo here, or click to browse</div>
+        <div class="vto-drop-sub">JPG, PNG, WebP · max 10MB</div>
+        <input type="file" id="vto-file" accept="image/jpeg,image/png,image/webp" style="display:none;">
+      </div>
+      <div class="vto-photo-preview" id="vto-photo-preview">
+        <img id="vto-photo-img" alt="Your uploaded photo preview">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;color:#15803d;">✓ PHOTO READY</div>
+          <div class="vto-photo-actions">
+            <button class="vto-btn ghost" id="vto-replace" type="button">Replace</button>
+            <button class="vto-btn ghost" id="vto-cam-open" type="button">Use camera</button>
+            <button class="vto-btn ghost" id="vto-remove" type="button" style="color:#b91c1c;">Remove</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;"><button class="vto-btn ghost" id="vto-cam-open-2" type="button">📷 Or capture with camera</button></div>
+      <div class="vto-guide">💡 <strong>Best results:</strong> stand facing the camera, arms slightly away from the body, plain background, head-to-waist (or full body) in frame. One person per photo.</div>
+      <div class="vto-error" id="vto-photo-error"></div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="vto-card" id="vto-s2">
+      <div class="vto-card-head"><h2 class="vto-card-title"><span class="n">02</span>Choose CODED FIT garment</h2></div>
+      <div class="vto-custom" id="vto-custom">
+        <img id="vto-custom-img" alt="Your customized garment reference">
+        <div class="vto-custom-info">
+          <div class="vto-custom-tag">★ Your Design Studio creation</div>
+          <div class="vto-custom-name" id="vto-custom-name">Custom garment</div>
+          <div class="vto-custom-meta" id="vto-custom-meta"></div>
+        </div>
+        <button class="vto-btn primary" id="vto-custom-use" type="button">Use this</button>
+      </div>
+      <p class="vto-hint">From the existing product catalogue — no separate garment list.</p>
+      <div class="vto-grid" id="vto-grid"></div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="vto-card" id="vto-s3">
+      <div class="vto-card-head"><h2 class="vto-card-title"><span class="n">03</span>Generate</h2></div>
+      <div class="vto-gensummary">
+        <div><div class="vto-genempty" id="vto-gen-photo">No photo yet — complete step 01.</div></div>
+        <div class="vto-plus">+</div>
+        <div><div class="vto-genempty" id="vto-gen-garment">No garment yet — complete step 02.</div></div>
+      </div>
+      <button class="vto-btn primary" id="vto-generate" type="button" disabled style="width:100%;padding:15px;">Generate my fitting →</button>
+      <div class="vto-progress" id="vto-progress">
+        <div class="vto-progress-title" id="vto-progress-title">Creating your virtual fitting…</div>
+        <div class="vto-progress-sub">The page stays usable while the fitting engine works. This usually takes 10–40 seconds.</div>
+        <div class="vto-bar"><i></i></div>
+      </div>
+      <div class="vto-error" id="vto-gen-error"></div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="vto-card" id="vto-s4">
+      <div class="vto-card-head"><h2 class="vto-card-title"><span class="n">04</span>View result</h2></div>
+      <div id="vto-result-empty">Your AI fitting will appear here after generation. Nothing shown here is pre-made.</div>
+      <div id="vto-result" style="display:none;">
+        <div class="vto-result-grid">
+          <figure><img id="vto-r-photo" alt="Your photo"><figcaption>Your photo</figcaption></figure>
+          <figure><img id="vto-r-garment" alt="CODED FIT garment"><figcaption>CODED FIT garment</figcaption></figure>
+          <figure><img id="vto-r-result" alt="AI try-on result"><figcaption>AI try-on result</figcaption></figure>
+        </div>
+        <div class="vto-score" id="vto-score"></div>
+        <div class="vto-result-btns">
+          <button class="vto-btn" id="vto-again-garment" type="button">Try another garment</button>
+          <button class="vto-btn" id="vto-again-photo" type="button">Change photo</button>
+          <button class="vto-btn" id="vto-save" type="button">Save result</button>
+          <button class="vto-btn primary" id="vto-add" type="button">Add to cart →</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="vto-privacy">
+      🔒 <strong>Privacy:</strong> uploaded photos are processed by the configured AI fitting service to create your result, then discarded — temp server files are deleted after every request and nothing is written to the database. Your photo is kept only in this tab's memory; closing or reloading this page removes it. Results are downloaded only when you press <strong>Save result</strong>.
+    </div>
+  </div>
+
+  <!-- Camera modal -->
+  <div class="vto-cam" id="vto-cam">
+    <div class="vto-cam-box">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:800;margin-bottom:10px;">CAPTURE PHOTO</div>
+      <video id="vto-video" playsinline></video>
+      <div class="vto-cam-btns">
+        <button class="vto-btn primary" id="vto-snap" type="button">Capture</button>
+        <button class="vto-btn ghost" id="vto-cam-close" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="coded-toast" id="coded-toast"></div>
+
+  <script src="js/products.js"></script>
+  <script src="js/product-flow.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+
+  <script>
+    /* ══ AI TRY-ON · 4-step client (photo + catalogue/custom garment → POST /api/try-on) ══ */
+    (function () {
+      'use strict';
+
+      var MAX_BYTES = 10 * 1024 * 1024;
+      var OK_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
+      var photoDataUrl = null;   // in-memory only — never localStorage
+      var garment = null;        // { kind:'catalog', product } or { kind:'custom', name, meta, image, garmentType }
+      var lastResult = null;     // { resultImageUrl, fitScore, taskId }
+      var generating = false;
+      var camStream = null;
+
+      function $(id) { return document.getElementById(id); }
+      function esc(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+      function toast(m) {
+        if (window.CF_showToast) window.CF_showToast(m);
+        else if (typeof showToast === 'function') showToast(m);
+      }
+      function mark(step) {
+        for (var i = 1; i <= 4; i++) {
+          var el = $('vs-' + i);
+          el.classList.remove('current', 'done');
+          if (i < step) el.classList.add('done');
+          if (i === step) el.classList.add('current');
+        }
+      }
+      function showError(boxId, title, msg) {
+        var box = $(boxId);
+        box.innerHTML = '<strong>' + esc(title) + '</strong>' + esc(msg);
+        box.classList.add('has');
+      }
+      function clearError(boxId) {
+        var box = $(boxId);
+        box.classList.remove('has');
+        box.innerHTML = '';
+      }
+
+      /* ---------- garment type mapping for the VTO provider ---------- */
+      function catalogGarmentType(p) {
+        var hay = ((p.category || '') + ' ' + (p.subCategory || '')).toLowerCase();
+        if (/dress/.test(hay)) return 'dress';
+        if (/trouser|bottom|pant|cargo|jean/.test(hay)) return 'bottom';
+        if (/jacket|hoodie|blazer|coat|outerwear/.test(hay)) return 'jacket';
+        if (/accessor|bag|sling/.test(hay)) return 'accessories';
+        return 'top';
+      }
+      function customGarmentType(garmentId) {
+        if (garmentId === 'cargo-pants') return 'bottom';
+        if (garmentId === 'hoodie-heavy') return 'jacket';
+        return 'top';
+      }
+
+      /* ---------- STEP 1 · photo ---------- */
+      function setPhoto(dataUrl) {
+        photoDataUrl = dataUrl;
+        if (dataUrl) {
+          $('vto-photo-img').src = dataUrl;
+          $('vto-photo-preview').classList.add('has');
+          $('vto-drop').style.display = 'none';
+          $('vto-gen-photo').innerHTML = '';
+          var img = document.createElement('img');
+          img.src = dataUrl; img.alt = 'Your photo'; img.style.cssText = 'width:100%;max-height:220px;object-fit:cover;border-radius:3px;';
+          $('vto-gen-photo').appendChild(img);
+          clearError('vto-photo-error');
+          mark(garment ? 3 : 2);
+        } else {
+          $('vto-photo-preview').classList.remove('has');
+          $('vto-photo-img').removeAttribute('src');
+          $('vto-drop').style.display = '';
+          $('vto-gen-photo').textContent = 'No photo yet — complete step 01.';
+          mark(1);
+        }
+        refreshGenerate();
+      }
+
+      function validateFile(f) {
+        if (!f) return 'No file selected.';
+        if (OK_TYPES.indexOf(f.type) === -1 && !/\.(jpe?g|png|webp)$/i.test(f.name || '')) {
+          return 'Unsupported file type. Please use a JPG, PNG, or WebP photo.';
+        }
+        if (f.size > MAX_BYTES) return 'Photo is too large. Please use a photo under 10MB.';
+        return null;
+      }
+
+      function loadFile(f) {
+        var err = validateFile(f);
+        if (err) { showError('vto-photo-error', 'Photo not accepted. ', err); return; }
+        var rd = new FileReader();
+        rd.onload = function (e) { setPhoto(e.target.result); };
+        rd.onerror = function () { showError('vto-photo-error', 'Photo not accepted. ', 'Could not read that file. Try another photo.'); };
+        rd.readAsDataURL(f);
+      }
+
+      /* camera */
+      function openCamera() {
+        var modal = $('vto-cam'), video = $('vto-video');
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          showError('vto-photo-error', 'Camera unavailable. ', 'This browser or device blocked camera access — please upload a file instead.');
+          return;
+        }
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 960 } }, audio: false })
+          .then(function (stream) {
+            camStream = stream;
+            video.srcObject = stream;
+            video.play();
+            modal.classList.add('has');
+          })
+          .catch(function () {
+            showError('vto-photo-error', 'Camera unavailable. ', 'Camera permission was denied — please upload a file instead.');
+          });
+      }
+      function closeCamera() {
+        if (camStream) { camStream.getTracks().forEach(function (t) { t.stop(); }); camStream = null; }
+        $('vto-cam').classList.remove('has');
+      }
+
+      /* ---------- STEP 2 · garments (existing catalogue + custom design) ---------- */
+      function readCustomPayload() {
+        // Full payload (with reference image) lives in sessionStorage — Phase 2 handoff.
+        try {
+          var full = JSON.parse(sessionStorage.getItem('CF_DESIGN_TRYON_V1') || 'null');
+          if (full && full.kind === 'design-tryon' && full.refImage) return full;
+        } catch (e) {}
+        return null;
+      }
+
+      function renderCustom() {
+        var box = $('vto-custom'), payload = readCustomPayload();
+        var from = null;
+        try { from = new URLSearchParams(window.location.search).get('from'); } catch (e) {}
+        if (payload && (from === 'design' || from === 'bespoke' || from === null)) {
+          // Show for design entries; bespoke entries may also carry it in future.
+          if (from === 'bespoke' && payload.kind !== 'design-tryon') { box.classList.remove('has'); return null; }
+          $('vto-custom-img').src = payload.refImage;
+          $('vto-custom-name').textContent = payload.garmentName + ' · ' + payload.color.label;
+          $('vto-custom-meta').textContent = (payload.fabric || '') + ' · Size ' + payload.size + ' · ' + payload.frontCount + ' front / ' + payload.backCount + ' back objects';
+          box.classList.add('has');
+          return payload;
+        }
+        // Slim copy without image (expired session): explain honestly.
+        try {
+          var slim = JSON.parse(localStorage.getItem('CF_DESIGN_TRYON_SLIM_V1') || 'null');
+          if (slim && slim.kind === 'design-tryon' && from === 'design') {
+            $('vto-custom-name').textContent = 'Custom design reference expired';
+            $('vto-custom-meta').textContent = 'The reference image lives only in the Design Studio tab. Reopen it there and press TRY THIS DESIGN ON ME again.';
+            $('vto-custom-img').removeAttribute('src');
+            $('vto-custom-use').style.display = 'none';
+            box.classList.add('has');
+          }
+        } catch (e) {}
+        return null;
+      }
+
+      function renderGrid() {
+        var grid = $('vto-grid');
+        if (typeof PRODUCTS === 'undefined' || !PRODUCTS.length) {
+          grid.innerHTML = '<div style="grid-column:1/-1;padding:32px;text-align:center;color:#888;">Catalogue failed to load (js/products.js). Check console.</div>';
+          return;
+        }
+        grid.innerHTML = PRODUCTS.map(function (p) {
+          var sel = garment && garment.kind === 'catalog' && garment.product.id === p.id;
+          return '<button type="button" class="vto-g' + (sel ? ' sel' : '') + '" data-id="' + p.id + '">' +
+            '<img src="' + esc((p.images || [])[0] || '') + '" alt="' + esc(p.name) + '" loading="lazy" onerror="this.src=\'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=600&q=70\'">' +
+            '<span class="vto-g-body" style="display:block;"><span class="vto-g-name">' + esc(p.name) + '</span>' +
+            '<span class="vto-g-meta" style="display:block;">' + esc(p.category || '') + ' · ' + esc(p.code || '') + '</span>' +
+            '<span class="vto-g-price" style="display:block;">₹' + Number(p.price || 0).toLocaleString('en-IN') + '</span></span></button>';
+        }).join('');
+        Array.prototype.forEach.call(grid.querySelectorAll('.vto-g'), function (b) {
+          b.addEventListener('click', function () {
+            var p = getProductById(parseInt(b.getAttribute('data-id'), 10));
+            if (p) selectCatalog(p);
+          });
+        });
+      }
+
+      function selectCatalog(p) {
+        garment = { kind: 'catalog', product: p };
+        renderGrid();
+        var cell = $('vto-gen-garment');
+        cell.innerHTML = '';
+        var img = document.createElement('img');
+        img.src = (p.images || [])[0] || ''; img.alt = p.name;
+        cell.appendChild(img);
+        clearGenError();
+        mark(photoDataUrl ? 3 : 2);
+        refreshGenerate();
+      }
+
+      function selectCustom(payload) {
+        garment = {
+          kind: 'custom',
+          name: payload.garmentName + ' · ' + payload.color.label,
+          meta: payload.color.label + ' · Size ' + payload.size,
+          image: payload.refImage,
+          garmentType: customGarmentType(payload.garmentId),
+          payload: payload
+        };
+        renderGrid();
+        var cell = $('vto-gen-garment');
+        cell.innerHTML = '';
+        var img = document.createElement('img');
+        img.src = payload.refImage; img.alt = 'Your customized garment';
+        cell.appendChild(img);
+        clearGenError();
+        mark(photoDataUrl ? 3 : 2);
+        refreshGenerate();
+        toast('Customized garment selected — the result will use YOUR design, not the stock photo.');
+      }
+
+      /* ---------- bespoke entry (?from=bespoke): saved spec + closest catalogue photo ---------- */
+      function renderBespokeEntry() {
+        var box = $('vto-custom');
+        var spec = null;
+        try { spec = JSON.parse(localStorage.getItem('CF_BESPOKE_V1') || 'null'); } catch (e) {}
+        if (!spec || (spec.kind !== 'bespoke' && spec.flow !== 'bespoke') || !spec.garmentId) {
+          box.classList.remove('has');
+          return null;
+        }
+        var product = (window.CF_FLOW && CF_FLOW.garmentToProduct(spec.garmentId)) || null;
+        var img = (product && (product.images || [])[0]) || '';
+        $('vto-custom-use').style.display = '';
+        if (img) $('vto-custom-img').src = img;
+        else $('vto-custom-img').removeAttribute('src');
+        box.querySelector('.vto-custom-tag').textContent = '★ Your Bespoke spec';
+        $('vto-custom-name').textContent = (spec.garmentName || 'Bespoke garment') + ' · ' + (spec.color || '');
+        $('vto-custom-meta').textContent = (spec.fabric || '') + ' · ' + (spec.fit || '') + ' fit · chest ' +
+          ((spec.measurements || {}).chest || '—') + '" · shown on closest catalogue photo';
+        box.classList.add('has');
+        return { spec: spec, product: product, image: img };
+      }
+
+      function selectBespoke(entry) {
+        var spec = entry.spec;
+        garment = {
+          kind: 'bespoke', spec: spec, product: entry.product,
+          name: spec.garmentName || 'Bespoke garment',
+          meta: (spec.color || '') + ' · ' + (spec.fit || '') + ' fit',
+          image: entry.image,
+          garmentType: spec.garmentId === 'cargo-pants' ? 'bottom' : spec.garmentId === 'hoodie-heavy' ? 'jacket' : 'top'
+        };
+        renderGrid();
+        var cell = $('vto-gen-garment');
+        cell.innerHTML = '';
+        if (entry.image) {
+          var img = document.createElement('img');
+          img.src = entry.image; img.alt = garment.name;
+          cell.appendChild(img);
+        } else {
+          cell.textContent = 'Bespoke spec linked (no reference photo).';
+        }
+        clearGenError();
+        mark(photoDataUrl ? 3 : 2);
+        refreshGenerate();
+        toast('Bespoke spec linked — fit, fabric and measurements travel to cart.');
+      }
+
+      function clearGenError() { clearError('vto-gen-error'); }
+
+      /* ---------- STEP 3 · generate ---------- */
+      function refreshGenerate() {
+        $('vto-generate').disabled = !(photoDataUrl && garment) || generating;
+      }
+
+      function garmentImageForRequest() {
+        if (garment.kind === 'custom') return { garmentImageBase64: garment.image };
+        if (garment.kind === 'bespoke') return { garmentImageUrl: garment.image };
+        return { garmentImageUrl: ((garment.product.images || [])[0] || '') };
+      }
+
+      function garmentMetaForRequest() {
+        if (garment.kind === 'catalog') {
+          var p = garment.product;
+          return { source: 'catalog', productId: p.id, code: p.code, name: p.name, category: p.category, price: p.price };
+        }
+        if (garment.kind === 'bespoke') {
+          var s = garment.spec;
+          return {
+            source: 'bespoke', garmentId: s.garmentId, name: s.garmentName,
+            color: s.color, fabric: s.fabric, fit: s.fit, size: s.sizeBlock,
+            measurements: s.measurements, price: s.price
+          };
+        }
+        var pl = garment.payload;
+        return {
+          source: 'design-studio', garmentId: pl.garmentId, name: pl.garmentName,
+          color: pl.color, size: pl.size, fabric: pl.fabric, face: pl.face,
+          frontCount: pl.frontCount, backCount: pl.backCount, price: pl.price
+        };
+      }
+
+      function generate() {
+        if (!photoDataUrl || !garment || generating) return;
+        generating = true;
+        refreshGenerate();
+        clearGenError();
+        $('vto-progress').classList.add('has');
+        $('vto-progress-title').textContent = 'Creating your virtual fitting…';
+        $('vto-result').style.display = 'none';
+        $('vto-result-empty').style.display = '';
+
+        var body = {
+          modelImageBase64: photoDataUrl,
+          garmentType: garment.kind === 'catalog' ? catalogGarmentType(garment.product) : garment.garmentType,
+          garmentMeta: garmentMetaForRequest()
+        };
+        var gi = garmentImageForRequest();
+        if (gi.garmentImageUrl) body.garmentImageUrl = gi.garmentImageUrl;
+        else body.garmentImageBase64 = gi.garmentImageBase64;
+
+        var ctrl = new AbortController();
+        var timeout = setTimeout(function () { ctrl.abort(); }, 120000);
+
+        fetch('/api/try-on', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          signal: ctrl.signal,
+          body: JSON.stringify(body)
+        })
+          .then(function (res) { return res.json().then(function (data) { return { status: res.status, data: data }; }); })
+          .then(function (out) {
+            clearTimeout(timeout);
+            if (out.data && out.data.success && out.data.resultImageUrl) return finish(out.data);
+            if (out.data && out.data.taskId && out.data.status === 'processing') return poll(out.data.taskId);
+            throw out.data || { message: 'Empty response from the fitting engine.' };
+          })
+          .catch(function (err) { failGenerate(err); });
+      }
+
+      function poll(taskId) {
+        $('vto-progress-title').textContent = 'Fitting engine is working… checking status…';
+        var tries = 0, max = 30;
+        var timer = setInterval(function () {
+          tries++;
+          fetch('/api/try-on/' + encodeURIComponent(taskId), { headers: { Accept: 'application/json' } })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+              var t = data && data.task;
+              if (t && t.status === 'completed' && t.resultImageUrl) {
+                clearInterval(timer);
+                finish({ resultImageUrl: t.resultImageUrl, fitScore: t.fitScore, taskId: taskId });
+              } else if (t && t.status === 'failed') {
+                clearInterval(timer);
+                failGenerate({ message: (t && t.message) || 'Fitting failed.' });
+              } else if (tries >= max) {
+                clearInterval(timer);
+                failGenerate({ message: 'The fitting is taking too long. Please try again in a minute.' });
+              }
+            })
+            .catch(function () {
+              if (tries >= max) { clearInterval(timer); failGenerate({ message: 'Lost contact with the fitting engine.' }); }
+            });
+        }, 2000);
+      }
+
+      function finish(data) {
+        generating = false;
+        refreshGenerate();
+        $('vto-progress').classList.remove('has');
+        lastResult = data;
+        $('vto-r-photo').src = photoDataUrl;
+        $('vto-r-garment').src = garment.kind === 'catalog' ? ((garment.product.images || [])[0] || '') : (garment.image || '');
+        $('vto-r-result').src = data.resultImageUrl;
+        var score = $('vto-score');
+        if (data.fitScore !== undefined && data.fitScore !== null) {
+          score.textContent = '✓ Fit score: ' + data.fitScore + '% biometric match (reported by the fitting engine)';
+          score.className = 'vto-score ok';
+        } else {
+          score.textContent = 'Fit score unavailable for this fitting.';
+          score.className = 'vto-score na';
+        }
+        $('vto-result-empty').style.display = 'none';
+        $('vto-result').style.display = '';
+        mark(4);
+        document.getElementById('vto-s4').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        toast('Fitting complete — this is a real engine result.');
+      }
+
+      function failGenerate(err) {
+        generating = false;
+        refreshGenerate();
+        $('vto-progress').classList.remove('has');
+        var msg = (err && err.message) || 'Something went wrong. Please try again.';
+        if (err && err.unavailable) {
+          showError('vto-gen-error', 'AI Try-On is currently unavailable. ',
+            'The virtual fitting provider is not configured on the server. Your photo and garment choice are kept — nothing was faked. An administrator can enable it with YouCam credentials (server/.env).');
+        } else if (err && err.name === 'AbortError') {
+          showError('vto-gen-error', 'Request timed out. ', 'The fitting engine took too long. Check your connection and try again.');
+        } else if (err instanceof TypeError) {
+          showError('vto-gen-error', 'Cannot reach the server. ', 'Start the backend (npm run server) and reload this page, then try again.');
+        } else {
+          showError('vto-gen-error', 'Fitting failed. ', msg);
+        }
+      }
+
+      /* ---------- STEP 4 · actions ---------- */
+      function saveResult() {
+        if (!lastResult) return;
+        var url = lastResult.resultImageUrl;
+        // Same-origin/data URLs download directly; remote provider URLs best-effort via fetch→blob.
+        if (/^data:/.test(url)) {
+          var a = document.createElement('a');
+          a.href = url; a.download = 'coded-fit-tryon-' + (lastResult.taskId || Date.now()) + '.png';
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          return;
+        }
+        fetch(url).then(function (r) { return r.blob(); }).then(function (blob) {
+          var o = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = o; a.download = 'coded-fit-tryon-' + (lastResult.taskId || Date.now()) + '.png';
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          setTimeout(function () { URL.revokeObjectURL(o); }, 4000);
+        }).catch(function () { window.open(url, '_blank', 'noopener'); });
+      }
+
+      function addToCart() {
+        if (!garment) return;
+        try {
+          if (garment.kind === 'catalog') {
+            if (typeof addToCart === 'function') addToCart(garment.product.id);
+          } else if (garment.kind === 'bespoke') {
+            var sp = garment.spec;
+            var bitem = {
+              id: 'BESPOKE-' + sp.garmentId + '-' + (sp.fit || 'regular') + '-' + Date.now().toString(36).toUpperCase(),
+              code: 'CF-BESPOKE',
+              name: 'Bespoke ' + (sp.garmentName || 'garment') + ' · ' + (sp.fit || ''),
+              price: sp.price || 0, mrp: sp.price || 0,
+              fabric: sp.fabric || '', color: sp.color || '',
+              badge: 'MADE-TO-MEASURE',
+              size: (sp.sizeBlock || 'M') + ' · chest ' + ((sp.measurements || {}).chest || '—') + '"',
+              qty: 1, img: garment.image, images: garment.image ? [garment.image] : [],
+              kind: 'bespoke',
+              custom: Object.assign({ flow: 'bespoke', preview: garment.image }, sp)
+            };
+            if (typeof addToCart === 'function') addToCart(bitem, bitem.size, 1);
+          } else {
+            var pl = garment.payload;
+            var item = {
+              id: 'DESIGN-' + pl.garmentId + '-' + Date.now().toString(36).toUpperCase(),
+              code: 'CF-DESIGN',
+              name: 'Custom ' + pl.garmentName + ' · ' + pl.color.label,
+              price: pl.price || 999, mrp: pl.price || 999,
+              fabric: pl.fabric || '', color: pl.color.label || '',
+              badge: 'CUSTOM DESIGN',
+              size: pl.size || 'M', qty: 1,
+              img: pl.refImage, images: [pl.refImage],
+              kind: 'design',
+              custom: Object.assign({ flow: 'design', preview: pl.refImage }, pl)
+            };
+            if (typeof addToCart === 'function') addToCart(item, item.size, 1);
+          }
+        } catch (e) {}
+        if (window.CF_openCartDrawer) window.CF_openCartDrawer();
+      }
+
+      /* ---------- init ---------- */
+      document.addEventListener('DOMContentLoaded', function () {
+        var drop = $('vto-drop'), file = $('vto-file');
+
+        drop.addEventListener('click', function () { file.click(); });
+        file.addEventListener('change', function () { if (file.files[0]) loadFile(file.files[0]); file.value = ''; });
+        ['dragover', 'dragenter'].forEach(function (ev) {
+          drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); });
+        });
+        ['dragleave', 'drop'].forEach(function (ev) {
+          drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); });
+        });
+        drop.addEventListener('drop', function (e) {
+          var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+          if (f) loadFile(f);
+        });
+
+        $('vto-replace').addEventListener('click', function () { file.click(); });
+        $('vto-remove').addEventListener('click', function () { setPhoto(null); });
+        $('vto-cam-open').addEventListener('click', openCamera);
+        $('vto-cam-open-2').addEventListener('click', openCamera);
+        $('vto-cam-close').addEventListener('click', closeCamera);
+        $('vto-snap').addEventListener('click', function () {
+          var video = $('vto-video');
+          if (!video.videoWidth) return;
+          var cv = document.createElement('canvas');
+          cv.width = video.videoWidth; cv.height = video.videoHeight;
+          cv.getContext('2d').drawImage(video, 0, 0);
+          closeCamera();
+          var url = cv.toDataURL('image/jpeg', 0.9);
+          // Re-validate size as if uploaded
+          if (url.length > MAX_BYTES * 1.37) {
+            showError('vto-photo-error', 'Photo not accepted. ', 'Captured frame is too large — please upload a smaller photo.');
+            return;
+          }
+          setPhoto(url);
+        });
+
+        // Bespoke entries resolve the saved spec (?from=bespoke); everything else
+        // uses the Design Studio payload. One custom slot, never both.
+        var fromPage = null;
+        try { fromPage = new URLSearchParams(window.location.search).get('from'); } catch (e) {}
+        if (fromPage === 'bespoke') {
+          var bspec = renderBespokeEntry();
+          if (bspec) {
+            $('vto-custom-use').addEventListener('click', function () { selectBespoke(bspec); });
+          }
+        } else {
+          var custom = renderCustom();
+          if (custom) {
+            $('vto-custom-use').addEventListener('click', function () { selectCustom(custom); });
+          }
+        }
+        renderGrid();
+
+        // Deep link from catalogue flows: preselect product if ?product=<id>
+        try {
+          var q = new URLSearchParams(window.location.search);
+          var pid = parseInt(q.get('product'), 10);
+          if (!isNaN(pid) && typeof getProductById === 'function') {
+            var p = getProductById(pid);
+            if (p) selectCatalog(p);
+          }
+        } catch (e) {}
+
+        // Handoff from My Fit Studio: reuse the tab photo (same try-on system, no re-upload).
+        try {
+          var handed = sessionStorage.getItem('CF_TRYON_PHOTO');
+          if (handed && handed.indexOf('data:image/') === 0 && !photoDataUrl) {
+            setPhoto(handed);
+            toast('Photo carried over from My Fit Studio.');
+          }
+        } catch (e) {}
+
+        $('vto-generate').addEventListener('click', generate);
+        $('vto-again-garment').addEventListener('click', function () {
+          document.getElementById('vto-s2').scrollIntoView({ behavior: 'smooth' });
+        });
+        $('vto-again-photo').addEventListener('click', function () {
+          document.getElementById('vto-s1').scrollIntoView({ behavior: 'smooth' });
+        });
+        $('vto-save').addEventListener('click', saveResult);
+        $('vto-add').addEventListener('click', addToCart);
+      });
+    })();
+  </script>
+  <script src="js/trust.js"></script>
+</body>
+</html>
