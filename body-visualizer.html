@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Fit Studio — Measurements & 3D Avatar | CODED FIT</title>
+<meta name="description" content="CODED FIT My Fit Studio: upload a photo, review your estimated measurements, generate your 3D avatar and preview garments. Optional fit preview — AI photo try-on stays primary.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Real pose detection: MediaPipe Pose (client-side, no photo leaves device for landmarks) -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469240/pose.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+<style>
+/* ══ MY FIT STUDIO · clean fitting-room UX (mf- namespace; all BV engine IDs kept) ══ */
+:root{--mf-red:#e10600;--mf-ink:#0d0e12;--mf-line:#e5e5e9}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;background:#f7f7f8;color:#111}
+.mf-wrap{max-width:1200px;margin:0 auto;padding:0 32px 80px}
+.mf-hero{padding:40px 0 6px;display:grid;grid-template-columns:1.25fr .75fr;gap:24px;align-items:center}
+.mf-hero h1{font-family:Syne,sans-serif;font-size:clamp(28px,4vw,44px);margin:8px 0 10px;text-transform:uppercase;letter-spacing:-1px;line-height:1.05}
+.mf-hero p{color:#555;font-size:13.5px;line-height:1.7;max-width:600px;margin:0}
+.tag{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;color:var(--mf-red);letter-spacing:1.5px;text-transform:uppercase}
+.stepper{display:flex;gap:6px;margin:24px 0;overflow-x:auto}
+.step{flex:1 0 auto;min-width:120px;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:800;padding:10px 12px;border:1px solid var(--mf-line);background:#fff;border-radius:3px;color:#888;text-transform:uppercase;white-space:nowrap}
+.step.active{background:#0d0e12;color:#fff;border-color:#0d0e12}
+.step.done{border-color:var(--mf-red);color:var(--mf-red)}
+.card{background:#fff;border:1px solid var(--mf-line);border-radius:4px;padding:24px;margin-bottom:20px}
+.card h2{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;text-transform:uppercase;margin:0}
+.card-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #f0f0f3;padding-bottom:10px;margin-bottom:16px;gap:12px}
+.card-head .n{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;color:var(--mf-red);letter-spacing:1.2px;text-transform:uppercase}
+.hint{font-size:12.5px;color:#666;line-height:1.65}
+label.fl{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;color:#555;text-transform:uppercase;margin:12px 0 5px;letter-spacing:.5px}
+input[type=number],input[type=text],select{width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:3px;font-size:13px;font-family:'JetBrains Mono',monospace;background:#fff}
+input[type=range]{width:100%;accent-color:var(--mf-red)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:none;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-top:12px}
+.btn-red{background:var(--mf-red);color:#fff}.btn-red:hover{background:#b80500}
+.btn-dark{background:#111;color:#fff}.btn-ghost{background:#fff;border:1px solid #111;color:#111}
+.btn-sm{width:auto;padding:10px 16px;font-size:10px;margin-top:8px}
+.warn{background:#fff7e6;border:1px solid #f0d48a;padding:10px 12px;border-radius:3px;font-size:12px;color:#664d03;margin-top:10px;line-height:1.6}
+.ok{background:#eefbf3;border:1px solid #9adbb0;padding:10px 12px;border-radius:3px;font-size:12px;color:#14532d;margin-top:10px;line-height:1.6}
+.err{background:#fdecec;border:1px solid #f5a3a3;padding:10px 12px;border-radius:3px;font-size:12px;color:#7a1010;margin-top:10px;line-height:1.6}
+#photo-canvas,#pose-canvas{width:100%;border-radius:4px;background:#111;display:block}
+.privacy{background:#141519;border:1px solid #26272d;color:#ddd;border-radius:4px;padding:20px}
+.privacy h3{margin:0 0 8px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:800;text-transform:uppercase;color:#fff}
+.privacy .hint{color:#aaa}
+.grid-photo{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.grid-duo{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.grid-avatar{display:grid;grid-template-columns:1.35fr .65fr;gap:20px;align-items:start}
+.view3d{position:relative;background:#0b0c0f;border-radius:4px;overflow:hidden;min-height:560px}
+#avatar3d{position:absolute;inset:0}
+.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;z-index:5;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#bbb}
+.camrow{position:absolute;left:12px;top:52px;display:flex;flex-direction:column;gap:6px;z-index:5}
+.camrow button{background:rgba(0,0,0,.65);border:1px solid #444;color:#ccc;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:800;padding:6px 10px;border-radius:3px;cursor:pointer;text-align:left}
+.camrow button.active,.camrow button:hover{background:#fff;color:#000;border-color:#fff}
+.bottombar{position:absolute;left:12px;right:12px;bottom:12px;display:flex;justify-content:space-between;align-items:center;z-index:5;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#999}
+.conf{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.conf div{background:#f6f6f8;border:1px solid #eee;padding:8px 10px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10.5px}
+.conf b{display:block;font-size:13px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.sw{width:34px;height:34px;border-radius:3px;cursor:pointer;border:2px solid transparent}
+.sw.sel{border-color:#000;outline:2px solid var(--mf-red)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid #ccc;background:#fff;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:800;cursor:pointer;border-radius:3px;text-transform:uppercase}
+.chip.sel{background:#111;color:#fff;border-color:#111}
+video#cam{width:100%;border-radius:4px;background:#000}
+.consent{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:#444;margin-top:12px;line-height:1.5}
+.vto-primary{background:#0d0e12;color:#fff;border-radius:4px;padding:24px;display:grid;grid-template-columns:1.2fr .8fr;gap:20px;align-items:center;margin-bottom:20px}
+.vto-primary h2{font-family:Syne,sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;margin:0 0 8px}
+.vto-primary p{font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.65;margin:0 0 4px}
+.vto-note{background:#fff;border:1px dashed #ccc;border-radius:4px;padding:14px 16px;font-size:12px;color:#666;line-height:1.65;margin-bottom:20px}
+@media(max-width:960px){.mf-hero{grid-template-columns:1fr}.grid-photo,.grid-duo,.grid-avatar,.vto-primary{grid-template-columns:1fr}.mf-wrap{padding:0 16px 64px}.row3{grid-template-columns:1fr 1fr}.view3d{min-height:480px}}
+</style>
+</head>
+<body>
+<div id="cf-navbar-mount"></div>
+<div class="mf-wrap">
+  <div class="mf-hero">
+    <div>
+      <div class="tag">// CODED FIT · My Fit Studio · 3D fit preview</div>
+      <h1>Your body,<br>tailored on screen.</h1>
+      <p>Upload one photo, check your estimated measurements, and see a 3D avatar shaped like you wearing CODED FIT garments. This is your <b>optional fit preview</b> — the <b>AI photo try-on stays the primary fitting room</b> and lives on its own screen.</p>
+      <button class="btn btn-red btn-sm" onclick="document.getElementById('step-photo').scrollIntoView({behavior:'smooth'})">Start my fitting →</button>
+    </div>
+    <div class="privacy">
+      <h3>Private by design</h3>
+      <div class="hint">• Body analysis runs in your browser — your photo reaches our server only if you press “Save Fit Profile”.<br>• “Delete my data” removes your photo and measurements from this device immediately.<br>• Keys and secrets live only in <code>server/.env</code>, never in this page.</div>
+    </div>
+  </div>
+
+  <div class="stepper" id="stepper">
+    <div class="step active" data-s="1">1 · Photo</div>
+    <div class="step" data-s="2">2 · Estimate</div>
+    <div class="step" data-s="3">3 · Review</div>
+    <div class="step" data-s="4">4 · 3D Avatar</div>
+    <div class="step" data-s="5">5 · Garments</div>
+  </div>
+
+  <!-- STEP 1 · Upload photo -->
+  <div class="card" id="step-photo">
+    <div class="card-head"><h2>Your photo</h2><span class="n">Step 01 · Upload</span></div>
+    <div class="grid-photo">
+      <div>
+        <div class="row2">
+          <div><label class="fl">Height (cm)</label><input type="number" id="in-height" value="172" min="120" max="230"></div>
+          <div><label class="fl">Weight (kg)</label><input type="number" id="in-weight" value="70" min="35" max="200"></div>
+        </div>
+        <div class="row2">
+          <div><label class="fl">I shop</label><select id="in-gender"><option value="men">Men</option><option value="women">Women</option></select></div>
+          <div><label class="fl">I like my fit</label><select id="in-fit"><option value="regular">Regular</option><option value="slim">Slim</option><option value="relaxed">Relaxed</option><option value="oversized">Oversized</option></select></div>
+        </div>
+        <label class="fl">Body shape (optional — refines the avatar)</label>
+        <select id="in-shape"><option value="auto">Detect from photo</option><option value="athletic">Athletic V-Taper</option><option value="rectangle">Lean / Rectangle</option><option value="pear">Pear / Triangle</option><option value="inverted_triangle">Inverted Triangle</option><option value="hourglass">Hourglass</option><option value="plus">Plus</option></select>
+        <div class="consent"><input type="checkbox" id="consent" checked style="width:auto;margin-top:3px"><span>I agree to on-device body analysis of my photo for this fitting. I can delete my photo and data anytime.</span></div>
+      </div>
+      <div>
+        <div class="hint" style="margin-bottom:8px">Stand straight, full body (head to feet) in frame, arms slightly open, good light, one person.</div>
+        <div class="row2" style="margin-bottom:8px">
+          <button class="btn btn-dark btn-sm" style="margin-top:0" onclick="document.getElementById('file').click()">📷 Upload photo</button>
+          <button class="btn btn-ghost btn-sm" style="margin-top:0" id="btn-cam" onclick="BV.toggleCamera()">🎥 Use camera</button>
+        </div>
+        <input type="file" id="file" accept="image/*" style="display:none">
+        <video id="cam" playsinline style="display:none;margin-top:10px"></video>
+        <button class="btn btn-ghost btn-sm" id="btn-snap" style="display:none" onclick="BV.snap()">Capture frame</button>
+        <div style="margin-top:10px"><canvas id="photo-canvas"></canvas></div>
+        <div id="quality"></div>
+        <button class="btn btn-red" id="btn-detect" onclick="BV.analyze()">Estimate my measurements →</button>
+        <div class="hint" style="margin-top:8px">Uploading a photo starts the estimate automatically — this button is only for retry. <button class="btn btn-ghost btn-sm" onclick="BV.manualMode()">Skip photo, enter manually</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 · Estimate -->
+  <div class="card">
+    <div class="card-head"><h2>Body estimate</h2><span class="n">Step 02 · Automatic</span></div>
+    <div class="grid-duo">
+      <div><canvas id="pose-canvas"></canvas></div>
+      <div>
+        <div id="landmark-status" class="hint">Your body map will appear here once a photo is analysed.</div>
+        <div class="warn">Estimates come from your photo plus height and weight — a tailor-grade approximation, not a medical measurement. Every number stays editable in the next step.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 · Review measurements -->
+  <div class="card">
+    <div class="card-head"><h2>Your estimated measurements</h2><span class="n">Step 03 · Review &amp; edit</span></div>
+    <div class="row3">
+      <div><label class="fl">Chest (in)</label><input type="number" id="m-chest" step="0.1" value="40"></div>
+      <div><label class="fl">Waist (in)</label><input type="number" id="m-waist" step="0.1" value="32"></div>
+      <div><label class="fl">Shoulder (in)</label><input type="number" id="m-shoulder" step="0.1" value="18"></div>
+      <div><label class="fl">Hip (in)</label><input type="number" id="m-hip" step="0.1" value="38"></div>
+      <div><label class="fl">Inseam (in)</label><input type="number" id="m-inseam" step="0.1" value="30"></div>
+      <div><label class="fl">Neck (in)</label><input type="number" id="m-neck" step="0.1" value="15.5"></div>
+    </div>
+    <label class="fl">Estimate confidence</label>
+    <div class="conf" id="conf-box"></div>
+    <div class="row2">
+      <button class="btn btn-dark btn-sm" onclick="BV.saveProfile()">Save fit profile</button>
+      <button class="btn btn-ghost btn-sm" onclick="BV.wipe()">Delete my data</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 · 3D avatar -->
+  <div class="card">
+    <div class="card-head"><h2>Your 3D avatar <span style="color:#888;font-size:11px;">· optional fit preview</span></h2><span class="n">Step 04 · Generate</span></div>
+    <div class="grid-avatar">
+      <div>
+        <div class="view3d"><div id="avatar3d"></div>
+          <div class="hud"><span id="hud-left">● AVATAR — DRAG TO ROTATE</span><span>WEBGL</span></div>
+          <div class="camrow">
+            <button class="active" onclick="BV.view('front',this)">FRONT</button>
+            <button onclick="BV.view('side',this)">SIDE</button>
+            <button onclick="BV.view('back',this)">BACK</button>
+            <button onclick="BV.toggleSpin(this)">⟳ 360° SPIN</button>
+          </div>
+          <div class="bottombar"><span>DRAG = ROTATE · SCROLL = ZOOM</span><span id="hud-size">SIZE M</span></div>
+        </div>
+        <div class="row2">
+          <button class="btn btn-red btn-sm" onclick="BV.buildAvatar()">Generate 3D avatar →</button>
+          <button class="btn btn-ghost btn-sm" onclick="BV.downloadAvatar()">Download avatar PNG</button>
+        </div>
+      </div>
+      <div>
+        <label class="fl">Skin tone</label>
+        <div class="swatches" id="skin-tones"></div>
+        <label class="fl">Refine my shape</label>
+        <div class="hint" style="margin-bottom:8px">Sliders reshape the avatar instantly. Red ones feed the fit check below; grey ones only refine the look.</div>
+        <div id="sculpt-sliders"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 · Garments on avatar -->
+  <div class="card">
+    <div class="card-head"><h2>Try garments on your avatar</h2><span class="n">Step 05 · Preview</span></div>
+    <label class="fl">Tops</label>
+    <div class="chips" id="g-chips">
+      <div class="chip sel" data-g="overshirt">Overshirt</div><div class="chip" data-g="tee">T-Shirt</div><div class="chip" data-g="shirt">Shirt</div><div class="chip" data-g="hoodie">Hoodie</div><div class="chip" data-g="kurta">Kurta</div>
+    </div>
+    <label class="fl">Bottoms</label>
+    <div class="chips" id="g-bottoms">
+      <div class="chip sel" data-b="shorts">Shorts</div><div class="chip" data-b="trousers">Trousers</div>
+    </div>
+    <label class="fl">Colour</label>
+    <div class="swatches" id="g-colors"></div>
+    <div class="row2">
+      <div><label class="fl">Size</label><div class="chips" id="g-sizes"><div class="chip" data-s="S">S</div><div class="chip sel" data-s="M">M</div><div class="chip" data-s="L">L</div><div class="chip" data-s="XL">XL</div><div class="chip" data-s="Bespoke">Bespoke</div></div></div>
+      <div><label class="fl">Collar</label><div class="chips" id="g-collar"><div class="chip sel" data-c="spread">Spread</div><div class="chip" data-c="mandarin">Mandarin</div><div class="chip" data-c="cuban">Cuban</div></div></div>
+    </div>
+    <div id="fit-zones" style="margin-top:12px"></div>
+    <button class="btn btn-red" onclick="BV.addToBag()">Add this look to bag →</button>
+  </div>
+
+  <!-- AI PHOTO TRY-ON · same Phase-3 system, clearly separated -->
+  <div class="vto-primary">
+    <div>
+      <div class="tag">AI photo try-on · primary fitting room</div>
+      <h2>Try on with my photo</h2>
+      <p>See the actual garment rendered on your own photo by the AI fitting engine — the same try-on system used across CODED FIT. The 3D avatar above is only an optional size preview.</p>
+    </div>
+    <div>
+      <button class="btn btn-red" style="margin-top:0" onclick="fitPhotoTryon()">Try on with my photo →</button>
+      <div class="hint" style="color:rgba(255,255,255,.55);margin-top:8px">Carries this tab's photo to the try-on screen. If the engine isn't configured, it will say so — never a fake result. <a href="tryon.html" style="color:#fff;">Open try-on without a photo →</a></div>
+    </div>
+  </div>
+
+  <div class="vto-note">The avatar preview and the photo try-on are <b>two separate rooms</b>: avatar = quick size and drape check on a model shaped like you · photo try-on = the real garment on your real photo.</div>
+
+  <!-- Fit assistant (existing) -->
+  <div class="card">
+    <div class="card-head"><h2>Fit assistant</h2><span class="n">English · Hindi · Hinglish</span></div>
+    <div class="hint">Try: “mujhe thoda loose fit chahiye” · “isko black kar do” · “collar mandarin kar do” · “peeche se dikhao”</div>
+    <div class="row2"><input type="text" id="ai-in" placeholder="..."><button class="btn btn-dark btn-sm" style="margin-top:0" onclick="BV.assistant()">Ask →</button></div>
+    <div id="ai-out" class="hint" style="margin-top:10px"></div>
+  </div>
+</div>
+<script>
+  // Hand the current tab photo to the Phase-3 AI try-on screen (same system, no duplicate).
+  function fitPhotoTryon() {
+    try {
+      var cv = document.getElementById('photo-canvas');
+      if (cv && cv.width > 0) {
+        var url = cv.toDataURL('image/jpeg', 0.85);
+        // Blank canvases encode tiny — only carry a real photo.
+        if (url && url.length > 8000) {
+          try { sessionStorage.setItem('CF_TRYON_PHOTO', url); } catch (e) {}
+        }
+      }
+    } catch (e) {}
+    window.location.href = 'tryon.html?from=fitstudio';
+  }
+</script>
+<script src="js/navbar.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/products.js"></script>
+<script src="js/body-visualizer.js"></script>
+<script src="js/trust.js"></script><script src="js/aiAssistant.js"></script></body>
+</html>
