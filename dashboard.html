@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Terminal &amp; Biometric Vault | CODED FIT [BLR-ATELIER]</title>
+  <meta name="description" content="Atelier Client Terminal: Active CNC Laser Cutting Telemetry, Biometric Fit Vault, Delivered Archives & 1-Click Repeat Reordering.">
+
+  <!-- Typography & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/studio3d.css">
+
+  <style>
+    body.dash-page-body {
+      background: #f7f7f8;
+      color: #0f1013;
+      font-family: var(--font-body);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top Telemetry Bar */
+    .top-telemetry-banner {
+      background: #232323;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 8px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top-telemetry-banner .p-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--crimson);
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    /* Site Header */
+    .dash-nav-header {
+      background: #fff;
+      border-bottom: 1px solid #e5e5e7;
+      padding: 14px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dash-brand-area {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .dash-brand-area .b-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    .dash-brand-area .b-sub {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--crimson);
+      font-weight: 800;
+    }
+
+    .dash-nav-links {
+      display: flex;
+      gap: 22px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .dash-nav-links a {
+      color: #000;
+      text-decoration: none;
+    }
+
+    .dash-nav-links a.red-link {
+      color: var(--crimson);
+    }
+
+    .dash-status-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    /* Sub-bar: Encrypted Session */
+    .session-subbar {
+      background: #18191d;
+      color: #999;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 6px 32px;
+      display: flex;
+      justify-content: space-between;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .session-subbar strong {
+      color: #fff;
+    }
+
+    /* Main Container */
+    .dash-main-container {
+      max-width: 1440px;
+      margin: 32px auto 80px;
+      padding: 0 32px;
+    }
+
+    /* Client Banner */
+    .client-terminal-card {
+      background: #fff;
+      border: 1px solid #e5e5e7;
+      padding: 28px 36px;
+      border-radius: 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .terminal-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--crimson);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .terminal-title-h1 {
+      font-family: var(--font-heading);
+      font-size: 34px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #000;
+      margin: 0;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .terminal-title-h1 .client-tier-sub {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: #666;
+      font-weight: 700;
+    }
+
+    .terminal-actions-right {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-recal {
+      background: var(--crimson);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-recal:hover {
+      background: #b80500;
+    }
+
+    .btn-visit {
+      background: #fff;
+      color: #000;
+      border: 1px solid #ccc;
+      padding: 10px 18px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-visit:hover {
+      background: #f0f0f2;
+    }
+
+    /* 4 Key Metric Cards */
+    .metrics-quad-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .metric-card-box {
+      background: #fff;
+      border: 1px solid #e5e5e7;
+      padding: 20px 24px;
+      border-radius: 2px;
+    }
+
+    .metric-card-label {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .metric-card-value {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 900;
+      color: #000;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .metric-card-sub {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: #666;
+      margin-top: 6px;
+    }
+
+    /* Navigation Tabs Bar */
+    .dash-tabs-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .d-tab-btn {
+      background: #fff;
+      border: 1px solid #e2e2e6;
+      padding: 10px 18px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      border-radius: 2px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .d-tab-btn.active {
+      background: #000;
+      color: #fff;
+      border-color: #000;
+    }
+
+    .d-tab-btn .badge-num {
+      color: var(--crimson);
+      margin-left: 4px;
+    }
+
+    /* Main Content 2-Column Split */
+    .dash-split-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* Active Commissions Cards */
+    .section-headline-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .headline-title {
+      color: #000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .headline-telemetry {
+      color: #888;
+    }
+
+    .commission-full-card {
+      background: #fff;
+      border: 1px solid #e5e5e7;
+      padding: 24px;
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+
+    .cfc-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .badge-stage-red {
+      background: var(--crimson);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 1px;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-stage-gray {
+      background: #232323;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 1px;
+      letter-spacing: 0.5px;
+    }
+
+    .cfc-body-grid {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 24px;
+    }
+
+    .cfc-thumb-box {
+      width: 150px;
+      height: 180px;
+      background: #111;
+      position: relative;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .cfc-thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cfc-thumb-overlay {
+      position: absolute;
+      bottom: 6px;
+      left: 6px;
+      font-family: var(--font-mono);
+      font-size: 8px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 2px 5px;
+    }
+
+    .cfc-details-col {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cfc-subline {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 800;
+      color: var(--crimson);
+      letter-spacing: 0.5px;
+    }
+
+    .cfc-title {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #000;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .cfc-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .cfc-meta-grid strong {
+      color: #000;
+    }
+
+    /* 11 Stage Mini Progress */
+    .mini-stepper-box {
+      background: #f7f7f9;
+      border: 1px solid #e5e5e7;
+      padding: 12px 14px;
+      border-radius: 2px;
+      margin: 12px 0;
+    }
+
+    .msb-title-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .msb-steps-row {
+      display: grid;
+      grid-template-columns: repeat(11, 1fr);
+      gap: 3px;
+    }
+
+    .ms-pill {
+      background: #e2e2e6;
+      font-family: var(--font-mono);
+      font-size: 7.5px;
+      text-align: center;
+      padding: 3px 0;
+      font-weight: 700;
+      color: #666;
+      border-radius: 1px;
+    }
+
+    .ms-pill.done {
+      background: #000;
+      color: #fff;
+    }
+
+    .ms-pill.active {
+      background: var(--crimson);
+      color: #fff;
+    }
+
+    .cfc-actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .btn-ghost-square {
+      background: #232323;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      border-radius: 2px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-ghost-square:hover {
+      background: #000;
+    }
+
+    .btn-ghost-white {
+      background: #fff;
+      color: #000;
+      border: 1px solid #ccc;
+    }
+
+    .btn-ghost-white:hover {
+      background: #f0f0f2;
+    }
+
+    /* Delivered Archives */
+    .delivered-section {
+      margin-top: 36px;
+    }
+
+    .archive-card {
+      background: #fff;
+      border: 1px solid #e5e5e7;
+      padding: 20px 24px;
+      border-radius: 2px;
+      margin-bottom: 14px;
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .archive-thumb {
+      width: 80px;
+      height: 95px;
+      background: #111;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .archive-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .arch-title {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #000;
+      margin: 2px 0 4px;
+    }
+
+    .arch-sub {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: #777;
+    }
+
+    .arch-price {
+      font-family: var(--font-mono);
+      font-size: 17px;
+      font-weight: 800;
+      color: #000;
+      text-align: right;
+      margin-bottom: 8px;
+    }
+
+    .btn-reorder {
+      background: #232323;
+      color: #fff;
+      border: none;
+      padding: 9px 14px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      border-radius: 2px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-reorder:hover {
+      background: var(--crimson);
+    }
+
+    /* RIGHT SIDEBAR */
+    .dash-sidebar-col {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Biometric Fit Profile Card */
+    .biometric-vault-card {
+      background: #fff;
+      border: 1px solid #e5e5e7;
+      padding: 24px;
+      border-radius: 2px;
+    }
+
+    .bvc-head-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .bvc-status-sub {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--crimson);
+      margin-bottom: 12px;
+    }
+
+    .wireframe-visualizer-box {
+      background: #f7f7f9;
+      border: 1px solid #e5e5e7;
+      border-radius: 2px;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 16px;
+      min-height: 220px;
+    }
+
+    .bvc-specs-table {
+      width: 100%;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+    }
+
+    .bvc-specs-table tr {
+      border-bottom: 1px solid #f0f0f2;
+    }
+
+    .bvc-specs-table td {
+      padding: 6px 0;
+    }
+
+    .bvc-specs-table td:last-child {
+      text-align: right;
+      color: #000;
+      font-weight: 800;
+    }
+
+    .bias-config-box {
+      background: #f7f7f9;
+      border: 1px solid #e5e5e7;
+      padding: 12px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      border-radius: 2px;
+      margin-bottom: 16px;
+    }
+
+    .bias-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .btn-360-scanner {
+      width: 100%;
+      background: var(--crimson);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+
+    .btn-360-scanner:hover {
+      background: #b80500;
+    }
+
+    /* Saved 3D Architectures Card */
+    .saved-architectures-card {
+      background: #fff;
+      border: 1px solid #e5e5e7;
+      padding: 24px;
+      border-radius: 2px;
+    }
+
+    .arch-item-row {
+      display: flex;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f2;
+      align-items: center;
+    }
+
+    .arch-item-row:last-child {
+      border-bottom: none;
+    }
+
+    .arch-img-sq {
+      width: 48px;
+      height: 48px;
+      background: #111;
+      border-radius: 2px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .arch-img-sq img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .arch-txt-name {
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #000;
+    }
+
+    .arch-txt-sub {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: #888;
+    }
+
+    .btn-resume-studio {
+      color: var(--crimson);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* Dispatch Nodes Card */
+    .dispatch-node-card {
+      background: #fff;
+      border: 1px solid #e5e5e7;
+      padding: 20px 24px;
+      border-radius: 2px;
+    }
+
+    /* Covenant Banner */
+    .dash-covenant-banner {
+      background: #232323;
+      color: #fff;
+      padding: 24px 32px;
+      border-radius: 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 36px;
+    }
+
+    .dcb-content-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .dcb-shield {
+      width: 36px;
+      height: 36px;
+      background: var(--crimson);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 2px;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .dcb-text h4 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin: 0 0 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .dcb-text p {
+      font-size: 12px;
+      color: #aaa;
+      margin: 0;
+    }
+
+    @media (max-width: 1080px) {
+      .dash-split-grid { grid-template-columns: 1fr; }
+      .metrics-quad-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body class="dash-page-body">
+
+  <!-- MASTER UNIFIED NAVBAR MOUNT -->
+  <div id="cf-navbar-mount"></div>
+
+  <!-- ── 4. MAIN DASHBOARD CONTENT ── -->
+  <main class="dash-main-container">
+    
+    <!-- CLIENT TERMINAL HEADER -->
+    <div class="client-terminal-card">
+      <div>
+        <div class="terminal-eyebrow">■ ATELIER CLIENT TERMINAL &amp; BIOMETRIC VAULT</div>
+        <h1 class="terminal-title-h1">
+          <span>DHYEY M.</span>
+          <span class="client-tier-sub">[ATELIER BLACK MEMBER #CF-8821-BLR]</span>
+        </h1>
+        <div style="font-size:12.5px;color:#777;margin-top:6px;">
+          Bespoke luxury streetwear calibrations &amp; bespoke commission history.
+        </div>
+      </div>
+
+      <div class="terminal-actions-right">
+        <a href="fit-profile.html" class="btn-recal">
+          <span>⚡</span> [RE-CALIBRATE AI FIT (60 SEC)]
+        </a>
+        <button class="btn-visit" onclick="requestDarziVisit()">
+          <span>📍</span> [REQUEST MASTER DARZI VISIT]
+        </button>
+      </div>
+    </div>
+
+    <!-- 4 KEY METRIC CARDS -->
+    <div class="metrics-quad-grid">
+      <!-- 01 Active -->
+      <div class="metric-card-box">
+        <div class="metric-card-label">ACTIVE COMMISSIONS</div>
+        <div class="metric-card-value">02 IN PRODUCTION</div>
+        <div class="metric-card-sub" style="color:var(--crimson);font-weight:700;">Stage 04 Laser Cutting + RTW Dispatched</div>
+      </div>
+
+      <!-- 02 Measurements -->
+      <div class="metric-card-box">
+        <div class="metric-card-label">VERIFIED MEASUREMENTS</div>
+        <div class="metric-card-value">18 BIOMETRIC NODES</div>
+        <div class="metric-card-sub">0.5mm Tolerance // Locked</div>
+      </div>
+
+      <!-- 03 Lifetime Value -->
+      <div class="metric-card-box">
+        <div class="metric-card-label">LIFETIME VALUE / PIECES</div>
+        <div class="metric-card-value">14 SILHOUETTES</div>
+        <div class="metric-card-sub">Commissioned since Oct 2024</div>
+      </div>
+
+      <!-- 04 Fit Confidence -->
+      <div class="metric-card-box">
+        <div class="metric-card-label">FIT CONFIDENCE INDEX</div>
+        <div class="metric-card-value" style="color:#10b981;">100% ZERO DEFECT</div>
+        <div class="metric-card-sub" style="color:var(--crimson);font-weight:700;">Zero Re-Cuts Record</div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION TABS -->
+    <div class="dash-tabs-bar">
+      <button class="d-tab-btn active">[01 // ACTIVE COMMISSIONS <span class="badge-num">(2)</span>]</button>
+      <button class="d-tab-btn" onclick="window.location.href='fit-profile.html'">[02 // BIOMETRIC FIT VAULT]</button>
+      <button class="d-tab-btn" onclick="window.location.href='customize.html'">[03 // SAVED 3D ATELIER ARCHITECTURES (4)]</button>
+      <button class="d-tab-btn" onclick="alert('Dispatch Node: Sovereign Towers, Indiranagar, Bengaluru. BlueDart Priority Active.')">[04 // ADDRESSES &amp; DISPATCH NODES]</button>
+      <button class="d-tab-btn" onclick="alert('100% Doorstep Fit Guarantee Covenant Active across all orders.')">[05 // TAILORING REVIEWS &amp; COVENANTS]</button>
+    </div>
+
+    <!-- MAIN 2-COLUMN SPLIT -->
+    <div class="dash-split-grid">
+      
+      <!-- LEFT COLUMN -->
+      <div>
+        
+        <!-- ACTIVE COMMISSIONS SECTION -->
+        <div class="section-headline-bar">
+          <div class="headline-title">
+            <span style="color:var(--crimson);">[PIPELINE // 01]</span>
+            <span>ACTIVE ATELIER COMMISSIONS</span>
+          </div>
+          <div class="headline-telemetry">TELEMETRY: REAL-TIME CNC</div>
+        </div>
+
+        <!-- ACTIVE ORDER 1: Custom Drop-Shoulder Merino Overshirt -->
+        <div class="commission-full-card">
+          <div class="cfc-top-row">
+            <span class="badge-stage-red">STAGE 04: LASER CUTTING (60%)</span>
+            <span>ORDER #CF-2026-8921</span>
+            <span>EST. DELIVERY: 22 OCT 2025</span>
+            <span style="font-size:14px;color:#000;">₹4,504</span>
+          </div>
+
+          <div class="cfc-body-grid">
+            <div class="cfc-thumb-box">
+              <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop" alt="Merino Overshirt">
+              <div class="cfc-thumb-overlay">CALIBRATED #CF-8821</div>
+            </div>
+
+            <div class="cfc-details-col">
+              <div class="cfc-subline">ATELIER BESPOKE LINE // 280 GSM MERINO TWILL</div>
+              <h3 class="cfc-title">CUSTOM DROP-SHOULDER MERINO OVERSHIRT</h3>
+              
+              <div class="cfc-meta-grid">
+                <div>Color: <strong>Concrete Slate</strong></div>
+                <div>Operative: <strong>Master Farooq A. (32 Yrs Exp)</strong></div>
+                <div>Monogram: <strong>[D.M.] Tactical Chest</strong></div>
+                <div>Laser Beam: <strong>CO2 0.10mm Precision</strong></div>
+              </div>
+
+              <!-- 11-Stage Mini Progress -->
+              <div class="mini-stepper-box">
+                <div class="msb-title-row">
+                  <span style="color:var(--crimson);">● STAGE 04 OF 11: LASER CNC FABRIC CUTTING</span>
+                  <span style="color:var(--crimson);">60% COMPLETE</span>
+                </div>
+                <div class="msb-steps-row">
+                  <div class="ms-pill done">01 LOCK</div>
+                  <div class="ms-pill done">02 CAD</div>
+                  <div class="ms-pill done">03 MILL</div>
+                  <div class="ms-pill active">04 CUT</div>
+                  <div class="ms-pill">05 STITCH</div>
+                  <div class="ms-pill">06 FUS</div>
+                  <div class="ms-pill">07 COLLAR</div>
+                  <div class="ms-pill">08 HEMO</div>
+                  <div class="ms-pill">09 STEAM</div>
+                  <div class="ms-pill">10 QA</div>
+                  <div class="ms-pill">11 SHIP</div>
+                </div>
+              </div>
+
+              <div class="cfc-actions-row">
+                <div style="display:flex;gap:8px;">
+                  <button class="btn-ghost-square" onclick="viewCadBlueprint()">
+                    [VIEW REAL-TIME CAD BLUEPRINT]
+                  </button>
+                  <a href="concierge.html" class="btn-ghost-square btn-ghost-white">
+                    [WHATSAPP CONCIERGE]
+                  </a>
+                </div>
+                <span style="font-family:var(--font-mono);font-size:9.5px;color:#888;">TOLERANCE: 0.5MM STRICT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVE ORDER 2: RTW Cuban Shirt -->
+        <div class="commission-full-card">
+          <div class="cfc-top-row">
+            <span class="badge-stage-gray">RTW DISPATCHED // READY-TO-WEAR CALIBRATED</span>
+            <span>ORDER #CF-2026-8922</span>
+            <span style="color:#10b981;">ARRIVING TOMORROW</span>
+            <span style="font-size:14px;color:#000;">₹1,799</span>
+          </div>
+
+          <div class="cfc-body-grid">
+            <div class="cfc-thumb-box">
+              <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=800&auto=format&fit=crop" alt="Cuban Shirt">
+              <div class="cfc-thumb-overlay">AWB #88219042</div>
+            </div>
+
+            <div class="cfc-details-col">
+              <div class="cfc-subline" style="color:#000;">RESORT TECH FABRIC // 160 GSM</div>
+              <h3 class="cfc-title">AERO-DRAPE CUBAN COLLAR SHIRT</h3>
+              <div style="font-size:12px;color:#666;line-height:1.4;margin:4px 0;">
+                Calibrated to Biometric Chest 41.2", Drop Shoulder +1.5". Hand-inspected at Bengaluru Atelier Hub.
+              </div>
+              <div style="font-family:var(--font-mono);font-size:10px;color:var(--crimson);font-weight:700;">
+                STATUS: DISPATCHED // BLUEDART AIR AWB #88219042 // ARRIVING TOMORROW
+              </div>
+
+              <div class="cfc-actions-row" style="margin-top:14px;">
+                <div style="display:flex;gap:8px;">
+                  <button class="btn-ghost-square" onclick="alert('BlueDart Express Tracking: Courier departed Bengaluru Airport hub at 06:14 AM. Out for delivery tomorrow morning.')">
+                    [TRACK SHIPMENT]
+                  </button>
+                  <button class="btn-ghost-square btn-ghost-white" onclick="alert('Doorstep Valet 10-Minute Trial Slot reserved for tomorrow 2:00 PM - 4:00 PM.')">
+                    [DOORSTEP TRIAL SLOTS]
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DELIVERED ARCHIVES // 1-CLICK REPEAT SPEC -->
+        <div class="delivered-section">
+          <div class="section-headline-bar">
+            <div class="headline-title">
+              <span style="color:#000;">DELIVERED ARCHIVES // 1-CLICK REPEAT SPEC</span>
+            </div>
+            <a href="shop.html" style="font-family:var(--font-mono);font-size:10px;color:#888;text-decoration:none;">VIEW ALL 14 ARCHIVES →</a>
+          </div>
+
+          <!-- Archive Item 1 -->
+          <div class="archive-card">
+            <div class="archive-thumb">
+              <img src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?q=80&w=800&auto=format&fit=crop" alt="Pleated Trouser">
+            </div>
+            <div>
+              <div class="arch-sub">DELIVERED SEP 2025 // #CF-7712</div>
+              <h4 class="arch-title">STRUCTURED PLEATED TROUSER</h4>
+              <div class="arch-sub" style="color:var(--crimson);font-weight:700;">Size 33" Locked // Dark Iron // 10/10 Fit Confirmed</div>
+            </div>
+            <div>
+              <div class="arch-price">₹3,999</div>
+              <button class="btn-reorder" onclick="oneClickReorder('CP-TR-01', 'STRUCTURED PLEATED TROUSER', 3999)">
+                [1-CLICK REORDER SAME FIT] ⤓
+              </button>
+            </div>
+          </div>
+
+          <!-- Archive Item 2 -->
+          <div class="archive-card">
+            <div class="archive-thumb">
+              <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop" alt="Heavy Tee">
+            </div>
+            <div>
+              <div class="arch-sub">DELIVERED JUL 2025 // #CF-6104</div>
+              <h4 class="arch-title">320 GSM BOXY ARCHETYPE TEE</h4>
+              <div class="arch-sub" style="color:var(--crimson);font-weight:700;">Oversized Calibrated // Raw Chalk</div>
+            </div>
+            <div>
+              <div class="arch-price">₹1,899</div>
+              <button class="btn-reorder" onclick="oneClickReorder('CP-TE-01', '320 GSM BOXY ARCHETYPE TEE', 1899)">
+                [1-CLICK REORDER SAME FIT] ⤓
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDEBAR -->
+      <div class="dash-sidebar-col">
+        
+        <!-- BIOMETRIC FIT PROFILE CARD -->
+        <div class="biometric-vault-card">
+          <div class="bvc-head-row">
+            <span style="color:#000;">■ BIOMETRIC FIT PROFILE</span>
+            <span style="color:var(--crimson);">#CF-8821-LOCKED</span>
+          </div>
+          
+          <div class="bvc-status-sub">
+            STATUS BADGE: 99.4% DRAPE ACCORD // ACTIVE TENSOR LOCK ✓
+          </div>
+
+          <!-- Stylized Wireframe with Callout Nodes -->
+          <div class="wireframe-visualizer-box">
+            <svg viewBox="0 0 240 240" width="100%" height="200">
+              <!-- Mannequin Outline -->
+              <ellipse cx="120" cy="24" rx="11" ry="14" fill="none" stroke="#222" stroke-width="1.5"/>
+              <line x1="120" y1="38" x2="120" y2="52" stroke="#222" stroke-width="1.5"/>
+              
+              <!-- Shoulders -->
+              <line x1="72" y1="56" x2="168" y2="56" stroke="var(--crimson)" stroke-width="2"/>
+              <circle cx="72" cy="56" r="3" fill="var(--crimson)"/>
+              <circle cx="168" cy="56" r="3" fill="var(--crimson)"/>
+              <rect x="18" y="48" width="50" height="16" fill="#000" rx="1"/>
+              <text x="22" y="60" fill="#fff" font-family="monospace" font-size="8.5" font-weight="bold">Shoulder: 18.2"</text>
+
+              <!-- Chest -->
+              <path d="M 72 56 L 82 100 L 88 135 L 120 145 L 152 135 L 158 100 L 168 56 Z" fill="rgba(0,0,0,0.03)" stroke="#333" stroke-width="1.5"/>
+              <line x1="82" y1="95" x2="158" y2="95" stroke="#333" stroke-dasharray="2,2"/>
+              <rect x="168" y="88" width="46" height="16" fill="#000" rx="1"/>
+              <text x="172" y="100" fill="#fff" font-family="monospace" font-size="8.5" font-weight="bold">Chest: 41.2"</text>
+
+              <!-- Torso Drop Callout -->
+              <rect x="18" y="112" width="56" height="16" fill="#000" rx="1"/>
+              <text x="22" y="124" fill="#fff" font-family="monospace" font-size="8.5" font-weight="bold">Torso: 28.5"</text>
+
+              <!-- Waist -->
+              <line x1="88" y1="135" x2="152" y2="135" stroke="var(--crimson)" stroke-width="1.5"/>
+              <rect x="168" y="128" width="46" height="16" fill="#000" rx="1"/>
+              <text x="172" y="140" fill="#fff" font-family="monospace" font-size="8.5" font-weight="bold">Waist: 33.0"</text>
+
+              <!-- Inseam & Legs -->
+              <path d="M 100 150 L 92 225" fill="none" stroke="#666" stroke-width="1.5"/>
+              <path d="M 140 150 L 148 225" fill="none" stroke="#666" stroke-width="1.5"/>
+              <rect x="18" y="195" width="50" height="16" fill="#000" rx="1"/>
+              <text x="22" y="207" fill="#fff" font-family="monospace" font-size="8.5" font-weight="bold">Inseam: 30.5"</text>
+            </svg>
+          </div>
+
+          <table class="bvc-specs-table">
+            <tr>
+              <td style="color:#777;">Shoulder Pitch:</td>
+              <td>18.2" (AI Estimate / Calibrated)</td>
+            </tr>
+            <tr>
+              <td style="color:#777;">Chest Circumference:</td>
+              <td style="color:var(--crimson);">41.2" (User Confirmed)</td>
+            </tr>
+            <tr>
+              <td style="color:#777;">Torso Drop Ratio:</td>
+              <td>28.5"</td>
+            </tr>
+            <tr>
+              <td style="color:#777;">Waistline:</td>
+              <td>33.0"</td>
+            </tr>
+            <tr>
+              <td style="color:#777;">Calibrated Inseam:</td>
+              <td>30.5" (Korean Pleat Break Locked)</td>
+            </tr>
+          </table>
+
+          <div class="bias-config-box">
+            <div style="color:#888;font-weight:700;margin-bottom:6px;">DRAPE BIAS CONFIGURATION:</div>
+            <div class="bias-line">
+              <span style="color:#555;">-1.5" Slouch Drape Bias</span>
+              <strong style="color:var(--crimson);">Active</strong>
+            </div>
+            <div class="bias-line">
+              <span style="color:#555;">Relaxed Streetwear Silhouette</span>
+              <strong style="color:#000;">Default</strong>
+            </div>
+            <div class="bias-line">
+              <span style="color:#555;">High-Rise Pleat Break</span>
+              <strong style="color:#000;">Locked</strong>
+            </div>
+          </div>
+
+          <a href="customize.html" class="btn-360-scanner">
+            [OPEN 360 VOLUMETRIC SCANNER]
+          </a>
+        </div>
+
+        <!-- SAVED 3D ATELIER ARCHITECTURES -->
+        <div class="saved-architectures-card">
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;font-weight:800;color:#000;margin-bottom:16px;">
+            <span>SAVED 3D ATELIER ARCHITECTURES</span>
+            <span style="color:#888;">4 SLOTS TOTAL</span>
+          </div>
+
+          <!-- Architecture 1 -->
+          <div class="arch-item-row">
+            <div class="arch-img-sq">
+              <img src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=400&auto=format&fit=crop" alt="Monsoon Tactical">
+            </div>
+            <div style="flex:1;">
+              <div class="arch-txt-name">MONSOON TACTICAL JACKET</div>
+              <div class="arch-txt-sub">Draft #D-901 // Charcoal 340 GSM</div>
+              <div style="font-family:var(--font-mono);font-size:11px;font-weight:800;color:#000;margin-top:2px;">₹3,499</div>
+            </div>
+            <a href="customize.html" class="btn-resume-studio">[RESUME IN 3D STUDIO]</a>
+          </div>
+
+          <!-- Architecture 2 -->
+          <div class="arch-item-row">
+            <div class="arch-img-sq">
+              <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=400&auto=format&fit=crop" alt="Relaxed Cuban">
+            </div>
+            <div style="flex:1;">
+              <div class="arch-txt-name">RELAXED CUBAN SILK</div>
+              <div class="arch-txt-sub">Draft #D-842 // Bone White Silk-Cotton</div>
+              <div style="font-family:var(--font-mono);font-size:11px;font-weight:800;color:#000;margin-top:2px;">₹2,799</div>
+            </div>
+            <a href="customize.html" class="btn-resume-studio">[RESUME IN 3D STUDIO]</a>
+          </div>
+
+          <div style="text-align:center;padding-top:14px;border-top:1px solid #f0f0f2;margin-top:8px;">
+            <a href="customize.html" style="font-family:var(--font-mono);font-size:10px;font-weight:800;color:#000;text-decoration:none;">
+              + NEW 3D ARCHITECTURE
+            </a>
+          </div>
+        </div>
+
+        <!-- DISPATCH NODES -->
+        <div class="dispatch-node-card">
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;font-weight:800;margin-bottom:8px;">
+            <span>DISPATCH NODES</span>
+            <span style="color:var(--crimson);">PRIMARY ACTIVE</span>
+          </div>
+          <div style="font-family:var(--font-heading);font-size:12px;font-weight:800;text-transform:uppercase;color:#000;">
+            PRIMARY: RESIDENCE (BLR-EAST) [DEFAULT NODE]
+          </div>
+          <div style="font-size:11.5px;color:#555;line-height:1.4;margin-top:4px;">
+            Apartment 804, Sovereign Towers, 100 Feet Road, Indiranagar, Bengaluru, KA 560038
+          </div>
+          <div style="font-family:var(--font-mono);font-size:9.5px;color:#888;margin-top:8px;">
+            Verified for Master Tailor Trial Visits &amp; Expedited Dispatch
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- COVENANT FOOTER BANNER -->
+    <div class="dash-covenant-banner">
+      <div class="dcb-content-wrap">
+        <div class="dcb-shield">&#9673;</div>
+        <div class="dcb-text">
+          <h4>CODED FIT ZERO-RISK ATELIER COVENANT</h4>
+          <p>Every millimeter calibrated order includes complementary master-tailor alterations and complimentary doorstep trial pickups across India.</p>
+        </div>
+      </div>
+      <button class="btn-visit" onclick="alert('Doorstep Valet Covenant: Complimentary 10-min fitting, immediate alterations, and zero-cost re-cuts.')">
+        READ FIT GUARANTEE PROTOCOL
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="site-footer">
+    <div class="trust-bar" style="background:#fff;border-top:1px solid #e5e5e7;border-bottom:1px solid #e5e5e7;">
+      <div class="trust-pill"><span class="t-icon">&#9679;</span> 100% DOORSTEP FIT GUARANTEE</div>
+      <div class="trust-pill"><span class="t-icon">&#9679;</span> MILLIMETER PRECISION AI FIT</div>
+      <div class="trust-pill"><span class="t-icon">&#9679;</span> 1-CLICK REPEAT SPEC</div>
+      <div class="trust-pill"><span class="t-icon">&#9679;</span> FREE ATELIER ALTERATIONS</div>
+    </div>
+    <div class="footer-bottom-bar">
+      <div>ISO 9001:2015 CERTIFIED PRECISION ATELIER // BENGALURU, INDIA</div>
+      <div>SERVER STATUS: NOMINAL &nbsp;|&nbsp; ENCRYPTION: 256-BIT SHA &nbsp;|&nbsp; BANGALORE HQ</div>
+    </div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+    function oneClickReorder(id, name, price) {
+      if (typeof window.CART !== 'undefined' && window.CART.addItem) {
+        window.CART.addItem({
+          id: id,
+          name: name,
+          price: price,
+          size: "33 (Calibrated)",
+          qty: 1
+        });
+      }
+      alert(`[1-CLICK REORDER TRIGGERED]\n${name} (₹${price.toLocaleString('en-IN')}) with your locked biometric fit profile (#CF-8821) queued for immediate dispatch.`);
+      window.location.href = "cart.html";
+    }
+
+    function viewCadBlueprint() {
+      alert("CAD Blueprint #CF-2026-8921:\n- Fabric: 280 GSM Merino Twill\n- Cutting Machine: CNC Bed #02 CO2 Laser\n- Calibrated: Shoulder 18.2\", Chest 41.2\", Waist 33.0\"\n- Tolerance: 0.50mm strict");
+    }
+
+    function requestDarziVisit() {
+      alert("Master Darzi Doorstep Visit requested for Bengaluru East (Indiranagar). An atelier valet concierge will contact you on WhatsApp (+91 98765 43210) to confirm your 30-minute measurement window.");
+    }
+  </script>
+<script src="js/aiAssistant.js"></script></body>
+</html>

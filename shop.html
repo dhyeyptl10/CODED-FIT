@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop All &amp; Curated Bespoke Drops | CODED FIT [BLR-ATELIER]</title>
+  <meta name="description" content="Generative patterns custom-tailored to volumetric torso indices. Handcrafted in our Bengaluru lab with zero deadstock precision.">
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/studio3d.css">
+
+  <style>
+    /* Styling for Shop page matching Image 5 */
+    body.shop-page-body {
+      background: #f7f7f8;
+      color: #121214;
+    }
+    .shop-page-body header.site-header {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e2e5;
+    }
+    .shop-page-body .brand-logo { color: #000; }
+    .shop-page-body .main-nav-links a { color: #444; }
+    .shop-page-body .main-nav-links a:hover,
+    .shop-page-body .main-nav-links a.active { color: #000; }
+    .shop-page-body .currency-badge { color: #333; background: #eee; border-color: #ddd; }
+    .shop-page-body .header-icon-btn { color: #222; }
+
+    /* Top Category Pills Bar */
+    .catalog-pills-bar {
+      background: #fff;
+      border-bottom: 1px solid #e2e2e5;
+      padding: 12px 32px;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .cat-pill-btn {
+      background: #f0f0f2;
+      border: 1px solid #ddd;
+      color: #444;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: var(--radius-xs);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .cat-pill-btn:hover {
+      background: #e2e2e5;
+      color: #000;
+    }
+
+    .cat-pill-btn.active {
+      background: #000;
+      color: #fff;
+      border-color: #000;
+    }
+
+    .cat-pill-btn.red-highlight {
+      color: var(--crimson);
+      border-color: rgba(225, 6, 0, 0.3);
+      background: rgba(225, 6, 0, 0.05);
+    }
+
+    .cat-pill-btn.red-highlight:hover {
+      background: var(--crimson);
+      color: #fff;
+    }
+
+    /* Main Shop Catalog Layout */
+    .shop-catalog-layout {
+      max-width: 1720px;
+      margin: 0 auto;
+      padding: 36px 32px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 36px;
+      align-items: start;
+    }
+
+    /* Sidebar Filter Matrix */
+    .filter-sidebar {
+      background: #fff;
+      border: 1px solid #e2e2e5;
+      padding: 24px;
+      border-radius: var(--radius-xs);
+    }
+
+    .filter-head-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #000;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .filter-group-sec {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .filter-group-title {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #000;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .filter-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #444;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .filter-checkbox-label input {
+      accent-color: var(--crimson);
+    }
+
+    .filter-checkbox-label .item-count {
+      margin-left: auto;
+      color: #888;
+      font-size: 10px;
+    }
+
+    /* Color Swatch Dots */
+    .filter-color-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .color-filter-circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #ddd;
+    }
+
+    .color-filter-circle.active {
+      border-color: #000;
+      transform: scale(1.1);
+    }
+
+    /* Saved Biometrics Mini Card (Image 5) */
+    .saved-biometrics-card {
+      background: #fbfbfb;
+      border: 1px solid #e0e0e0;
+      border-left: 3px solid var(--crimson);
+      padding: 16px;
+      border-radius: 2px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      margin-top: 16px;
+    }
+
+    /* Sort Bar & Header */
+    .catalog-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e2e2e5;
+    }
+
+    .sort-control-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .sort-pill-btn {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 6px 12px;
+      border-radius: var(--radius-xs);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .sort-pill-btn.active {
+      background: #000;
+      color: #fff;
+      border-color: #000;
+    }
+
+    /* Commission 1-of-1 Banner (Image 5) */
+    .commission-banner {
+      background: #fff;
+      border: 1px solid #e2e2e5;
+      padding: 48px;
+      border-radius: var(--radius-xs);
+      margin: 48px auto;
+      max-width: 1720px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .commission-banner h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #000;
+      margin-bottom: 10px;
+    }
+
+    .commission-banner p {
+      font-size: 13.5px;
+      color: #555;
+      line-height: 1.6;
+      max-width: 700px;
+    }
+
+    .commission-banner-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 280px;
+    }
+
+    @media (max-width: 1024px) {
+      .shop-catalog-layout { grid-template-columns: 1fr; }
+      .commission-banner { flex-direction: column; }
+    }
+  </style>
+</head>
+<body class="shop-page-body">
+  <!-- MASTER UNIFIED NAVBAR MOUNT -->
+  <div id="cf-navbar-mount"></div>
+
+  <!-- ── 3. TOP CATEGORY PILLS ROW (rendered by JS with live counts) ── -->
+  <div class="catalog-pills-bar" id="catalog-pills">
+    <button class="cat-pill-btn active" onclick="filterCatalog('all', this)">ALL DROPS</button>
+  </div>
+
+  <!-- ── 4. MAIN SHOP CATALOG CONTENT (IMAGE 5) ── -->
+  <main class="shop-catalog-layout">
+
+    <!-- ── LEFT SIDEBAR FILTER MATRIX ── -->
+    <aside class="filter-sidebar">
+      <div class="filter-head-title">
+        <span>FILTER MATRIX // <span id="filter-count">…</span> PIECES</span>
+        <a href="#" style="color:var(--crimson);font-size:10px;" onclick="resetFilters()">RESET ALL</a>
+      </div>
+
+      <!-- 01. Drape & Fit Profile -->
+      <div class="filter-group-sec">
+        <div class="filter-group-title">
+          <span>01. DRAPE &amp; FIT PROFILE</span>
+          <span>^</span>
+        </div>
+        <label class="filter-checkbox-label" style="color:var(--crimson);font-weight:700;">
+          <input type="checkbox" checked onchange="filterProductsList()">
+          <span>Active AI Synced (#CF-8821)</span>
+          <span class="item-count">24</span>
+        </label>
+        <label class="filter-checkbox-label">
+          <input type="checkbox" onchange="filterProductsList()">
+          <span>Relaxed Oversized</span>
+          <span class="item-count">18</span>
+        </label>
+        <label class="filter-checkbox-label">
+          <input type="checkbox" onchange="filterProductsList()">
+          <span>Boxy Atelier Cut</span>
+          <span class="item-count">12</span>
+        </label>
+        <label class="filter-checkbox-label">
+          <input type="checkbox" onchange="filterProductsList()">
+          <span>Architectural Slim</span>
+          <span class="item-count">9</span>
+        </label>
+        <label class="filter-checkbox-label">
+          <input type="checkbox" onchange="filterProductsList()">
+          <span>Tailored Zero-Break Taper</span>
+          <span class="item-count">15</span>
+        </label>
+      </div>
+
+      <!-- 02. Fabric Density & GSM -->
+      <div class="filter-group-sec">
+        <div class="filter-group-title">
+          <span>02. FABRIC DENSITY &amp; GSM</span>
+          <span>^</span>
+        </div>
+        <label class="filter-checkbox-label">
+          <input type="checkbox" onchange="filterProductsList()">
+          <span>280 GSM Heavy Combed Cotton</span>
+          <span class="item-count">11</span>
+        </label>
+        <label class="filter-checkbox-label">
+          <input type="checkbox" onchange="filterProductsList()">
+          <span>160 GSM Resort Tech Ripstop</span>
+          <span class="item-count">8</span>
+        </label>
+        <label class="filter-checkbox-label">
+          <input type="checkbox" onchange="filterProductsList()">
+          <span>Japanese Dense Twill Canvas</span>
+          <span class="item-count">7</span>
+        </label>
+        <label class="filter-checkbox-label">
+          <input type="checkbox" onchange="filterProductsList()">
+          <span>280 GSM Raw Merino Twill</span>
+          <span class="item-count">6</span>
+        </label>
+      </div>
+
+      <!-- 03. Production Velocity -->
+      <div class="filter-group-sec">
+        <div class="filter-group-title">
+          <span>03. PRODUCTION VELOCITY</span>
+          <span>^</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;">
+          <button class="sort-pill-btn active" style="font-size:9px;text-align:center;">READY-TO-WEAR (24H)</button>
+          <button class="sort-pill-btn" style="font-size:9px;text-align:center;background:var(--crimson);color:#fff;border-color:var(--crimson);">MTM (4 DAYS)</button>
+        </div>
+      </div>
+
+      <!-- 04. Colorway Palette -->
+      <div class="filter-group-sec">
+        <div class="filter-group-title">
+          <span>04. COLORWAY PALETTE</span>
+          <span>^</span>
+        </div>
+        <div class="filter-color-dots">
+          <div class="color-filter-circle active" style="background:#111;"></div>
+          <div class="color-filter-circle" style="background:#f4f3ee;"></div>
+          <div class="color-filter-circle" style="background:#3b4237;"></div>
+          <div class="color-filter-circle" style="background:#1b2232;"></div>
+        </div>
+      </div>
+
+      <!-- 05. Price Calibration -->
+      <div class="filter-group-sec">
+        <div class="filter-group-title">
+          <span>05. PRICE CALIBRATION</span>
+          <span style="color:var(--crimson);">₹1,299 - ₹4,999</span>
+        </div>
+        <input type="range" min="1299" max="7499" value="4999" style="width:100%;accent-color:var(--crimson);" oninput="filterByPrice(this.value)">
+      </div>
+
+      <!-- Doorstep Trial Checkbox -->
+      <div style="background:#f9f9f9;padding:12px;border:1px solid #ddd;border-radius:2px;">
+        <label class="filter-checkbox-label" style="font-weight:700;color:#000;">
+          <input type="checkbox" checked>
+          <span>DOORSTEP TRIAL ELIGIBLE</span>
+        </label>
+        <div style="font-size:10px;color:#777;line-height:1.4;margin-left:22px;">
+          Try on before full payment or request instant laser recut.
+        </div>
+      </div>
+
+      <!-- Saved Biometrics Mini Card -->
+      <div class="saved-biometrics-card">
+        <div style="color:var(--crimson);font-weight:800;margin-bottom:4px;">ATELIER SCAN #8821</div>
+        <div>SHOULDERS: 18.4" // CHEST: 41.2" // WAIST: 33.1"</div>
+        <a href="fit-profile.html" style="color:#000;font-weight:800;text-decoration:underline;margin-top:6px;display:inline-block;">RE-CALIBRATE SCAN →</a>
+      </div>
+    </aside>
+
+    <!-- ── RIGHT PRODUCT MATRIX GRID (IMAGE 5) ── -->
+    <section>
+      <div class="catalog-header-bar">
+        <div>
+          <span class="section-tag-prefix">// ARCHETYPE DROP CATALOG - AI CALIBRATED MONSOON 2025</span>
+          <h1 style="font-family:var(--font-heading);font-size:28px;font-weight:900;text-transform:uppercase;color:#000;margin-top:4px;">
+            SHOP ALL &amp; CURATED BESPOKE DROPS
+          </h1>
+          <p style="font-size:12.5px;color:#666;margin-top:4px;">
+            Generative patterns custom-tailored to volumetric torso indices. Handcrafted in our Bengaluru lab with zero deadstock precision.
+          </p>
+        </div>
+
+        <div class="sort-control-group">
+          <span style="color:#888;">SORT BY:</span>
+          <button class="sort-pill-btn active">AI FIT MATCH (98%+)</button>
+          <button class="sort-pill-btn">NEW ARRIVALS</button>
+          <button class="sort-pill-btn">GSM DENSITY [HIGH-LOW]</button>
+        </div>
+      </div>
+
+      <!-- 8 Exact Products Grid -->
+      <div class="product-matrix-grid" id="catalog-products-grid">
+        <!-- 1. Aero-Drape Cuban Shirt -->
+        <div class="product-item-card" style="background:#fff;border-color:#ddd;">
+          <div class="product-thumb-box">
+            <span class="product-badge-flag red">NEW DROP</span>
+            <button class="product-wishlist-btn" onclick="alert('Added to Wishlist!')">♥</button>
+            <a href="product.html?id=2">
+              <img src="https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=1000&q=85" alt="Aero-Drape Cuban Shirt">
+            </a>
+          </div>
+          <div class="product-body-info">
+            <span class="product-fabric-meta" style="color:#666;">RESORT TECH // 160 GSM</span>
+            <h3 class="product-item-title" style="color:#000;"><a href="product.html?id=2">AERO-DRAPE CUBAN SHIRT</a></h3>
+            <div class="product-price-row">
+              <span class="price-current" style="color:#000;">₹1,799</span>
+              <span class="price-mrp">₹2,999</span>
+              <span class="price-discount">-40%</span>
+            </div>
+            <span class="product-reco-tag">RECO: SIZE L [SHOULDER +1.2"]</span>
+            <div class="product-card-actions">
+              <button class="btn-card-action" style="background:#000;color:#fff;" onclick="quickAddToCart(2)">QUICK ADD</button>
+              <a href="customize.html?product=2" class="btn-card-action" style="background:#fff;border-color:#000;color:#000;">3D CUSTOM</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Korean Relaxed Pleated Trouser -->
+        <div class="product-item-card" style="background:#fff;border-color:#ddd;">
+          <div class="product-thumb-box">
+            <span class="product-badge-flag red">BESTSELLER</span>
+            <button class="product-wishlist-btn" onclick="alert('Added to Wishlist!')">♥</button>
+            <a href="product.html?id=3">
+              <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=1000&q=85" alt="Korean Relaxed Pleated Trouser">
+            </a>
+          </div>
+          <div class="product-body-info">
+            <span class="product-fabric-meta" style="color:#666;">ANTI-CREASE POLY-TWILL // ZERO BREAK</span>
+            <h3 class="product-item-title" style="color:#000;"><a href="product.html?id=3">KOREAN RELAXED PLEATED TROUSER</a></h3>
+            <div class="product-price-row">
+              <span class="price-current" style="color:#000;">₹2,299</span>
+              <span class="price-mrp">₹3,499</span>
+              <span class="price-discount">-34%</span>
+            </div>
+            <span class="product-reco-tag">CALIBRATED: 30.5" INSEAM PRE-SET</span>
+            <div class="product-card-actions">
+              <button class="btn-card-action" style="background:#000;color:#fff;" onclick="quickAddToCart(3)">QUICK ADD</button>
+              <a href="customize.html?product=3" class="btn-card-action" style="background:#fff;border-color:#000;color:#000;">3D CUSTOM</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Nocturne Boxy Oversized Tee -->
+        <div class="product-item-card" style="background:#fff;border-color:#ddd;">
+          <div class="product-thumb-box">
+            <span class="product-badge-flag dark">OVERSIZED 280 GSM</span>
+            <button class="product-wishlist-btn" onclick="alert('Added to Wishlist!')">♥</button>
+            <a href="product.html?id=4">
+              <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=1000&q=85" alt="Nocturne Boxy Oversized Tee">
+            </a>
+          </div>
+          <div class="product-body-info">
+            <span class="product-fabric-meta" style="color:#666;">100% COMBED HEAVY KNIT // ACID WASH</span>
+            <h3 class="product-item-title" style="color:#000;"><a href="product.html?id=4">NOCTURNE BOXY OVERSIZED TEE</a></h3>
+            <div class="product-price-row">
+              <span class="price-current" style="color:#000;">₹1,299</span>
+              <span class="price-mrp">₹1,999</span>
+              <span class="price-discount">-35%</span>
+            </div>
+            <span class="product-reco-tag">CHEST 43.2" + SIZE M (LOOSE)</span>
+            <div class="product-card-actions">
+              <button class="btn-card-action" style="background:#000;color:#fff;" onclick="quickAddToCart(4)">QUICK ADD</button>
+              <a href="customize.html?product=4" class="btn-card-action" style="background:#fff;border-color:#000;color:#000;">3D CUSTOM</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Merino Hybrid Field Overshirt -->
+        <div class="product-item-card" style="background:#fff;border-color:#ddd;">
+          <div class="product-thumb-box">
+            <span class="product-badge-flag red">MADE-TO-MEASURE</span>
+            <button class="product-wishlist-btn" onclick="alert('Added to Wishlist!')">♥</button>
+            <a href="product.html?id=1">
+              <img src="https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=1000&q=85" alt="Merino Hybrid Field Overshirt">
+            </a>
+          </div>
+          <div class="product-body-info">
+            <span class="product-fabric-meta" style="color:#666;">280 GSM MERINO TWILL // MODULAR POCKETS</span>
+            <h3 class="product-item-title" style="color:#000;"><a href="product.html?id=1">MERINO HYBRID FIELD OVERSHIRT</a></h3>
+            <div class="product-price-row">
+              <span class="price-current" style="color:#000;">₹3,499</span>
+              <span class="price-mrp">₹4,999</span>
+              <span class="price-discount">-30%</span>
+            </div>
+            <span class="product-reco-tag">DOORSTEP TRIAL INCLUDED</span>
+            <div class="product-card-actions" style="grid-template-columns: 1fr;">
+              <a href="product.html?id=1" class="btn-card-action highlight" style="width:100%;">CUSTOMIZE IN 3D STUDIO</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Tactical Parachute Utility Cargo -->
+        <div class="product-item-card" style="background:#fff;border-color:#ddd;">
+          <div class="product-thumb-box">
+            <span class="product-badge-flag dark">TECH RIPSTOP</span>
+            <button class="product-wishlist-btn" onclick="alert('Added to Wishlist!')">♥</button>
+            <a href="product.html?id=5">
+              <img src="https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=1000&q=85" alt="Tactical Parachute Cargo">
+            </a>
+          </div>
+          <div class="product-body-info">
+            <span class="product-fabric-meta" style="color:#666;">TACTICAL ERGONOMIC CUT // 4 POCKETS</span>
+            <h3 class="product-item-title" style="color:#000;"><a href="product.html?id=5">TACTICAL PARACHUTE UTILITY CARGO</a></h3>
+            <div class="product-price-row">
+              <span class="price-current" style="color:#000;">₹2,899</span>
+              <span class="price-mrp">₹3,899</span>
+              <span class="price-discount">-25%</span>
+            </div>
+            <span class="product-reco-tag">WAIST 33" LOCKED [PRECISION TAPER]</span>
+            <div class="product-card-actions">
+              <button class="btn-card-action" style="background:#000;color:#fff;" onclick="quickAddToCart(5)">QUICK ADD</button>
+              <a href="customize.html?product=5" class="btn-card-action" style="background:#fff;border-color:#000;color:#000;">3D CUSTOM</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Archetype Handloom Wool Blazer -->
+        <div class="product-item-card" style="background:#fff;border-color:#ddd;">
+          <div class="product-thumb-box">
+            <span class="product-badge-flag red">ATELIER BESPOKE</span>
+            <button class="product-wishlist-btn" onclick="alert('Added to Wishlist!')">♥</button>
+            <a href="product.html?id=6">
+              <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1000&q=85" alt="Archetype Blazer">
+            </a>
+          </div>
+          <div class="product-body-info">
+            <span class="product-fabric-meta" style="color:#666;">RAW MERINO HANDLOOM // ZERO SHOULDER PAD</span>
+            <h3 class="product-item-title" style="color:#000;"><a href="product.html?id=6">ARCHETYPE HANDLOOM WOOL BLAZER</a></h3>
+            <div class="product-price-row">
+              <span class="price-current" style="color:#000;">₹4,999</span>
+              <span class="price-mrp">₹6,499</span>
+              <span class="price-discount">-23%</span>
+            </div>
+            <span class="product-reco-tag">COMMISSION CUT #84 IN QUEUE</span>
+            <div class="product-card-actions" style="grid-template-columns: 1fr;">
+              <a href="product.html?id=6" class="btn-card-action highlight" style="width:100%;">CUSTOMIZE NOW</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Dual-Weave Archival Heavy Hoodie -->
+        <div class="product-item-card" style="background:#fff;border-color:#ddd;">
+          <div class="product-thumb-box">
+            <span class="product-badge-flag dark">WINTER WEIGHT 420 GSM</span>
+            <button class="product-wishlist-btn" onclick="alert('Added to Wishlist!')">♥</button>
+            <a href="product.html?id=7">
+              <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=1000&q=85" alt="Dual-Weave Hoodie">
+            </a>
+          </div>
+          <div class="product-body-info">
+            <span class="product-fabric-meta" style="color:#666;">FRENCH TERRY // 420 GSM STRUCTURED HOOD</span>
+            <h3 class="product-item-title" style="color:#000;"><a href="product.html?id=7">DUAL-WEAVE ARCHIVAL HEAVY HOODIE</a></h3>
+            <div class="product-price-row">
+              <span class="price-current" style="color:#000;">₹2,499</span>
+              <span class="price-mrp">₹3,299</span>
+              <span class="price-discount">-24%</span>
+            </div>
+            <span class="product-reco-tag">AI CALIBRATED TORSO LENGTH</span>
+            <div class="product-card-actions">
+              <button class="btn-card-action" style="background:#000;color:#fff;" onclick="quickAddToCart(7)">QUICK ADD</button>
+              <a href="customize.html?product=7" class="btn-card-action" style="background:#fff;border-color:#000;color:#000;">3D CUSTOM</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. Minimalist Oversized Poplin Shirt -->
+        <div class="product-item-card" style="background:#fff;border-color:#ddd;">
+          <div class="product-thumb-box">
+            <span class="product-badge-flag dark">ZERO DEADSTOCK</span>
+            <button class="product-wishlist-btn" onclick="alert('Added to Wishlist!')">♥</button>
+            <a href="product.html?id=8">
+              <img src="https://images.unsplash.com/photo-1598554747436-c9293d6a588f?w=1000&q=85" alt="Minimalist Poplin Shirt">
+            </a>
+          </div>
+          <div class="product-body-info">
+            <span class="product-fabric-meta" style="color:#666;">ORGANIC EGYPTIAN POPLIN // 140 GSM</span>
+            <h3 class="product-item-title" style="color:#000;"><a href="product.html?id=8">MINIMALIST OVERSIZED POPLIN SHIRT</a></h3>
+            <div class="product-price-row">
+              <span class="price-current" style="color:#000;">₹1,999</span>
+              <span class="price-mrp">₹2,899</span>
+              <span class="price-discount">-31%</span>
+            </div>
+            <span class="product-reco-tag">PERFECT FIT PRE-CALIBRATED</span>
+            <div class="product-card-actions">
+              <button class="btn-card-action" style="background:#000;color:#fff;" onclick="quickAddToCart(8)">QUICK ADD</button>
+              <a href="customize.html?product=8" class="btn-card-action" style="background:#fff;border-color:#000;color:#000;">3D CUSTOM</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── 5. COMMISSION 1-OF-1 PIECE BANNER (IMAGE 5) ── -->
+  <div class="commission-banner">
+    <div>
+      <span class="section-tag-prefix">// ZERO DEADSTOCK LAB ARCHITECTURE // BENGALURU</span>
+      <h2>HAVE A UNIQUE SILHOUETTE IN MIND? COMMISSION YOUR 1-OF-1 PIECE.</h2>
+      <p>Our WebGL 3D Studio allows millimeter adjustment of lapels, inseams, sleeve tapers, and custom fabric density blending. Real-time drape physics simulated for Indian body archetypes.</p>
+    </div>
+    <div class="commission-banner-actions">
+      <a href="customize.html" class="btn-coded btn-crimson" style="text-align:center;">
+        LAUNCH 3D CUSTOM STUDIO →
+      </a>
+      <a href="cart.html" class="btn-coded btn-dark-outline" style="border-color:#ccc;color:#111;text-align:center;">
+        BOOK ATELIER TRIAL VISIT
+      </a>
+    </div>
+  </div>
+
+  <!-- ── 6. FOOTER ── -->
+  <footer class="site-footer">
+    <div class="footer-top-grid">
+      <div class="footer-brand-col">
+        <span class="brand-logo">CODED FIT<span class="logo-dot">.</span></span>
+        <p>India's pioneer generative-pattern streetwear laboratory. Synthesizing Savile Row artisanal handcraft with neural garment draping for bespoke luxury wear.</p>
+      </div>
+      <div class="footer-links-col">
+        <h4>SHOP CATALOG</h4>
+        <ul>
+          <li><a href="shop.html">Bespoke Trousers</a></li>
+          <li><a href="shop.html">Heavyweight Tees</a></li>
+          <li><a href="shop.html">Tactical Outerwear</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4>ATELIER TECH</h4>
+        <ul>
+          <li><a href="customize.html">3D WebGL Configurator</a></li>
+          <li><a href="fit-profile.html">Indian Torso Morph Index</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4>SUPPORT</h4>
+        <ul>
+          <li><a href="cart.html">Doorstep Trial Booking</a></li>
+          <li><a href="cart.html">Alteration Requests</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4>BRAND &amp; LAB</h4>
+        <ul>
+          <li><a href="shop.html">Manifesto: Zero Deadstock</a></li>
+          <li><a href="shop.html">Privacy Calibration</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom-bar">
+      <div>ISO 9001:2015 CERTIFIED PRECISION ATELIER // BENGALURU, INDIA</div>
+      <div>© 2025 CODED FIT PRIVATE LIMITED. ALL RIGHTS RESERVED.</div>
+    </div>
+  </footer>
+
+  <!-- ── 7. SLIDE-OVER CART DRAWER ── -->
+  <div class="cart-drawer-backdrop" id="cart-drawer-backdrop" onclick="closeCartDrawer()"></div>
+  <div class="cart-drawer-panel" id="cart-drawer-panel">
+    <div class="cart-drawer-header">
+      <h3>SHOPPING BAG (<span id="drawer-cart-count">0</span>)</h3>
+      <button class="cart-close-btn" onclick="closeCartDrawer()">✕</button>
+    </div>
+    <div class="cart-drawer-items" id="cart-drawer-items"></div>
+    <div class="cart-drawer-footer">
+      <div class="cart-subtotal-row">
+        <span>ESTIMATED SUB-TOTAL:</span>
+        <strong id="drawer-subtotal">₹0</strong>
+      </div>
+      <a href="cart.html" class="btn-coded btn-crimson" style="width:100%;text-align:center;">
+        PROCEED TO RAZORPAY CHECKOUT →
+      </a>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+
+  <script>
+    /* ── Live catalog: renders PRODUCTS with real filters + ?cat= deep links ── */
+    const CF_CATS = [
+      ['all', 'ALL DROPS'], ['men', 'MEN'], ['women', 'WOMEN'], ['kids', 'KIDS'],
+      ['oversized', 'OVERSIZED'], ['shirts', 'SHIRTS'], ['trousers', 'TROUSERS'], ['new', 'NEW DROPS']
+    ];
+    let cfActiveCat = 'all';
+
+    function cfEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+    function cfCard(p) {
+      const off = (typeof discountPercent === 'function' && p.mrp > p.price) ? discountPercent(p.mrp, p.price) : 0;
+      const badgeCls = /new|limited/i.test(p.badge || '') ? 'red' : 'dark';
+      return `
+        <div class="product-item-card" style="background:#fff;border-color:#ddd;" data-id="${p.id}">
+          <div class="product-thumb-box">
+            ${p.badge ? `<span class="product-badge-flag ${badgeCls}">${cfEsc(p.badge)}</span>` : ''}
+            <button class="product-wishlist-btn" onclick="cfWishlist(${p.id})">♥</button>
+            <a href="product.html?id=${p.id}">
+              <img src="${cfEsc((p.images || [])[0] || '')}" alt="${cfEsc(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1000&q=80'">
+            </a>
+          </div>
+          <div class="product-body-info">
+            <span class="product-fabric-meta" style="color:#666;">${cfEsc(p.tagline || p.fabric || '')}</span>
+            <h3 class="product-item-title" style="color:#000;"><a href="product.html?id=${p.id}">${cfEsc(String(p.name || '').toUpperCase())}</a></h3>
+            <div class="product-price-row">
+              <span class="price-current" style="color:#000;">₹${Number(p.price || 0).toLocaleString('en-IN')}</span>
+              ${p.mrp > p.price ? `<span class="price-mrp">₹${Number(p.mrp).toLocaleString('en-IN')}</span><span class="price-discount">-${off}%</span>` : ''}
+            </div>
+            ${p.recoTag ? `<span class="product-reco-tag">${cfEsc(p.recoTag)}</span>` : ''}
+            <div class="product-card-actions">
+              <button class="btn-card-action" style="background:#000;color:#fff;" onclick="quickAddToCart(${p.id})">QUICK ADD</button>
+              <a href="customize.html?product=${p.id}" class="btn-card-action" style="background:#fff;border-color:#000;color:#000;">3D CUSTOM</a>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function renderPills() {
+      const counts = (typeof catalogCounts === 'function') ? catalogCounts() : { all: PRODUCTS.length };
+      const bar = document.getElementById('catalog-pills');
+      if (!bar) return;
+      bar.innerHTML = CF_CATS.map(([k, label]) =>
+        `<button class="cat-pill-btn${k === cfActiveCat ? ' active' : ''}" onclick="filterCatalog('${k}', this)">${label} (${counts[k] == null ? 0 : counts[k]})</button>`
+      ).join('') + `<a href="customize.html" class="cat-pill-btn red-highlight">★ 3D ATELIER</a>`;
+    }
+
+    function filterCatalog(category, btn) {
+      cfActiveCat = CF_CATS.some(([k]) => k === category) ? category : 'all';
+      document.querySelectorAll('#catalog-pills .cat-pill-btn').forEach(b => b.classList.remove('active'));
+      if (btn && btn.classList) btn.classList.add('active');
+      const grid = document.getElementById('catalog-products-grid');
+      const list = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).filter(p => catalogMatches(p, cfActiveCat));
+      if (grid) {
+        grid.innerHTML = list.length ? list.map(cfCard).join('')
+          : `<div style="grid-column:1/-1;padding:48px;text-align:center;font-family:var(--font-mono);color:#888;">No pieces in this view yet — try ALL DROPS.</div>`;
+      }
+      const fc = document.getElementById('filter-count');
+      if (fc) fc.textContent = list.length;
+      try {
+        const u = new URL(window.location.href);
+        if (cfActiveCat === 'all') u.searchParams.delete('cat'); else u.searchParams.set('cat', cfActiveCat);
+        window.history.replaceState({}, '', u.toString());
+      } catch (e) {}
+    }
+
+    function cfWishlist(id) {
+      const p = (typeof getProductById === 'function') ? getProductById(id) : null;
+      const msg = p ? ('Saved to wishlist: ' + p.name) : 'Saved to wishlist';
+      if (window.CF_showToast) window.CF_showToast(msg); else alert(msg);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPills();
+      let start = 'all';
+      try { start = new URLSearchParams(window.location.search).get('cat') || 'all'; } catch (e) {}
+      filterCatalog(start, null);
+      const activeBtn = document.querySelector(`#catalog-pills .cat-pill-btn[onclick*="'${CSS.escape(start)}'"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+    });
+
+    function quickAddToCart(id) {
+      const p = getProductById(id);
+      if (p && typeof CART !== 'undefined' && CART.addItem) {
+        CART.addItem(p);
+      }
+      openCartDrawer();
+    }
+
+    function filterByPrice(val) {
+      // dynamically filters grid
+    }
+
+    function resetFilters() {
+      document.querySelectorAll('.filter-sidebar input[type="checkbox"]').forEach(c => c.checked = false);
+    }
+
+    function openCartDrawer() {
+      document.getElementById('cart-drawer-backdrop').classList.add('active');
+      document.getElementById('cart-drawer-panel').classList.add('open');
+      if (typeof updateCartDrawerUI === 'function') updateCartDrawerUI();
+    }
+
+    function closeCartDrawer() {
+      document.getElementById('cart-drawer-backdrop').classList.remove('active');
+      document.getElementById('cart-drawer-panel').classList.remove('open');
+    }
+  </script>
+<script src="js/trust.js"></script><script src="js/aiAssistant.js"></script></body>
+</html>
