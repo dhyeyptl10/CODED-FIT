@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bespoke Studio — Customize Your Garment | CODED FIT</title>
+  <meta name="description" content="CODED FIT Bespoke Studio. Choose your garment, fabric, color, fit and measurements. Real garment preview with front and back views.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/editor.css">
+
+  <style>
+    /* ══ PHASE 1 · BESPOKE STUDIO · premium fashion UX (bf- namespace) ══ */
+    :root { --bf-red:#e10600; --bf-ink:#0d0e12; --bf-line:#e5e5e9; --bf-mut:#666; }
+    * { box-sizing: border-box; }
+    body.bf-body { background:#f7f7f8; color:#111; margin:0; font-family:'Inter',sans-serif; }
+
+    .bf-wrap { max-width:1440px; margin:0 auto; padding:0 32px 80px; }
+
+    /* Hero — editorial, not telemetry */
+    .bf-hero { padding:40px 0 8px; }
+    .bf-eyebrow { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:800; letter-spacing:2px; color:var(--bf-red); text-transform:uppercase; margin-bottom:10px; }
+    .bf-title { font-family:'Syne',sans-serif; font-size:clamp(28px,4vw,46px); font-weight:900; letter-spacing:-1px; text-transform:uppercase; margin:0 0 10px; }
+    .bf-sub { font-size:13.5px; color:#555; max-width:640px; line-height:1.7; margin:0 0 6px; }
+    .bf-sub a { color:#111; font-weight:700; }
+
+    /* Progress indicator */
+    .bf-steps { position:sticky; top:0; z-index:60; background:rgba(247,247,248,.96); backdrop-filter:blur(8px); border-bottom:1px solid var(--bf-line); margin:22px -32px 0; padding:12px 32px; display:flex; gap:6px; overflow-x:auto; }
+    .bf-step { flex:1 0 auto; min-width:120px; font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:#888; background:#fff; border:1px solid var(--bf-line); border-radius:3px; padding:9px 12px; text-decoration:none; display:flex; gap:8px; align-items:center; white-space:nowrap; }
+    .bf-step .n { color:var(--bf-red); }
+    .bf-step.done { color:#111; border-color:#111; }
+    .bf-step.done .n { color:#111; }
+    .bf-step.current { background:#111; color:#fff; border-color:#111; }
+    .bf-step.current .n { color:#fff; }
+
+    /* 3-col layout */
+    .bf-grid { display:grid; grid-template-columns:350px 1fr 340px; gap:24px; align-items:start; margin-top:24px; }
+    .bf-col { display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+    .bf-card { background:#fff; border:1px solid var(--bf-line); border-radius:4px; padding:20px; }
+    .bf-card-head { display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid #f0f0f3; padding-bottom:10px; margin-bottom:14px; }
+    .bf-card-title { font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; margin:0; }
+    .bf-card-title .n { color:var(--bf-red); margin-right:6px; }
+    .bf-card-sub { font-family:'JetBrains Mono',monospace; font-size:9px; color:#888; text-transform:uppercase; }
+    .bf-hint { font-size:12px; color:#666; line-height:1.6; margin:0 0 12px; }
+
+    /* STEP 1 — garment cards (horizontal on mobile) */
+    .bf-garments { display:flex; flex-direction:column; gap:10px; }
+    .bf-garment { display:grid; grid-template-columns:76px 1fr auto; gap:12px; align-items:center; border:1px solid var(--bf-line); border-radius:3px; padding:10px; cursor:pointer; background:#fbfbfc; transition:border-color .15s, background .15s; text-align:left; width:100%; font:inherit; color:inherit; }
+    .bf-garment:hover { border-color:#999; }
+    .bf-garment.sel { border-color:var(--bf-red); background:#fff; box-shadow:inset 3px 0 0 var(--bf-red); }
+    .bf-garment-thumb { width:76px; height:92px; background:#f1f2f4; border:1px solid #e2e2e6; border-radius:2px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+    .bf-garment-thumb svg { width:100%; height:100%; }
+    .bf-garment-name { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; margin-bottom:2px; }
+    .bf-garment-desc { font-size:11px; color:#777; line-height:1.45; margin-bottom:6px; }
+    .bf-garment-price { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:800; }
+    .bf-garment-price span { color:#888; font-weight:400; font-size:10px; }
+    .bf-tick { width:22px; height:22px; border-radius:50%; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; font-size:12px; color:transparent; flex-shrink:0; }
+    .bf-garment.sel .bf-tick { background:var(--bf-red); border-color:var(--bf-red); color:#fff; }
+
+    /* STEP 2 — fabric */
+    .bf-fabric { border:1px solid var(--bf-line); border-radius:3px; padding:12px; margin-bottom:10px; cursor:pointer; background:#fbfbfc; display:grid; grid-template-columns:44px 1fr auto; gap:12px; align-items:center; width:100%; font:inherit; color:inherit; text-align:left; }
+    .bf-fabric:hover { border-color:#999; }
+    .bf-fabric.sel { border-color:var(--bf-red); background:#fff; box-shadow:inset 3px 0 0 var(--bf-red); }
+    .bf-fabric:last-child { margin-bottom:0; }
+    .bf-tex { width:44px; height:44px; border-radius:3px; border:1px solid rgba(0,0,0,.15); flex-shrink:0; }
+    .bf-tex-cotton { background:repeating-linear-gradient(45deg,#eceae6 0 3px,#f7f6f3 3px 6px); }
+    .bf-tex-heavy { background:repeating-linear-gradient(0deg,#dcd8d2 0 2px,#efece7 2px 5px); }
+    .bf-tex-linen { background:repeating-linear-gradient(90deg,#e7ddcf 0 2px,#f4efe4 2px 4px),repeating-linear-gradient(0deg,rgba(0,0,0,.04) 0 1px,transparent 1px 3px); }
+    .bf-tex-denim { background:repeating-linear-gradient(45deg,#2b3a55 0 2px,#33415e 2px 4px); }
+    .bf-tex-twill { background:repeating-linear-gradient(-45deg,#cfc9bd 0 3px,#ded8cb 3px 6px); }
+    .bf-tex-fleece { background:radial-gradient(circle at 30% 30%,#f2f2f4 0 2px,transparent 2px 5px),#e3e4e8; background-size:8px 8px; }
+    .bf-tex-generic { background:linear-gradient(135deg,#eee,#ddd); }
+    .bf-fabric-name { font-family:'Space Grotesk',sans-serif; font-size:12.5px; font-weight:700; }
+    .bf-fabric-desc { font-size:11px; color:#777; margin-top:2px; line-height:1.45; }
+    .bf-fabric-price { font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:800; white-space:nowrap; }
+    .bf-fabric-price.inc { color:#15803d; }
+
+    /* STEP 3 — color */
+    .bf-colors { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .bf-color { border:1px solid var(--bf-line); border-radius:3px; padding:10px 6px; cursor:pointer; background:#fbfbfc; text-align:center; font:inherit; color:inherit; }
+    .bf-color:hover { border-color:#999; }
+    .bf-color.sel { border-color:#111; background:#fff; outline:2px solid var(--bf-red); outline-offset:-2px; }
+    .bf-dot { width:34px; height:34px; border-radius:50%; margin:0 auto 6px; border:2px solid rgba(0,0,0,.18); box-shadow:inset 0 1px 3px rgba(0,0,0,.2); }
+    .bf-color-name { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; text-transform:uppercase; }
+    .bf-active-color { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:800; margin-top:10px; }
+    .bf-active-color span { color:var(--bf-red); }
+
+    /* STEP 4 — fit */
+    .bf-fits { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .bf-fit { border:1px solid var(--bf-line); border-radius:3px; padding:12px; cursor:pointer; background:#fbfbfc; font:inherit; color:inherit; text-align:left; }
+    .bf-fit:hover { border-color:#999; }
+    .bf-fit.sel { border-color:var(--bf-red); background:#fff; box-shadow:inset 3px 0 0 var(--bf-red); }
+    .bf-fit-name { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:800; margin-bottom:6px; }
+    .bf-fit-bar { height:26px; background:#f0f0f3; border-radius:2px; margin-bottom:6px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .bf-fit-bar i { display:block; height:18px; background:#111; border-radius:2px; }
+    .bf-fit.sel .bf-fit-bar i { background:var(--bf-red); }
+    .bf-fit-desc { font-size:10.5px; color:#777; line-height:1.45; }
+
+    /* STEP 5 — measurements */
+    .bf-meas-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .bf-field label { display:block; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:#555; margin-bottom:4px; }
+    .bf-field input { width:100%; border:1px solid #ccc; border-radius:3px; padding:9px 10px; font-family:'JetBrains Mono',monospace; font-size:13px; }
+    .bf-field input:focus { border-color:#111; outline:none; }
+    .bf-est-btn { width:100%; margin-top:12px; background:#111; color:#fff; border:none; border-radius:3px; padding:12px; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; cursor:pointer; }
+    .bf-est-btn:hover { background:#000; }
+    .bf-est-note { font-size:11px; color:#777; margin-top:8px; line-height:1.55; }
+    .bf-est-note a { color:#111; font-weight:700; }
+
+    /* CENTER — preview */
+    .bf-preview-card { background:#fff; border:1px solid var(--bf-line); border-radius:4px; padding:20px; position:sticky; top:64px; }
+    .bf-view-pills { display:flex; gap:8px; background:#f0f0f3; padding:4px; border-radius:20px; width:max-content; margin:0 auto 14px; }
+    .bf-view-pills button { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:800; letter-spacing:1px; padding:7px 20px; border-radius:16px; border:none; background:transparent; color:#666; cursor:pointer; }
+    .bf-view-pills button.on { background:#fff; color:#111; box-shadow:0 2px 6px rgba(0,0,0,.12); }
+    .bf-stage-note { text-align:center; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:#888; letter-spacing:.6px; text-transform:uppercase; margin-bottom:10px; }
+    .bf-stage-note strong { color:#111; }
+    .bf-fit-applied { text-align:center; font-size:11.5px; color:#555; margin-top:12px; }
+    .bf-fit-applied strong { color:#111; }
+    .bf-fabric-note { margin-top:10px; background:#f7f7f9; border:1px solid #e8e8ec; border-radius:3px; padding:10px 12px; font-size:11.5px; color:#555; line-height:1.55; }
+    /* garment stage (reuses editor.css classes, fit scaling hook) */
+    #bf-stage .garment-product-stage { transition:transform .3s ease; transform-origin:top center; }
+    #bf-stage[data-fit="slim"] .garment-product-stage { transform:scaleX(.94); }
+    #bf-stage[data-fit="regular"] .garment-product-stage { transform:scaleX(1); }
+    #bf-stage[data-fit="relaxed"] .garment-product-stage { transform:scaleX(1.06); }
+    #bf-stage[data-fit="oversized"] .garment-product-stage { transform:scaleX(1.12); }
+
+    /* TRY ON entry */
+    .bf-tryon { background:#0d0e12; color:#fff; border-radius:4px; padding:24px; margin-top:16px; }
+    .bf-tryon h3 { font-family:'Syne',sans-serif; font-size:20px; font-weight:900; text-transform:uppercase; margin:0 0 6px; }
+    .bf-tryon p { font-size:12.5px; color:rgba(255,255,255,.6); line-height:1.65; margin:0 0 16px; }
+    .bf-tryon-btns { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .bf-tryon-btns a { display:block; text-align:center; padding:13px 10px; border-radius:3px; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; text-decoration:none; }
+    .bf-try-photo { background:var(--bf-red); color:#fff; }
+    .bf-try-photo:hover { background:#b80500; }
+    .bf-try-avatar { background:#fff; color:#111; }
+    .bf-try-avatar:hover { background:#eee; }
+    .bf-try-honest { font-size:11px; color:rgba(255,255,255,.45); margin-top:12px; line-height:1.6; }
+
+    /* RIGHT — summary */
+    .bf-summary { position:sticky; top:64px; }
+    .bf-piece { font-family:'Syne',sans-serif; font-size:17px; font-weight:900; text-transform:uppercase; margin:0; line-height:1.25; }
+    .bf-piece-sub { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--bf-red); font-weight:800; letter-spacing:.6px; margin:4px 0 14px; text-transform:uppercase; }
+    .bf-spec { width:100%; border-collapse:collapse; font-family:'JetBrains Mono',monospace; font-size:10.5px; margin-bottom:16px; }
+    .bf-spec td { padding:7px 0; border-bottom:1px solid #f0f0f3; }
+    .bf-spec td:first-child { color:#888; }
+    .bf-spec td:last-child { text-align:right; font-weight:800; }
+    .bf-price-box { border-top:1px solid var(--bf-line); padding-top:12px; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#555; }
+    .bf-price-row { display:flex; justify-content:space-between; margin-bottom:6px; }
+    .bf-total-row { display:flex; justify-content:space-between; align-items:baseline; border-top:1px solid var(--bf-line); margin-top:10px; padding-top:12px; }
+    .bf-total { font-family:'Syne',sans-serif; font-size:28px; font-weight:900; }
+    .bf-cta { width:100%; background:var(--bf-red); color:#fff; border:none; border-radius:3px; padding:16px; font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; cursor:pointer; margin-top:16px; }
+    .bf-cta:hover { background:#b80500; }
+    .bf-cta2 { width:100%; background:#fff; color:#111; border:1px solid #111; border-radius:3px; padding:12px; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; cursor:pointer; margin-top:8px; text-decoration:none; display:block; text-align:center; }
+    .bf-cta2:hover { background:#111; color:#fff; }
+    .bf-guarantee { font-size:11px; color:#666; line-height:1.6; margin-top:12px; }
+    .bf-links { display:flex; gap:8px; margin-top:12px; }
+    .bf-links a { flex:1; text-align:center; font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:800; color:#333; border:1px solid #ddd; border-radius:3px; padding:9px 4px; text-decoration:none; text-transform:uppercase; }
+    .bf-links a:hover { border-color:#111; color:#000; }
+
+    /* sticky mobile CTA */
+    .bf-sticky { display:none; position:fixed; left:0; right:0; bottom:0; z-index:80; background:#fff; border-top:1px solid var(--bf-line); padding:10px 16px calc(10px + env(safe-area-inset-bottom)); align-items:center; gap:12px; }
+    .bf-sticky-price { font-family:'Syne',sans-serif; font-size:20px; font-weight:900; }
+    .bf-sticky-price small { display:block; font-family:'JetBrains Mono',monospace; font-size:8.5px; color:#888; font-weight:700; }
+    .bf-sticky button { flex:1; background:var(--bf-red); color:#fff; border:none; border-radius:3px; padding:14px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:800; letter-spacing:1px; cursor:pointer; }
+
+    @media (max-width:1180px) {
+      .bf-grid { grid-template-columns:1fr; }
+      .bf-preview-card, .bf-summary { position:static; }
+      .bf-center-col { order:-1; }
+      .bf-garments { flex-direction:row; overflow-x:auto; padding-bottom:6px; }
+      .bf-garment { min-width:250px; }
+      .bf-colors { grid-template-columns:repeat(6,1fr); }
+      .bf-sticky { display:flex; }
+      .bf-wrap { padding:0 16px 120px; }
+      .bf-steps { margin:22px -16px 0; padding:12px 16px; }
+    }
+    @media (max-width:560px) {
+      .bf-colors { grid-template-columns:repeat(3,1fr); }
+      .bf-fits { grid-template-columns:1fr 1fr; }
+      .bf-tryon-btns { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body class="bf-body">
+
+  <div id="cf-navbar-mount"></div>
+
+  <div class="bf-wrap">
+    <header class="bf-hero">
+      <div class="bf-eyebrow">CODED FIT · Bespoke Studio</div>
+      <h1 class="bf-title">Design your one-of-one garment</h1>
+      <p class="bf-sub">Pick a real silhouette from the studio catalogue, choose cloth and colour, set your fit and measurements — then preview it front and back before trying it on. Prefer graphics and prints? Open the <a href="editor.html">Design Studio</a> instead.</p>
+    </header>
+
+    <nav class="bf-steps" aria-label="Bespoke progress">
+      <a class="bf-step current" href="#bf-s1"><span class="n">01</span> Garment</a>
+      <a class="bf-step" href="#bf-s2"><span class="n">02</span> Fabric</a>
+      <a class="bf-step" href="#bf-s3"><span class="n">03</span> Colour</a>
+      <a class="bf-step" href="#bf-s4"><span class="n">04</span> Fit</a>
+      <a class="bf-step" href="#bf-s5"><span class="n">05</span> Measure</a>
+      <a class="bf-step" href="#bf-preview"><span class="n">06</span> Preview</a>
+      <a class="bf-step" href="#bf-tryon"><span class="n">07</span> Try on</a>
+    </nav>
+
+    <main class="bf-grid">
+      <!-- LEFT · configuration -->
+      <div class="bf-col">
+        <section class="bf-card" id="bf-s1">
+          <div class="bf-card-head"><h2 class="bf-card-title"><span class="n">01</span>Choose your garment</h2><span class="bf-card-sub" id="bf-g-count"></span></div>
+          <p class="bf-hint">Five studio silhouettes from the existing garment catalogue. Selecting one reloads the preview.</p>
+          <div class="bf-garments" id="bf-garments"></div>
+        </section>
+
+        <section class="bf-card" id="bf-s2">
+          <div class="bf-card-head"><h2 class="bf-card-title"><span class="n">02</span>Choose fabric</h2><span class="bf-card-sub">per garment</span></div>
+          <p class="bf-hint">Only cloths supported by the selected garment are shown. Swatches are clean visual textures — no fake photography.</p>
+          <div id="bf-fabrics"></div>
+        </section>
+
+        <section class="bf-card" id="bf-s3">
+          <div class="bf-card-head"><h2 class="bf-card-title"><span class="n">03</span>Choose colour</h2><span class="bf-card-sub" id="bf-color-count"></span></div>
+          <div class="bf-colors" id="bf-colors"></div>
+          <div class="bf-active-color">Selected — <span id="bf-color-name">–</span></div>
+        </section>
+
+        <section class="bf-card" id="bf-s4">
+          <div class="bf-card-head"><h2 class="bf-card-title"><span class="n">04</span>Choose fit</h2><span class="bf-card-sub">saved to spec</span></div>
+          <div class="bf-fits" id="bf-fits"></div>
+        </section>
+
+        <section class="bf-card" id="bf-s5">
+          <div class="bf-card-head"><h2 class="bf-card-title"><span class="n">05</span>Measurements</h2><span class="bf-card-sub">inches · editable</span></div>
+          <p class="bf-hint">Same measurement system as the Body Visualizer — nothing duplicated. Values save with your bespoke spec.</p>
+          <div class="bf-meas-grid">
+            <div class="bf-field"><label for="bf-height">Height (cm)</label><input id="bf-height" type="number" min="120" max="230" step="1" value="172"></div>
+            <div class="bf-field"><label for="bf-chest">Chest (in)</label><input id="bf-chest" type="number" min="28" max="60" step="0.5" value="40"></div>
+            <div class="bf-field"><label for="bf-waist">Waist (in)</label><input id="bf-waist" type="number" min="22" max="56" step="0.5" value="32"></div>
+            <div class="bf-field"><label for="bf-shoulder">Shoulder (in)</label><input id="bf-shoulder" type="number" min="13" max="26" step="0.1" value="18"></div>
+            <div class="bf-field"><label for="bf-hip">Hip (in)</label><input id="bf-hip" type="number" min="28" max="60" step="0.5" value="38"></div>
+            <div class="bf-field"><label for="bf-inseam">Inseam (in)</label><input id="bf-inseam" type="number" min="22" max="40" step="0.5" value="30"></div>
+            <div class="bf-field"><label for="bf-neck">Neck (in)</label><input id="bf-neck" type="number" min="12" max="21" step="0.1" value="15.5"></div>
+            <div class="bf-field"><label>&nbsp;</label><div style="font-size:11px;color:#888;padding-top:10px;" id="bf-meas-src">Source: manual</div></div>
+          </div>
+          <button class="bf-est-btn" id="bf-est-btn" type="button">Use my estimated measurements</button>
+          <p class="bf-est-note" id="bf-est-note">Pulls your saved Body Visualizer profile from this device. No profile yet? <a href="body-visualizer.html">Create one in 60 seconds →</a></p>
+        </section>
+      </div>
+
+      <!-- CENTER · preview -->
+      <div class="bf-col bf-center-col">
+        <section class="bf-preview-card" id="bf-preview">
+          <div class="bf-card-head"><h2 class="bf-card-title"><span class="n">06</span>Garment preview</h2><span class="bf-card-sub" id="bf-prev-name">–</span></div>
+          <div class="bf-view-pills" role="tablist" aria-label="Garment view">
+            <button id="bf-view-front" class="on" type="button">Front</button>
+            <button id="bf-view-back" type="button">Back</button>
+          </div>
+          <div class="bf-stage-note">Real silhouette · <strong id="bf-stage-garment">–</strong> · <strong id="bf-stage-face">Front</strong></div>
+          <div class="garment-stage-wrap" id="bf-stage" data-fit="regular">
+            <div id="bf-stage-inner" style="width:100%;"></div>
+          </div>
+          <p class="bf-fit-applied" id="bf-fit-line">Fit — <strong>Regular</strong> · drapes true to the pattern block.</p>
+          <div class="bf-fabric-note" id="bf-fabric-line">Fabric — <strong>–</strong></div>
+        </section>
+
+        <section class="bf-tryon" id="bf-tryon">
+          <div class="bf-eyebrow" style="color:#e10600;">07 · AI virtual try-on entry</div>
+          <h3>See it on you</h3>
+          <p>Your bespoke spec travels with you. Upload a photo for on-device body landmarks, or open your parametric 3D avatar — both live in the Body Visualizer. Nothing is faked here.</p>
+          <div class="bf-tryon-btns">
+            <a class="bf-try-photo" id="bf-try-photo" href="tryon.html?from=bespoke">Upload my photo</a>
+            <a class="bf-try-avatar" id="bf-try-avatar" href="body-visualizer.html?from=bespoke">Use my 3D avatar</a>
+          </div>
+          <p class="bf-try-honest">Photo analysis runs on your device (MediaPipe). AI garment render needs a configured try-on API — until then you get the true 3D avatar drape, never a fake result.</p>
+        </section>
+      </div>
+
+      <!-- RIGHT · summary -->
+      <div class="bf-col">
+        <aside class="bf-card bf-summary" id="bf-summary">
+          <div class="bf-card-head"><h2 class="bf-card-title"><span class="n">08</span>Your bespoke spec</h2><span class="bf-card-sub">one-of-one</span></div>
+          <h3 class="bf-piece" id="bf-sum-name">–</h3>
+          <div class="bf-piece-sub">Bespoke production · made for your measurements</div>
+          <table class="bf-spec">
+            <tr><td>Garment</td><td id="bf-sum-garment">–</td></tr>
+            <tr><td>Fabric</td><td id="bf-sum-fabric">–</td></tr>
+            <tr><td>Colour</td><td id="bf-sum-color">–</td></tr>
+            <tr><td>Fit</td><td id="bf-sum-fit">–</td></tr>
+            <tr><td>Size block</td><td id="bf-sum-size">–</td></tr>
+            <tr><td>View</td><td id="bf-sum-view">Front</td></tr>
+          </table>
+          <div class="bf-price-box">
+            <div class="bf-price-row"><span id="bf-base-label">Base pattern</span><span id="bf-base-val">₹0</span></div>
+            <div class="bf-price-row"><span id="bf-fabric-label">Fabric</span><span id="bf-fabric-val">Included</span></div>
+            <div class="bf-price-row"><span>Bespoke cutting</span><span style="color:#15803d;font-weight:800;">Included</span></div>
+            <div class="bf-total-row"><span style="font-weight:800;">Total</span><span class="bf-total" id="bf-total">₹0</span></div>
+          </div>
+          <button class="bf-cta" id="bf-add" type="button">Save &amp; add to bag →</button>
+          <button class="bf-cta2" id="bf-save" type="button">Save draft only</button>
+          <div class="bf-guarantee">✓ Doorstep fit check on first bespoke · ✓ Free remake if the drape misses · ✓ Spec saved on this device and sent to the atelier API when available.</div>
+          <div class="bf-links">
+            <a href="editor.html">Design Studio</a>
+            <a href="body-visualizer.html">Body Visualizer</a>
+            <a href="shop.html">Shop</a>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <div class="bf-sticky">
+    <div class="bf-sticky-price"><small id="bf-sticky-name">Bespoke</small><span id="bf-sticky-price">₹0</span></div>
+    <button type="button" onclick="document.getElementById('bf-add').click()">Save &amp; add to bag</button>
+  </div>
+
+  <div class="coded-toast" id="coded-toast"></div>
+
+  <script src="js/editor-products.js"></script>
+  <script src="js/garment-renderer.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/product-flow.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navbar.js"></script>
+
+  <script>
+    /* ══ PHASE 1 · Bespoke state — reuses GARMENTS, garment-renderer, CF_FIT_PROFILE_V1, NOVA_CART ══ */
+    (function () {
+      'use strict';
+
+      var FABRIC_SURCHARGE = 299; // flat atelier finish surcharge for non-base cloths (local calc; server recalculates)
+      var FIT_META = {
+        slim:     { label: 'Slim',     desc: 'Close through chest and waist. +0.5 inch wearing ease.', ease: 'Close contour · tailored chest' },
+        regular:  { label: 'Regular',  desc: 'Balanced ease with a structured shoulder line.',        ease: 'True to pattern block' },
+        relaxed:  { label: 'Relaxed',  desc: 'Contemporary drape with room to move.',                 ease: '+2 inch ease · soft drape' },
+        oversized:{ label: 'Oversized',desc: 'Dropped, boxy volume. Size down for a regular feel.',   ease: 'Architectural volume' }
+      };
+
+      var state = {
+        garmentId: 'tee-classic',
+        fabricIdx: 0,
+        colorId: null,
+        fit: 'regular',
+        face: 'front',
+        measurements: { height: 172, chest: 40, waist: 32, shoulder: 18, hip: 38, inseam: 30, neck: 15.5 },
+        measSource: 'manual'
+      };
+
+      function $(id) { return document.getElementById(id); }
+      function garment() { return (typeof getGarmentById === 'function' ? getGarmentById(state.garmentId) : GARMENTS[0]) || GARMENTS[0]; }
+      function fabricName() { var g = garment(); return (g.fabrics && g.fabrics[state.fabricIdx]) || 'Studio cloth'; }
+      function colorObj() { var g = garment(); return (g.colors || []).filter(function (c) { return c.id === state.colorId; })[0] || g.colors[0]; }
+      function fabricAdd() { return state.fabricIdx === 0 ? 0 : FABRIC_SURCHARGE; }
+      function total() { return garment().basePrice + fabricAdd(); }
+      function inr(n) { return '₹' + Number(n || 0).toLocaleString('en-IN'); }
+
+      function esc(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+
+      /* ---------- STEP 1 · garments ---------- */
+      var GARMENT_BLURB = {
+        'tee-classic': 'Clean everyday tee block. Sharp shoulder, honest drape.',
+        'oversized-tee': 'Dropped shoulder, boxy body. The streetwear staple.',
+        'hoodie-heavy': 'Double-lined hood, heavy loopback body. Winter weight.',
+        'boxy-shirt': 'Architectural boxy shirt with spread collar geometry.',
+        'cargo-pants': 'Relaxed tapered cargo with utility pocket mapping.'
+      };
+
+      function thumbSVG(g, hex) {
+        var sil = (g.silhouette && g.silhouette.front) || '';
+        return '<svg viewBox="0 0 ' + g.svgViewBox.w + ' ' + g.svgViewBox.h + '" xmlns="http://www.w3.org/2000/svg">' +
+          sil.replace(/class="garment-body-fill"/g, 'fill="' + hex + '"').replace(/class="garment-detail"/g, 'fill="none" stroke="rgba(0,0,0,.25)" stroke-width="3"') +
+          '</svg>';
+      }
+
+      function renderGarments() {
+        var box = $('bf-garments');
+        $('bf-g-count').textContent = GARMENTS.length + ' silhouettes';
+        box.innerHTML = GARMENTS.map(function (g) {
+          var hex = (g.colors[0] || {}).hex || '#17181b';
+          return '<button type="button" class="bf-garment' + (g.id === state.garmentId ? ' sel' : '') + '" data-g="' + g.id + '">' +
+            '<span class="bf-garment-thumb">' + thumbSVG(g, hex) + '</span>' +
+            '<span><span class="bf-garment-name">' + esc(g.name) + '</span>' +
+            '<span class="bf-garment-desc" style="display:block;">' + esc(GARMENT_BLURB[g.id] || g.category) + ' · ' + esc((g.fabrics || [])[0] || '') + '</span>' +
+            '<span class="bf-garment-price">From ' + inr(g.basePrice) + ' <span>base</span></span></span>' +
+            '<span class="bf-tick">✓</span></button>';
+        }).join('');
+        Array.prototype.forEach.call(box.querySelectorAll('.bf-garment'), function (b) {
+          b.addEventListener('click', function () { selectGarment(b.getAttribute('data-g')); });
+        });
+      }
+
+      function selectGarment(id) {
+        if (!id || id === state.garmentId) return;
+        state.garmentId = id;
+        state.fabricIdx = 0;
+        state.colorId = (garment().colors[0] || {}).id || null;
+        state.face = 'front';
+        renderGarments(); renderFabrics(); renderColors(); renderPreview(); renderSummary(); saveDraft(true);
+      }
+
+      /* ---------- STEP 2 · fabrics (only this garment's) ---------- */
+      function texClass(name) {
+        var n = String(name || '').toLowerCase();
+        if (/linen/.test(n)) return 'bf-tex-linen';
+        if (/denim/.test(n)) return 'bf-tex-denim';
+        if (/twill/.test(n)) return 'bf-tex-twill';
+        if (/fleece|loopback|terry/.test(n)) return 'bf-tex-fleece';
+        if (/280|300|450|500|heavy|premium/.test(n)) return 'bf-tex-heavy';
+        if (/cotton|jersey|modal|poplin|oxford|pique/.test(n)) return 'bf-tex-cotton';
+        if (/ripstop|nylon|utility/.test(n)) return 'bf-tex-twill';
+        return 'bf-tex-generic';
+      }
+
+      function renderFabrics() {
+        var g = garment(), box = $('bf-fabrics');
+        box.innerHTML = (g.fabrics || []).map(function (f, i) {
+          var add = i === 0 ? 0 : FABRIC_SURCHARGE;
+          return '<button type="button" class="bf-fabric' + (i === state.fabricIdx ? ' sel' : '') + '" data-f="' + i + '">' +
+            '<span class="bf-tex ' + texClass(f) + '"></span>' +
+            '<span><span class="bf-fabric-name">' + esc(f) + '</span>' +
+            '<span class="bf-fabric-desc" style="display:block;">' + (i === 0 ? 'Base studio cloth · cut as sampled' : 'Atelier finish · same block, upgraded hand-feel') + '</span></span>' +
+            '<span class="bf-fabric-price' + (add === 0 ? ' inc' : '') + '">' + (add === 0 ? 'Included' : '+' + inr(add)) + '</span></button>';
+        }).join('');
+        Array.prototype.forEach.call(box.querySelectorAll('.bf-fabric'), function (b) {
+          b.addEventListener('click', function () {
+            state.fabricIdx = parseInt(b.getAttribute('data-f'), 10) || 0;
+            renderFabrics(); renderPreview(); renderSummary(); saveDraft(true);
+          });
+        });
+      }
+
+      /* ---------- STEP 3 · colours (real swatches → real garment) ---------- */
+      function renderColors() {
+        var g = garment(), box = $('bf-colors');
+        if (!state.colorId) state.colorId = (g.colors[0] || {}).id;
+        $('bf-color-count').textContent = (g.colors || []).length + ' colourways';
+        box.innerHTML = (g.colors || []).map(function (c) {
+          return '<button type="button" class="bf-color' + (c.id === state.colorId ? ' sel' : '') + '" data-c="' + esc(c.id) + '">' +
+            '<span class="bf-dot" style="background:' + esc(c.hex) + '"></span>' +
+            '<span class="bf-color-name">' + esc(c.label) + '</span></button>';
+        }).join('');
+        Array.prototype.forEach.call(box.querySelectorAll('.bf-color'), function (b) {
+          b.addEventListener('click', function () { selectColor(b.getAttribute('data-c')); });
+        });
+        $('bf-color-name').textContent = (colorObj() || {}).label || '–';
+      }
+
+      function selectColor(id) {
+        state.colorId = id;
+        // Immediate garment repaint — the actual SVG body fills, not the page background.
+        var hex = (colorObj() || {}).hex;
+        if (hex) {
+          Array.prototype.forEach.call(document.querySelectorAll('#bf-stage-inner .garment-body-fill'), function (el) {
+            el.setAttribute('fill', hex);
+          });
+        }
+        renderColors(); renderSummary(); saveDraft(true);
+      }
+
+      /* ---------- STEP 4 · fit ---------- */
+      function renderFits() {
+        var box = $('bf-fits');
+        var widths = { slim: '46%', regular: '60%', relaxed: '74%', oversized: '88%' };
+        box.innerHTML = Object.keys(FIT_META).map(function (k) {
+          var f = FIT_META[k];
+          return '<button type="button" class="bf-fit' + (state.fit === k ? ' sel' : '') + '" data-fit="' + k + '">' +
+            '<div class="bf-fit-name">' + f.label.toUpperCase() + '</div>' +
+            '<div class="bf-fit-bar"><i style="width:' + widths[k] + '"></i></div>' +
+            '<div class="bf-fit-desc">' + esc(f.desc) + '</div></button>';
+        }).join('');
+        Array.prototype.forEach.call(box.querySelectorAll('.bf-fit'), function (b) {
+          b.addEventListener('click', function () {
+            state.fit = b.getAttribute('data-fit');
+            renderFits(); renderPreview(); renderSummary(); saveDraft(true);
+          });
+        });
+      }
+
+      /* ---------- STEP 5 · measurements (existing system) ---------- */
+      var MEAS_FIELDS = [['bf-height', 'height'], ['bf-chest', 'chest'], ['bf-waist', 'waist'], ['bf-shoulder', 'shoulder'], ['bf-hip', 'hip'], ['bf-inseam', 'inseam'], ['bf-neck', 'neck']];
+
+      function readMeasurements() {
+        MEAS_FIELDS.forEach(function (pair) {
+          var el = $(pair[0]);
+          var v = parseFloat(el && el.value);
+          if (!isNaN(v)) state.measurements[pair[1]] = v;
+        });
+        state.measSource = 'manual';
+        $('bf-meas-src').textContent = 'Source: manual';
+      }
+
+      function loadEstimated() {
+        var found = null, src = '';
+        try {
+          var saved = JSON.parse(localStorage.getItem('CF_FIT_PROFILE_V1') || 'null');
+          if (saved && (saved.chestIn || saved.chest)) {
+            found = {
+              height: saved.heightCm || saved.height || 172,
+              chest: saved.chestIn || saved.chest || 40,
+              waist: saved.waistIn || saved.waist || 32,
+              shoulder: saved.shoulderIn || saved.shoulder || 18,
+              hip: saved.hipIn || saved.hip || 38,
+              inseam: saved.inseamIn || saved.inseam || 30,
+              neck: saved.neckIn || saved.neck || 15.5
+            };
+            src = 'Body Visualizer profile ' + (saved.fitId || '');
+          }
+        } catch (e) { /* keep manual */ }
+        if (!found) {
+          if (window.CF_showToast) window.CF_showToast('No saved measurements yet — opening Body Visualizer…');
+          setTimeout(function () { window.location.href = 'body-visualizer.html?from=bespoke'; }, 900);
+          return;
+        }
+        state.measurements = found;
+        state.measSource = src || 'estimated';
+        $('bf-height').value = found.height; $('bf-chest').value = found.chest;
+        $('bf-waist').value = found.waist; $('bf-shoulder').value = found.shoulder;
+        $('bf-hip').value = found.hip; $('bf-inseam').value = found.inseam; $('bf-neck').value = found.neck;
+        $('bf-meas-src').textContent = 'Source: ' + state.measSource;
+        $('bf-est-note').innerHTML = '✓ Loaded from your saved Body Visualizer profile. Edit freely — edits save to this bespoke spec only.';
+        renderSummary(); saveDraft(true);
+        if (window.CF_showToast) window.CF_showToast('Estimated measurements applied');
+      }
+
+      /* ---------- STEP 6 · preview (existing garment renderer) ---------- */
+      function renderPreview() {
+        var g = garment(), c = colorObj();
+        // Reuse the Design Studio renderer: true silhouette + print zones, front/back.
+        // NOTE: garment-renderer.js targets #stage-wrap, so host it inside our stage.
+        try {
+          var host = $('bf-stage-inner');
+          var nest = $('stage-wrap');
+          if (!nest) { nest = document.createElement('div'); nest.id = 'stage-wrap'; host.appendChild(nest); }
+          renderGarmentStage(g, state.face);
+        } catch (e) { return; }
+        // Paint the actual garment in the selected colourway.
+        if (c && c.hex) {
+          Array.prototype.forEach.call(document.querySelectorAll('#bf-stage-inner .garment-body-fill'), function (el) {
+            el.setAttribute('fill', c.hex);
+          });
+        }
+        // Toggle front/back SVG visibility (renderer ships both).
+        var f = $('garment-svg-front'), b = $('garment-svg-back');
+        if (f && b) {
+          if (state.face === 'front') { f.style.display = 'block'; b.style.display = 'none'; }
+          else { f.style.display = 'none'; b.style.display = 'block'; }
+        }
+        $('bf-stage').setAttribute('data-fit', state.fit);
+        // Scale print-zone + canvas layer hooks are internal to renderer; reposition not needed for bespoke (no artwork).
+        var pz = $('print-zone-guide'); if (pz) pz.style.opacity = '0';
+        $('bf-view-front').classList.toggle('on', state.face === 'front');
+        $('bf-view-back').classList.toggle('on', state.face === 'back');
+        $('bf-stage-face').textContent = state.face === 'front' ? 'Front' : 'Back';
+        $('bf-stage-garment').textContent = g.name;
+        $('bf-prev-name').textContent = g.name + ' · ' + ((c || {}).label || '');
+        $('bf-fit-line').innerHTML = 'Fit — <strong>' + FIT_META[state.fit].label + '</strong> · ' + esc(FIT_META[state.fit].ease) + '.';
+        $('bf-fabric-line').innerHTML = 'Fabric — <strong>' + esc(fabricName()) + '</strong> · colour <strong>' + esc((c || {}).label || '') + '</strong>. Cloth hand-feel is noted on the spec; weave texture refinement needs studio photography assets.';
+        $('bf-sum-view').textContent = state.face === 'front' ? 'Front' : 'Back';
+      }
+
+      function switchFace(face) {
+        if (face === state.face) return;
+        state.face = face;
+        renderPreview(); renderSummary();
+      }
+
+      /* ---------- summary + price ---------- */
+      function sizeBlock() {
+        // Studio size block derived from chest + fit (transparent, chart-free note in UI copy).
+        var ch = state.measurements.chest || 40;
+        var adj = state.fit === 'slim' ? 1 : state.fit === 'relaxed' ? -1.5 : state.fit === 'oversized' ? -3 : 0;
+        var eff = ch + adj;
+        if (eff < 37) return 'S block';
+        if (eff < 41) return 'M block';
+        if (eff < 45) return 'L block';
+        return 'XL block';
+      }
+
+      function renderSummary() {
+        var g = garment(), c = colorObj();
+        $('bf-sum-name').textContent = g.name;
+        $('bf-sum-garment').textContent = g.name;
+        $('bf-sum-fabric').textContent = fabricName();
+        $('bf-sum-color').textContent = (c || {}).label || '–';
+        $('bf-sum-fit').textContent = FIT_META[state.fit].label + ' (' + sizeBlock() + ')';
+        $('bf-sum-size').textContent = sizeBlock() + ' · chest ' + state.measurements.chest + '"';
+        $('bf-base-label').textContent = 'Base ' + g.name;
+        $('bf-base-val').textContent = inr(g.basePrice);
+        $('bf-fabric-label').textContent = fabricName();
+        $('bf-fabric-val').textContent = fabricAdd() === 0 ? 'Included' : '+' + inr(fabricAdd());
+        $('bf-total').textContent = inr(total());
+        $('bf-sticky-price').textContent = inr(total());
+        $('bf-sticky-name').textContent = g.name;
+        // Try-on links: photo fitting → AI Try-On screen; avatar → Body Visualizer.
+        var q = '?from=bespoke&garment=' + encodeURIComponent(g.id) + '&fit=' + encodeURIComponent(state.fit);
+        $('bf-try-photo').href = 'tryon.html' + q;
+        $('bf-try-avatar').href = 'body-visualizer.html' + q;
+        // Keep the draft current so TRY ON (?from=bespoke) always sees this exact spec.
+        saveDraft(true);
+        markSteps();
+      }
+
+      function markSteps() {
+        var steps = document.querySelectorAll('.bf-step');
+        // 01 always done once a garment is picked (default), 02-05 done when non-default touched.
+        var doneIdx = [true, state.fabricIdx !== 0, !!state.colorId, state.fit !== 'regular', state.measSource !== 'manual', true, false];
+        Array.prototype.forEach.call(steps, function (s, i) { s.classList.toggle('done', !!doneIdx[i]); });
+      }
+
+      /* ---------- STEP 8 · save (existing storage + backend when available) ---------- */
+      function spec() {
+        var g = garment(), c = colorObj();
+        return {
+          kind: 'bespoke',
+          garmentId: g.id, garmentName: g.name, category: g.category,
+          basePrice: g.basePrice, fabric: fabricName(), fabricAdd: fabricAdd(),
+          fabricIdx: state.fabricIdx,
+          color: (c || {}).label || '', colorHex: (c || {}).hex || '', colorId: (c || {}).id || null,
+          fit: state.fit, face: state.face, sizeBlock: sizeBlock(),
+          measurements: Object.assign({}, state.measurements),
+          measSource: state.measSource,
+          price: total(), updatedAt: new Date().toISOString()
+        };
+      }
+
+      function saveDraft(silent) {
+        try { localStorage.setItem('CF_BESPOKE_V1', JSON.stringify(spec())); } catch (e) { /* private mode */ }
+        if (!silent && window.CF_showToast) window.CF_showToast('Draft saved on this device');
+      }
+
+      function svgThumb(g, hex) {
+        var sil = (g.silhouette && g.silhouette.front) || '';
+        var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + g.svgViewBox.w + ' ' + g.svgViewBox.h + '">' +
+          '<rect width="100%" height="100%" fill="#f1f2f4"/>' +
+          sil.replace(/class="garment-body-fill"/g, 'fill="' + hex + '"').replace(/class="garment-detail"/g, 'fill="none" stroke="rgba(0,0,0,.3)" stroke-width="3"') + '</svg>';
+        return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+      }
+
+      function addToBag() {
+        readMeasurements();
+        var s = spec(), g = garment(), c = colorObj();
+        saveDraft(true);
+        var thumb = svgThumb(g, (c || {}).hex || '#17181b');
+        var item = {
+          id: 'BESPOKE-' + g.id + '-' + s.fit + '-' + ((c || {}).id || 'std'),
+          code: 'CF-BESPOKE',
+          name: 'Bespoke ' + g.name + ' · ' + FIT_META[s.fit].label,
+          price: s.price, mrp: s.price,
+          fabric: s.fabric, color: s.color,
+          badge: 'MADE-TO-MEASURE',
+          size: s.sizeBlock + ' · chest ' + s.measurements.chest + '"',
+          qty: 1,
+          img: thumb,
+          images: [thumb],
+          kind: 'bespoke',
+          custom: Object.assign({ flow: 'bespoke', preview: thumb }, s),
+          bespoke: s
+        };
+        try {
+          // Call addToCart directly (not CART.addItem) so our bespoke size string is kept:
+          // CART.addItem(item) would overwrite item.size with its default 'L' param.
+          if (typeof addToCart === 'function') addToCart(item, item.size, 1);
+          else if (window.CART && window.CART.addItem) window.CART.addItem(item);
+        } catch (e) { /* drawer will still open */ }
+        // Best-effort server price check — local total is authoritative until backend responds.
+        try {
+          fetch('/api/customization/calculate-price', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fabricId: 'gots_cotton', monogram: '' })
+          }).catch(function () {});
+        } catch (e) {}
+        if (window.CF_openCartDrawer) window.CF_openCartDrawer();
+        else if (typeof openCartDrawer === 'function') { try { openCartDrawer(); } catch (e) {} }
+      }
+
+      /* ---------- init ---------- */
+      function preselectFromURL() {
+        try {
+          var q = new URLSearchParams(window.location.search);
+          var key = q.get('garment') || q.get('product');
+          if (!key) return;
+          var hit = null;
+          if (typeof getGarmentById === 'function') { try { hit = getGarmentById(key); } catch (e) {} }
+          if (hit && hit.id) { state.garmentId = hit.id; return; }
+          // numeric shop id → closest studio silhouette via the central flow map
+          // (SHOP → BESPOKE journey; single source of truth in js/product-flow.js).
+          var n = parseInt(key, 10);
+          if (!isNaN(n)) {
+            var gid = (window.CF_FLOW && CF_FLOW.productToGarmentId(getProductById(n))) || 'tee-classic';
+            if (gid) state.garmentId = gid;
+          }
+        } catch (e) {}
+      }
+
+      function restoreDraft() {
+        try {
+          // EDIT from cart takes precedence over the auto-saved draft.
+          var edit = null;
+          try {
+            var isEdit = window.location.search.indexOf('edit=1') > -1;
+            if (isEdit) {
+              edit = JSON.parse(sessionStorage.getItem('CF_BESPOKE_EDIT') || 'null');
+              sessionStorage.removeItem('CF_BESPOKE_EDIT');
+            }
+          } catch (e) {}
+          var d = (edit && (edit.kind === 'bespoke' || edit.flow === 'bespoke')) ? edit
+            : JSON.parse(localStorage.getItem('CF_BESPOKE_V1') || 'null');
+          if (!d || (d.kind !== 'bespoke' && d.flow !== 'bespoke')) return;
+          if (d.garmentId) state.garmentId = d.garmentId;
+          if (typeof d.fabricIdx === 'number') state.fabricIdx = d.fabricIdx;
+          if (d.colorId) state.colorId = d.colorId;
+          if (d.fit && FIT_META[d.fit]) state.fit = d.fit;
+          if (d.measurements) {
+            state.measurements = Object.assign(state.measurements, d.measurements);
+            MEAS_FIELDS.forEach(function (pair) {
+              var el = $(pair[0]);
+              if (el && state.measurements[pair[1]] != null) el.value = state.measurements[pair[1]];
+            });
+            if (d.measSource && d.measSource !== 'manual') {
+              state.measSource = d.measSource;
+              $('bf-meas-src').textContent = 'Source: ' + d.measSource;
+            }
+          }
+        } catch (e) {}
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        if (typeof GARMENTS === 'undefined' || typeof renderGarmentStage !== 'function') {
+          document.getElementById('bf-stage-inner').innerHTML =
+            '<p style="padding:40px;text-align:center;color:#991b1b;">Studio assets failed to load (editor-products.js / garment-renderer.js). Check console — no functionality removed.</p>';
+          return;
+        }
+        preselectFromURL();
+        restoreDraft();
+        var g = garment();
+        if (!state.colorId) state.colorId = (g.colors[0] || {}).id;
+        // restore fabric/color indexes safely after garment switch
+        if (state.fabricIdx >= (g.fabrics || []).length) state.fabricIdx = 0;
+        if (!(g.colors || []).some(function (c) { return c.id === state.colorId; })) state.colorId = (g.colors[0] || {}).id;
+
+        renderGarments(); renderFabrics(); renderColors(); renderFits();
+        renderPreview(); renderSummary();
+
+        $('bf-view-front').addEventListener('click', function () { switchFace('front'); });
+        $('bf-view-back').addEventListener('click', function () { switchFace('back'); });
+        $('bf-est-btn').addEventListener('click', loadEstimated);
+        MEAS_FIELDS.forEach(function (pair) {
+          var el = $(pair[0]);
+          if (el) el.addEventListener('change', function () { readMeasurements(); renderSummary(); saveDraft(true); });
+        });
+        $('bf-add').addEventListener('click', addToBag);
+        $('bf-save').addEventListener('click', function () { readMeasurements(); renderSummary(); saveDraft(false); });
+
+        // progress indicator highlight on scroll
+        try {
+          var map = [['bf-s1', 0], ['bf-s2', 1], ['bf-s3', 2], ['bf-s4', 3], ['bf-s5', 4], ['bf-preview', 5], ['bf-tryon', 6]];
+          var steps = document.querySelectorAll('.bf-step');
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) {
+              if (!en.isIntersecting) return;
+              var idx = -1;
+              map.forEach(function (m) { if (m[0] === en.target.id) idx = m[1]; });
+              if (idx >= 0) Array.prototype.forEach.call(steps, function (s, i) { s.classList.toggle('current', i === idx); });
+            });
+          }, { rootMargin: '-30% 0px -60% 0px' });
+          map.forEach(function (m) { var el = $(m[0]); if (el) io.observe(el); });
+        } catch (e) {}
+      });
+    })();
+  </script>
+  <script src="js/trust.js"></script>
+  <script src="js/aiAssistant.js"></script>
+</body>
+</html>
