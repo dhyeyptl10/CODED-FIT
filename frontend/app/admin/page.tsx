@@ -1,0 +1,6 @@
+'use client';
+import {useState} from 'react';
+import {useAuthStore} from '@/store/authStore';
+export default function Admin(){const {user,openLoginModal}=useAuthStore();const [data,setData]=useState<any>(null);const [error,setError]=useState('');
+async function load(){try{const response=await fetch('/api/admin/metrics',{headers:{Authorization:`Bearer ${localStorage.getItem('coded_token')}`}});const result=await response.json();if(!response.ok)throw new Error(result.message);setData(result.metrics);}catch(e:any){setError(e.message);}}
+return <div className="max-w-5xl mx-auto p-8 space-y-6"><h1 className="text-3xl font-bold">Store operations</h1>{user?.role==='admin'?<><button onClick={load} className="border p-3 rounded-lg">Refresh dashboard</button>{data && <><div className="grid grid-cols-3 gap-4">{[['Orders',data.totalOrders],['Paid revenue',`₹${data.totalRevenue}`],['Low stock',data.lowStockCount]].map(([k,v])=><div key={k} className="p-4 bg-white rounded-xl"><p>{k}</p><strong className="text-2xl">{v}</strong></div>)}</div>{data.recentOrders.map((o:any)=><div className="p-4 border rounded-xl" key={o._id}>{o.orderNumber} · {o.status} · ₹{o.totals.total} · {o.payment.status}</div>)}</>}</>:<button onClick={()=>openLoginModal('email')}>Sign in with an administrator account</button>}<p role="alert">{error}</p></div>;}

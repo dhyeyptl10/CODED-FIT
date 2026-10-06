@@ -3,11 +3,24 @@
   "version": "1.0.0",
   "description": "CODED FIT — Precision Hybrid Fashion-Tech Platform",
   "scripts": {
-    "start": "cd server && node server.js",
-    "seed": "cd server && node seed.js",
-    "server": "cd server && node server.js"
+    "start": "npm --prefix backend start",
+    "seed": "npm --prefix backend run seed",
+    "backend": "npm --prefix backend run dev",
+    "frontend": "npm --prefix frontend run dev",
+    "web": "npm --prefix frontend run dev",
+    "web:build": "npm --prefix frontend run build",
+    "mobile": "npm --prefix mobile-app start",
+    "test": "npm --prefix backend test",
+    "typecheck": "npm --prefix frontend run typecheck"
   },
-  "keywords": ["fashion-tech", "3d-try-on", "threejs", "webrtc", "ollama", "razorpay"],
+  "keywords": [
+    "fashion-tech",
+    "3d-try-on",
+    "threejs",
+    "webrtc",
+    "ollama",
+    "razorpay"
+  ],
   "author": "CODED FIT Atelier",
   "license": "ISC"
 }

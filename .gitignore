@@ -35,3 +35,9 @@ scratch/
 # OS Files
 .DS_Store
 Thumbs.db
+
+.next/
+*.tsbuildinfo
+.expo/
+backend/uploads/*
+!backend/uploads/.gitkeep

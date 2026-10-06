@@ -32,17 +32,17 @@ export const COLORS = {
   textLight: '#AAAAAA',
   textDim: '#CCCCCC',
 
-  // CODED FIT retail palette — red / white / sky blue
-  gold: '#D71920',
+  // CODED FIT retail palette — black / red / white
+  gold: '#E5192B',
   goldLight: '#FFE9EA',
   goldDark: '#B01016',
   goldMuted: 'rgba(215, 25, 32, 0.08)',
   goldGlow: 'rgba(220, 38, 38, 0.12)',
 
   // Primary Accent
-  accent: '#D71920',
-  sky: '#75C8EE',
-  skySoft: '#EAF7FD',
+  accent: '#E5192B',
+  sky: '#E5192B',
+  skySoft: '#F5F5F5',
   accentDark: '#111111',
   accentMuted: '#888888',
   accentSoft: 'rgba(220, 38, 38, 0.06)',

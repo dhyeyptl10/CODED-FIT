@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Tabs } from 'expo-router';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import { CartService } from '../../services/cart';
-import { COLORS } from '../../constants/theme';
+
+
 
 function TabIcon({
   icon,
@@ -32,21 +32,6 @@ function TabIcon({
 }
 
 export default function TabsLayout() {
-  const [cartCount, setCartCount] = useState<number>(0);
-
-  useEffect(() => {
-    loadCartCount();
-    const interval = setInterval(loadCartCount, 2500);
-    return () => clearInterval(interval);
-  }, []);
-
-  const loadCartCount = async () => {
-    try {
-      const count = await CartService.getItemCount();
-      setCartCount(count);
-    } catch (_) {}
-  };
-
   return (
     <Tabs
       screenOptions={{
@@ -75,7 +60,7 @@ export default function TabsLayout() {
         name="bespoke"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon icon="✦" label="Bespoke" focused={focused} />
+            <TabIcon icon="✦" label="Studio" focused={focused} />
           ),
         }}
       />
@@ -105,7 +90,7 @@ const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
-    borderTopColor: '#E3E3EC',
+    borderTopColor: '#E5E5E5',
     height: Platform.OS === 'ios' ? 82 : 72,
     paddingBottom: Platform.OS === 'ios' ? 14 : 6,
     paddingTop: 8,
@@ -134,7 +119,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   iconTextActive: {
-    color: '#D71920',
+    color: '#E5192B',
     textShadowColor: 'rgba(201, 0, 45, 0.2)',
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 8,
@@ -148,7 +133,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   labelTextActive: {
-    color: '#D71920',
+    color: '#E5192B',
     fontWeight: '800',
   },
   activeIndicator: {
@@ -156,9 +141,9 @@ const styles = StyleSheet.create({
     bottom: -6,
     width: 22,
     height: 2,
-    backgroundColor: '#D71920',
+    backgroundColor: '#E5192B',
     borderRadius: 1,
-    shadowColor: '#75C8EE',
+    shadowColor: '#E5192B',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.8,
     shadowRadius: 4,
@@ -167,7 +152,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -4,
     right: -12,
-    backgroundColor: '#75C8EE',
+    backgroundColor: '#E5192B',
     borderRadius: 10,
     minWidth: 16,
     height: 16,

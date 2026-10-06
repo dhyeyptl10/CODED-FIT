@@ -40,10 +40,7 @@ export function useAuth() {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
       if (!isSupported || !isEnrolled) {
-        // Fallback for simulators or unsupported devices: simulated success
-        await new Promise(res => setTimeout(res, 400));
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        return true;
+        return false;
       }
 
       const result = await LocalAuthentication.authenticateAsync({

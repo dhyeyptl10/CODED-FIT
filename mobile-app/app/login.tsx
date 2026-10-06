@@ -19,14 +19,11 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import {getApiBaseUrl} from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Mode = 'login' | 'signup';
 type Role = 'customer' | 'admin';
-
-// ── Dummy credentials (replace with real API in prod) ──────────
-const ADMIN_CREDS = { email: 'admin@codedfit.com', password: 'admin123' };
-const DEMO_CUSTOMER = { email: 'demo@codedfit.com', password: 'demo123', name: 'Dhyey Patel' };
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -46,44 +43,19 @@ export default function LoginScreen() {
 
     setLoading(true);
 
-    // Simulate API delay
-    await new Promise(r => setTimeout(r, 900));
-
     try {
-      if (role === 'admin') {
-        if (email.toLowerCase() === ADMIN_CREDS.email && password === ADMIN_CREDS.password) {
-          await AsyncStorage.setItem('CF_USER', JSON.stringify({ role: 'admin', email, name: 'Admin', loggedIn: true }));
-          router.replace('/(tabs)');
-        } else {
-          Alert.alert('Access Denied', 'Invalid admin credentials.');
-        }
-      } else {
-        // Customer login
-        if (mode === 'login') {
-          // Accept demo creds or any email/pass combo (demo mode)
-          const user = { role: 'customer', email, name: email.split('@')[0], loggedIn: true };
-          await AsyncStorage.setItem('CF_USER', JSON.stringify(user));
-          router.replace('/(tabs)');
-        } else {
-          // Sign up
-          if (!name.trim()) {
-            Alert.alert('Missing Name', 'Please enter your full name.');
-            setLoading(false);
-            return;
-          }
-          const user = { role: 'customer', email, name, loggedIn: true };
-          await AsyncStorage.setItem('CF_USER', JSON.stringify(user));
-          router.replace('/(tabs)');
-        }
-      }
-    } catch (e) {
-      Alert.alert('Error', 'Something went wrong. Please try again.');
-    }
-
-    setLoading(false);
+      const base=await getApiBaseUrl();
+      const response=await fetch(base+'/auth/'+(mode==='signup'?'register':'login'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.trim(),password,name:name.trim()})});
+      const data=await response.json();
+      if(!response.ok)throw new Error(data.message || 'Authentication failed');
+      await AsyncStorage.setItem('@CODED_FIT_TOKEN',data.token);
+      await AsyncStorage.setItem('CF_USER',JSON.stringify({...data.user,loggedIn:true}));
+      router.replace('/(tabs)');
+    }catch(e:any){Alert.alert('Sign-in failed',e.message);}finally{setLoading(false);}
   };
 
   const handleGuestBrowse = async () => {
+    await AsyncStorage.removeItem('@CODED_FIT_TOKEN');
     await AsyncStorage.setItem('CF_USER', JSON.stringify({ role: 'guest', loggedIn: false }));
     router.replace('/(tabs)');
   };
@@ -212,7 +184,7 @@ export default function LoginScreen() {
             {/* Demo hint */}
             {role === 'customer' && (
               <TouchableOpacity
-                onPress={() => { setEmail(DEMO_CUSTOMER.email); setPassword(DEMO_CUSTOMER.password); }}
+                onPress={() => { setEmail(''); setPassword(''); }}
                 style={styles.demoBtn}
               >
                 <Text style={styles.demoBtnText}>Use demo account</Text>
@@ -220,7 +192,7 @@ export default function LoginScreen() {
             )}
             {role === 'admin' && (
               <TouchableOpacity
-                onPress={() => { setEmail(ADMIN_CREDS.email); setPassword(ADMIN_CREDS.password); }}
+                onPress={() => { setEmail('Your administrator email'); setPassword('Your password'); }}
                 style={styles.demoBtn}
               >
                 <Text style={styles.demoBtnText}>Use demo admin credentials</Text>
