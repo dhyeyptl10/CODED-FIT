@@ -16,6 +16,7 @@ import {
   Platform,
   Alert,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -67,9 +68,13 @@ export default function LoginScreen() {
 
           {/* Brand Header */}
           <View style={styles.brandSection}>
-            <Text style={styles.brand}>CODED FIT</Text>
-            <Text style={styles.brandSub}>[BLR-ATELIER]</Text>
-            <Text style={styles.tagline}>India's First AI Fashion Studio</Text>
+            <Image
+              source={require('../assets/icon.png')}
+              style={styles.brandLogo}
+              resizeMode="contain"
+              accessibilityLabel="CODED FIT"
+            />
+            <Text style={styles.tagline}>Precision Engineered For The Connected Self.</Text>
           </View>
 
           {/* Role Toggle */}
@@ -232,10 +237,9 @@ const styles = StyleSheet.create({
   container: { padding: 24, paddingBottom: 40 },
 
   // Brand
-  brandSection: { alignItems: 'center', marginBottom: 32, paddingTop: 16 },
-  brand: { fontSize: 28, fontWeight: '900', color: '#111111', letterSpacing: 4 },
-  brandSub: { fontSize: 11, fontWeight: '700', color: '#DC2626', letterSpacing: 3, marginTop: 2 },
-  tagline: { fontSize: 12, color: '#888888', marginTop: 8, letterSpacing: 0.5 },
+  brandSection: { alignItems: 'center', marginBottom: 28, paddingTop: 8 },
+  brandLogo: { width: 220, height: 110, marginBottom: 6 },
+  tagline: { fontSize: 11, color: '#888888', marginTop: 4, letterSpacing: 0.8, textAlign: 'center' },
 
   // Role Toggle
   roleToggle: {

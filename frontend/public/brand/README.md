@@ -1,11 +1,26 @@
-# CODED FIT brand assets
+# CODED FIT — Brand Assets
 
-- `coded-fit-original.png`: unmodified logo supplied by the owner (Logo.png).
-- `coded-fit-logo.png`: transparent PNG extracted with the built-in ImageGen tool. Red circuit CF, white code brackets/slash and black CODED FIT wordmark retained. Small tagline omitted in this navigation variant for legibility. Original remains available above.
+## Logos
 
-Edit prompt: Extract the existing logo on a genuinely transparent background; remove gray concrete wall and empty margins, preserve the red circuit CF, white textured code brackets and slash, black CODED FIT. lettering and original two-line arrangement. Remove the tiny tagline for navigation readability. Do not redesign the mark.
+- `coded-fit-logo.png` — Primary nav logo (transparent background, `<CF/>` mark + "CODED FIT." wordmark). Used in website header, footer, and mobile error screen.
+- `coded-fit-original.png` — Original full logo with tagline ("Precision Engineered For The Connected Self."). Retained as source.
 
-Usage: website header/footer, landing studio artwork, and mobile storefront error screen. Mobile normal screens share the website header.
+## Icons / Splash
+
+- `/mobile-app/assets/icon.png` — App icon 1024×1024 (iOS & Android)
+- `/mobile-app/assets/splash.png` — Splash screen portrait
+- `/mobile-app/assets/adaptive-icon.png` — Android adaptive icon foreground
+- `/frontend/public/favicon.png` — Browser tab favicon
+- `/frontend/public/icon-512.png` — PWA / Android Chrome 512px icon
+- `/frontend/public/apple-touch-icon.png` — iOS home screen icon 180×180
+
+## Campaign Film
+
+`/images/coded-fit-campaign.mp4`: cottonbro studio, "Two Models wearing Black and White", Pexels video 8443735.
+Source: https://www.pexels.com/video/two-models-wearing-black-and-white-8443735/
+License: https://www.pexels.com/license/
+Editorial stock footage for brand atmosphere only.
+
 
 # Campaign film
 
