@@ -6,6 +6,12 @@
     "orientation": "portrait",
     "scheme": "codedfitapp",
     "userInterfaceStyle": "dark",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#E0DEDD"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.novastreet.codedfitapp",
@@ -19,6 +25,10 @@
     },
     "android": {
       "package": "com.novastreet.codedfitapp",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#E0DEDD"
+      },
       "permissions": [
         "CAMERA",
         "RECORD_AUDIO",

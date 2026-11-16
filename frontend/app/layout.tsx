@@ -12,7 +12,31 @@ import { AIChat } from '@/components/ai/AIChat';
 export const metadata: Metadata = {
   title: 'CODED FIT — Wear Your Own Code',
   description: "Discover clothing, personalize your wardrobe, and explore 3D and photo try-on with CODED FIT.",
+  icons: {
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/favicon.png',
+  },
+  openGraph: {
+    title: 'CODED FIT — Wear Your Own Code',
+    description: 'Precision Engineered For The Connected Self.',
+    images: [{ url: '/favicon.png' }],
+    siteName: 'CODED FIT',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'CODED FIT',
+    description: 'Precision Engineered For The Connected Self.',
+    images: ['/favicon.png'],
+  },
 };
+
 
 export default function RootLayout({
   children,
